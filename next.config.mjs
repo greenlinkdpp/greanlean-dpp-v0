@@ -3,6 +3,12 @@ const nextConfig = {
     return [
       {
         source: "/",
+        has: [
+          {
+            type: "host",
+            value: "dpp.greanlean.com",
+          },
+        ],
         destination: "/login",
         permanent: false,
       },
