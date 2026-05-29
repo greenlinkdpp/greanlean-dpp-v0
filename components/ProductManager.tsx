@@ -27,7 +27,9 @@ export function ProductManager() {
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (!error) setProducts(data || []);
+    if (!error) {
+      setProducts(data || []);
+    }
   }
 
   useEffect(() => {
@@ -80,10 +82,19 @@ export function ProductManager() {
       <form onSubmit={createProduct} className="card space-y-4">
         <h2 className="text-xl font-bold">Create Product</h2>
 
-        <input className="input" name="name" placeholder="Product name" required />
+        <input
+          className="input"
+          name="name"
+          placeholder="Product name"
+          required
+        />
+
         <input className="input" name="sku" placeholder="SKU" />
+
         <input className="input" name="brand" placeholder="Brand" />
+
         <input className="input" name="category" placeholder="Category" />
+
         <textarea
           className="input min-h-28"
           name="description"
@@ -104,7 +115,7 @@ export function ProductManager() {
           {products.map((p) => (
             <div
               key={p.id}
-              className="flex items-center justify-between gap-4 py-4"
+              className="flex flex-wrap items-center justify-between gap-4 py-4"
             >
               <div>
                 <p className="font-semibold">{p.name}</p>
@@ -113,15 +124,24 @@ export function ProductManager() {
                 </p>
               </div>
 
-              {p.public_slug && (
+              <div className="flex gap-2">
                 <Link
                   className="btn-secondary py-2"
-                  href={`/p/${p.public_slug}`}
-                  target="_blank"
+                  href={`/dashboard/products/${p.id}`}
                 >
-                  View DPP
+                  Edit
                 </Link>
-              )}
+
+                {p.public_slug && (
+                  <Link
+                    className="btn-secondary py-2"
+                    href={`/p/${p.public_slug}`}
+                    target="_blank"
+                  >
+                    View DPP
+                  </Link>
+                )}
+              </div>
             </div>
           ))}
 
