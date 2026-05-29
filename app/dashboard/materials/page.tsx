@@ -1,0 +1,2 @@
+import { SimpleInsertManager } from "@/components/SimpleInsertManager";
+export default function Page(){return <div><h1 className="text-3xl font-black">Materials</h1><p className="mt-2 text-slate-600">Manage materials.</p><div className="mt-8"><SimpleInsertManager title="Materials" table="product_materials" fields={[{name:"material_name",placeholder:"Material name",required:true},{name:"material_type",placeholder:"Material type"},{name:"origin_country",placeholder:"Origin country"},{name:"certification",placeholder:"Certification"}]}/></div></div>}
