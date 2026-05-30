@@ -1,0 +1,15 @@
+{
+  "dashboard": "Dashboard",
+  "products": "Products",
+  "suppliers": "Suppliers",
+  "materials": "Materials",
+  "certificates": "Certificates",
+  "esg": "ESG Metrics",
+  "create_product": "Create Product",
+  "save_product": "Save Product",
+  "edit_product": "Edit Product",
+  "view_dpp": "View Public DPP",
+  "loading": "Loading...",
+  "published": "Published",
+  "draft": "Draft"
+}

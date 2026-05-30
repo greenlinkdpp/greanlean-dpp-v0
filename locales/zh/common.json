@@ -1,0 +1,15 @@
+{
+  "dashboard": "后台首页",
+  "products": "产品管理",
+  "suppliers": "供应商",
+  "materials": "材料",
+  "certificates": "证书",
+  "esg": "ESG 指标",
+  "create_product": "创建产品",
+  "save_product": "保存产品",
+  "edit_product": "编辑产品",
+  "view_dpp": "查看 DPP",
+  "loading": "加载中...",
+  "published": "已发布",
+  "draft": "草稿"
+}

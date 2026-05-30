@@ -1,3 +1,136 @@
-import { notFound } from "next/navigation"; import { createSupabaseClient } from "@/lib/supabase"; import Link from "next/link";
-async function getData(slug:string){const supabase=createSupabaseClient();const {data:product}=await supabase.from("products").select("*").eq("public_slug",slug).eq("status","published").single();if(!product)return null;const [{data:materials},{data:esg},{data:certificates}]=await Promise.all([supabase.from("product_materials").select("*").eq("product_id",product.id),supabase.from("product_esg_metrics").select("*").eq("product_id",product.id),supabase.from("product_certificates").select("*").eq("product_id",product.id)]);return{product,materials:materials||[],esg:esg||[],certificates:certificates||[]}}
-export default async function PublicDppPage({params}:{params:{slug:string}}){const data=await getData(params.slug);if(!data)notFound();const {product,materials,esg,certificates}=data;const site=process.env.NEXT_PUBLIC_SITE_URL||"http://localhost:3000";const dppUrl=`${site}/p/${product.public_slug}`;return <main className="min-h-screen bg-white"><header className="border-b border-slate-200"><div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5"><Link href="/" className="font-bold">GreenLean DPP</Link><span className="rounded-full bg-green-50 px-3 py-1 text-sm font-semibold text-green-700">Published</span></div></header><section className="mx-auto max-w-5xl px-6 py-12"><div className="grid gap-8 lg:grid-cols-[1fr_220px]"><div><p className="text-sm font-semibold text-brand-700">{product.dpp_id}</p><h1 className="mt-3 text-5xl font-black">{product.name}</h1><p className="mt-4 max-w-2xl text-slate-600">{product.description}</p><div className="mt-6 flex flex-wrap gap-3 text-sm"><span className="rounded-full bg-slate-100 px-4 py-2">SKU: {product.sku||"N/A"}</span><span className="rounded-full bg-slate-100 px-4 py-2">Brand: {product.brand||"N/A"}</span><span className="rounded-full bg-slate-100 px-4 py-2">Category: {product.category||"N/A"}</span></div></div><div className="card text-center"><img className="mx-auto h-40 w-40" alt="DPP QR Code" src={`/api/qr?url=${encodeURIComponent(dppUrl)}`}/><p className="mt-3 text-xs text-slate-500">Scan to view this product passport</p></div></div><div className="mt-12 grid gap-6 md:grid-cols-3"><div className="card"><h2 className="font-bold">Materials</h2><div className="mt-4 space-y-3 text-sm text-slate-600">{materials.map((m:any)=><p key={m.id}>{m.material_name} · {m.percentage||"-"}%</p>)}{!materials.length&&<p>No material records yet.</p>}</div></div><div className="card"><h2 className="font-bold">ESG</h2><div className="mt-4 space-y-3 text-sm text-slate-600">{esg.map((e:any)=><p key={e.id}>Carbon: {e.carbon_footprint||"-"} · Water: {e.water_usage||"-"}</p>)}{!esg.length&&<p>No ESG records yet.</p>}</div></div><div className="card"><h2 className="font-bold">Certificates</h2><div className="mt-4 space-y-3 text-sm text-slate-600">{certificates.map((c:any)=><p key={c.id}>{c.certificate_name} · {c.verification_status||"pending"}</p>)}{!certificates.length&&<p>No certificate records yet.</p>}</div></div></div></section></main>}
+import { notFound } from "next/navigation";
+import { createSupabaseClient } from "@/lib/supabase";
+import Link from "next/link";
+
+async function getData(slug: string) {
+  const supabase = createSupabaseClient();
+
+  const { data: product } = await supabase
+    .from("products")
+    .select("*")
+    .eq("public_slug", slug)
+    .eq("status", "published")
+    .single();
+
+  if (!product) return null;
+
+  const [{ data: materials }, { data: esg }, { data: certificates }] =
+    await Promise.all([
+      supabase.from("product_materials").select("*").eq("product_id", product.id),
+      supabase.from("product_esg_metrics").select("*").eq("product_id", product.id),
+      supabase.from("product_certificates").select("*").eq("product_id", product.id),
+    ]);
+
+  return {
+    product,
+    materials: materials || [],
+    esg: esg || [],
+    certificates: certificates || [],
+  };
+}
+
+export default async function PublicDppPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const data = await getData(params.slug);
+  if (!data) notFound();
+
+  const { product, materials, esg, certificates } = data;
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const dppUrl = `${site}/p/${product.public_slug}`;
+
+  return (
+    <main className="min-h-screen bg-white">
+      <header className="border-b border-slate-200">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
+          <Link href="/" className="font-bold">
+            GreenLean DPP
+          </Link>
+          <span className="rounded-full bg-green-50 px-3 py-1 text-sm font-semibold text-green-700">
+            Published / 已发布
+          </span>
+        </div>
+      </header>
+
+      <section className="mx-auto max-w-5xl px-6 py-12">
+        <div className="grid gap-8 lg:grid-cols-[1fr_220px]">
+          <div>
+            <p className="text-sm font-semibold text-brand-700">
+              {product.dpp_id}
+            </p>
+
+            <h1 className="mt-3 text-5xl font-black">{product.name}</h1>
+
+            <p className="mt-4 max-w-2xl text-slate-600">
+              {product.description}
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-3 text-sm">
+              <span className="rounded-full bg-slate-100 px-4 py-2">
+                SKU: {product.sku || "N/A"}
+              </span>
+              <span className="rounded-full bg-slate-100 px-4 py-2">
+                Brand / 品牌: {product.brand || "N/A"}
+              </span>
+              <span className="rounded-full bg-slate-100 px-4 py-2">
+                Category / 分类: {product.category || "N/A"}
+              </span>
+            </div>
+          </div>
+
+          <div className="card text-center">
+            <img
+              className="mx-auto h-40 w-40"
+              alt="DPP QR Code"
+              src={`/api/qr?url=${encodeURIComponent(dppUrl)}`}
+            />
+            <p className="mt-3 text-xs text-slate-500">
+              Scan to view this product passport / 扫码查看产品护照
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <div className="card">
+            <h2 className="font-bold">Materials / 材料</h2>
+            <div className="mt-4 space-y-3 text-sm text-slate-600">
+              {materials.map((m: any) => (
+                <p key={m.id}>
+                  {m.material_name} · {m.percentage || "-"}%
+                </p>
+              ))}
+              {!materials.length && <p>No material records yet / 暂无材料记录。</p>}
+            </div>
+          </div>
+
+          <div className="card">
+            <h2 className="font-bold">ESG / ESG 指标</h2>
+            <div className="mt-4 space-y-3 text-sm text-slate-600">
+              {esg.map((e: any) => (
+                <p key={e.id}>
+                  Carbon / 碳: {e.carbon_footprint || "-"} · Water / 水:{" "}
+                  {e.water_usage || "-"}
+                </p>
+              ))}
+              {!esg.length && <p>No ESG records yet / 暂无 ESG 记录。</p>}
+            </div>
+          </div>
+
+          <div className="card">
+            <h2 className="font-bold">Certificates / 证书</h2>
+            <div className="mt-4 space-y-3 text-sm text-slate-600">
+              {certificates.map((c: any) => (
+                <p key={c.id}>
+                  {c.certificate_name} · {c.verification_status || "pending"}
+                </p>
+              ))}
+              {!certificates.length && <p>No certificate records yet / 暂无证书记录。</p>}
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
