@@ -88,17 +88,17 @@ insert into public.product_traceability (
   product_id, event_type, event_name, event_name_zh, event_date, country, city,
   facility_name, facility_name_zh, transport_method, verification_status, notes, notes_zh
 )
-select id, 'material sourcing', 'Organic cotton yarn sourced', '采购有机棉纱线', '2026-03-18', 'China', 'Aksu',
+select id, 'material sourcing', 'Organic cotton yarn sourced', '采购有机棉纱线', '2026-03-18'::timestamp, 'China', 'Aksu',
   'Demo Organic Cotton Cooperative', '示例有机棉合作社', 'Truck', 'verified',
   'Supplier declaration and scope certificate checked.', '已核查供应商声明和范围证书。'
 from demo
 union all
-select id, 'manufacturing', 'Knitting, cutting and sewing', '织造、裁剪与缝制', '2026-04-22', 'China', 'Ningbo',
+select id, 'manufacturing', 'Knitting, cutting and sewing', '织造、裁剪与缝制', '2026-04-22'::timestamp, 'China', 'Ningbo',
   'Demo Garment Factory', '示例服装工厂', 'Internal transfer', 'verified',
   'Production batch record linked to SKU GL-TSHIRT-001.', '生产批次记录已关联 SKU GL-TSHIRT-001。'
 from demo
 union all
-select id, 'transport', 'Export shipment to EU warehouse', '出口运输至欧盟仓库', '2026-05-06', 'Germany', 'Hamburg',
+select id, 'transport', 'Export shipment to EU warehouse', '出口运输至欧盟仓库', '2026-05-06'::timestamp, 'Germany', 'Hamburg',
   'Demo EU Distribution Warehouse', '示例欧盟分拨仓', 'Sea freight + rail', 'pending',
   'Shipment data reserved for carrier API connection.', '运输数据预留给后续承运商 API 对接。'
 from demo;
@@ -142,12 +142,12 @@ insert into public.product_certificates (
   certificate_number, issuer, issue_date, expiry_date, certificate_url, verification_status
 )
 select id, 'GOTS Scope Certificate', 'GOTS 范围证书', 'Material', '材料认证',
-  'GOTS-DEMO-2026-001', 'Demo Certification Body', '2026-01-15', '2027-01-14',
+  'GOTS-DEMO-2026-001', 'Demo Certification Body', '2026-01-15'::date, '2027-01-14'::date,
   'https://example.com/gots-demo-certificate.pdf', 'verified'
 from demo
 union all
 select id, 'OEKO-TEX Standard 100', 'OEKO-TEX Standard 100', 'Chemical safety', '化学安全',
-  'OEKO-DEMO-2026-018', 'Demo Textile Testing Institute', '2026-02-01', '2027-01-31',
+  'OEKO-DEMO-2026-018', 'Demo Textile Testing Institute', '2026-02-01'::date, '2027-01-31'::date,
   'https://example.com/oeko-tex-demo-certificate.pdf', 'verified'
 from demo;
 
