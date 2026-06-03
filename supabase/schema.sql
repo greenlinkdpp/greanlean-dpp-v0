@@ -26,7 +26,6 @@ create table if not exists public.products (
   main_image text,
   name_zh text,
   description_zh text,
-  subcategory text,
   season text,
   care_instructions text,
   care_instructions_zh text,

@@ -15,24 +15,24 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const t = locale === "zh"
       ? {
         overview: "后台首页",
-        products: "产品管理",
-        suppliers: "供应商",
+        products: "产品中心",
+        suppliers: "供应商库",
         importData: "批量导入",
-        materials: "材料",
-        esg: "ESG 指标",
-        certificates: "证书",
-        workspace: "工作台",
+        materials: "材料快录",
+        esg: "ESG 快录",
+        certificates: "证书快录",
+        workspace: "DPP 工作流",
         signOut: "退出登录"
       }
     : {
         overview: "Dashboard",
-        products: "Products",
-        suppliers: "Suppliers",
+        products: "Product Hub",
+        suppliers: "Supplier Library",
         importData: "Bulk Import",
-        materials: "Materials",
-        esg: "ESG",
-        certificates: "Certificates",
-        workspace: "Workspace",
+        materials: "Materials Quick Entry",
+        esg: "ESG Quick Entry",
+        certificates: "Certificate Quick Entry",
+        workspace: "DPP Workflow",
         signOut: "Sign out"
       };
 
@@ -41,9 +41,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     [t.products, "/dashboard/products"],
     [t.importData, "/dashboard/import"],
     [t.suppliers, "/dashboard/suppliers"],
-    [t.materials, "/dashboard/materials"],
-    [t.esg, "/dashboard/esg"],
-    [t.certificates, "/dashboard/certificates"],
   ];
 
   function withLocale(href: string) {

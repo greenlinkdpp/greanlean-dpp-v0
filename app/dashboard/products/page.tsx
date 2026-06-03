@@ -8,12 +8,12 @@ export default function ProductsPage() {
   const t =
     locale === "zh"
       ? {
-          title: "产品管理",
-          subtitle: "创建产品护照并发布公开 DPP 页面。",
+          title: "产品中心",
+          subtitle: "先创建产品，再进入产品详情补充材料、追溯、ESG、证书和消费者透明化数据。",
         }
       : {
-          title: "Products",
-          subtitle: "Create product passports and publish public DPP pages.",
+          title: "Product Hub",
+          subtitle: "Create a product first, then open its detail page to complete materials, traceability, ESG, certificates and consumer transparency.",
         };
 
   return (
