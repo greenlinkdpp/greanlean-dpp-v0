@@ -17,7 +17,6 @@ export default function Home() {
             "greanlean 帮助纺织、WPC 复合地板、五金金属配件等出口企业采集产品数据、生成 DPP 页面、管理证书与追溯信息，并为未来欧盟系统对接预留数据基础。",
           primaryCta: "获取 DPP 评估",
           secondaryCta: "查看演示 DPP",
-          importCta: "体验批量导入",
           heroStat1: "6 类核心数据",
           heroStat1Desc: "产品、材料、追溯、ESG、证书、消费者透明化",
           heroStat2: "CSV / Excel 路线",
@@ -71,7 +70,6 @@ export default function Home() {
             "greanlean helps textile, WPC flooring, metal hardware and other export manufacturers collect product data, generate DPP pages, manage certificates and traceability, and prepare the data foundation for future EU system connections.",
           primaryCta: "Get DPP assessment",
           secondaryCta: "View demo DPP",
-          importCta: "Try bulk import",
           heroStat1: "6 data modules",
           heroStat1Desc: "Product, materials, traceability, ESG, certificates and consumer transparency",
           heroStat2: "CSV / Excel path",
@@ -180,9 +178,6 @@ export default function Home() {
                   {t.secondaryCta}
                 </Link>
 
-                <Link href="/dashboard/import?demo=1" className="btn-secondary">
-                  {t.importCta}
-                </Link>
               </div>
             </div>
 

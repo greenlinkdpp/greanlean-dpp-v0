@@ -1,5 +1,109 @@
 -- greanlean DPP optimization patch. Safe to run multiple times.
 
+create extension if not exists "pgcrypto";
+
+create table if not exists public.product_bom (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid references public.products(id) on delete cascade,
+  component_name text not null,
+  component_name_zh text,
+  component_type text,
+  component_type_zh text,
+  quantity numeric,
+  unit text,
+  position text,
+  created_at timestamptz default now()
+);
+
+create table if not exists public.product_traceability (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid references public.products(id) on delete cascade,
+  event_type text,
+  event_name text not null,
+  event_name_zh text,
+  event_date timestamptz,
+  country text,
+  city text,
+  facility_name text,
+  facility_name_zh text,
+  supplier_name text,
+  transport_method text,
+  verification_status text default 'pending',
+  notes text,
+  notes_zh text,
+  created_at timestamptz default now()
+);
+
+create table if not exists public.product_circularity (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid references public.products(id) on delete cascade,
+  repairability_score numeric,
+  recyclability_score numeric,
+  take_back_program text,
+  resale_supported boolean default false,
+  remanufacturing_supported boolean default false,
+  disassembly_guide text,
+  recycling_instructions text,
+  end_of_life_info text,
+  created_at timestamptz default now()
+);
+
+create table if not exists public.product_consumer_transparency (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid references public.products(id) on delete cascade,
+  brand_story text,
+  brand_story_zh text,
+  sustainability_story text,
+  sustainability_story_zh text,
+  consumer_notice text,
+  consumer_notice_zh text,
+  marketing_content text,
+  marketing_content_zh text,
+  packaging_info text,
+  created_at timestamptz default now()
+);
+
+create table if not exists public.product_digital_identity (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid references public.products(id) on delete cascade,
+  product_uuid text,
+  gtin text,
+  style_id text,
+  batch_id text,
+  serial_id text,
+  digital_link_url text,
+  qr_code_id text,
+  nfc_id text,
+  rfid_epc text,
+  created_at timestamptz default now()
+);
+
+create table if not exists public.product_documents (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid references public.products(id) on delete cascade,
+  document_name text not null,
+  document_type text,
+  file_url text,
+  file_size text,
+  language text,
+  uploaded_by text,
+  version text,
+  created_at timestamptz default now()
+);
+
+create table if not exists public.product_data_governance (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid references public.products(id) on delete cascade,
+  data_source text,
+  data_owner text,
+  audit_status text,
+  data_quality_score numeric,
+  created_at timestamptz default now()
+);
+
+alter table public.leads
+add column if not exists status text default 'new';
+
 alter table public.products
 add column if not exists name_zh text,
 add column if not exists description_zh text,
@@ -40,7 +144,8 @@ alter table public.product_consumer_transparency
 add column if not exists brand_story_zh text,
 add column if not exists sustainability_story_zh text,
 add column if not exists consumer_notice_zh text,
-add column if not exists marketing_content_zh text;
+add column if not exists marketing_content_zh text,
+add column if not exists packaging_info text;
 
 alter table public.product_digital_identity
   drop constraint if exists product_digital_identity_product_id_fkey;
