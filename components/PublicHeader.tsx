@@ -30,11 +30,11 @@ export function PublicHeader() {
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
         <Link href={`/${langQuery}`} className="flex items-center gap-3 font-bold">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white">
+          <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white shadow-sm">
             G
           </span>
 
-          <span>greanlean</span>
+          <span className="brand-wordmark">GREANLEAN</span>
         </Link>
 
         <nav className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
