@@ -8,6 +8,20 @@ import { useLanguage } from "@/components/LanguageProvider";
 
 type Locale = "en" | "zh";
 type Props = { data: any; dppUrl: string };
+type IconName =
+  | "box"
+  | "layers"
+  | "route"
+  | "leaf"
+  | "certificate"
+  | "eye"
+  | "qr"
+  | "tag"
+  | "recycle"
+  | "carbon"
+  | "shield"
+  | "file"
+  | "info";
 
 function valueOrDash(value: any, locale: Locale = "en") {
   if (value === null || value === undefined || value === "") return "-";
@@ -65,12 +79,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           qrText: "此二维码链接到当前公开 DPP 页面。",
           productImage: "产品图片",
           overview: "产品概览",
-          productIdentity: "1. 产品基本信息",
-          materialSource: "2. 材料组成与来源",
-          traceability: "3. 生产与运输追溯",
-          esg: "4. ESG 与循环性",
-          certificates: "5. 认证证书",
-          consumer: "6. 消费者透明化",
+          productIdentity: "产品基本信息",
+          materialSource: "材料组成与来源",
+          traceability: "生产与运输追溯",
+          esg: "ESG 与循环性",
+          certificates: "认证证书",
+          consumer: "消费者透明化",
           evidence: "证据文件与数据治理",
           noData: "暂无数据",
           pendingData: "该模块已预留，等待企业补充数据。",
@@ -145,12 +159,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           qrText: "This QR code links to the current public DPP page.",
           productImage: "Product image",
           overview: "Product overview",
-          productIdentity: "1. Product basics",
-          materialSource: "2. Materials and sources",
-          traceability: "3. Production and transport traceability",
-          esg: "4. ESG and circularity",
-          certificates: "5. Certificates",
-          consumer: "6. Consumer transparency",
+          productIdentity: "Product basics",
+          materialSource: "Materials and sources",
+          traceability: "Production and transport traceability",
+          esg: "ESG and circularity",
+          certificates: "Certificates",
+          consumer: "Consumer transparency",
           evidence: "Evidence files and data governance",
           noData: "No data yet",
           pendingData: "This module is reserved and awaiting company data.",
@@ -268,19 +282,19 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.digitalLink, firstIdentity?.digital_link_url],
   ];
 
-  const summaryMetrics: Array<[string, any]> = [
-    [t.materialCount, materials.length],
-    [t.recycled, totalRecycled === null ? "0%" : `${totalRecycled}%`],
-    [t.carbon, latestEsg?.carbon_footprint ? `${latestEsg.carbon_footprint} kg CO2e` : "0 kg CO2e"],
-    [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`],
+  const summaryMetrics: Array<[string, any, IconName]> = [
+    [t.materialCount, materials.length, "layers"],
+    [t.recycled, totalRecycled === null ? "0%" : `${totalRecycled}%`, "recycle"],
+    [t.carbon, latestEsg?.carbon_footprint ? `${latestEsg.carbon_footprint} kg CO2e` : "0 kg CO2e", "carbon"],
+    [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
   ];
-  const navItems = [
-    ["#identity", t.productIdentity],
-    ["#materials", t.materialSource],
-    ["#traceability", t.traceability],
-    ["#esg", t.esg],
-    ["#certificates", t.certificates],
-    ["#consumer", t.consumer],
+  const navItems: Array<[string, string, IconName]> = [
+    ["#identity", t.productIdentity, "box"],
+    ["#materials", t.materialSource, "layers"],
+    ["#traceability", t.traceability, "route"],
+    ["#esg", t.esg, "leaf"],
+    ["#certificates", t.certificates, "certificate"],
+    ["#consumer", t.consumer, "eye"],
   ];
 
   return (
@@ -368,20 +382,21 @@ export function PublicDppClient({ data, dppUrl }: Props) {
 
       <section className="relative z-10 mx-auto -mt-6 max-w-7xl px-6">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {summaryMetrics.map(([label, value]) => (
-            <Metric key={label} label={label} value={value} locale={locale} />
+          {summaryMetrics.map(([label, value, icon]) => (
+            <Metric key={label} label={label} value={value} locale={locale} icon={icon} />
           ))}
         </div>
       </section>
 
       <nav className="sticky top-[73px] z-30 border-b border-slate-200/80 bg-[#f7faf8]/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-6 py-3">
-          {navItems.map(([href, label]) => (
+          {navItems.map(([href, label, icon]) => (
             <a
               key={href}
               href={href}
-              className="shrink-0 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-200 hover:text-brand-700"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-200 hover:text-brand-700"
             >
+              <Icon name={icon} className="h-4 w-4 text-brand-700" />
               {label}
             </a>
           ))}
@@ -389,21 +404,21 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       </nav>
 
       <div className="mx-auto max-w-7xl px-6 py-12">
-        <Section id="identity" title={t.productIdentity} eyebrow={t.overview}>
+        <Section id="identity" title={t.productIdentity} eyebrow={t.overview} icon="box">
           <div className="grid gap-4 lg:grid-cols-2">
             <InfoGrid items={productDetails} locale={locale} />
             <InfoGrid items={identityDetails} locale={locale} />
           </div>
         </Section>
 
-        <Section id="materials" title={t.materialSource}>
+        <Section id="materials" title={t.materialSource} icon="layers">
           {materials.length || bom.length ? (
             <div className="grid gap-4 lg:grid-cols-2">
               {materials.map((material: any) => (
                 <MaterialCard key={material.id} item={material} locale={locale} t={t} />
               ))}
               {bom.map((component: any) => (
-                <DataCard key={component.id} title={pick(component, locale, "component_name", "component_name_zh")}>
+                <DataCard key={component.id} title={pick(component, locale, "component_name", "component_name_zh")} icon="tag">
                   <InfoGrid
                     items={[
                       [t.component, pick(component, locale, "component_type", "component_type_zh")],
@@ -420,7 +435,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>
 
-        <Section id="traceability" title={t.traceability}>
+        <Section id="traceability" title={t.traceability} icon="route">
           {traceability.length ? (
             <div className="space-y-4">
               {traceability.map((event: any, index: number) => (
@@ -446,7 +461,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>
 
-        <Section id="esg" title={t.esg}>
+        <Section id="esg" title={t.esg} icon="leaf">
           {latestEsg || firstCircularity ? (
             <div className="grid gap-4 md:grid-cols-2">
               <InfoGrid
@@ -478,11 +493,11 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>
 
-        <Section id="certificates" title={t.certificates}>
+        <Section id="certificates" title={t.certificates} icon="certificate">
           {certificates.length ? (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {certificates.map((certificate: any) => (
-                <DataCard key={certificate.id} title={pick(certificate, locale, "certificate_name", "certificate_name_zh")}>
+                <DataCard key={certificate.id} title={pick(certificate, locale, "certificate_name", "certificate_name_zh")} icon="certificate">
                   <div className="mb-4">
                     <StatusBadge value={certificate.verification_status} locale={locale} verified={t.verified} pending={t.pending} />
                   </div>
@@ -508,7 +523,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>
 
-        <Section id="consumer" title={t.consumer}>
+        <Section id="consumer" title={t.consumer} icon="eye">
           {hasConsumerData ? (
             <div className="grid gap-4 lg:grid-cols-2">
               <InfoGrid
@@ -535,12 +550,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </Section>
 
         {(documents.length || firstGovernance) && (
-          <Section id="evidence" title={t.evidence}>
+          <Section id="evidence" title={t.evidence} icon="file">
             <div className="grid gap-4 lg:grid-cols-2">
               {documents.length ? (
                 <div className="space-y-3">
                   {documents.map((document: any) => (
-                    <DataCard key={document.id} title={document.document_name || t.documentName}>
+                    <DataCard key={document.id} title={document.document_name || t.documentName} icon="file">
                       <InfoGrid
                         items={[
                           ["Type", document.document_type],
@@ -584,6 +599,115 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   );
 }
 
+function Icon({ name, className = "h-5 w-5" }: { name: IconName; className?: string }) {
+  const common = {
+    fill: "none",
+    stroke: "currentColor",
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    strokeWidth: 2,
+  };
+
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className={className}>
+      {name === "box" && (
+        <>
+          <path {...common} d="M21 8.5 12 3 3 8.5l9 5.5 9-5.5Z" />
+          <path {...common} d="M3 8.5V16l9 5 9-5V8.5" />
+          <path {...common} d="M12 14v7" />
+        </>
+      )}
+      {name === "layers" && (
+        <>
+          <path {...common} d="m12 3 9 5-9 5-9-5 9-5Z" />
+          <path {...common} d="m3 13 9 5 9-5" />
+          <path {...common} d="m3 18 9 5 9-5" />
+        </>
+      )}
+      {name === "route" && (
+        <>
+          <path {...common} d="M6 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+          <path {...common} d="M18 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+          <path {...common} d="M8.5 14.5 15.5 9.5" />
+          <path {...common} d="M8 18h8a3 3 0 0 0 0-6H9" />
+        </>
+      )}
+      {name === "leaf" && (
+        <>
+          <path {...common} d="M20 4c-8 0-13 4.5-13 11a5 5 0 0 0 5 5c6.5 0 8-8 8-16Z" />
+          <path {...common} d="M4 20c3-6 7-9 12-11" />
+        </>
+      )}
+      {name === "certificate" && (
+        <>
+          <path {...common} d="M6 3h12v18l-6-3-6 3V3Z" />
+          <path {...common} d="M9 8h6" />
+          <path {...common} d="M9 12h6" />
+        </>
+      )}
+      {name === "eye" && (
+        <>
+          <path {...common} d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+          <path {...common} d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+        </>
+      )}
+      {name === "qr" && (
+        <>
+          <path {...common} d="M4 4h6v6H4V4Z" />
+          <path {...common} d="M14 4h6v6h-6V4Z" />
+          <path {...common} d="M4 14h6v6H4v-6Z" />
+          <path {...common} d="M14 14h2v2h-2v-2Z" />
+          <path {...common} d="M18 14h2v6h-4v-2h2v-4Z" />
+        </>
+      )}
+      {name === "tag" && (
+        <>
+          <path {...common} d="M20 13 11 22 2 13V4h9l9 9Z" />
+          <path {...common} d="M7.5 8.5h.01" />
+        </>
+      )}
+      {name === "recycle" && (
+        <>
+          <path {...common} d="m7 7 2-4 2 4" />
+          <path {...common} d="M9 3c3 0 5 1.5 6 4" />
+          <path {...common} d="m17 10 4 1-3 3" />
+          <path {...common} d="M21 11c0 3-1.5 5-4 6" />
+          <path {...common} d="m7 17-1 4-3-3" />
+          <path {...common} d="M6 21c-2-2-2.5-4.5-1-7" />
+        </>
+      )}
+      {name === "carbon" && (
+        <>
+          <path {...common} d="M7 7a5 5 0 0 1 10 0c0 4-5 9-5 9S7 11 7 7Z" />
+          <path {...common} d="M9 19h6" />
+          <path {...common} d="M10 22h4" />
+        </>
+      )}
+      {name === "shield" && (
+        <>
+          <path {...common} d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z" />
+          <path {...common} d="m8.5 12 2.5 2.5L16 9" />
+        </>
+      )}
+      {name === "file" && (
+        <>
+          <path {...common} d="M6 3h8l4 4v14H6V3Z" />
+          <path {...common} d="M14 3v5h5" />
+          <path {...common} d="M9 13h6" />
+          <path {...common} d="M9 17h4" />
+        </>
+      )}
+      {name === "info" && (
+        <>
+          <path {...common} d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" />
+          <path {...common} d="M12 10v6" />
+          <path {...common} d="M12 7h.01" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 function Badge({ children, tone = "light" }: { children: ReactNode; tone?: "light" | "dark" }) {
   const className =
     tone === "dark"
@@ -592,29 +716,60 @@ function Badge({ children, tone = "light" }: { children: ReactNode; tone?: "ligh
   return <span className={className}>{children}</span>;
 }
 
-function Metric({ label, value, locale }: { label: string; value: any; locale: Locale }) {
+function Metric({ label, value, locale, icon }: { label: string; value: any; locale: Locale; icon: IconName }) {
   return (
     <div className="dpp-fade rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
-      <p className="text-sm font-semibold text-slate-500">{label}</p>
-      <p className="mt-2 text-3xl font-black text-slate-950">{valueOrDash(value, locale)}</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-sm font-semibold text-slate-500">{label}</p>
+          <p className="mt-2 text-3xl font-black text-slate-950">{valueOrDash(value, locale)}</p>
+        </div>
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
+          <Icon name={icon} className="h-5 w-5" />
+        </span>
+      </div>
     </div>
   );
 }
 
-function Section({ id, title, eyebrow, children }: { id: string; title: string; eyebrow?: string; children: ReactNode }) {
+function Section({
+  id,
+  title,
+  eyebrow,
+  icon,
+  children,
+}: {
+  id: string;
+  title: string;
+  eyebrow?: string;
+  icon: IconName;
+  children: ReactNode;
+}) {
   return (
     <section id={id} className="dpp-fade scroll-mt-36 border-t border-slate-200 py-10 first:border-t-0 first:pt-0 lg:py-14">
-      {eyebrow && <p className="text-sm font-bold uppercase text-brand-700">{eyebrow}</p>}
-      <h2 className={eyebrow ? "mt-2 text-3xl font-black text-slate-950" : "text-3xl font-black text-slate-950"}>{title}</h2>
+      <div className="flex items-start gap-4">
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-slate-950 text-white shadow-sm">
+          <Icon name={icon} className="h-6 w-6" />
+        </span>
+        <div>
+          {eyebrow && <p className="text-sm font-bold uppercase text-brand-700">{eyebrow}</p>}
+          <h2 className={eyebrow ? "mt-1 text-3xl font-black text-slate-950" : "text-3xl font-black text-slate-950"}>{title}</h2>
+        </div>
+      </div>
       <div className="mt-7">{children}</div>
     </section>
   );
 }
 
-function DataCard({ title, children }: { title: string; children: ReactNode }) {
+function DataCard({ title, icon = "info", children }: { title: string; icon?: IconName; children: ReactNode }) {
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
-      <h3 className="font-black text-slate-950">{title}</h3>
+      <div className="flex items-center gap-3">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
+          <Icon name={icon} className="h-5 w-5" />
+        </span>
+        <h3 className="font-black text-slate-950">{title}</h3>
+      </div>
       <div className="mt-4">{children}</div>
     </article>
   );
@@ -634,12 +789,17 @@ function Info({
   const className =
     variant === "dark"
       ? "rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur"
-      : "rounded-lg border border-slate-200 bg-white p-4 shadow-sm";
+      : "rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition hover:border-brand-100 hover:bg-brand-50/20";
   const labelClass = variant === "dark" ? "text-xs font-bold uppercase text-brand-100" : "text-xs font-bold uppercase text-slate-500";
   const valueClass = variant === "dark" ? "mt-2 break-words text-sm font-semibold leading-6 text-white" : "mt-2 break-words text-sm font-semibold leading-6 text-slate-950";
   return (
     <div className={className}>
-      <p className={labelClass}>{label}</p>
+      <div className="flex items-center gap-2">
+        <span className={variant === "dark" ? "grid h-5 w-5 place-items-center rounded bg-white/10 text-brand-100" : "grid h-5 w-5 place-items-center rounded bg-slate-100 text-brand-700"}>
+          <Icon name="info" className="h-3.5 w-3.5" />
+        </span>
+        <p className={labelClass}>{label}</p>
+      </div>
       <p className={valueClass}>{valueOrDash(value, locale)}</p>
     </div>
   );
@@ -662,7 +822,7 @@ function Empty({ text }: { text: string }) {
 function MaterialCard({ item, locale, t }: { item: any; locale: Locale; t: any }) {
   const pct = Number(item.percentage || 0);
   return (
-    <DataCard title={pick(item, locale, "material_name", "material_name_zh")}>
+    <DataCard title={pick(item, locale, "material_name", "material_name_zh")} icon="layers">
       <InfoGrid
         items={[
           [t.materialType, pick(item, locale, "material_type", "material_type_zh")],
@@ -695,7 +855,9 @@ function TimelineItem({
 }) {
   return (
     <article className="grid gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg sm:grid-cols-[48px_1fr]">
-      <div className="grid h-12 w-12 place-items-center rounded-lg bg-slate-950 text-sm font-black text-white shadow-sm">{index}</div>
+      <div className="grid h-12 w-12 place-items-center rounded-lg bg-slate-950 text-white shadow-sm">
+        <Icon name="route" className="h-6 w-6" />
+      </div>
       <div>
         <h3 className="font-black text-slate-950">{title}</h3>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
