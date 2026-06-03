@@ -79,7 +79,7 @@ const modules: ImportModule[] = [
       subcategory: "Apparel",
       description_en: "Demo apparel product for EU DPP.",
       description_zh: "用于欧盟 DPP 的示例服装产品。",
-      main_image_url: "https://example.com/product.jpg",
+      main_image_url: "/images/demo-organic-cotton-tshirt.png",
       batch_id: "BATCH-2026-001",
       production_date: "2026-05-20",
       origin_country: "China",

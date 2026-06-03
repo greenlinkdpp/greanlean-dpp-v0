@@ -47,6 +47,7 @@ function withDemoDppData(data: any) {
     category: data.product.category || "Textile & Apparel",
     subcategory: data.product.subcategory || "T-Shirt",
     season: data.product.season || "2026 Core Collection",
+    main_image: data.product.main_image || "/images/demo-organic-cotton-tshirt.png",
     description:
       data.product.description ||
       "A demo digital product passport for sustainable apparel, covering identity, materials, production traceability, ESG metrics, certificates and consumer transparency.",

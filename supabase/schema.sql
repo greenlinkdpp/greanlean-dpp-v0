@@ -282,7 +282,7 @@ create policy "Public can read governance" on public.product_data_governance for
 
 insert into public.products (
   name, name_zh, sku, brand, category, subcategory, season, description, description_zh,
-  status, dpp_id, public_slug, care_instructions, care_instructions_zh,
+  status, dpp_id, public_slug, main_image, care_instructions, care_instructions_zh,
   repair_instructions, repair_instructions_zh, end_of_life_instructions, end_of_life_instructions_zh
 )
 values (
@@ -298,6 +298,7 @@ values (
   'published',
   'DPP-DEMO-001',
   'demo-organic-cotton-tshirt',
+  '/images/demo-organic-cotton-tshirt.png',
   'Machine wash cold with similar colors. Do not bleach. Line dry where possible to reduce energy use.',
   '建议冷水机洗并与相近颜色衣物同洗。不可漂白，优先自然晾干以减少能源消耗。',
   'Minor seam damage can be repaired with standard cotton thread. Keep spare buttons and repair before disposal.',
@@ -317,6 +318,7 @@ on conflict (public_slug) do update set
   description_zh = excluded.description_zh,
   status = excluded.status,
   dpp_id = excluded.dpp_id,
+  main_image = excluded.main_image,
   care_instructions = excluded.care_instructions,
   care_instructions_zh = excluded.care_instructions_zh,
   repair_instructions = excluded.repair_instructions,
