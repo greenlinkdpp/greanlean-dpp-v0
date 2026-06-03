@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/LanguageProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { createSupabaseClient } from "@/lib/supabase";
 
 export default function LoginPage() {
   const { locale } = useLanguage();
+  const router = useRouter();
 
   const t =
     locale === "zh"
@@ -18,6 +20,7 @@ export default function LoginPage() {
           password: "密码",
           submit: "登录",
           submitting: "登录中...",
+          failed: "登录失败：",
           note: "当前阶段用于总管理员和早期客户账号。",
           hub: "DPP 数据中心",
           importFlow: "批量导入流程",
@@ -31,6 +34,7 @@ export default function LoginPage() {
           password: "Password",
           submit: "Login",
           submitting: "Logging in...",
+          failed: "Login failed: ",
           note: "For admin and early customer accounts in the current phase.",
           hub: "DPP data hub",
           importFlow: "Bulk import workflow",
@@ -51,15 +55,29 @@ export default function LoginPage() {
     const email = String(form.get("email") || "").trim();
     const password = String(form.get("password") || "").trim();
 
-    const { error } = await createSupabaseClient().auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { error } = await createSupabaseClient().auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) setMsg(error.message);
-    else setMsg(null);
+      if (error) {
+        setMsg(t.failed + error.message);
+        return;
+      }
 
-    setLoading(false);
+      router.push(`/dashboard?lang=${locale}`);
+      router.refresh();
+    } catch (error) {
+      setMsg(
+        t.failed +
+          (error instanceof Error && error.message
+            ? error.message
+            : "Please try again.")
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
