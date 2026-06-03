@@ -1,4 +1,4 @@
-# GreenLean DPP v0
+# greanlean DPP v0
 
 技术栈：Next.js / React / Tailwind CSS / Headless UI / Supabase / Vercel。
 

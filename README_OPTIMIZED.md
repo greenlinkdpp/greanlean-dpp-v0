@@ -1,4 +1,4 @@
-# GreenLean DPP Optimized Version
+# greanlean DPP Optimized Version
 
 Optimized for the current Supabase database schema.
 
@@ -38,6 +38,6 @@ http://localhost:3000/p/demo-organic-cotton-tshirt
 
 ```bash
 git add .
-git commit -m "Optimize GreenLean DPP system"
+git commit -m "Optimize greanlean DPP system"
 git push
 ```

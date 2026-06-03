@@ -11,7 +11,7 @@ export default function LoginPage() {
   const t =
     locale === "zh"
       ? {
-          badge: "GreenLean DPP",
+          badge: "greanlean DPP",
           title: "登录 DPP 工作台",
           subtitle: "管理产品护照、批量导入数据、发布公开 DPP 页面。",
           email: "邮箱",
@@ -24,7 +24,7 @@ export default function LoginPage() {
           publish: "公开产品护照发布",
         }
       : {
-          badge: "GreenLean DPP",
+          badge: "greanlean DPP",
           title: "Login to DPP Workspace",
           subtitle: "Manage product passports, bulk import data and publish public DPP pages.",
           email: "Email",

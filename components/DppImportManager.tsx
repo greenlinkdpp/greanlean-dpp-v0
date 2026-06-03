@@ -74,7 +74,7 @@ const modules: ImportModule[] = [
       sku: "GL-TEX-001",
       product_name_en: "Organic Cotton T-Shirt",
       product_name_zh: "有机棉 T 恤",
-      brand: "GreenLean",
+      brand: "greanlean",
       category: "Textile",
       subcategory: "Apparel",
       description_en: "Demo apparel product for EU DPP.",
@@ -187,7 +187,7 @@ const modules: ImportModule[] = [
       recyclability_score: 75,
       repairability_score: 60,
       methodology: "Internal LCA estimate",
-      verified_by: "GreenLean review",
+      verified_by: "greanlean review",
     },
   },
   {

@@ -13,7 +13,7 @@ export function LeadForm() {
           name: "姓名 / 称呼",
           namePlaceholder: "例如：David",
           company: "公司名称",
-          companyPlaceholder: "例如：GreenLean",
+          companyPlaceholder: "例如：greanlean",
           contact: "联系方式",
           contactPlaceholder: "手机号 / 邮箱 / WhatsApp / 微信",
           industry: "行业",
@@ -30,12 +30,13 @@ export function LeadForm() {
           required: "请填写姓名和联系方式。",
           success: "提交成功，我们会尽快联系你。",
           failed: "提交失败：",
+          timeout: "提交超时，请稍后重试或直接联系我们。",
         }
       : {
           name: "Name",
           namePlaceholder: "e.g. David",
           company: "Company",
-          companyPlaceholder: "e.g. GreenLean",
+          companyPlaceholder: "e.g. greanlean",
           contact: "Contact",
           contactPlaceholder: "Phone / Email / WhatsApp / WeChat",
           industry: "Industry",
@@ -53,6 +54,7 @@ export function LeadForm() {
           required: "Please enter your name and contact information.",
           success: "Submitted. We will contact you soon.",
           failed: "Submission failed: ",
+          timeout: "Submission timed out. Please try again or contact us directly.",
         };
 
   const [loading, setLoading] = useState(false);
@@ -63,13 +65,11 @@ export function LeadForm() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setLoading(true);
+    const formEl = event.currentTarget;
+    const form = new FormData(formEl);
     setMsg(null);
 
-    const form = new FormData(event.currentTarget);
-
     if (String(form.get("website") || "").trim()) {
-      setLoading(false);
       return;
     }
 
@@ -87,27 +87,44 @@ export function LeadForm() {
         type: "err",
         text: t.required,
       });
-      setLoading(false);
       return;
     }
 
-    const { error } = await createSupabaseClient().from("leads").insert(payload);
+    setLoading(true);
+    setMsg(null);
 
-    if (error) {
+    try {
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        window.setTimeout(() => reject(new Error(t.timeout)), 12000);
+      });
+      const insertPromise = createSupabaseClient().from("leads").insert(payload);
+      const result = (await Promise.race([insertPromise, timeoutPromise])) as {
+        error: { message?: string } | null;
+      };
+
+      if (result.error) {
+        setMsg({
+          type: "err",
+          text: t.failed + (result.error.message || t.timeout),
+        });
+      } else {
+        formEl.reset();
+
+        setMsg({
+          type: "ok",
+          text: t.success,
+        });
+      }
+    } catch (error) {
       setMsg({
         type: "err",
-        text: t.failed + error.message,
+        text:
+          t.failed +
+          (error instanceof Error && error.message ? error.message : t.timeout),
       });
-    } else {
-      event.currentTarget.reset();
-
-      setMsg({
-        type: "ok",
-        text: t.success,
-      });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }
 
   return (

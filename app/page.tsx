@@ -14,7 +14,7 @@ export default function Home() {
           badge: "面向中国出口企业的欧盟 DPP 服务商",
           title: "让产品数据成为可展示、可追溯、可对接的 DPP。",
           subtitle:
-            "GreenLean 帮助纺织、WPC 复合地板、五金金属配件等出口企业采集产品数据、生成 DPP 页面、管理证书与追溯信息，并为未来欧盟系统对接预留数据基础。",
+            "greanlean 帮助纺织、WPC 复合地板、五金金属配件等出口企业采集产品数据、生成 DPP 页面、管理证书与追溯信息，并为未来欧盟系统对接预留数据基础。",
           primaryCta: "获取 DPP 评估",
           secondaryCta: "查看演示 DPP",
           importCta: "体验批量导入",
@@ -59,7 +59,7 @@ export default function Home() {
           workflow5: "为后续欧盟系统对接保留 API 和数据结构",
           readinessTitle: "为未来欧盟 DPP 对接做准备",
           readinessSubtitle:
-            "目前最重要的是先把数据做成标准化、可追溯、可导出、可权限控制的结构。GreenLean 的系统会围绕唯一产品标识、结构化字段、证据文件、版本记录和公开访问链接逐步完善。",
+            "目前最重要的是先把数据做成标准化、可追溯、可导出、可权限控制的结构。greanlean 的系统会围绕唯一产品标识、结构化字段、证据文件、版本记录和公开访问链接逐步完善。",
           contactTitle: "开始你的 DPP 准备度评估",
           contactSubtitle:
             "告诉我们你的产品类别、出口市场和已有数据情况，我们会帮你判断第一版 DPP 应该先做哪些字段。",
@@ -68,7 +68,7 @@ export default function Home() {
           badge: "EU DPP services for Chinese exporters",
           title: "Turn product data into digital passports that are visible, traceable and ready to connect.",
           subtitle:
-            "GreenLean helps textile, WPC flooring, metal hardware and other export manufacturers collect product data, generate DPP pages, manage certificates and traceability, and prepare the data foundation for future EU system connections.",
+            "greanlean helps textile, WPC flooring, metal hardware and other export manufacturers collect product data, generate DPP pages, manage certificates and traceability, and prepare the data foundation for future EU system connections.",
           primaryCta: "Get DPP assessment",
           secondaryCta: "View demo DPP",
           importCta: "Try bulk import",
@@ -113,7 +113,7 @@ export default function Home() {
           workflow5: "Reserve APIs and data structures for future EU system connections",
           readinessTitle: "Preparing for future EU DPP connections",
           readinessSubtitle:
-            "The practical first step is standardized, traceable, exportable and permission-aware data. GreenLean is built around unique product identifiers, structured fields, evidence files, version records and public access links.",
+            "The practical first step is standardized, traceable, exportable and permission-aware data. greanlean is built around unique product identifiers, structured fields, evidence files, version records and public access links.",
           contactTitle: "Start your DPP readiness assessment",
           contactSubtitle:
             "Tell us your product category, export markets and current data status. We will help identify which fields your first DPP should cover.",

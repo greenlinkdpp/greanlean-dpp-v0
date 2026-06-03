@@ -119,5 +119,5 @@ drop policy if exists "Public can read certificates" on public.product_certifica
 create policy "Public can read certificates" on public.product_certificates for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status = 'published'));
 
 insert into public.products (name, sku, brand, category, description, status, dpp_id, public_slug)
-values ('Demo Organic Cotton T-Shirt','GL-TSHIRT-001','GreenLean','Apparel','A demo digital product passport for sustainable apparel.','published','DPP-DEMO-001','demo-organic-cotton-tshirt')
+values ('Demo Organic Cotton T-Shirt','GL-TSHIRT-001','greanlean','Apparel','A demo digital product passport for sustainable apparel.','published','DPP-DEMO-001','demo-organic-cotton-tshirt')
 on conflict (public_slug) do nothing;

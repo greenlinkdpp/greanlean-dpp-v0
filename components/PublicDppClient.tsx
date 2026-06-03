@@ -56,7 +56,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   const t =
     locale === "zh"
       ? {
-          brand: "GreenLean DPP",
+          brand: "greanlean DPP",
           published: "已发布",
           passport: "数字产品护照",
           verified: "已验证",
@@ -138,11 +138,11 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           moduleStatus: "模块状态",
           ready: "已录入",
           reserved: "待补充",
-          footerTitle: "由 GreenLean DPP 提供支持",
+          footerTitle: "由 greanlean DPP 提供支持",
           footerText: "该页面用于披露产品身份、材料来源、供应链追溯、ESG、证书和消费者透明化信息。",
         }
       : {
-          brand: "GreenLean DPP",
+          brand: "greanlean DPP",
           published: "Published",
           passport: "Digital Product Passport",
           verified: "Verified",
@@ -224,7 +224,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           moduleStatus: "Module status",
           ready: "Added",
           reserved: "Reserved",
-          footerTitle: "Powered by GreenLean DPP",
+          footerTitle: "Powered by greanlean DPP",
           footerText:
             "This page discloses product identity, material sources, supply-chain traceability, ESG, certificates and consumer transparency information.",
         };

@@ -25,19 +25,16 @@ export function LanguageProvider({
 }) {
   const [locale, setLocaleState] =
     useState<Locale>(() => {
-      if (typeof window === "undefined") return "en";
+      if (typeof window === "undefined") return "zh";
 
       try {
         const queryLocale = new URLSearchParams(window.location.search).get("lang");
         if (queryLocale === "zh" || queryLocale === "en") return queryLocale;
-
-        const saved = window.localStorage?.getItem("greanlean_locale");
-        if (saved === "zh" || saved === "en") return saved;
       } catch {
-        return "en";
+        return "zh";
       }
 
-      return "en";
+      return "zh";
     });
 
   useEffect(() => {
@@ -49,11 +46,7 @@ export function LanguageProvider({
         saved = queryLocale;
       }
 
-      saved =
-        saved ||
-        window.localStorage?.getItem(
-          "greanlean_locale"
-        ) || null;
+      saved = saved || "zh";
     } catch {
       saved = null;
     }

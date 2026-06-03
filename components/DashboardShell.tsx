@@ -60,7 +60,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-white/10 bg-slate-950 p-6 lg:block">
         <Link href="/dashboard" className="flex items-center gap-3 font-bold">
           <span className="grid h-10 w-10 place-items-center rounded-lg bg-brand-500 text-slate-950">G</span>
-          <span>GreenLean DPP</span>
+          <span>greanlean DPP</span>
         </Link>
 
         <nav className="mt-10 space-y-2">
@@ -92,7 +92,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <div className="flex items-center justify-between gap-3">
               <Link href="/dashboard" className="flex items-center gap-3 font-bold">
                 <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white">G</span>
-                <span>GreenLean DPP</span>
+                <span>greanlean DPP</span>
               </Link>
               <LanguageSwitcher />
             </div>
@@ -117,7 +117,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <div className="mb-6 hidden items-center justify-between lg:flex">
               <div>
                 <p className="text-sm font-semibold text-slate-500">{t.workspace}</p>
-                <p className="mt-1 text-lg font-black text-slate-950">GreenLean DPP</p>
+                <p className="mt-1 text-lg font-black text-slate-950">greanlean DPP</p>
               </div>
               <LanguageSwitcher />
             </div>

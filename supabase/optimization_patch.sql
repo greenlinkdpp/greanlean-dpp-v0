@@ -1,4 +1,4 @@
--- GreenLean DPP optimization patch. Safe to run multiple times.
+-- greanlean DPP optimization patch. Safe to run multiple times.
 
 alter table public.products
 add column if not exists name_zh text,

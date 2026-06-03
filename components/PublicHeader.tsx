@@ -34,7 +34,7 @@ export function PublicHeader() {
             G
           </span>
 
-          <span>GreenLean</span>
+          <span>greanlean</span>
         </Link>
 
         <nav className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
