@@ -7,6 +7,7 @@ import { useLanguage } from "@/components/LanguageProvider";
 type Field = {
   name: string;
   placeholder: string;
+  placeholderZh?: string;
   required?: boolean;
   type?: string;
 };
@@ -73,6 +74,15 @@ export function SimpleInsertManager({
   pageSize = 8,
 }: Props) {
   const { locale } = useLanguage();
+  const shownTitle =
+    locale === "zh"
+      ? {
+          Suppliers: "供应商",
+          Materials: "材料",
+          "ESG Metrics": "ESG 指标",
+          Certificates: "证书",
+        }[title] || title
+      : title;
 
   const t =
     locale === "zh"
@@ -201,7 +211,7 @@ export function SimpleInsertManager({
     if (error) {
       setMsg({ type: "err", text: t.errorPrefix + error.message });
     } else {
-      setMsg({ type: "ok", text: `${title} ${t.saved}` });
+      setMsg({ type: "ok", text: `${shownTitle} ${t.saved}` });
       formEl.reset();
       setPage(1);
       await load(1);
@@ -241,21 +251,24 @@ export function SimpleInsertManager({
       <form onSubmit={create} className="card space-y-4">
         <div>
           <h2 className="text-xl font-bold">
-            {t.add} {title}
+            {t.add} {shownTitle}
           </h2>
           <p className="mt-1 text-sm text-slate-500">{t.createNew}</p>
         </div>
 
-        {fields.map((field) => (
-          <input
-            key={field.name}
-            className="input"
-            name={field.name}
-            required={field.required}
-            type={field.type || "text"}
-            placeholder={field.placeholder}
-          />
-        ))}
+        {fields.map((field) => {
+          const placeholder = locale === "zh" && field.placeholderZh ? field.placeholderZh : field.placeholder;
+          return (
+            <input
+              key={field.name}
+              className="input"
+              name={field.name}
+              required={field.required}
+              type={field.type || "text"}
+              placeholder={placeholder}
+            />
+          );
+        })}
 
         <button disabled={saving} className="btn-primary w-full">
           {saving ? t.saving : t.save}
@@ -272,7 +285,7 @@ export function SimpleInsertManager({
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold">
-              {title} {t.records}
+              {shownTitle} {t.records}
             </h2>
             <p className="mt-1 text-sm text-slate-500">
               {filteredRows.length} {t.recordCount}
@@ -289,7 +302,7 @@ export function SimpleInsertManager({
             className="input"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={`${t.search} ${title}...`}
+            placeholder={`${t.search} ${shownTitle}...`}
           />
         </div>
 

@@ -24,26 +24,60 @@ export function LanguageProvider({
   children: React.ReactNode;
 }) {
   const [locale, setLocaleState] =
-    useState<Locale>("en");
+    useState<Locale>(() => {
+      if (typeof window === "undefined") return "en";
+
+      try {
+        const queryLocale = new URLSearchParams(window.location.search).get("lang");
+        if (queryLocale === "zh" || queryLocale === "en") return queryLocale;
+
+        const saved = window.localStorage?.getItem("greanlean_locale");
+        if (saved === "zh" || saved === "en") return saved;
+      } catch {
+        return "en";
+      }
+
+      return "en";
+    });
 
   useEffect(() => {
-    const saved =
-      window.localStorage.getItem(
-        "greanlean_locale"
-      );
+    let saved: string | null = null;
+
+    try {
+      const queryLocale = new URLSearchParams(window.location.search).get("lang");
+      if (queryLocale === "zh" || queryLocale === "en") {
+        saved = queryLocale;
+      }
+
+      saved =
+        saved ||
+        window.localStorage?.getItem(
+          "greanlean_locale"
+        ) || null;
+    } catch {
+      saved = null;
+    }
 
     if (saved === "zh" || saved === "en") {
       setLocaleState(saved);
     }
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
   function setLocale(locale: Locale) {
     setLocaleState(locale);
 
-    window.localStorage.setItem(
-      "greanlean_locale",
-      locale
-    );
+    try {
+      window.localStorage?.setItem(
+        "greanlean_locale",
+        locale
+      );
+    } catch {
+      // Some preview/browser environments do not expose localStorage.
+    }
   }
 
   const value = useMemo(() => {

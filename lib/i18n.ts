@@ -6,7 +6,7 @@ export const messages = {
   en: {
     solutions: "Solutions",
     dpp: "DPP",
-    contact: "Contact",
+    contactInfo: "Contact",
     login: "DPP Login",
     dashboard: "Dashboard",
     products: "Products",
@@ -100,7 +100,7 @@ export const messages = {
     submitted: "提交成功，我们会尽快联系你。",
     name: "姓名",
     company: "公司",
-    contact: "联系方式",
+    contactInfo: "联系方式",
     industry: "行业",
     message: "需求说明",
     chinese: "中文",
