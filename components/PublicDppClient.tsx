@@ -298,7 +298,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           detailViewDesc: "完整数据给 B2B、监管和审核使用",
           downloadPdf: "下载 DPP PDF",
           downloadJson: "下载 JSON",
-          audioDescription: "播放音频描述",
           glossaryTitle: "缩写词表",
           glossaryIntro: "点击展开常见认证和法规术语说明。",
           gotsTerm: "GOTS",
@@ -325,6 +324,15 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           visualizationTitle: "环境数据对比",
           waterBenchmark: "用水量对比",
           batchHistoryTitle: "BATCH-2026-001 历史记录",
+          passportSummary: "护照摘要",
+          complianceScope: "披露范围",
+          complianceScopeValue: "ESPR / REACH / RSL / 纺织标签法规",
+          materialProfile: "材料结构",
+          materialProfileValue: "95% 有机棉 + 5% 再生涤纶缝纫线",
+          nextAction: "消费者可执行动作",
+          nextActionValue: "查看证书、维修/回收、下载 DPP 数据",
+          performanceSnapshot: "性能快照",
+          performanceSnapshotValue: "耐洗 ≥50 次；使用寿命 2-3 年",
           batchRecord1: "2026-03-18 原料批次创建并绑定 GOTS 范围证书",
           batchRecord2: "2026-04-22 制造批次完成，SKU 与 SGTIN 生成",
           batchRecord3: "2026-05-06 出口运输记录写入，承运商 API 待接入",
@@ -547,7 +555,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           detailViewDesc: "Full data for B2B, regulators and audits",
           downloadPdf: "Download DPP PDF",
           downloadJson: "Download JSON",
-          audioDescription: "Play audio description",
           glossaryTitle: "Glossary",
           glossaryIntro: "Expand common certification and regulatory terms.",
           gotsTerm: "GOTS",
@@ -574,6 +581,15 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           visualizationTitle: "Environmental data comparison",
           waterBenchmark: "Water usage comparison",
           batchHistoryTitle: "BATCH-2026-001 history",
+          passportSummary: "Passport summary",
+          complianceScope: "Disclosure scope",
+          complianceScopeValue: "ESPR / REACH / RSL / textile labelling rules",
+          materialProfile: "Material profile",
+          materialProfileValue: "95% organic cotton + 5% recycled polyester sewing thread",
+          nextAction: "Consumer actions",
+          nextActionValue: "View certificates, repair/recycle, download DPP data",
+          performanceSnapshot: "Performance snapshot",
+          performanceSnapshotValue: "Wash durability >=50 cycles; service life 2-3 years",
           batchRecord1: "2026-03-18 Material batch created and linked to GOTS scope certificate",
           batchRecord2: "2026-04-22 Manufacturing batch completed; SKU and SGTIN generated",
           batchRecord3: "2026-05-06 Export shipment record added; carrier API pending",
@@ -646,7 +662,15 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.sku, product.sku],
     [t.gtin, firstIdentity?.gtin],
     [t.sgtin, sgtin],
+    [t.batch, firstIdentity?.batch_id],
     [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`],
+    [t.lastUpdatedLabel, t.dataLastUpdatedValue],
+  ];
+  const heroSummary: Array<[string, any]> = [
+    [t.complianceScope, t.complianceScopeValue],
+    [t.materialProfile, t.materialProfileValue],
+    [t.performanceSnapshot, t.performanceSnapshotValue],
+    [t.nextAction, t.nextActionValue],
   ];
   const performanceItems: Array<[string, any]> = [
     [t.washDurability, "≥ 50"],
@@ -772,18 +796,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.laborCertification, t.laborCertificationValue],
   ];
   const batchHistory = [t.batchRecord1, t.batchRecord2, t.batchRecord3, t.batchRecord4];
-  const audioText =
-    locale === "zh"
-      ? `这是有机棉基础T恤的数字产品护照。碳足迹为3.2千克二氧化碳当量，已记录材料来源、证书、受限物质、生命周期结束方案和数据验证来源。`
-      : "This is the digital product passport for an organic cotton T-shirt. It records a 3.2 kilogram CO2 equivalent footprint, material origin, certificates, restricted substances, end-of-life options and data verification sources.";
-  const speakAudioDescription = () => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(audioText);
-    utterance.lang = locale === "zh" ? "zh-CN" : "en-US";
-    window.speechSynthesis.speak(utterance);
-  };
-
   const summaryMetrics: Array<[string, any, IconName]> = [
     [t.materialCount, materials.length, "layers"],
     [t.recycled, totalRecycled === null ? "0%" : `${totalRecycled}%`, "recycle"],
@@ -853,10 +865,24 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               {pick(product, locale, "description", "description_zh")}
             </p>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:max-w-3xl">
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {heroDetails.map(([label, value]) => (
                 <Info key={label} label={label} value={value} locale={locale} variant="dark" />
               ))}
+            </div>
+
+            <div className="mt-5 overflow-hidden rounded-lg border border-white/10 bg-white/10 backdrop-blur">
+              <div className="border-b border-white/10 px-4 py-3">
+                <p className="text-sm font-black text-brand-100">{t.passportSummary}</p>
+              </div>
+              <div className="grid gap-0 md:grid-cols-2">
+                {heroSummary.map(([label, value]) => (
+                  <div key={label} className="border-b border-white/10 px-4 py-3 last:border-b-0 md:border-r md:even:border-r-0">
+                    <p className="text-xs font-bold uppercase text-slate-400">{label}</p>
+                    <p className="mt-1 text-sm font-semibold leading-6 text-white">{valueOrDash(value, locale)}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -928,9 +954,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           </div>
           <p className="text-sm font-semibold text-slate-600">{viewMode === "simple" ? t.simpleViewDesc : t.detailViewDesc}</p>
           <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={speakAudioDescription} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold text-slate-700 transition hover:border-brand-200 hover:text-brand-700" aria-label={t.audioDescription}>
-              {t.audioDescription}
-            </button>
             <a href={`/api/dpp-export?format=pdf&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`} target="_blank" rel="noreferrer" className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-bold text-blue-700 transition hover:bg-blue-600 hover:text-white">
               {t.downloadPdf}
             </a>
