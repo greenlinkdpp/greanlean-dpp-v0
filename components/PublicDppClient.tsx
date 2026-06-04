@@ -174,28 +174,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           quality: "数据质量",
           footerTitle: "由 greanlean DPP 提供支持",
           footerText: "该页面用于披露产品身份、材料来源、供应链追溯、ESG、证书和消费者透明化信息。",
-          disclosureTitle: "ESPR / DPP 信息披露概览",
-          disclosureText: "围绕产品身份、数据载体、材料来源、循环性、环境影响和合规证据组织信息。",
           productRecordTitle: "产品身份档案",
           digitalIdentityTitle: "数据载体与唯一标识",
-          supplyDisclosure: "供应链追溯",
-          supplyDisclosureDesc: "生产、运输、地点与验证记录",
-          environmentDisclosure: "环境与循环性",
-          environmentDisclosureDesc: "碳、水、能源、可维修与回收信息",
-          consumerDisclosure: "消费者可读信息",
-          consumerDisclosureDesc: "护理、维修、包装与生命周期结束说明",
-          identityDisclosure: "产品身份",
-          identityDisclosureDesc: "DPP ID、SKU、批次与数字链接",
-          materialDisclosure: "材料与来源",
-          materialDisclosureDesc: "材料比例、来源、物质与可回收信息",
-          chemicalDisclosure: "受限物质",
-          chemicalDisclosureDesc: "SVHC、重金属、偶氮染料和 MSDS 文件",
-          lifecycleDisclosure: "生命周期记录",
-          lifecycleDisclosureDesc: "生产、运输、维修、回收相关事件",
-          evidenceDisclosure: "合规证据",
-          evidenceDisclosureDesc: "证书、报告、验证状态与数据治理",
-          performanceDisclosure: "技术性能",
-          performanceDisclosureDesc: "耐洗、强度、色牢度、缩水率与使用寿命",
           gs1Note: "兼容 GS1 GTIN / SGTIN 唯一标识结构，用于产品级与单品级追溯。",
           jrcNote: "依据欧盟 JRC 循环经济方法学评估",
           chemicalTitle: "REACH / RSL 化学合规明细",
@@ -431,28 +411,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           footerTitle: "Powered by greanlean DPP",
           footerText:
             "This page discloses product identity, material sources, supply-chain traceability, ESG, certificates and consumer transparency information.",
-          disclosureTitle: "ESPR / DPP disclosure profile",
-          disclosureText: "Information is organized around product identity, data carrier, material origin, circularity, environmental impact and compliance evidence.",
           productRecordTitle: "Product identity record",
           digitalIdentityTitle: "Data carrier and identifiers",
-          supplyDisclosure: "Supply-chain traceability",
-          supplyDisclosureDesc: "Production, transport, location and verification records",
-          environmentDisclosure: "Environment and circularity",
-          environmentDisclosureDesc: "Carbon, water, energy, repair and recycling information",
-          consumerDisclosure: "Consumer-readable information",
-          consumerDisclosureDesc: "Care, repair, packaging and end-of-life instructions",
-          identityDisclosure: "Product identity",
-          identityDisclosureDesc: "DPP ID, SKU, batch and digital link",
-          materialDisclosure: "Materials and origin",
-          materialDisclosureDesc: "Material ratio, origin, substances and recyclability",
-          chemicalDisclosure: "Restricted substances",
-          chemicalDisclosureDesc: "SVHC, heavy metals, azo dyes and MSDS files",
-          lifecycleDisclosure: "Lifecycle records",
-          lifecycleDisclosureDesc: "Production, transport, repair and recycling events",
-          evidenceDisclosure: "Compliance evidence",
-          evidenceDisclosureDesc: "Certificates, reports, verification and data governance",
-          performanceDisclosure: "Technical performance",
-          performanceDisclosureDesc: "Wash durability, strength, colour fastness, shrinkage and lifetime",
           gs1Note: "Compatible with GS1 GTIN / SGTIN identity structure for product-level and item-level traceability.",
           jrcNote: "Assessed using EU JRC circular-economy methodology",
           chemicalTitle: "REACH / RSL chemical compliance details",
@@ -816,17 +776,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     ["#textile-reserve", t.textileReserve, "layers"],
     ["#batch-tracking", t.batchTracking, "route"],
   ];
-  const disclosureItems: Array<[string, string, IconName]> = [
-    [t.identityDisclosure, t.identityDisclosureDesc, "box"],
-    [t.materialDisclosure, t.materialDisclosureDesc, "layers"],
-    [t.chemicalDisclosure, t.chemicalDisclosureDesc, "file"],
-    [t.performanceDisclosure, t.performanceDisclosureDesc, "shield"],
-    [t.supplyDisclosure, t.supplyDisclosureDesc, "route"],
-    [t.environmentDisclosure, t.environmentDisclosureDesc, "leaf"],
-    [t.evidenceDisclosure, t.evidenceDisclosureDesc, "shield"],
-    [t.consumerDisclosure, t.consumerDisclosureDesc, "eye"],
-  ];
-
   return (
     <main className="min-h-screen bg-[#f7faf8] text-slate-950" aria-label={t.passport}>
       <header className="sticky top-0 z-40 border-b border-white/70 bg-white/85 backdrop-blur-xl">
@@ -1004,31 +953,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
 
         {viewMode === "detail" && (
           <>
-        <section className="dpp-fade mb-10 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-          <div className="grid gap-0 lg:grid-cols-[0.72fr_1.28fr]">
-            <div className="bg-slate-950 p-6 text-white lg:p-8">
-              <p className="text-sm font-bold text-brand-100">{t.passport}</p>
-              <h2 className="mt-2 text-2xl font-black lg:text-3xl">{t.disclosureTitle}</h2>
-              <p className="mt-3 leading-7 text-slate-300">{t.disclosureText}</p>
-            </div>
-            <div className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-3 lg:p-5">
-              {disclosureItems.map(([title, desc, icon]) => (
-                <div key={title} className="rounded-lg border border-slate-200 bg-slate-50 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:bg-white hover:shadow-sm">
-                  <div className="flex items-start gap-3">
-                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
-                      <Icon name={icon} className="h-5 w-5" />
-                    </span>
-                    <div>
-                      <h3 className="font-black text-slate-950">{title}</h3>
-                      <p className="mt-1 text-sm leading-6 text-slate-600">{desc}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <Section id="identity" title={t.productIdentity} eyebrow={t.overview} icon="box">
           <div className="grid gap-4 lg:grid-cols-2">
             <DataCard title={t.productRecordTitle} icon="box" surface="soft">
@@ -1263,7 +1187,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         {viewMode === "detail" && <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
           <div className="space-y-4">
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-5">
-              <p className="text-sm font-bold uppercase text-emerald-700">{t.consumerDisclosure}</p>
+              <p className="text-sm font-bold uppercase text-emerald-700">{t.consumer}</p>
               <h3 className="mt-2 text-2xl font-black text-slate-950">{t.endOfLife}</h3>
               <p className="mt-3 leading-7 text-slate-700">{t.endOfLifeIntro}</p>
             </div>
