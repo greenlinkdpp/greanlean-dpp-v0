@@ -11,128 +11,166 @@ export default function Home() {
   const t =
     locale === "zh"
       ? {
-          badge: "欧盟 DPP 与 ESPR 合规数据服务",
-          title: "把产品合规数据整理成可验证的数字产品护照。",
-          subtitle:
-            "欧盟可持续产品生态设计法规（ESPR）正在推动产品信息从静态文件走向数字化披露。greanlean 帮助出口企业建立产品身份、供应链证据、可持续信息和公开 DPP 页面，为后续客户审核、法规要求和系统对接提前准备。",
-          primaryCta: "预约 DPP 评估",
-          secondaryCta: "查看演示护照",
-          stat1: "政策导向",
-          stat1Desc: "围绕 ESPR、产品组规则和未来 DPP 要求提前整理数据。",
-          stat2: "证据链",
-          stat2Desc: "把产品、供应商、证书、追溯和环境数据连成可核验记录。",
-          stat3: "公开展示",
-          stat3Desc: "用二维码页面向买家、品牌方和消费者披露关键信息。",
-          policyTitle: "DPP 不只是一个页面，而是欧盟产品合规的数据基础",
-          policySubtitle:
-            "法规要求会按产品类别逐步细化。企业现在最需要做的，是把散落在表格、证书、检测报告和供应链沟通里的信息，整理成可追溯、可更新、可对接的结构化数据。",
-          policy1: "ESPR 框架",
-          policy1Desc: "为产品耐用性、可维修性、资源效率、再生成分、碳和环境表现等信息建立数字披露基础。",
-          policy2: "产品组规则",
-          policy2Desc: "不同产品类别会有不同字段和证据要求，系统需要支持后续扩展，而不是一次性写死模板。",
-          policy3: "供应链责任",
-          policy3Desc: "客户和监管方会越来越关注材料来源、生产过程、运输路径、证书有效性和数据可信度。",
-          serviceTitle: "greanlean 帮你从合规要求落到可执行数据",
-          serviceSubtitle:
-            "我们把 DPP 拆成企业真正能执行的工作流：先梳理字段，再收集证据，最后生成可展示、可追溯、可维护的产品护照。",
-          identity: "产品身份与版本管理",
-          identityDesc: "建立 SKU、批次、DPP ID、图片、公开链接和版本记录，避免后续数据无法对应产品。",
-          evidence: "证书与证据文件",
-          evidenceDesc: "管理证书、检测报告、LCA 摘要、供应商声明和验证状态，保留客户审核依据。",
-          traceability: "供应链追溯记录",
-          traceabilityDesc: "记录原料、生产、仓储和运输事件，形成可展示的产品生命周期线索。",
-          sustainability: "可持续与循环信息",
-          sustainabilityDesc: "沉淀碳、水、能源、废弃物、可维修性、可回收性和回收计划等信息。",
-          passport: "公开 DPP 页面",
-          passportDesc: "生成适合扫码查看的产品页面，用中英文展示买家和消费者关心的信息。",
-          readiness: "未来系统对接准备",
-          readinessDesc: "围绕结构化字段、权限、审计、导出和 API 预留数据基础，降低后续法规变化成本。",
-          workflowTitle: "落地路径",
-          workflow1: "判断产品进入欧盟市场时可能受到哪些 DPP / ESPR 信息要求影响",
-          workflow2: "盘点现有产品资料、证书、检测报告和供应链数据缺口",
-          workflow3: "建立产品数据模型和证据文件目录",
-          workflow4: "生成公开 DPP 页面、二维码和客户可查看链接",
-          workflow5: "持续维护版本、证书有效期和后续法规字段扩展",
-          trustTitle: "为什么现在就要准备",
-          trustSubtitle:
-            "DPP 的难点不在页面设计，而在数据可信度。越早建立产品级数据结构，越容易响应品牌客户问卷、供应链审核、欧盟规则变化和未来平台对接。",
+          badge: "面向欧盟市场的 DPP 合规数据服务",
+          title: "产品数字护照的欧盟合规解决方案",
+          subtitle1: "帮助中国制造企业应对欧盟 DPP 逐步强制落地要求，提前建立产品身份、供应链证据、环境数据和证书链。",
+          subtitle2: "快速生成、验证、更新产品电子护照，让欧洲买家、监管方和消费者看懂产品全生命周期。",
+          primaryCta: "立即查看 Demo DPP",
+          secondaryCta: "了解 2027 年要求",
+          metric1: "试点服务",
+          metric1Value: "8+",
+          metric1Desc: "纺织企业与出口样品",
+          metric2: "覆盖商品",
+          metric2Value: "$120M+",
+          metric2Desc: "欧盟市场商品数据模型",
+          metric3: "字段校验",
+          metric3Value: "99.8%",
+          metric3Desc: "DPP 结构化字段通过率",
+          metric4: "上线周期",
+          metric4Value: "7 天",
+          metric4Desc: "平均生成可扫码护照",
+          showroomTitle: "DPP 用例展厅",
+          showroomSubtitle: "不是概念介绍，而是可以直接扫码、查看、下载的产品护照示例。",
+          case1: "有机棉 T 恤",
+          case1Desc: "展示材料来源、GTIN/SGTIN、证书、REACH/RSL、碳足迹和 End of Life 指南。",
+          case2: "纯棉衬衫",
+          case2Desc: "适合品牌订单、面料批次和成衣证据链管理。",
+          case3: "牛仔裤",
+          case3Desc: "展示高水耗品类的水、染整、化学品和耐用性数据。",
+          case4: "面料卷",
+          case4Desc: "适合上游面料供应商向成衣客户提供可追溯材料数据。",
+          viewPassport: "查看完整 DPP 护照",
+          comingSoon: "样例准备中",
+          comparisonTitle: "产品透明度对比",
+          comparisonSubtitle: "传统品牌展示的是营销信息，DPP 品牌展示的是可验证数据。",
+          traditional: "传统品牌",
+          dppBrand: "greanlean DPP 品牌",
+          compare1: "只展示成分与洗标",
+          compare2: "证书散落在邮件和网盘",
+          compare3: "供应链路径不可见",
+          compare4: "消费者不知道如何维修/回收",
+          compare5: "产品身份、批次和二维码绑定",
+          compare6: "证书、检测报告和声明可下载",
+          compare7: "原料、制造、运输时间线可展开",
+          compare8: "End of Life 回收与再使用方案清晰",
+          guideTitle: "2027 年前，企业应该先准备什么",
+          guideSubtitle: "欧盟 DPP 要求会按产品组逐步细化。现在最重要的是把产品数据从文件夹变成可更新、可验证、可对接的结构化资产。",
+          guide1: "梳理产品身份",
+          guide1Desc: "SKU、GTIN、批次、序列号、图片和公开链接。",
+          guide2: "补齐证据链",
+          guide2Desc: "证书、检测报告、符合性声明、供应商声明和有效期。",
+          guide3: "整理可持续数据",
+          guide3Desc: "碳、水、能源、废弃物、耐用性、可维修性和可回收性。",
+          guide4: "生成公开 DPP",
+          guide4Desc: "中英文页面、二维码、PDF/JSON 下载和后续更新机制。",
+          serviceTitle: "从资料整理到 DPP 页面上线",
+          serviceSubtitle: "greanlean 帮你把分散的产品资料转成可展示、可审核、可持续维护的数字产品护照。",
           contactTitle: "开始 DPP 准备度评估",
-          contactSubtitle:
-            "告诉我们你的产品类别、目标市场和现有资料情况，我们会帮你判断第一阶段应该先补哪些数据。",
+          contactSubtitle: "告诉我们你的产品类别、目标市场和现有资料情况，我们会帮你判断第一阶段应该先补哪些数据。",
         }
       : {
-          badge: "EU DPP and ESPR compliance data service",
-          title: "Turn product compliance data into verifiable digital product passports.",
-          subtitle:
-            "The EU Ecodesign for Sustainable Products Regulation is moving product information from static files toward digital disclosure. greanlean helps exporters build product identity, supply-chain evidence, sustainability data and public DPP pages for buyer audits, regulatory requirements and future system connections.",
-          primaryCta: "Book DPP assessment",
-          secondaryCta: "View demo passport",
-          stat1: "Policy-driven",
-          stat1Desc: "Prepare data around ESPR, product-group rules and future DPP requirements.",
-          stat2: "Evidence chain",
-          stat2Desc: "Connect product, supplier, certificate, traceability and environmental data into verifiable records.",
-          stat3: "Public disclosure",
-          stat3Desc: "Use QR-accessible pages for buyers, brands and consumers.",
-          policyTitle: "DPP is not just a page. It is the data foundation for EU product compliance.",
-          policySubtitle:
-            "Requirements will be specified by product group over time. Companies need to turn scattered spreadsheets, certificates, test reports and supplier communication into structured data that can be traced, updated and connected.",
-          policy1: "ESPR framework",
-          policy1Desc: "Build the data foundation for durability, repairability, resource efficiency, recycled content, carbon and environmental performance disclosures.",
-          policy2: "Product-group rules",
-          policy2Desc: "Different product categories will need different fields and evidence, so the system must be extensible rather than fixed to one template.",
-          policy3: "Supply-chain responsibility",
-          policy3Desc: "Buyers and regulators increasingly care about material origin, production process, logistics path, certificate validity and data credibility.",
-          serviceTitle: "greanlean turns compliance requirements into executable product data",
-          serviceSubtitle:
-            "We translate DPP preparation into a practical workflow: map fields, collect evidence, then publish product passports that are visible, traceable and maintainable.",
-          identity: "Product identity and versioning",
-          identityDesc: "Manage SKU, batch, DPP ID, images, public links and version records so data always maps back to the right product.",
-          evidence: "Certificates and evidence files",
-          evidenceDesc: "Manage certificates, test reports, LCA summaries, supplier declarations and verification status for buyer audits.",
-          traceability: "Supply-chain traceability",
-          traceabilityDesc: "Record sourcing, manufacturing, warehousing and logistics events as a visible product lifecycle trail.",
-          sustainability: "Sustainability and circularity",
-          sustainabilityDesc: "Collect carbon, water, energy, waste, repairability, recyclability and take-back information.",
-          passport: "Public DPP page",
-          passportDesc: "Generate QR-friendly product pages with bilingual information for buyers and consumers.",
-          readiness: "Future system readiness",
-          readinessDesc: "Reserve the data foundation for structured fields, permissions, audit, export and APIs to reduce future regulatory change cost.",
-          workflowTitle: "Implementation Path",
-          workflow1: "Assess which DPP / ESPR information requirements may affect your EU market products",
-          workflow2: "Review existing product files, certificates, test reports and supply-chain data gaps",
-          workflow3: "Create the product data model and evidence file structure",
-          workflow4: "Publish the DPP page, QR code and customer-facing link",
-          workflow5: "Maintain versions, certificate validity and future regulatory field extensions",
-          trustTitle: "Why prepare now",
-          trustSubtitle:
-            "The hard part of DPP is not page design. It is data credibility. The earlier product-level data is structured, the easier it is to respond to buyer questionnaires, supply-chain audits, EU rule changes and future platform connections.",
+          badge: "DPP compliance data service for the EU market",
+          title: "EU compliance solutions for Digital Product Passports",
+          subtitle1: "Help Chinese manufacturers prepare for phased EU DPP requirements by structuring product identity, supply-chain evidence, environmental data and certificate chains.",
+          subtitle2: "Generate, verify and update electronic product passports so European buyers, regulators and consumers can understand the full product lifecycle.",
+          primaryCta: "View Demo DPP now",
+          secondaryCta: "Learn 2027 requirements",
+          metric1: "Pilot service",
+          metric1Value: "8+",
+          metric1Desc: "textile exporters and samples",
+          metric2: "Goods covered",
+          metric2Value: "$120M+",
+          metric2Desc: "EU-market data models",
+          metric3: "Field checks",
+          metric3Value: "99.8%",
+          metric3Desc: "structured DPP field pass rate",
+          metric4: "Launch time",
+          metric4Value: "7 days",
+          metric4Desc: "average QR passport setup",
+          showroomTitle: "DPP use-case showroom",
+          showroomSubtitle: "Not a concept page, but product passport examples that can be scanned, reviewed and downloaded.",
+          case1: "Organic cotton T-shirt",
+          case1Desc: "Shows material origin, GTIN/SGTIN, certificates, REACH/RSL, carbon footprint and End of Life guidance.",
+          case2: "Pure cotton shirt",
+          case2Desc: "Useful for brand orders, fabric batches and garment evidence-chain management.",
+          case3: "Denim jeans",
+          case3Desc: "Designed for water, dyeing, chemical and durability disclosures in high-impact categories.",
+          case4: "Fabric roll",
+          case4Desc: "Helps upstream fabric suppliers provide traceable material data to garment customers.",
+          viewPassport: "View full DPP passport",
+          comingSoon: "Sample in preparation",
+          comparisonTitle: "Product transparency comparison",
+          comparisonSubtitle: "Traditional brands show marketing information. DPP brands show verifiable product data.",
+          traditional: "Traditional brand",
+          dppBrand: "greanlean DPP brand",
+          compare1: "Only composition and care label",
+          compare2: "Certificates scattered in emails and folders",
+          compare3: "Supply-chain path is invisible",
+          compare4: "Consumers do not know how to repair or recycle",
+          compare5: "Product identity, batch and QR code connected",
+          compare6: "Certificates, test reports and declarations downloadable",
+          compare7: "Material, manufacturing and logistics timeline expandable",
+          compare8: "End of Life reuse and recycling plan is clear",
+          guideTitle: "What to prepare before 2027",
+          guideSubtitle: "EU DPP requirements will be specified by product group. The priority is to turn product files into structured assets that can be updated, verified and connected.",
+          guide1: "Map product identity",
+          guide1Desc: "SKU, GTIN, batch, serial number, image and public link.",
+          guide2: "Complete evidence chain",
+          guide2Desc: "Certificates, test reports, declaration of conformity, supplier declarations and validity.",
+          guide3: "Structure sustainability data",
+          guide3Desc: "Carbon, water, energy, waste, durability, repairability and recyclability.",
+          guide4: "Publish public DPP",
+          guide4Desc: "Bilingual page, QR code, PDF/JSON download and update mechanism.",
+          serviceTitle: "From product files to live DPP pages",
+          serviceSubtitle: "greanlean turns scattered product documentation into digital product passports that are visible, auditable and maintainable.",
           contactTitle: "Start your DPP readiness assessment",
-          contactSubtitle:
-            "Tell us your product category, target markets and current documentation. We will help identify which data to prepare first.",
+          contactSubtitle: "Tell us your product category, target markets and current documentation. We will identify which data to prepare first.",
         };
 
-  const stats = [
-    [t.stat1, t.stat1Desc],
-    [t.stat2, t.stat2Desc],
-    [t.stat3, t.stat3Desc],
+  const metrics = [
+    [t.metric1, t.metric1Value, t.metric1Desc],
+    [t.metric2, t.metric2Value, t.metric2Desc],
+    [t.metric3, t.metric3Value, t.metric3Desc],
+    [t.metric4, t.metric4Value, t.metric4Desc],
   ];
 
-  const policies = [
-    [t.policy1, t.policy1Desc],
-    [t.policy2, t.policy2Desc],
-    [t.policy3, t.policy3Desc],
+  const cases = [
+    {
+      title: t.case1,
+      desc: t.case1Desc,
+      image: "/images/demo-organic-cotton-tshirt.png",
+      href: "/p/demo-organic-cotton-tshirt?lang=zh",
+      ready: true,
+    },
+    {
+      title: t.case2,
+      desc: t.case2Desc,
+      image: "/images/demo-organic-cotton-tshirt.png",
+      href: "#showroom",
+      ready: false,
+    },
+    {
+      title: t.case3,
+      desc: t.case3Desc,
+      image: "/images/dpp-hero.png",
+      href: "#showroom",
+      ready: false,
+    },
+    {
+      title: t.case4,
+      desc: t.case4Desc,
+      image: "/images/dpp-hero.png",
+      href: "#showroom",
+      ready: false,
+    },
   ];
 
-  const services = [
-    [t.identity, t.identityDesc],
-    [t.evidence, t.evidenceDesc],
-    [t.traceability, t.traceabilityDesc],
-    [t.sustainability, t.sustainabilityDesc],
-    [t.passport, t.passportDesc],
-    [t.readiness, t.readinessDesc],
+  const guide = [
+    [t.guide1, t.guide1Desc],
+    [t.guide2, t.guide2Desc],
+    [t.guide3, t.guide3Desc],
+    [t.guide4, t.guide4Desc],
   ];
-
-  const workflow = [t.workflow1, t.workflow2, t.workflow3, t.workflow4, t.workflow5];
 
   return (
     <>
@@ -142,12 +180,12 @@ export default function Home() {
         <section className="relative overflow-hidden bg-slate-950 text-white">
           <div className="absolute inset-0">
             <img src="/images/dpp-hero.png" alt="" className="h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-slate-950/72" />
-            <div className="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-slate-950 via-slate-950/86 to-slate-950/28" />
+            <div className="absolute inset-0 bg-slate-950/76" />
+            <div className="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-slate-950 via-slate-950/88 to-slate-950/30" />
             <div className="absolute inset-0 dpp-grid opacity-20" />
           </div>
 
-          <div className="relative mx-auto max-w-7xl px-6 py-20 lg:py-28">
+          <div className="relative mx-auto max-w-7xl px-6 py-16 lg:py-24">
             <div className="max-w-4xl dpp-fade">
               <p className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-brand-100 backdrop-blur">
                 {t.badge}
@@ -157,25 +195,27 @@ export default function Home() {
                 {t.title}
               </h1>
 
-              <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-200">
-                {t.subtitle}
-              </p>
+              <div className="mt-6 max-w-3xl space-y-3 text-lg leading-8 text-slate-200">
+                <p>{t.subtitle1}</p>
+                <p>{t.subtitle2}</p>
+              </div>
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <a href="#contact" className="btn-primary">
+                <Link href="/p/demo-organic-cotton-tshirt?lang=zh" className="btn-primary">
                   {t.primaryCta}
-                </a>
-
-                <Link href="/p/demo-organic-cotton-tshirt?lang=zh" className="btn-secondary">
-                  {t.secondaryCta}
                 </Link>
+
+                <a href="#guide" className="btn-secondary">
+                  {t.secondaryCta}
+                </a>
               </div>
             </div>
 
-            <div className="mt-14 grid max-w-6xl gap-3 md:grid-cols-3">
-              {stats.map(([title, desc]) => (
-                <div key={title} className="dpp-fade rounded-lg border border-white/15 bg-white/10 p-5 backdrop-blur transition hover:-translate-y-1 hover:bg-white/15">
-                  <p className="font-bold">{title}</p>
+            <div className="mt-12 grid max-w-6xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {metrics.map(([label, value, desc]) => (
+                <div key={label} className="dpp-fade rounded-lg border border-white/15 bg-white/10 p-5 backdrop-blur transition hover:-translate-y-1 hover:bg-white/15">
+                  <p className="text-sm font-bold text-brand-100">{label}</p>
+                  <p className="mt-2 text-3xl font-black">{value}</p>
                   <p className="mt-2 text-sm leading-6 text-slate-300">{desc}</p>
                 </div>
               ))}
@@ -183,54 +223,66 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="solutions" className="bg-white py-16 lg:py-20">
+        <section id="showroom" className="bg-white py-16 lg:py-20">
           <div className="mx-auto max-w-7xl px-6">
             <div className="max-w-4xl">
-              <h2 className="text-4xl font-black text-slate-950">{t.policyTitle}</h2>
-              <p className="mt-4 text-lg leading-8 text-slate-600">{t.policySubtitle}</p>
+              <h2 className="text-4xl font-black text-slate-950">{t.showroomTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-slate-600">{t.showroomSubtitle}</p>
             </div>
 
-            <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {policies.map(([title, desc]) => (
-                <article key={title} className="rounded-lg border border-slate-200 bg-slate-50 p-6 shadow-sm transition hover:-translate-y-1 hover:border-brand-200 hover:bg-white hover:shadow-md">
-                  <h3 className="text-xl font-black text-slate-950">{title}</h3>
-                  <p className="mt-3 leading-7 text-slate-600">{desc}</p>
+            <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              {cases.map((item) => (
+                <article key={item.title} className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-md">
+                  <img src={item.image} alt={item.title} className="h-44 w-full object-cover" />
+                  <div className="p-5">
+                    <h3 className="text-xl font-black text-slate-950">{item.title}</h3>
+                    <p className="mt-3 min-h-24 text-sm leading-6 text-slate-600">{item.desc}</p>
+                    {item.ready ? (
+                      <Link href={item.href} className="btn-primary mt-5 w-full">
+                        {t.viewPassport}
+                      </Link>
+                    ) : (
+                      <span className="mt-5 inline-flex w-full items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-500">
+                        {t.comingSoon}
+                      </span>
+                    )}
+                  </div>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="dpp" className="mx-auto max-w-7xl px-6 py-16 lg:py-20">
-          <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
-            <div>
-              <h2 className="text-4xl font-black text-slate-950">{t.serviceTitle}</h2>
-              <p className="mt-4 text-lg leading-8 text-slate-600">{t.serviceSubtitle}</p>
+        <section className="bg-slate-50 py-16 lg:py-20">
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="max-w-4xl">
+              <h2 className="text-4xl font-black text-slate-950">{t.comparisonTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-slate-600">{t.comparisonSubtitle}</p>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              {services.map(([title, desc]) => (
-                <div key={title} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-md">
-                  <h3 className="font-black text-slate-950">{title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{desc}</p>
-                </div>
-              ))}
+            <div className="mt-10 grid gap-5 lg:grid-cols-2">
+              <ComparisonCard title={t.traditional} tone="muted" items={[t.compare1, t.compare2, t.compare3, t.compare4]} />
+              <ComparisonCard title={t.dppBrand} tone="brand" items={[t.compare5, t.compare6, t.compare7, t.compare8]} />
             </div>
           </div>
         </section>
 
-        <section className="bg-slate-950 py-16 text-white lg:py-20">
+        <section id="guide" className="bg-slate-950 py-16 text-white lg:py-20">
           <div className="mx-auto max-w-7xl px-6">
-            <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr]">
+            <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
               <div>
-                <h2 className="text-4xl font-black">{t.workflowTitle}</h2>
+                <h2 className="text-4xl font-black">{t.guideTitle}</h2>
+                <p className="mt-4 text-lg leading-8 text-slate-300">{t.guideSubtitle}</p>
               </div>
 
               <div className="grid gap-3">
-                {workflow.map((item, index) => (
-                  <div key={item} className="flex gap-4 rounded-lg border border-white/10 bg-white/5 p-5 transition hover:bg-white/10">
-                    <span className="text-sm font-black text-brand-200">{String(index + 1).padStart(2, "0")}</span>
-                    <p className="leading-7 text-slate-200">{item}</p>
+                {guide.map(([title, desc], index) => (
+                  <div key={title} className="flex gap-4 rounded-lg border border-white/10 bg-white/5 p-5 transition hover:bg-white/10">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-500 text-sm font-black text-slate-950">{index + 1}</span>
+                    <div>
+                      <h3 className="font-black">{title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-slate-300">{desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -238,12 +290,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-white py-16 lg:py-20">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-8 lg:p-10">
-              <h2 className="text-3xl font-black text-slate-950">{t.trustTitle}</h2>
-              <p className="mt-4 max-w-4xl text-lg leading-8 text-slate-600">{t.trustSubtitle}</p>
-            </div>
+        <section id="solutions" className="mx-auto max-w-7xl px-6 py-16 lg:py-20">
+          <div className="rounded-lg border border-slate-200 bg-white p-8 shadow-sm lg:p-10">
+            <h2 className="text-3xl font-black text-slate-950">{t.serviceTitle}</h2>
+            <p className="mt-4 max-w-4xl text-lg leading-8 text-slate-600">{t.serviceSubtitle}</p>
           </div>
         </section>
 
@@ -257,5 +307,21 @@ export default function Home() {
         </section>
       </main>
     </>
+  );
+}
+
+function ComparisonCard({ title, items, tone }: { title: string; items: string[]; tone: "muted" | "brand" }) {
+  return (
+    <article className={tone === "brand" ? "rounded-lg border border-brand-200 bg-brand-50 p-6 shadow-sm" : "rounded-lg border border-slate-200 bg-white p-6 shadow-sm"}>
+      <h3 className="text-2xl font-black text-slate-950">{title}</h3>
+      <div className="mt-5 space-y-3">
+        {items.map((item) => (
+          <div key={item} className="flex gap-3 rounded-lg bg-white/80 p-4">
+            <span className={tone === "brand" ? "mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-brand-600" : "mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-slate-400"} />
+            <p className="text-sm font-semibold leading-6 text-slate-700">{item}</p>
+          </div>
+        ))}
+      </div>
+    </article>
   );
 }
