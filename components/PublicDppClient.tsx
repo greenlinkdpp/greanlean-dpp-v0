@@ -100,6 +100,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           overview: "产品概览",
           productIdentity: "产品基本信息",
           materialSource: "材料组成与来源",
+          chemicalRestricted: "化学品与受限物质",
           productPerformance: "产品性能",
           traceability: "生产与运输追溯",
           esg: "ESG 与循环性",
@@ -183,6 +184,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           identityDisclosureDesc: "DPP ID、SKU、批次与数字链接",
           materialDisclosure: "材料与来源",
           materialDisclosureDesc: "材料比例、来源、物质与可回收信息",
+          chemicalDisclosure: "受限物质",
+          chemicalDisclosureDesc: "SVHC、重金属、偶氮染料和 MSDS 文件",
           lifecycleDisclosure: "生命周期记录",
           lifecycleDisclosureDesc: "生产、运输、维修、回收相关事件",
           evidenceDisclosure: "合规证据",
@@ -191,6 +194,27 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           performanceDisclosureDesc: "耐洗、强度、色牢度、缩水率与使用寿命",
           gs1Note: "兼容 GS1 GTIN / SGTIN 唯一标识结构，用于产品级与单品级追溯。",
           jrcNote: "依据欧盟 JRC 循环经济方法学评估",
+          chemicalTitle: "REACH / RSL 化学合规明细",
+          chemicalIntro: "展示 SVHC 候选清单物质、重金属、偶氮染料和 MSDS 文件，便于买家快速核对受限物质证据链。",
+          testItem: "检测项目",
+          testResult: "检测结果",
+          limitValue: "限值 / 判断标准",
+          reportFile: "报告 / 文件",
+          svhcCandidate: "SVHC 候选清单物质",
+          heavyMetalLead: "重金属 - 铅 Pb",
+          heavyMetalCadmium: "重金属 - 镉 Cd",
+          heavyMetalChromium: "重金属 - 六价铬 Cr(VI)",
+          azoDyes: "偶氮染料",
+          msdsFile: "MSDS 物质安全数据表",
+          notDetected: "未检出",
+          available: "可查看",
+          svhcLimit: "≤ 0.1% w/w；如含有需披露",
+          leadLimit: "Demo RSL 限值：≤ 90 mg/kg",
+          cadmiumLimit: "Demo RSL 限值：≤ 40 mg/kg",
+          chromiumLimit: "Demo RSL 限值：≤ 3 mg/kg",
+          azoLimit: "禁用芳香胺 < 30 mg/kg",
+          msdsLimit: "染整助剂和相关化学品文件",
+          downloadReport: "下载报告",
           performanceTitle: "纺织品技术性能指标",
           washDurability: "面料耐洗性",
           tensileStrength: "拉伸强度（经向）",
@@ -241,6 +265,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           overview: "Product overview",
           productIdentity: "Product basics",
           materialSource: "Materials and sources",
+          chemicalRestricted: "Chemicals and restricted substances",
           productPerformance: "Product performance",
           traceability: "Production and transport traceability",
           esg: "ESG and circularity",
@@ -325,6 +350,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           identityDisclosureDesc: "DPP ID, SKU, batch and digital link",
           materialDisclosure: "Materials and origin",
           materialDisclosureDesc: "Material ratio, origin, substances and recyclability",
+          chemicalDisclosure: "Restricted substances",
+          chemicalDisclosureDesc: "SVHC, heavy metals, azo dyes and MSDS files",
           lifecycleDisclosure: "Lifecycle records",
           lifecycleDisclosureDesc: "Production, transport, repair and recycling events",
           evidenceDisclosure: "Compliance evidence",
@@ -333,6 +360,27 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           performanceDisclosureDesc: "Wash durability, strength, colour fastness, shrinkage and lifetime",
           gs1Note: "Compatible with GS1 GTIN / SGTIN identity structure for product-level and item-level traceability.",
           jrcNote: "Assessed using EU JRC circular-economy methodology",
+          chemicalTitle: "REACH / RSL chemical compliance details",
+          chemicalIntro: "Displays SVHC candidate-list substances, heavy metals, azo dyes and MSDS files so buyers can verify restricted-substance evidence quickly.",
+          testItem: "Test item",
+          testResult: "Result",
+          limitValue: "Limit / criterion",
+          reportFile: "Report / file",
+          svhcCandidate: "SVHC candidate-list substances",
+          heavyMetalLead: "Heavy metal - Lead Pb",
+          heavyMetalCadmium: "Heavy metal - Cadmium Cd",
+          heavyMetalChromium: "Heavy metal - Chromium VI",
+          azoDyes: "Azo dyes",
+          msdsFile: "MSDS safety data sheet",
+          notDetected: "Not detected",
+          available: "Available",
+          svhcLimit: "≤ 0.1% w/w; disclosure required if present",
+          leadLimit: "Demo RSL limit: ≤ 90 mg/kg",
+          cadmiumLimit: "Demo RSL limit: ≤ 40 mg/kg",
+          chromiumLimit: "Demo RSL limit: ≤ 3 mg/kg",
+          azoLimit: "Restricted aromatic amines < 30 mg/kg",
+          msdsLimit: "Dyeing auxiliaries and related chemical files",
+          downloadReport: "Download report",
           performanceTitle: "Textile technical performance",
           washDurability: "Wash durability",
           tensileStrength: "Tensile strength (warp)",
@@ -441,6 +489,44 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.minimumLifetime, locale === "zh" ? "2-3 年" : "2-3 years"],
     [t.testBasis, t.performanceBasis],
   ];
+  const chemicalRows = [
+    {
+      item: t.svhcCandidate,
+      result: t.notDetected,
+      limit: t.svhcLimit,
+      type: "svhc",
+    },
+    {
+      item: t.heavyMetalLead,
+      result: "< 10 mg/kg",
+      limit: t.leadLimit,
+      type: "heavy-metals",
+    },
+    {
+      item: t.heavyMetalCadmium,
+      result: "< 1 mg/kg",
+      limit: t.cadmiumLimit,
+      type: "heavy-metals",
+    },
+    {
+      item: t.heavyMetalChromium,
+      result: t.notDetected,
+      limit: t.chromiumLimit,
+      type: "heavy-metals",
+    },
+    {
+      item: t.azoDyes,
+      result: t.notDetected,
+      limit: t.azoLimit,
+      type: "azo",
+    },
+    {
+      item: t.msdsFile,
+      result: t.available,
+      limit: t.msdsLimit,
+      type: "msds",
+    },
+  ];
   const declarationItems: Array<[string, any]> = [
     [t.applicableEuRules, [t.declarationRule1, t.declarationRule2, t.declarationRule3, t.declarationRule4].join("\n")],
     [t.manufacturerInfo, t.manufacturerValue],
@@ -458,6 +544,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   const navItems: Array<[string, string, IconName]> = [
     ["#identity", t.productIdentity, "box"],
     ["#materials", t.materialSource, "layers"],
+    ["#chemicals", t.chemicalRestricted, "file"],
     ["#performance", t.productPerformance, "shield"],
     ["#traceability", t.traceability, "route"],
     ["#esg", t.esg, "leaf"],
@@ -468,6 +555,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   const disclosureItems: Array<[string, string, IconName]> = [
     [t.identityDisclosure, t.identityDisclosureDesc, "box"],
     [t.materialDisclosure, t.materialDisclosureDesc, "layers"],
+    [t.chemicalDisclosure, t.chemicalDisclosureDesc, "file"],
     [t.performanceDisclosure, t.performanceDisclosureDesc, "shield"],
     [t.supplyDisclosure, t.supplyDisclosureDesc, "route"],
     [t.environmentDisclosure, t.environmentDisclosureDesc, "leaf"],
@@ -643,6 +731,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ) : (
             <Empty text={t.pendingData} />
           )}
+        </Section>
+
+        <Section id="chemicals" title={t.chemicalRestricted} icon="file">
+          <DataCard title={t.chemicalTitle} icon="file" surface="soft">
+            <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.chemicalIntro}</p>
+            <ChemicalTable rows={chemicalRows} locale={locale} t={t} productSlug={product.public_slug || "demo-organic-cotton-tshirt"} />
+          </DataCard>
         </Section>
 
         <Section id="performance" title={t.productPerformance} icon="shield">
@@ -1196,6 +1291,56 @@ function GuideCard({ icon, title, text }: { icon: IconName; title: string; text:
         <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
       </div>
     </article>
+  );
+}
+
+function ChemicalTable({
+  rows,
+  locale,
+  t,
+  productSlug,
+}: {
+  rows: Array<{ item: string; result: string; limit: string; type: string }>;
+  locale: Locale;
+  t: any;
+  productSlug: string;
+}) {
+  return (
+    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="hidden grid-cols-[1.25fr_0.8fr_1.35fr_170px] bg-slate-950 px-4 py-3 text-xs font-black uppercase text-white md:grid">
+        <span>{t.testItem}</span>
+        <span>{t.testResult}</span>
+        <span>{t.limitValue}</span>
+        <span>{t.reportFile}</span>
+      </div>
+      <div className="divide-y divide-slate-100">
+        {rows.map((row) => (
+          <div key={`${row.type}-${row.item}`} className="grid gap-3 px-4 py-4 md:grid-cols-[1.25fr_0.8fr_1.35fr_170px] md:items-center">
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.testItem}</p>
+              <p className="font-black text-slate-950">{row.item}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.testResult}</p>
+              <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-sm font-bold text-emerald-700">{row.result}</span>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.limitValue}</p>
+              <p className="text-sm font-semibold leading-6 text-slate-700">{row.limit}</p>
+            </div>
+            <a
+              href={`/api/chemical-document?type=${encodeURIComponent(row.type)}&lang=${locale}&product=${encodeURIComponent(productSlug)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-black text-blue-700 transition hover:-translate-y-0.5 hover:bg-blue-600 hover:text-white"
+            >
+              <Icon name="pdf" className="h-4 w-4" />
+              {t.downloadReport}
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
