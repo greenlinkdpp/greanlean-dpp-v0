@@ -72,6 +72,7 @@ function addRegulatoryChemicalContext(value: any, locale: Locale) {
 export function PublicDppClient({ data, dppUrl }: Props) {
   const { locale } = useLanguage();
   const [activeCertificate, setActiveCertificate] = useState<any>(null);
+  const [viewMode, setViewMode] = useState<"simple" | "detail">("detail");
   const {
     product,
     materials = [],
@@ -107,6 +108,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           certificates: "认证证书",
           consumer: "消费者透明化",
           evidence: "证据文件与数据治理",
+          accessibility: "消费者可访问性",
+          textileReserve: "纺织品特定信息预留",
+          batchTracking: "批次追踪",
           noData: "暂无数据",
           pendingData: "该模块已预留，等待企业补充数据。",
           sku: "SKU",
@@ -288,6 +292,44 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           verificationExpiry: "验证有效期",
           verificationExpiryValue: "2026-06-04 至 2027-06-03",
           dataLastUpdatedValue: "2026-06-04",
+          simpleView: "简略版",
+          detailView: "详细版",
+          simpleViewDesc: "核心指标给消费者快速阅读",
+          detailViewDesc: "完整数据给 B2B、监管和审核使用",
+          downloadPdf: "下载 DPP PDF",
+          downloadJson: "下载 JSON",
+          audioDescription: "播放音频描述",
+          glossaryTitle: "缩写词表",
+          glossaryIntro: "点击展开常见认证和法规术语说明。",
+          gotsTerm: "GOTS",
+          gotsDesc: "Global Organic Textile Standard，全球有机纺织品标准，用于有机纤维和加工链要求。",
+          oekoTerm: "OEKO-TEX",
+          oekoDesc: "纺织品有害物质检测与认证体系，用于证明产品经过相关化学安全筛查。",
+          reachTerm: "REACH",
+          reachDesc: "欧盟化学品注册、评估、授权和限制法规，DPP 中常用于受限物质披露。",
+          svhcTerm: "SVHC",
+          svhcDesc: "高度关注物质候选清单，若超过阈值通常需要向下游披露。",
+          benchmarkTitle: "这件 T 恤的碳足迹",
+          thisProduct: "该产品",
+          industryAverage: "行业平均",
+          benchmarkAdvantage: "低于示例行业平均值约 29%，主要来自有机棉材料、低影响染整和海运/铁路组合运输假设。",
+          textileReserveIntro: "以下字段用于提前适配未来纺织品 DPP 细化要求；当前作为预留和数据准备项展示。",
+          microfiberPotential: "微纤维释放潜力评估",
+          microfiberValue: "低至中；棉主身面料为主，需通过洗涤模拟测试进一步确认。",
+          fullOriginTrace: "原产地完整追溯",
+          fullOriginValue: "新疆/阿克苏棉源 → 宁波制造 → 汉堡欧盟仓 → 消费者扫码访问",
+          animalWelfare: "动物福利声明",
+          animalWelfareValue: "不适用；该产品不含动物源材料。",
+          laborCertification: "劳动条件认证",
+          laborCertificationValue: "SA8000 / BSCI 字段预留；当前 demo 记录供应商声明。",
+          visualizationTitle: "环境数据对比",
+          waterBenchmark: "用水量对比",
+          batchHistoryTitle: "BATCH-2026-001 历史记录",
+          batchRecord1: "2026-03-18 原料批次创建并绑定 GOTS 范围证书",
+          batchRecord2: "2026-04-22 制造批次完成，SKU 与 SGTIN 生成",
+          batchRecord3: "2026-05-06 出口运输记录写入，承运商 API 待接入",
+          batchRecord4: "2026-06-04 DPP 数据审核并更新公开页面",
+          lastUpdatedLabel: "最后更新于",
           noHouseholdWaste: "请勿丢弃于生活垃圾",
           noHouseholdWasteDesc: "优先投放至纺织品回收箱、品牌回收计划或当地指定收集点。",
           removeTrims: "回收前剪除不可回收辅料",
@@ -314,6 +356,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           certificates: "Certificates",
           consumer: "Consumer transparency",
           evidence: "Evidence files and data governance",
+          accessibility: "Consumer accessibility",
+          textileReserve: "Textile-specific reserved fields",
+          batchTracking: "Batch tracking",
           noData: "No data yet",
           pendingData: "This module is reserved and awaiting company data.",
           sku: "SKU",
@@ -496,6 +541,44 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           verificationExpiry: "Verification validity",
           verificationExpiryValue: "2026-06-04 to 2027-06-03",
           dataLastUpdatedValue: "2026-06-04",
+          simpleView: "Simple view",
+          detailView: "Detailed view",
+          simpleViewDesc: "Core indicators for consumers",
+          detailViewDesc: "Full data for B2B, regulators and audits",
+          downloadPdf: "Download DPP PDF",
+          downloadJson: "Download JSON",
+          audioDescription: "Play audio description",
+          glossaryTitle: "Glossary",
+          glossaryIntro: "Expand common certification and regulatory terms.",
+          gotsTerm: "GOTS",
+          gotsDesc: "Global Organic Textile Standard, used for organic fibres and textile processing-chain requirements.",
+          oekoTerm: "OEKO-TEX",
+          oekoDesc: "A textile harmful-substance testing and certification system for chemical safety screening.",
+          reachTerm: "REACH",
+          reachDesc: "EU chemicals regulation for registration, evaluation, authorisation and restriction of chemicals; often used for restricted-substance disclosure.",
+          svhcTerm: "SVHC",
+          svhcDesc: "Substances of Very High Concern candidate list; substances above threshold usually require downstream disclosure.",
+          benchmarkTitle: "Carbon footprint of this T-shirt",
+          thisProduct: "This product",
+          industryAverage: "Industry average",
+          benchmarkAdvantage: "About 29% below the demo industry average, mainly from organic cotton, lower-impact dyeing and sea/rail logistics assumptions.",
+          textileReserveIntro: "These fields are reserved to prepare for future textile-specific DPP requirements; currently shown as data-readiness items.",
+          microfiberPotential: "Microfibre release potential",
+          microfiberValue: "Low to medium; cotton-rich main fabric, pending washing-simulation test confirmation.",
+          fullOriginTrace: "Full origin traceability",
+          fullOriginValue: "Xinjiang/Aksu cotton source -> Ningbo manufacturing -> Hamburg EU warehouse -> consumer scan",
+          animalWelfare: "Animal welfare declaration",
+          animalWelfareValue: "Not applicable; this product contains no animal-derived materials.",
+          laborCertification: "Labour condition certification",
+          laborCertificationValue: "SA8000 / BSCI fields reserved; demo currently records supplier declarations.",
+          visualizationTitle: "Environmental data comparison",
+          waterBenchmark: "Water usage comparison",
+          batchHistoryTitle: "BATCH-2026-001 history",
+          batchRecord1: "2026-03-18 Material batch created and linked to GOTS scope certificate",
+          batchRecord2: "2026-04-22 Manufacturing batch completed; SKU and SGTIN generated",
+          batchRecord3: "2026-05-06 Export shipment record added; carrier API pending",
+          batchRecord4: "2026-06-04 DPP data reviewed and public page updated",
+          lastUpdatedLabel: "Last updated",
           noHouseholdWaste: "Do not discard with household waste",
           noHouseholdWasteDesc: "Use textile collection bins, brand take-back programs or local designated collection points first.",
           removeTrims: "Remove non-recyclable trims before disposal",
@@ -670,6 +753,36 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.verificationExpiry, t.verificationExpiryValue],
     [t.lastUpdated, t.dataLastUpdatedValue],
   ];
+  const glossaryItems = [
+    [t.gotsTerm, t.gotsDesc],
+    [t.oekoTerm, t.oekoDesc],
+    [t.reachTerm, t.reachDesc],
+    [t.svhcTerm, t.svhcDesc],
+  ];
+  const simpleMetrics: Array<[string, any, IconName]> = [
+    [t.carbon, latestEsg?.carbon_footprint ? `${latestEsg.carbon_footprint} kg CO2e` : "3.2 kg CO2e", "carbon"],
+    [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
+    [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100` : "81 / 100", "recycle"],
+    [t.minimumLifetime, locale === "zh" ? "2-3 年" : "2-3 years", "check"],
+  ];
+  const textileReserveItems: Array<[string, any]> = [
+    [t.microfiberPotential, t.microfiberValue],
+    [t.fullOriginTrace, t.fullOriginValue],
+    [t.animalWelfare, t.animalWelfareValue],
+    [t.laborCertification, t.laborCertificationValue],
+  ];
+  const batchHistory = [t.batchRecord1, t.batchRecord2, t.batchRecord3, t.batchRecord4];
+  const audioText =
+    locale === "zh"
+      ? `这是有机棉基础T恤的数字产品护照。碳足迹为3.2千克二氧化碳当量，已记录材料来源、证书、受限物质、生命周期结束方案和数据验证来源。`
+      : "This is the digital product passport for an organic cotton T-shirt. It records a 3.2 kilogram CO2 equivalent footprint, material origin, certificates, restricted substances, end-of-life options and data verification sources.";
+  const speakAudioDescription = () => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(audioText);
+    utterance.lang = locale === "zh" ? "zh-CN" : "en-US";
+    window.speechSynthesis.speak(utterance);
+  };
 
   const summaryMetrics: Array<[string, any, IconName]> = [
     [t.materialCount, materials.length, "layers"],
@@ -685,8 +798,11 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     ["#traceability", t.traceability, "route"],
     ["#esg", t.esg, "leaf"],
     ["#certificates", t.certificates, "certificate"],
+    ["#accessibility", t.accessibility, "eye"],
     ["#consumer", t.consumer, "eye"],
     ["#end-of-life", t.endOfLifeGuide, "recycle"],
+    ["#textile-reserve", t.textileReserve, "layers"],
+    ["#batch-tracking", t.batchTracking, "route"],
   ];
   const disclosureItems: Array<[string, string, IconName]> = [
     [t.identityDisclosure, t.identityDisclosureDesc, "box"],
@@ -700,7 +816,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   ];
 
   return (
-    <main className="min-h-screen bg-[#f7faf8] text-slate-950">
+    <main className="min-h-screen bg-[#f7faf8] text-slate-950" aria-label={t.passport}>
       <header className="sticky top-0 z-40 border-b border-white/70 bg-white/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-6 py-4">
           <Link href={`/?lang=${locale}`} className="flex items-center gap-3 font-bold">
@@ -717,7 +833,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </div>
       </header>
 
-      <section className="relative overflow-hidden border-b border-slate-200 bg-slate-950 text-white">
+      <section className="relative overflow-hidden border-b border-slate-200 bg-slate-950 text-white" aria-labelledby="dpp-product-title">
         <div className="absolute inset-0 dpp-grid opacity-25" />
         <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(2,6,23,0.98),rgba(15,23,42,0.88)_50%,rgba(5,46,22,0.82))]" />
 
@@ -729,7 +845,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               <Badge tone="dark">{pick(product, locale, "category")}</Badge>
             </div>
 
-            <h1 className="mt-6 max-w-4xl text-4xl font-black leading-tight md:text-5xl lg:text-6xl">
+            <h1 id="dpp-product-title" className="mt-6 max-w-4xl text-4xl font-black leading-tight md:text-5xl lg:text-6xl">
               {pick(product, locale, "name", "name_zh")}
             </h1>
 
@@ -749,7 +865,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               {product.main_image ? (
                 <img
                   src={product.main_image}
-                  alt={pick(product, locale, "name", "name_zh")}
+              alt={pick(product, locale, "name", "name_zh")}
                   className="h-64 w-full object-cover"
                 />
               ) : (
@@ -790,7 +906,42 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </div>
       </section>
 
-      <nav className="sticky top-[73px] z-30 border-b border-slate-200/80 bg-[#f7faf8]/90 backdrop-blur-xl">
+      <section className="mx-auto max-w-7xl px-6 pt-6" aria-label={t.accessibility}>
+        <div className="dpp-fade flex flex-wrap items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setViewMode("simple")}
+              aria-pressed={viewMode === "simple"}
+              className={viewMode === "simple" ? "rounded-lg bg-slate-950 px-4 py-2 text-sm font-black text-white" : "rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-black text-slate-700"}
+            >
+              {t.simpleView}
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("detail")}
+              aria-pressed={viewMode === "detail"}
+              className={viewMode === "detail" ? "rounded-lg bg-slate-950 px-4 py-2 text-sm font-black text-white" : "rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-black text-slate-700"}
+            >
+              {t.detailView}
+            </button>
+          </div>
+          <p className="text-sm font-semibold text-slate-600">{viewMode === "simple" ? t.simpleViewDesc : t.detailViewDesc}</p>
+          <div className="flex flex-wrap gap-2">
+            <button type="button" onClick={speakAudioDescription} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold text-slate-700 transition hover:border-brand-200 hover:text-brand-700" aria-label={t.audioDescription}>
+              {t.audioDescription}
+            </button>
+            <a href={`/api/dpp-export?format=pdf&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`} target="_blank" rel="noreferrer" className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-bold text-blue-700 transition hover:bg-blue-600 hover:text-white">
+              {t.downloadPdf}
+            </a>
+            <a href={`/api/dpp-export?format=json&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`} target="_blank" rel="noreferrer" className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-700 transition hover:bg-emerald-600 hover:text-white">
+              {t.downloadJson}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <nav className="sticky top-[73px] z-30 border-b border-slate-200/80 bg-[#f7faf8]/90 backdrop-blur-xl" aria-label="DPP section navigation">
         <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-6 py-3">
           {navItems.map(([href, label, icon]) => (
             <a
@@ -806,6 +957,30 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       </nav>
 
       <div className="mx-auto max-w-7xl px-6 py-8">
+        {viewMode === "simple" && (
+          <section className="dpp-fade mb-6 grid gap-4 lg:grid-cols-[1fr_1fr]">
+            <DataCard title={t.simpleView} icon="eye" surface="soft">
+              <div className="grid gap-3 sm:grid-cols-2">
+                {simpleMetrics.map(([label, value, icon]) => (
+                  <Metric key={label} label={label} value={value} locale={locale} icon={icon} />
+                ))}
+              </div>
+            </DataCard>
+            <DataCard title={t.benchmarkTitle} icon="carbon" surface="soft">
+              <ComparisonBars
+                currentLabel={t.thisProduct}
+                averageLabel={t.industryAverage}
+                currentValue={3.2}
+                averageValue={4.5}
+                unit="kg CO2e"
+                note={t.benchmarkAdvantage}
+              />
+            </DataCard>
+          </section>
+        )}
+
+        {viewMode === "detail" && (
+          <>
         <section className="dpp-fade mb-10 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
           <div className="grid gap-0 lg:grid-cols-[0.72fr_1.28fr]">
             <div className="bg-slate-950 p-6 text-white lg:p-8">
@@ -844,8 +1019,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             </DataCard>
           </div>
         </Section>
+          </>
+        )}
 
-        <Section id="materials" title={t.materialSource} icon="layers">
+        {viewMode === "detail" && <Section id="materials" title={t.materialSource} icon="layers">
           {materials.length || bom.length ? (
             <div className="grid gap-4 lg:grid-cols-2">
               {materials.map((material: any) => (
@@ -867,16 +1044,16 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ) : (
             <Empty text={t.pendingData} />
           )}
-        </Section>
+        </Section>}
 
-        <Section id="chemicals" title={t.chemicalRestricted} icon="file">
+        {viewMode === "detail" && <Section id="chemicals" title={t.chemicalRestricted} icon="file">
           <DataCard title={t.chemicalTitle} icon="file" surface="soft">
             <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.chemicalIntro}</p>
             <ChemicalTable rows={chemicalRows} locale={locale} t={t} productSlug={product.public_slug || "demo-organic-cotton-tshirt"} />
           </DataCard>
-        </Section>
+        </Section>}
 
-        <Section id="performance" title={t.productPerformance} icon="shield">
+        {viewMode === "detail" && <Section id="performance" title={t.productPerformance} icon="shield">
           <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
             <DataCard title={t.performanceTitle} icon="shield" surface="soft">
               <InfoGrid items={performanceItems} locale={locale} />
@@ -887,9 +1064,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               ))}
             </div>
           </div>
-        </Section>
+        </Section>}
 
-        <Section id="traceability" title={t.traceability} icon="route">
+        {viewMode === "detail" && <Section id="traceability" title={t.traceability} icon="route">
           {traceability.length ? (
             <div className="space-y-4">
               {traceability.map((event: any, index: number) => (
@@ -912,9 +1089,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ) : (
             <Empty text={t.pendingData} />
           )}
-        </Section>
+        </Section>}
 
-        <Section id="esg" title={t.esg} icon="leaf">
+        {viewMode === "detail" && <Section id="esg" title={t.esg} icon="leaf">
           {latestEsg || firstCircularity ? (
             <div className="grid gap-4 md:grid-cols-2">
               <InfoGrid
@@ -944,9 +1121,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ) : (
             <Empty text={t.pendingData} />
           )}
-        </Section>
+        </Section>}
 
-        <Section id="certificates" title={t.certificates} icon="certificate">
+        {viewMode === "detail" && <Section id="certificates" title={t.certificates} icon="certificate">
           {certificates.length ? (
             <div className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -994,9 +1171,47 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ) : (
             <Empty text={t.pendingData} />
           )}
+        </Section>}
+
+        <Section id="accessibility" title={t.accessibility} icon="eye">
+          <div className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
+            <DataCard title={t.glossaryTitle} icon="file" surface="soft">
+              <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.glossaryIntro}</p>
+              <div className="space-y-3">
+                {glossaryItems.map(([term, desc]) => (
+                  <details key={term} className="rounded-lg border border-slate-200 bg-white p-4">
+                    <summary className="cursor-pointer font-black text-slate-950">{term}</summary>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">{desc}</p>
+                  </details>
+                ))}
+              </div>
+            </DataCard>
+            <div className="space-y-4">
+              <DataCard title={t.benchmarkTitle} icon="carbon" surface="soft">
+                <ComparisonBars
+                  currentLabel={t.thisProduct}
+                  averageLabel={t.industryAverage}
+                  currentValue={3.2}
+                  averageValue={4.5}
+                  unit="kg CO2e"
+                  note={t.benchmarkAdvantage}
+                />
+              </DataCard>
+              <DataCard title={t.visualizationTitle} icon="leaf" surface="soft">
+                <ComparisonBars
+                  currentLabel={t.thisProduct}
+                  averageLabel={t.industryAverage}
+                  currentValue={118}
+                  averageValue={160}
+                  unit="L"
+                  note={t.waterBenchmark}
+                />
+              </DataCard>
+            </div>
+          </div>
         </Section>
 
-        <Section id="consumer" title={t.consumer} icon="eye">
+        {viewMode === "detail" && <Section id="consumer" title={t.consumer} icon="eye">
           {hasConsumerData ? (
             <div className="grid gap-4 lg:grid-cols-2">
               <InfoGrid
@@ -1020,9 +1235,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ) : (
             <Empty text={t.pendingData} />
           )}
-        </Section>
+        </Section>}
 
-        <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
+        {viewMode === "detail" && <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
           <div className="space-y-4">
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-5">
               <p className="text-sm font-bold uppercase text-emerald-700">{t.consumerDisclosure}</p>
@@ -1064,9 +1279,45 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               <GuideCard icon="recycle" title={t.textileCollection} text={t.textileCollectionDesc} />
             </div>
           </div>
-        </Section>
+        </Section>}
 
-        <Section id="evidence" title={t.evidence} icon="file">
+        {viewMode === "detail" && <Section id="textile-reserve" title={t.textileReserve} icon="layers">
+          <div className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-5">
+              <h3 className="text-2xl font-black text-slate-950">{t.textileReserve}</h3>
+              <p className="mt-3 leading-7 text-slate-700">{t.textileReserveIntro}</p>
+              <p className="mt-4 text-sm font-bold text-blue-700">{t.lastUpdatedLabel}: {t.dataLastUpdatedValue}</p>
+            </div>
+            <InfoGrid items={textileReserveItems} locale={locale} />
+          </div>
+        </Section>}
+
+        {viewMode === "detail" && <Section id="batch-tracking" title={t.batchTracking} icon="route">
+          <div className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
+            <DataCard title={t.batchHistoryTitle} icon="route" surface="soft">
+              <div className="space-y-3">
+                {batchHistory.map((item, index) => (
+                  <div key={item} className="flex gap-3 rounded-lg border border-slate-200 bg-white p-4">
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-slate-950 text-xs font-black text-white">{index + 1}</span>
+                    <p className="text-sm font-semibold leading-6 text-slate-700">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </DataCard>
+            <DataCard title={t.visualizationTitle} icon="carbon" surface="soft">
+              <ComparisonBars
+                currentLabel={t.thisProduct}
+                averageLabel={t.industryAverage}
+                currentValue={3.2}
+                averageValue={4.5}
+                unit="kg CO2e"
+                note={`${t.lastUpdatedLabel}: ${t.dataLastUpdatedValue}`}
+              />
+            </DataCard>
+          </div>
+        </Section>}
+
+        {viewMode === "detail" && <Section id="evidence" title={t.evidence} icon="file">
           <div className="space-y-4">
             <DataCard title={t.dataTransparencyTitle} icon="file" surface="soft">
               <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.dataTransparencyIntro}</p>
@@ -1099,7 +1350,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               </DataCard>
             </div>
           </div>
-        </Section>
+        </Section>}
 
         <section className="dpp-fade mt-10 rounded-lg bg-slate-950 p-8 text-white shadow-sm">
           <h2 className="text-2xl font-black">{t.footerTitle}</h2>
@@ -1541,6 +1792,52 @@ function DataSourceTable({
   );
 }
 
+function ComparisonBars({
+  currentLabel,
+  averageLabel,
+  currentValue,
+  averageValue,
+  unit,
+  note,
+}: {
+  currentLabel: string;
+  averageLabel: string;
+  currentValue: number;
+  averageValue: number;
+  unit: string;
+  note: string;
+}) {
+  const max = Math.max(currentValue, averageValue);
+  const currentWidth = `${Math.max(8, Math.round((currentValue / max) * 100))}%`;
+  const averageWidth = `${Math.max(8, Math.round((averageValue / max) * 100))}%`;
+
+  return (
+    <div>
+      <div className="space-y-4" role="img" aria-label={`${currentLabel}: ${currentValue} ${unit}; ${averageLabel}: ${averageValue} ${unit}`}>
+        <div>
+          <div className="flex items-center justify-between gap-3 text-sm font-bold text-slate-700">
+            <span>{currentLabel}</span>
+            <span>{currentValue} {unit}</span>
+          </div>
+          <div className="mt-2 h-3 overflow-hidden rounded-full bg-slate-200">
+            <div className="h-full rounded-full bg-brand-600 dpp-progress" style={{ width: currentWidth }} />
+          </div>
+        </div>
+        <div>
+          <div className="flex items-center justify-between gap-3 text-sm font-bold text-slate-700">
+            <span>{averageLabel}</span>
+            <span>{averageValue} {unit}</span>
+          </div>
+          <div className="mt-2 h-3 overflow-hidden rounded-full bg-slate-200">
+            <div className="h-full rounded-full bg-slate-500" style={{ width: averageWidth }} />
+          </div>
+        </div>
+      </div>
+      <p className="mt-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm font-semibold leading-6 text-emerald-800">{note}</p>
+    </div>
+  );
+}
+
 function MaterialCard({ item, locale, t }: { item: any; locale: Locale; t: any }) {
   const pct = Number(item.percentage || 0);
   return (
@@ -1574,17 +1871,17 @@ function TimelineItem({
   locale: Locale;
 }) {
   return (
-    <article className="grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:bg-white hover:shadow-lg sm:grid-cols-[48px_1fr]">
-      <div className="grid h-12 w-12 place-items-center rounded-lg bg-slate-950 text-white shadow-sm">
-        <Icon name="route" className="h-6 w-6" />
+    <details className="rounded-lg border border-slate-200 bg-slate-50 p-5 shadow-sm transition duration-300 open:bg-white hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
+      <summary className="flex cursor-pointer items-center gap-4">
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-slate-950 text-white shadow-sm">
+          <Icon name="route" className="h-6 w-6" />
+        </span>
+        <span className="font-black text-slate-950">{title}</span>
+      </summary>
+      <div className="mt-4 pl-0 sm:pl-16">
+        <InfoGrid items={items} locale={locale} />
       </div>
-      <div>
-        <h3 className="font-black text-slate-950">{title}</h3>
-        <div className="mt-4">
-          <InfoGrid items={items} locale={locale} />
-        </div>
-      </div>
-    </article>
+    </details>
   );
 }
 
