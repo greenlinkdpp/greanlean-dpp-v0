@@ -246,6 +246,48 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           openNewTab: "新窗口打开",
           endOfLifeGuide: "End of Life 生命周期结束指南",
           endOfLifeIntro: "面向消费者的循环利用指引，帮助产品在再使用、回收和拆解阶段保持可操作。",
+          reuseOptions: "再使用选项",
+          takeBackPlanDetails: "品牌旧衣回收计划",
+          takeBackPlanValue: "消费者可通过 greanlean 回收计划提交旧衣，系统记录回收批次并优先进入再使用筛选。",
+          takeBackPlanLink: "查看回收计划",
+          expectedResaleCycles: "预期转售次数",
+          resalePriceRange: "转售价格参考范围",
+          repairAndUpcycle: "维修与改造",
+          commonRepairTypes: "常见维修类型",
+          commonRepairTypesValue: "缝线修补、领口加固、轻微破洞织补、标签更换、局部改造",
+          repairProviders: "推荐维修服务商",
+          repairProvidersValue: "Demo Textile Repair Hub；EU Local Alteration Partner Network",
+          sparePartsGuide: "零部件采购指南",
+          sparePartsGuideValue: "优先采购棉线、可拆卸标签和低影响辅料；避免加入难回收复合辅料。",
+          textileRecycling: "纺织品回收",
+          recyclableParts: "可回收部分明细",
+          recyclablePartsValue: "100% 棉主身面料，可进入棉纺织品回收体系",
+          removeBeforeRecycle: "需要移除部分",
+          removeBeforeRecycleValue: "5% 涤纶缝纫线、领标和其他非棉辅料，按回收机构要求剪除",
+          recyclingFacilityLink: "当地回收设施查询",
+          dataTransparencyTitle: "数据来源与验证透明度",
+          dataTransparencyIntro: "列出关键环境数据来源、验证方式和更新时间，便于买家判断数据可信度。",
+          dataPoint: "数据项",
+          dataValue: "数值",
+          sourceLabel: "来源",
+          verificationLabel: "验证",
+          lastUpdated: "最后更新时间",
+          carbonSource: "LCA Database + 产品材料模型",
+          waterSource: "生产商声明",
+          wasteSource: "第三方审计",
+          recycledSource: "BOM 与供应商声明",
+          independentVerified: "第三方独立验证",
+          supplierDeclared: "供应商/生产商声明",
+          auditVerified: "第三方审计验证",
+          verificationAgency: "验证机构确认",
+          verificationAgencyValue: "SGS-CSTC Standards Technical Services Co., Ltd.（Demo）",
+          verificationScope: "验证范围",
+          verificationScopeValue: "碳足迹模型、重金属/偶氮染料报告、GOTS/OEKO-TEX 证书链由第三方独立验证；用水量和部分生产数据由生产商声明。",
+          verificationCertificate: "验证证书编号",
+          verificationCertificateValue: "SGS-DPP-DEMO-2026-042",
+          verificationExpiry: "验证有效期",
+          verificationExpiryValue: "2026-06-04 至 2027-06-03",
+          dataLastUpdatedValue: "2026-06-04",
           noHouseholdWaste: "请勿丢弃于生活垃圾",
           noHouseholdWasteDesc: "优先投放至纺织品回收箱、品牌回收计划或当地指定收集点。",
           removeTrims: "回收前剪除不可回收辅料",
@@ -412,6 +454,48 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           openNewTab: "Open in new tab",
           endOfLifeGuide: "End of Life guide",
           endOfLifeIntro: "Consumer-facing circularity guidance for reuse, recycling and disassembly decisions.",
+          reuseOptions: "Reuse options",
+          takeBackPlanDetails: "Brand take-back program",
+          takeBackPlanValue: "Consumers can submit used garments through the greanlean take-back program; returned batches are recorded and screened for reuse first.",
+          takeBackPlanLink: "View take-back program",
+          expectedResaleCycles: "Expected resale cycles",
+          resalePriceRange: "Resale price reference",
+          repairAndUpcycle: "Repair and upcycling",
+          commonRepairTypes: "Common repair types",
+          commonRepairTypesValue: "Seam repair, collar reinforcement, small-hole mending, label replacement and local upcycling",
+          repairProviders: "Recommended repair providers",
+          repairProvidersValue: "Demo Textile Repair Hub; EU Local Alteration Partner Network",
+          sparePartsGuide: "Spare-parts sourcing guide",
+          sparePartsGuideValue: "Prioritize cotton thread, detachable labels and low-impact trims; avoid adding hard-to-recycle composite trims.",
+          textileRecycling: "Textile recycling",
+          recyclableParts: "Recyclable parts",
+          recyclablePartsValue: "100% cotton main fabric, suitable for cotton-rich textile recycling streams",
+          removeBeforeRecycle: "Parts to remove",
+          removeBeforeRecycleValue: "5% polyester sewing thread, neck label and non-cotton trims where required by recyclers",
+          recyclingFacilityLink: "Find local recycling facilities",
+          dataTransparencyTitle: "Data source and verification transparency",
+          dataTransparencyIntro: "Shows key environmental data sources, verification method and update date so buyers can assess data credibility.",
+          dataPoint: "Data point",
+          dataValue: "Value",
+          sourceLabel: "Source",
+          verificationLabel: "Verification",
+          lastUpdated: "Last updated",
+          carbonSource: "LCA Database + product material model",
+          waterSource: "Manufacturer declaration",
+          wasteSource: "Third-party audit",
+          recycledSource: "BOM and supplier declarations",
+          independentVerified: "Independently verified",
+          supplierDeclared: "Supplier / manufacturer declared",
+          auditVerified: "Third-party audit verified",
+          verificationAgency: "Verification body confirmation",
+          verificationAgencyValue: "SGS-CSTC Standards Technical Services Co., Ltd. (Demo)",
+          verificationScope: "Verification scope",
+          verificationScopeValue: "Carbon-footprint model, heavy-metal/azo-dye reports and GOTS/OEKO-TEX certificate chain are independently verified; water usage and selected production data are manufacturer-declared.",
+          verificationCertificate: "Verification certificate number",
+          verificationCertificateValue: "SGS-DPP-DEMO-2026-042",
+          verificationExpiry: "Verification validity",
+          verificationExpiryValue: "2026-06-04 to 2027-06-03",
+          dataLastUpdatedValue: "2026-06-04",
           noHouseholdWaste: "Do not discard with household waste",
           noHouseholdWasteDesc: "Use textile collection bins, brand take-back programs or local designated collection points first.",
           removeTrims: "Remove non-recyclable trims before disposal",
@@ -533,6 +617,58 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.importerInfo, t.importerValue],
     [t.declarationDate, t.declarationDateValue],
     [t.declarationValidity, t.declarationValidityValue],
+  ];
+  const reuseItems: Array<[string, any]> = [
+    [t.takeBackPlanDetails, t.takeBackPlanValue],
+    [t.expectedResaleCycles, locale === "zh" ? "1-2 次" : "1-2 cycles"],
+    [t.resalePriceRange, locale === "zh" ? "原零售价的 20%-40%" : "20%-40% of original retail price"],
+  ];
+  const repairItems: Array<[string, any]> = [
+    [t.commonRepairTypes, t.commonRepairTypesValue],
+    [t.repairProviders, t.repairProvidersValue],
+    [t.sparePartsGuide, t.sparePartsGuideValue],
+  ];
+  const recyclingItems: Array<[string, any]> = [
+    [t.recyclableParts, t.recyclablePartsValue],
+    [t.removeBeforeRecycle, t.removeBeforeRecycleValue],
+    [t.recyclingFacilityLink, locale === "zh" ? "Recycle Now / 当地纺织品回收设施查询" : "Recycle Now / local textile recycling locator"],
+  ];
+  const dataSourceRows = [
+    {
+      point: t.carbon,
+      value: latestEsg?.carbon_footprint ? `${latestEsg.carbon_footprint} kg CO2e` : "3.2 kg CO2e",
+      source: t.carbonSource,
+      verification: t.independentVerified,
+      updated: t.dataLastUpdatedValue,
+    },
+    {
+      point: t.water,
+      value: latestEsg?.water_usage ? `${latestEsg.water_usage} L` : "118 L",
+      source: t.waterSource,
+      verification: t.supplierDeclared,
+      updated: t.dataLastUpdatedValue,
+    },
+    {
+      point: t.waste,
+      value: latestEsg?.waste_generation ? `${latestEsg.waste_generation} kg` : "0.38 kg",
+      source: t.wasteSource,
+      verification: t.auditVerified,
+      updated: t.dataLastUpdatedValue,
+    },
+    {
+      point: t.recycled,
+      value: latestEsg?.recycled_content ? `${latestEsg.recycled_content}%` : "4%",
+      source: t.recycledSource,
+      verification: t.independentVerified,
+      updated: t.dataLastUpdatedValue,
+    },
+  ];
+  const verificationItems: Array<[string, any]> = [
+    [t.verificationAgency, t.verificationAgencyValue],
+    [t.verificationScope, t.verificationScopeValue],
+    [t.verificationCertificate, t.verificationCertificateValue],
+    [t.verificationExpiry, t.verificationExpiryValue],
+    [t.lastUpdated, t.dataLastUpdatedValue],
   ];
 
   const summaryMetrics: Array<[string, any, IconName]> = [
@@ -887,22 +1023,42 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </Section>
 
         <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
-          <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="space-y-4">
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-5">
               <p className="text-sm font-bold uppercase text-emerald-700">{t.consumerDisclosure}</p>
               <h3 className="mt-2 text-2xl font-black text-slate-950">{t.endOfLife}</h3>
               <p className="mt-3 leading-7 text-slate-700">{t.endOfLifeIntro}</p>
-              <div className="mt-5">
-                <InfoGrid
-                  items={[
-                    [t.takeBack, firstCircularity?.take_back_program],
-                    [t.endOfLife, firstCircularity?.end_of_life_info || pick(product, locale, "end_of_life_instructions", "end_of_life_instructions_zh")],
-                  ]}
-                  locale={locale}
-                />
-              </div>
             </div>
-            <div className="grid gap-3">
+            <div className="grid gap-4 xl:grid-cols-3">
+              <DataCard title={t.reuseOptions} icon="recycle" surface="soft">
+                <InfoGrid items={reuseItems} locale={locale} />
+                <a
+                  href="https://www.recyclenow.com/recycle-an-item/clothing-textiles"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-200 bg-emerald-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-lg"
+                >
+                  <Icon name="recycle" className="h-5 w-5" />
+                  {t.takeBackPlanLink}
+                </a>
+              </DataCard>
+              <DataCard title={t.repairAndUpcycle} icon="scissors" surface="soft">
+                <InfoGrid items={repairItems} locale={locale} />
+              </DataCard>
+              <DataCard title={t.textileRecycling} icon="trash" surface="soft">
+                <InfoGrid items={recyclingItems} locale={locale} />
+                <a
+                  href="https://www.recyclenow.com/recycle-an-item/clothing-textiles"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
+                >
+                  <Icon name="recycle" className="h-5 w-5" />
+                  {t.recyclingFacilityLink}
+                </a>
+              </DataCard>
+            </div>
+            <div className="grid gap-3 md:grid-cols-3">
               <GuideCard icon="trash" title={t.noHouseholdWaste} text={t.noHouseholdWasteDesc} />
               <GuideCard icon="scissors" title={t.removeTrims} text={t.removeTrimsDesc} />
               <GuideCard icon="recycle" title={t.textileCollection} text={t.textileCollectionDesc} />
@@ -910,15 +1066,24 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           </div>
         </Section>
 
-        {(documents.length || firstGovernance) && (
-          <Section id="evidence" title={t.evidence} icon="file">
+        <Section id="evidence" title={t.evidence} icon="file">
+          <div className="space-y-4">
+            <DataCard title={t.dataTransparencyTitle} icon="file" surface="soft">
+              <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.dataTransparencyIntro}</p>
+              <DataSourceTable rows={dataSourceRows} t={t} />
+            </DataCard>
             <div className="grid gap-4 lg:grid-cols-2">
-              {documents.length ? (
-                <div className="space-y-3">
-                  {documents.map((document: any) => (
-                    <DataCard key={document.id} title={document.document_name || t.documentName} icon="file">
+              <DataCard title={t.verificationAgency} icon="shield" surface="soft">
+                <InfoGrid items={verificationItems} locale={locale} />
+              </DataCard>
+              <DataCard title={t.evidence} icon="file" surface="soft">
+                {documents.length ? (
+                  <div className="space-y-3">
+                    {documents.map((document: any) => (
                       <InfoGrid
+                        key={document.id}
                         items={[
+                          [t.documentName, document.document_name || t.documentName],
                           ["Type", document.document_type],
                           ["Language", document.language],
                           ["Version", document.version],
@@ -926,29 +1091,15 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                         ]}
                         locale={locale}
                       />
-                    </DataCard>
-                  ))}
-                </div>
-              ) : (
-                <Empty text={t.noData} />
-              )}
-
-              {firstGovernance ? (
-                <InfoGrid
-                  items={[
-                    [t.dataSource, firstGovernance.data_source],
-                    [t.dataOwner, firstGovernance.data_owner],
-                    [t.audit, firstGovernance.audit_status],
-                    [t.quality, firstGovernance.data_quality_score],
-                  ]}
-                  locale={locale}
-                />
-              ) : (
-                <Empty text={t.noData} />
-              )}
+                    ))}
+                  </div>
+                ) : (
+                  <Empty text={t.noData} />
+                )}
+              </DataCard>
             </div>
-          </Section>
-        )}
+          </div>
+        </Section>
 
         <section className="dpp-fade mt-10 rounded-lg bg-slate-950 p-8 text-white shadow-sm">
           <h2 className="text-2xl font-black">{t.footerTitle}</h2>
@@ -1337,6 +1488,52 @@ function ChemicalTable({
               <Icon name="pdf" className="h-4 w-4" />
               {t.downloadReport}
             </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DataSourceTable({
+  rows,
+  t,
+}: {
+  rows: Array<{ point: string; value: string; source: string; verification: string; updated: string }>;
+  t: any;
+}) {
+  return (
+    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="hidden grid-cols-[1fr_0.8fr_1.2fr_1fr_0.8fr] bg-slate-950 px-4 py-3 text-xs font-black uppercase text-white md:grid">
+        <span>{t.dataPoint}</span>
+        <span>{t.dataValue}</span>
+        <span>{t.sourceLabel}</span>
+        <span>{t.verificationLabel}</span>
+        <span>{t.lastUpdated}</span>
+      </div>
+      <div className="divide-y divide-slate-100">
+        {rows.map((row) => (
+          <div key={row.point} className="grid gap-3 px-4 py-4 md:grid-cols-[1fr_0.8fr_1.2fr_1fr_0.8fr] md:items-center">
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.dataPoint}</p>
+              <p className="font-black text-slate-950">{row.point}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.dataValue}</p>
+              <p className="font-semibold text-slate-950">{row.value}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.sourceLabel}</p>
+              <p className="text-sm font-semibold leading-6 text-slate-700">{row.source}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.verificationLabel}</p>
+              <span className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-sm font-bold text-blue-700">{row.verification}</span>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.lastUpdated}</p>
+              <p className="text-sm font-semibold text-slate-700">{row.updated}</p>
+            </div>
           </div>
         ))}
       </div>
