@@ -100,6 +100,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           overview: "产品概览",
           productIdentity: "产品基本信息",
           materialSource: "材料组成与来源",
+          productPerformance: "产品性能",
           traceability: "生产与运输追溯",
           esg: "ESG 与循环性",
           certificates: "认证证书",
@@ -186,8 +187,35 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           lifecycleDisclosureDesc: "生产、运输、维修、回收相关事件",
           evidenceDisclosure: "合规证据",
           evidenceDisclosureDesc: "证书、报告、验证状态与数据治理",
+          performanceDisclosure: "技术性能",
+          performanceDisclosureDesc: "耐洗、强度、色牢度、缩水率与使用寿命",
           gs1Note: "兼容 GS1 GTIN / SGTIN 唯一标识结构，用于产品级与单品级追溯。",
           jrcNote: "依据欧盟 JRC 循环经济方法学评估",
+          performanceTitle: "纺织品技术性能指标",
+          washDurability: "面料耐洗性",
+          tensileStrength: "拉伸强度（经向）",
+          colorFastness: "颜色牢度",
+          shrinkage: "缩水率（经向）",
+          minimumLifetime: "最小使用寿命",
+          testBasis: "测试/声明依据",
+          performanceBasis: "示例性能声明，面向纺织品 DPP 技术文件展示；实际产品应以检测报告和客户规格为准。",
+          declarationTitle: "EU Declaration of Conformity",
+          declarationSubtitle: "欧盟符合性声明",
+          declarationIntro: "该声明用于汇总产品适用的欧盟法规、经济运营方信息和声明有效期，并作为 DPP 证据链的一部分提供下载。",
+          applicableEuRules: "适用欧盟法规 / 指令",
+          manufacturerInfo: "制造商信息",
+          importerInfo: "进口商 / 欧盟责任方",
+          declarationDate: "声明日期",
+          declarationValidity: "有效期",
+          declarationDownload: "下载符合性声明 PDF",
+          declarationRule1: "Regulation (EU) 2024/1781 - ESPR 可持续产品生态设计法规框架",
+          declarationRule2: "Regulation (EC) No 1907/2006 - REACH 化学品法规及 RSL 受限物质清单",
+          declarationRule3: "Regulation (EU) 2023/988 - General Product Safety Regulation 通用产品安全法规",
+          declarationRule4: "Regulation (EU) No 1007/2011 - Textile fibre names and labelling 纺织纤维名称与标签",
+          manufacturerValue: "Demo Garment Factory Co., Ltd., 88 Textile Road, Ningbo, Zhejiang, China",
+          importerValue: "Greanlean EU Compliance GmbH, Demo Strasse 12, 20457 Hamburg, Germany",
+          declarationDateValue: "2026-06-04",
+          declarationValidityValue: "2026-06-04 至 2027-06-03",
           viewPdfCertificate: "查看 PDF 证书",
           certificatePreview: "证书预览",
           closePreview: "关闭预览",
@@ -213,6 +241,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           overview: "Product overview",
           productIdentity: "Product basics",
           materialSource: "Materials and sources",
+          productPerformance: "Product performance",
           traceability: "Production and transport traceability",
           esg: "ESG and circularity",
           certificates: "Certificates",
@@ -300,8 +329,35 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           lifecycleDisclosureDesc: "Production, transport, repair and recycling events",
           evidenceDisclosure: "Compliance evidence",
           evidenceDisclosureDesc: "Certificates, reports, verification and data governance",
+          performanceDisclosure: "Technical performance",
+          performanceDisclosureDesc: "Wash durability, strength, colour fastness, shrinkage and lifetime",
           gs1Note: "Compatible with GS1 GTIN / SGTIN identity structure for product-level and item-level traceability.",
           jrcNote: "Assessed using EU JRC circular-economy methodology",
+          performanceTitle: "Textile technical performance",
+          washDurability: "Wash durability",
+          tensileStrength: "Tensile strength (warp)",
+          colorFastness: "Colour fastness",
+          shrinkage: "Shrinkage (warp)",
+          minimumLifetime: "Minimum service life",
+          testBasis: "Test / declaration basis",
+          performanceBasis: "Demo performance declaration for textile DPP technical-file display; real products should reference test reports and customer specifications.",
+          declarationTitle: "EU Declaration of Conformity",
+          declarationSubtitle: "EU Declaration of Conformity",
+          declarationIntro: "This declaration summarizes applicable EU rules, economic-operator information and declaration validity as part of the DPP evidence chain.",
+          applicableEuRules: "Applicable EU rules / directives",
+          manufacturerInfo: "Manufacturer information",
+          importerInfo: "Importer / EU responsible party",
+          declarationDate: "Declaration date",
+          declarationValidity: "Validity",
+          declarationDownload: "Download declaration PDF",
+          declarationRule1: "Regulation (EU) 2024/1781 - ESPR framework for ecodesign requirements",
+          declarationRule2: "Regulation (EC) No 1907/2006 - REACH and RSL restricted substances screening",
+          declarationRule3: "Regulation (EU) 2023/988 - General Product Safety Regulation",
+          declarationRule4: "Regulation (EU) No 1007/2011 - Textile fibre names and labelling",
+          manufacturerValue: "Demo Garment Factory Co., Ltd., 88 Textile Road, Ningbo, Zhejiang, China",
+          importerValue: "Greanlean EU Compliance GmbH, Demo Strasse 12, 20457 Hamburg, Germany",
+          declarationDateValue: "2026-06-04",
+          declarationValidityValue: "2026-06-04 to 2027-06-03",
           viewPdfCertificate: "View PDF certificate",
           certificatePreview: "Certificate preview",
           closePreview: "Close preview",
@@ -377,6 +433,21 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.sgtin, sgtin],
     [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`],
   ];
+  const performanceItems: Array<[string, any]> = [
+    [t.washDurability, "≥ 50"],
+    [t.tensileStrength, "≥ 450 N/m"],
+    [t.colorFastness, "≥ Grade 3"],
+    [t.shrinkage, "≤ 3%"],
+    [t.minimumLifetime, locale === "zh" ? "2-3 年" : "2-3 years"],
+    [t.testBasis, t.performanceBasis],
+  ];
+  const declarationItems: Array<[string, any]> = [
+    [t.applicableEuRules, [t.declarationRule1, t.declarationRule2, t.declarationRule3, t.declarationRule4].join("\n")],
+    [t.manufacturerInfo, t.manufacturerValue],
+    [t.importerInfo, t.importerValue],
+    [t.declarationDate, t.declarationDateValue],
+    [t.declarationValidity, t.declarationValidityValue],
+  ];
 
   const summaryMetrics: Array<[string, any, IconName]> = [
     [t.materialCount, materials.length, "layers"],
@@ -387,6 +458,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   const navItems: Array<[string, string, IconName]> = [
     ["#identity", t.productIdentity, "box"],
     ["#materials", t.materialSource, "layers"],
+    ["#performance", t.productPerformance, "shield"],
     ["#traceability", t.traceability, "route"],
     ["#esg", t.esg, "leaf"],
     ["#certificates", t.certificates, "certificate"],
@@ -396,6 +468,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   const disclosureItems: Array<[string, string, IconName]> = [
     [t.identityDisclosure, t.identityDisclosureDesc, "box"],
     [t.materialDisclosure, t.materialDisclosureDesc, "layers"],
+    [t.performanceDisclosure, t.performanceDisclosureDesc, "shield"],
     [t.supplyDisclosure, t.supplyDisclosureDesc, "route"],
     [t.environmentDisclosure, t.environmentDisclosureDesc, "leaf"],
     [t.evidenceDisclosure, t.evidenceDisclosureDesc, "shield"],
@@ -572,6 +645,19 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>
 
+        <Section id="performance" title={t.productPerformance} icon="shield">
+          <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
+            <DataCard title={t.performanceTitle} icon="shield" surface="soft">
+              <InfoGrid items={performanceItems} locale={locale} />
+            </DataCard>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {performanceItems.slice(0, 5).map(([label, value]) => (
+                <Metric key={label} label={label} value={value} locale={locale} icon="check" />
+              ))}
+            </div>
+          </div>
+        </Section>
+
         <Section id="traceability" title={t.traceability} icon="route">
           {traceability.length ? (
             <div className="space-y-4">
@@ -631,33 +717,48 @@ export function PublicDppClient({ data, dppUrl }: Props) {
 
         <Section id="certificates" title={t.certificates} icon="certificate">
           {certificates.length ? (
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {certificates.map((certificate: any) => (
-                <DataCard key={certificate.id} title={pick(certificate, locale, "certificate_name", "certificate_name_zh")} icon="certificate">
-                  <div className="mb-4">
-                    <StatusBadge value={certificate.verification_status} locale={locale} verified={t.verified} pending={t.pending} />
-                  </div>
-                  <InfoGrid
-                    items={[
-                      [t.number, certificate.certificate_number],
-                      [t.issuer, certificate.issuer],
-                      [t.issueDate, formatDate(certificate.issue_date, locale)],
-                      [t.expiryDate, formatDate(certificate.expiry_date, locale)],
-                    ]}
-                    locale={locale}
-                  />
-                  {certificate.certificate_url && (
-                    <button
-                      type="button"
-                      onClick={() => setActiveCertificate(certificate)}
-                      className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
-                    >
-                      <Icon name="pdf" className="h-5 w-5" />
-                      {t.viewPdfCertificate}
-                    </button>
-                  )}
-                </DataCard>
-              ))}
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {certificates.map((certificate: any) => (
+                  <DataCard key={certificate.id} title={pick(certificate, locale, "certificate_name", "certificate_name_zh")} icon="certificate">
+                    <div className="mb-4">
+                      <StatusBadge value={certificate.verification_status} locale={locale} verified={t.verified} pending={t.pending} />
+                    </div>
+                    <InfoGrid
+                      items={[
+                        [t.number, certificate.certificate_number],
+                        [t.issuer, certificate.issuer],
+                        [t.issueDate, formatDate(certificate.issue_date, locale)],
+                        [t.expiryDate, formatDate(certificate.expiry_date, locale)],
+                      ]}
+                      locale={locale}
+                    />
+                    {certificate.certificate_url && (
+                      <button
+                        type="button"
+                        onClick={() => setActiveCertificate(certificate)}
+                        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
+                      >
+                        <Icon name="pdf" className="h-5 w-5" />
+                        {t.viewPdfCertificate}
+                      </button>
+                    )}
+                  </DataCard>
+                ))}
+              </div>
+              <DataCard title={t.declarationTitle} icon="file" surface="soft">
+                <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.declarationIntro}</p>
+                <InfoGrid items={declarationItems} locale={locale} />
+                <a
+                  href={`/api/declaration?lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg sm:w-auto"
+                >
+                  <Icon name="pdf" className="h-5 w-5" />
+                  {t.declarationDownload}
+                </a>
+              </DataCard>
             </div>
           ) : (
             <Empty text={t.pendingData} />
@@ -1073,7 +1174,7 @@ function InfoGrid({ items, locale }: { items: Array<[string, any]>; locale: Loca
             </span>
             <span>{label}</span>
           </div>
-          <p className="break-words text-sm font-semibold leading-6 text-slate-950">{valueOrDash(value, locale)}</p>
+          <p className="whitespace-pre-line break-words text-sm font-semibold leading-6 text-slate-950">{valueOrDash(value, locale)}</p>
         </div>
       ))}
     </div>
