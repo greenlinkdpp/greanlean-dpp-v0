@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -21,7 +21,11 @@ type IconName =
   | "carbon"
   | "shield"
   | "file"
-  | "info";
+  | "info"
+  | "check"
+  | "pdf"
+  | "trash"
+  | "scissors";
 
 function valueOrDash(value: any, locale: Locale = "en") {
   if (value === null || value === undefined || value === "") return "-";
@@ -51,8 +55,23 @@ function compact(values: any[]) {
   return values.filter((value) => value !== null && value !== undefined && value !== "").join(", ");
 }
 
+function addRegulatoryChemicalContext(value: any, locale: Locale) {
+  const text = valueOrDash(value, locale);
+  const lower = text.toLowerCase();
+  if (text === "-") {
+    return locale === "zh"
+      ? "符合欧盟 REACH 法规及 RSL（受限物质清单）标准。"
+      : "Screened against EU REACH requirements and RSL (Restricted Substances List) standards.";
+  }
+  if (lower.includes("reach") || lower.includes("rsl")) return text;
+  return locale === "zh"
+    ? `${text}；并符合欧盟 REACH 法规及 RSL（受限物质清单）标准。`
+    : `${text}; screened against EU REACH requirements and RSL (Restricted Substances List) standards.`;
+}
+
 export function PublicDppClient({ data, dppUrl }: Props) {
   const { locale } = useLanguage();
+  const [activeCertificate, setActiveCertificate] = useState<any>(null);
   const {
     product,
     materials = [],
@@ -96,6 +115,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           dppId: "DPP ID",
           publicSlug: "公开 Slug",
           gtin: "GTIN",
+          sgtin: "SGTIN",
           batch: "批次",
           serial: "序列号",
           digitalLink: "数字链接",
@@ -148,6 +168,38 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           quality: "数据质量",
           footerTitle: "由 greanlean DPP 提供支持",
           footerText: "该页面用于披露产品身份、材料来源、供应链追溯、ESG、证书和消费者透明化信息。",
+          disclosureTitle: "ESPR / DPP 信息披露概览",
+          disclosureText: "围绕产品身份、数据载体、材料来源、循环性、环境影响和合规证据组织信息。",
+          productRecordTitle: "产品身份档案",
+          digitalIdentityTitle: "数据载体与唯一标识",
+          supplyDisclosure: "供应链追溯",
+          supplyDisclosureDesc: "生产、运输、地点与验证记录",
+          environmentDisclosure: "环境与循环性",
+          environmentDisclosureDesc: "碳、水、能源、可维修与回收信息",
+          consumerDisclosure: "消费者可读信息",
+          consumerDisclosureDesc: "护理、维修、包装与生命周期结束说明",
+          identityDisclosure: "产品身份",
+          identityDisclosureDesc: "DPP ID、SKU、批次与数字链接",
+          materialDisclosure: "材料与来源",
+          materialDisclosureDesc: "材料比例、来源、物质与可回收信息",
+          lifecycleDisclosure: "生命周期记录",
+          lifecycleDisclosureDesc: "生产、运输、维修、回收相关事件",
+          evidenceDisclosure: "合规证据",
+          evidenceDisclosureDesc: "证书、报告、验证状态与数据治理",
+          gs1Note: "兼容 GS1 GTIN / SGTIN 唯一标识结构，用于产品级与单品级追溯。",
+          jrcNote: "依据欧盟 JRC 循环经济方法学评估",
+          viewPdfCertificate: "查看 PDF 证书",
+          certificatePreview: "证书预览",
+          closePreview: "关闭预览",
+          openNewTab: "新窗口打开",
+          endOfLifeGuide: "End of Life 生命周期结束指南",
+          endOfLifeIntro: "面向消费者的循环利用指引，帮助产品在再使用、回收和拆解阶段保持可操作。",
+          noHouseholdWaste: "请勿丢弃于生活垃圾",
+          noHouseholdWasteDesc: "优先投放至纺织品回收箱、品牌回收计划或当地指定收集点。",
+          removeTrims: "回收前剪除不可回收辅料",
+          removeTrimsDesc: "如回收机构要求，请剪除标签、非纺织辅料或其他难回收部件。",
+          textileCollection: "优先再使用，再进入纺织品回收",
+          textileCollectionDesc: "仍可穿着时建议捐赠、转售或维修；不可再使用时进入纺织品回收体系。",
         }
       : {
           brand: "greanlean DPP",
@@ -176,6 +228,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           dppId: "DPP ID",
           publicSlug: "Public slug",
           gtin: "GTIN",
+          sgtin: "SGTIN",
           batch: "Batch",
           serial: "Serial",
           digitalLink: "Digital link",
@@ -229,6 +282,38 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           footerTitle: "Powered by greanlean DPP",
           footerText:
             "This page discloses product identity, material sources, supply-chain traceability, ESG, certificates and consumer transparency information.",
+          disclosureTitle: "ESPR / DPP disclosure profile",
+          disclosureText: "Information is organized around product identity, data carrier, material origin, circularity, environmental impact and compliance evidence.",
+          productRecordTitle: "Product identity record",
+          digitalIdentityTitle: "Data carrier and identifiers",
+          supplyDisclosure: "Supply-chain traceability",
+          supplyDisclosureDesc: "Production, transport, location and verification records",
+          environmentDisclosure: "Environment and circularity",
+          environmentDisclosureDesc: "Carbon, water, energy, repair and recycling information",
+          consumerDisclosure: "Consumer-readable information",
+          consumerDisclosureDesc: "Care, repair, packaging and end-of-life instructions",
+          identityDisclosure: "Product identity",
+          identityDisclosureDesc: "DPP ID, SKU, batch and digital link",
+          materialDisclosure: "Materials and origin",
+          materialDisclosureDesc: "Material ratio, origin, substances and recyclability",
+          lifecycleDisclosure: "Lifecycle records",
+          lifecycleDisclosureDesc: "Production, transport, repair and recycling events",
+          evidenceDisclosure: "Compliance evidence",
+          evidenceDisclosureDesc: "Certificates, reports, verification and data governance",
+          gs1Note: "Compatible with GS1 GTIN / SGTIN identity structure for product-level and item-level traceability.",
+          jrcNote: "Assessed using EU JRC circular-economy methodology",
+          viewPdfCertificate: "View PDF certificate",
+          certificatePreview: "Certificate preview",
+          closePreview: "Close preview",
+          openNewTab: "Open in new tab",
+          endOfLifeGuide: "End of Life guide",
+          endOfLifeIntro: "Consumer-facing circularity guidance for reuse, recycling and disassembly decisions.",
+          noHouseholdWaste: "Do not discard with household waste",
+          noHouseholdWasteDesc: "Use textile collection bins, brand take-back programs or local designated collection points first.",
+          removeTrims: "Remove non-recyclable trims before disposal",
+          removeTrimsDesc: "Where requested by recyclers, cut off labels, non-textile trims or other hard-to-recycle components.",
+          textileCollection: "Reuse first, then textile recycling",
+          textileCollectionDesc: "Donate, resell or repair while usable; send to textile recycling when reuse is no longer possible.",
         };
 
   const latestEsg = esg[0] || null;
@@ -249,6 +334,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   const verifiedCertificates = certificates.filter((certificate: any) => {
     return String(certificate.verification_status || "").toLowerCase() === "verified";
   }).length;
+  const sgtin =
+    firstIdentity?.gtin && firstIdentity?.serial_id
+      ? `${firstIdentity.gtin}.${firstIdentity.serial_id}`
+      : null;
   const hasConsumerData = Boolean(
     firstTransparency?.brand_story ||
       firstTransparency?.brand_story_zh ||
@@ -277,9 +366,16 @@ export function PublicDppClient({ data, dppUrl }: Props) {
 
   const identityDetails: Array<[string, any]> = [
     [t.gtin, firstIdentity?.gtin],
+    [t.sgtin, sgtin],
     [t.batch, firstIdentity?.batch_id],
     [t.serial, firstIdentity?.serial_id],
     [t.digitalLink, firstIdentity?.digital_link_url],
+  ];
+  const heroDetails: Array<[string, any]> = [
+    [t.sku, product.sku],
+    [t.gtin, firstIdentity?.gtin],
+    [t.sgtin, sgtin],
+    [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`],
   ];
 
   const summaryMetrics: Array<[string, any, IconName]> = [
@@ -295,6 +391,15 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     ["#esg", t.esg, "leaf"],
     ["#certificates", t.certificates, "certificate"],
     ["#consumer", t.consumer, "eye"],
+    ["#end-of-life", t.endOfLifeGuide, "recycle"],
+  ];
+  const disclosureItems: Array<[string, string, IconName]> = [
+    [t.identityDisclosure, t.identityDisclosureDesc, "box"],
+    [t.materialDisclosure, t.materialDisclosureDesc, "layers"],
+    [t.supplyDisclosure, t.supplyDisclosureDesc, "route"],
+    [t.environmentDisclosure, t.environmentDisclosureDesc, "leaf"],
+    [t.evidenceDisclosure, t.evidenceDisclosureDesc, "shield"],
+    [t.consumerDisclosure, t.consumerDisclosureDesc, "eye"],
   ];
 
   return (
@@ -336,7 +441,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             </p>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:max-w-3xl">
-              {productDetails.slice(1, 5).map(([label, value]) => (
+              {heroDetails.map(([label, value]) => (
                 <Info key={label} label={label} value={value} locale={locale} variant="dark" />
               ))}
             </div>
@@ -403,11 +508,43 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </div>
       </nav>
 
-      <div className="mx-auto max-w-7xl px-6 py-12">
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <section className="dpp-fade mb-10 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+          <div className="grid gap-0 lg:grid-cols-[0.72fr_1.28fr]">
+            <div className="bg-slate-950 p-6 text-white lg:p-8">
+              <p className="text-sm font-bold text-brand-100">{t.passport}</p>
+              <h2 className="mt-2 text-2xl font-black lg:text-3xl">{t.disclosureTitle}</h2>
+              <p className="mt-3 leading-7 text-slate-300">{t.disclosureText}</p>
+            </div>
+            <div className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-3 lg:p-5">
+              {disclosureItems.map(([title, desc, icon]) => (
+                <div key={title} className="rounded-lg border border-slate-200 bg-slate-50 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:bg-white hover:shadow-sm">
+                  <div className="flex items-start gap-3">
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
+                      <Icon name={icon} className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <h3 className="font-black text-slate-950">{title}</h3>
+                      <p className="mt-1 text-sm leading-6 text-slate-600">{desc}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <Section id="identity" title={t.productIdentity} eyebrow={t.overview} icon="box">
           <div className="grid gap-4 lg:grid-cols-2">
-            <InfoGrid items={productDetails} locale={locale} />
-            <InfoGrid items={identityDetails} locale={locale} />
+            <DataCard title={t.productRecordTitle} icon="box" surface="soft">
+              <InfoGrid items={productDetails} locale={locale} />
+            </DataCard>
+            <DataCard title={t.digitalIdentityTitle} icon="qr" surface="soft">
+              <InfoGrid items={identityDetails} locale={locale} />
+              <p className="mt-4 rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm font-semibold leading-6 text-blue-800">
+                {t.gs1Note}
+              </p>
+            </DataCard>
           </div>
         </Section>
 
@@ -441,7 +578,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               {traceability.map((event: any, index: number) => (
                 <TimelineItem
                   key={event.id || index}
-                  index={index + 1}
                   title={pick(event, locale, "event_name", "event_name_zh")}
                   items={[
                     [t.eventType, event.event_type],
@@ -478,8 +614,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               />
               <InfoGrid
                 items={[
-                  [t.repairability, firstCircularity?.repairability_score],
-                  [t.recyclability, firstCircularity?.recyclability_score],
+                  [t.repairability, firstCircularity?.repairability_score ? `${firstCircularity.repairability_score} / 100 · ${t.jrcNote}` : null],
+                  [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100 · ${t.jrcNote}` : null],
                   [t.takeBack, firstCircularity?.take_back_program],
                   [t.resale, firstCircularity?.resale_supported],
                   [t.remanufacturing, firstCircularity?.remanufacturing_supported],
@@ -511,9 +647,14 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                     locale={locale}
                   />
                   {certificate.certificate_url && (
-                    <a className="mt-4 inline-flex text-sm font-bold text-brand-700" href={certificate.certificate_url} target="_blank" rel="noreferrer">
-                      {t.openCertificate}
-                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setActiveCertificate(certificate)}
+                      className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
+                    >
+                      <Icon name="pdf" className="h-5 w-5" />
+                      {t.viewPdfCertificate}
+                    </button>
                   )}
                 </DataCard>
               ))}
@@ -547,6 +688,30 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ) : (
             <Empty text={t.pendingData} />
           )}
+        </Section>
+
+        <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
+          <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-5">
+              <p className="text-sm font-bold uppercase text-emerald-700">{t.consumerDisclosure}</p>
+              <h3 className="mt-2 text-2xl font-black text-slate-950">{t.endOfLife}</h3>
+              <p className="mt-3 leading-7 text-slate-700">{t.endOfLifeIntro}</p>
+              <div className="mt-5">
+                <InfoGrid
+                  items={[
+                    [t.takeBack, firstCircularity?.take_back_program],
+                    [t.endOfLife, firstCircularity?.end_of_life_info || pick(product, locale, "end_of_life_instructions", "end_of_life_instructions_zh")],
+                  ]}
+                  locale={locale}
+                />
+              </div>
+            </div>
+            <div className="grid gap-3">
+              <GuideCard icon="trash" title={t.noHouseholdWaste} text={t.noHouseholdWasteDesc} />
+              <GuideCard icon="scissors" title={t.removeTrims} text={t.removeTrimsDesc} />
+              <GuideCard icon="recycle" title={t.textileCollection} text={t.textileCollectionDesc} />
+            </div>
+          </div>
         </Section>
 
         {(documents.length || firstGovernance) && (
@@ -595,6 +760,46 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           <p className="mt-4 text-sm font-semibold text-slate-400">greanlean.com</p>
         </section>
       </div>
+
+      {activeCertificate && (
+        <div className="fixed inset-0 z-[80] bg-slate-950/75 p-4 backdrop-blur-sm">
+          <div className="mx-auto flex h-full max-w-5xl flex-col overflow-hidden rounded-lg border border-white/10 bg-white shadow-2xl">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 place-items-center rounded-lg bg-blue-50 text-blue-700">
+                  <Icon name="pdf" className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="text-xs font-bold uppercase text-slate-500">{t.certificatePreview}</p>
+                  <h2 className="font-black text-slate-950">{pick(activeCertificate, locale, "certificate_name", "certificate_name_zh")}</h2>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <a
+                  href={activeCertificate.certificate_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:text-blue-700"
+                >
+                  {t.openNewTab}
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setActiveCertificate(null)}
+                  className="rounded-lg bg-slate-950 px-3 py-2 text-sm font-bold text-white transition hover:bg-slate-800"
+                >
+                  {t.closePreview}
+                </button>
+              </div>
+            </div>
+            <iframe
+              title={pick(activeCertificate, locale, "certificate_name", "certificate_name_zh")}
+              src={activeCertificate.certificate_url}
+              className="min-h-0 flex-1 bg-slate-100"
+            />
+          </div>
+        </div>
+      )}
     </main>
   );
 }
@@ -704,6 +909,37 @@ function Icon({ name, className = "h-5 w-5" }: { name: IconName; className?: str
           <path {...common} d="M12 7h.01" />
         </>
       )}
+      {name === "check" && (
+        <>
+          <path {...common} d="M20 6 9 17l-5-5" />
+        </>
+      )}
+      {name === "pdf" && (
+        <>
+          <path {...common} d="M6 3h8l4 4v14H6V3Z" />
+          <path {...common} d="M14 3v5h5" />
+          <path {...common} d="M8.5 16.5h7" />
+          <path {...common} d="M8.5 12.5h2.5a1.5 1.5 0 0 0 0-3H8.5v6" />
+        </>
+      )}
+      {name === "trash" && (
+        <>
+          <path {...common} d="M4 7h16" />
+          <path {...common} d="M10 11v6" />
+          <path {...common} d="M14 11v6" />
+          <path {...common} d="M6 7l1 14h10l1-14" />
+          <path {...common} d="M9 7V4h6v3" />
+        </>
+      )}
+      {name === "scissors" && (
+        <>
+          <path {...common} d="M4.5 7.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 0 0-5 0Z" />
+          <path {...common} d="M4.5 16.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 0 0-5 0Z" />
+          <path {...common} d="M8.8 9.1 20 4" />
+          <path {...common} d="M8.8 14.9 20 20" />
+          <path {...common} d="M8.8 9.1 12 12l-3.2 2.9" />
+        </>
+      )}
     </svg>
   );
 }
@@ -718,15 +954,18 @@ function Badge({ children, tone = "light" }: { children: ReactNode; tone?: "ligh
 
 function Metric({ label, value, locale, icon }: { label: string; value: any; locale: Locale; icon: IconName }) {
   return (
-    <div className="dpp-fade rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-semibold text-slate-500">{label}</p>
-          <p className="mt-2 text-3xl font-black text-slate-950">{valueOrDash(value, locale)}</p>
+    <div className="dpp-fade overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
+      <div className="h-1 bg-[linear-gradient(90deg,#16a34a,#0f766e)]" />
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold text-slate-500">{label}</p>
+            <p className="mt-2 text-3xl font-black text-slate-950">{valueOrDash(value, locale)}</p>
+          </div>
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
+            <Icon name={icon} className="h-5 w-5" />
+          </span>
         </div>
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
-          <Icon name={icon} className="h-5 w-5" />
-        </span>
       </div>
     </div>
   );
@@ -746,24 +985,42 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <section id={id} className="dpp-fade scroll-mt-36 border-t border-slate-200 py-10 first:border-t-0 first:pt-0 lg:py-14">
-      <div className="flex items-start gap-4">
-        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-slate-950 text-white shadow-sm">
-          <Icon name={icon} className="h-6 w-6" />
-        </span>
-        <div>
-          {eyebrow && <p className="text-sm font-bold uppercase text-brand-700">{eyebrow}</p>}
-          <h2 className={eyebrow ? "mt-1 text-3xl font-black text-slate-950" : "text-3xl font-black text-slate-950"}>{title}</h2>
+    <section id={id} className="dpp-fade mb-6 scroll-mt-36 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="border-b border-slate-200 bg-[linear-gradient(90deg,#ffffff,#f1f8f3)] px-5 py-5 lg:px-7">
+        <div className="flex items-start gap-4">
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-slate-950 text-white shadow-sm">
+            <Icon name={icon} className="h-5 w-5" />
+          </span>
+          <div>
+            {eyebrow && <p className="text-sm font-bold uppercase text-brand-700">{eyebrow}</p>}
+            <h2 className={eyebrow ? "mt-1 text-2xl font-black text-slate-950 lg:text-3xl" : "text-2xl font-black text-slate-950 lg:text-3xl"}>{title}</h2>
+          </div>
         </div>
       </div>
-      <div className="mt-7">{children}</div>
+      <div className="p-5 lg:p-7">{children}</div>
     </section>
   );
 }
 
-function DataCard({ title, icon = "info", children }: { title: string; icon?: IconName; children: ReactNode }) {
+function DataCard({
+  title,
+  icon = "info",
+  children,
+  surface = "white",
+}: {
+  title: string;
+  icon?: IconName;
+  children: ReactNode;
+  surface?: "white" | "soft";
+}) {
   return (
-    <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
+    <article
+      className={
+        surface === "soft"
+          ? "rounded-lg border border-slate-200 bg-slate-50 p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:bg-white hover:shadow-md"
+          : "rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg"
+      }
+    >
       <div className="flex items-center gap-3">
         <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
           <Icon name={icon} className="h-5 w-5" />
@@ -807,9 +1064,17 @@ function Info({
 
 function InfoGrid({ items, locale }: { items: Array<[string, any]>; locale: Locale }) {
   return (
-    <div className="grid gap-3">
+    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       {items.map(([label, value]) => (
-        <Info key={label} label={label} value={value} locale={locale} />
+        <div key={label} className="grid gap-2 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:grid-cols-[168px_1fr]">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500">
+            <span className="grid h-5 w-5 shrink-0 place-items-center rounded bg-brand-50 text-brand-700">
+              <Icon name="info" className="h-3.5 w-3.5" />
+            </span>
+            <span>{label}</span>
+          </div>
+          <p className="break-words text-sm font-semibold leading-6 text-slate-950">{valueOrDash(value, locale)}</p>
+        </div>
       ))}
     </div>
   );
@@ -817,6 +1082,20 @@ function InfoGrid({ items, locale }: { items: Array<[string, any]>; locale: Loca
 
 function Empty({ text }: { text: string }) {
   return <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-sm font-semibold text-slate-500">{text}</div>;
+}
+
+function GuideCard({ icon, title, text }: { icon: IconName; title: string; text: string }) {
+  return (
+    <article className="flex gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
+      <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-slate-950 text-white">
+        <Icon name={icon} className="h-6 w-6" />
+      </span>
+      <div>
+        <h3 className="font-black text-slate-950">{title}</h3>
+        <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
+      </div>
+    </article>
+  );
 }
 
 function MaterialCard({ item, locale, t }: { item: any; locale: Locale; t: any }) {
@@ -830,7 +1109,7 @@ function MaterialCard({ item, locale, t }: { item: any; locale: Locale; t: any }
           [t.recycled, item.recycled_content ? `${item.recycled_content}%` : null],
           [t.origin, item.origin_country],
           [t.certification, item.certification],
-          [t.chemical, pick(item, locale, "chemical_info", "chemical_info_zh")],
+          [t.chemical, addRegulatoryChemicalContext(pick(item, locale, "chemical_info", "chemical_info_zh"), locale)],
           [t.recyclability, pick(item, locale, "recyclability", "recyclability_zh")],
         ]}
         locale={locale}
@@ -843,27 +1122,23 @@ function MaterialCard({ item, locale, t }: { item: any; locale: Locale; t: any }
 }
 
 function TimelineItem({
-  index,
   title,
   items,
   locale,
 }: {
-  index: number;
   title: string;
   items: Array<[string, any]>;
   locale: Locale;
 }) {
   return (
-    <article className="grid gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg sm:grid-cols-[48px_1fr]">
+    <article className="grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:bg-white hover:shadow-lg sm:grid-cols-[48px_1fr]">
       <div className="grid h-12 w-12 place-items-center rounded-lg bg-slate-950 text-white shadow-sm">
         <Icon name="route" className="h-6 w-6" />
       </div>
       <div>
         <h3 className="font-black text-slate-950">{title}</h3>
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
-          {items.map(([label, value]) => (
-            <Info key={label} label={label} value={value} locale={locale} />
-          ))}
+        <div className="mt-4">
+          <InfoGrid items={items} locale={locale} />
         </div>
       </div>
     </article>
