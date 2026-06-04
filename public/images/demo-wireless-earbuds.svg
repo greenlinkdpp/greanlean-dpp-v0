@@ -1,0 +1,31 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="900" rx="36" fill="#F8FAFC"/>
+  <rect x="110" y="95" width="980" height="710" rx="34" fill="#FFFFFF" stroke="#DDE6EE" stroke-width="3"/>
+  <circle cx="970" cy="170" r="46" fill="#EAF8EF"/>
+  <circle cx="220" cy="715" r="64" fill="#EAF1FF"/>
+  <path d="M462 570C462 520 503 480 553 480H647C697 480 738 520 738 570V600C738 663 687 714 624 714H576C513 714 462 663 462 600V570Z" fill="#E8EEF4" stroke="#C8D3DF" stroke-width="6"/>
+  <path d="M505 563C505 540 524 521 547 521H653C676 521 695 540 695 563V592C695 633 662 666 621 666H579C538 666 505 633 505 592V563Z" fill="#FFFFFF"/>
+  <rect x="552" y="598" width="96" height="14" rx="7" fill="#B8C4CF"/>
+  <g filter="url(#shadow)">
+    <path d="M390 245C390 203 424 169 466 169H483C525 169 559 203 559 245V463C559 498 531 526 496 526H453C418 526 390 498 390 463V245Z" fill="#FFFFFF" stroke="#D4DEE8" stroke-width="7"/>
+    <path d="M450 254C450 238 463 225 479 225H497C513 225 526 238 526 254V335C526 351 513 364 497 364H479C463 364 450 351 450 335V254Z" fill="#0F172A"/>
+    <path d="M475 363L475 468" stroke="#0F172A" stroke-width="28" stroke-linecap="round"/>
+    <circle cx="488" cy="292" r="16" fill="#27C084"/>
+  </g>
+  <g filter="url(#shadow)">
+    <path d="M641 245C641 203 675 169 717 169H734C776 169 810 203 810 245V463C810 498 782 526 747 526H704C669 526 641 498 641 463V245Z" fill="#FFFFFF" stroke="#D4DEE8" stroke-width="7"/>
+    <path d="M674 254C674 238 687 225 703 225H721C737 225 750 238 750 254V335C750 351 737 364 721 364H703C687 364 674 351 674 335V254Z" fill="#0F172A"/>
+    <path d="M725 363L725 468" stroke="#0F172A" stroke-width="28" stroke-linecap="round"/>
+    <circle cx="712" cy="292" r="16" fill="#27C084"/>
+  </g>
+  <rect x="825" y="580" width="162" height="108" rx="18" fill="#0F172A"/>
+  <rect x="847" y="602" width="118" height="64" rx="10" fill="#FFFFFF"/>
+  <path d="M868 620H946M868 638H918M868 656H934" stroke="#27C084" stroke-width="8" stroke-linecap="round"/>
+  <path d="M296 160H222C198 160 178 180 178 204V278" stroke="#27C084" stroke-width="10" stroke-linecap="round"/>
+  <path d="M904 740H978C1002 740 1022 720 1022 696V622" stroke="#27C084" stroke-width="10" stroke-linecap="round"/>
+  <defs>
+    <filter id="shadow" x="350" y="139" width="500" height="427" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#0F172A" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+</svg>

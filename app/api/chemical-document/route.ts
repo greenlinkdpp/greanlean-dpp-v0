@@ -88,13 +88,14 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const type = url.searchParams.get("type") || "svhc";
   const product = url.searchParams.get("product") || "demo-organic-cotton-tshirt";
+  const isElectronics = product === "demo-wireless-earbuds";
   const doc = documents[type] || documents.svhc;
   const lines = [
     doc.title,
     "",
-    `Product: Organic Cotton T-Shirt (${product})`,
-    "DPP ID: DPP-DEMO-001",
-    "SKU: GL-TSHIRT-001",
+    `Product: ${isElectronics ? "Wireless Bluetooth Earbuds" : "Organic Cotton T-Shirt"} (${product})`,
+    `DPP ID: ${isElectronics ? "DPP-AUDIO-DEMO-001" : "DPP-DEMO-001"}`,
+    `SKU: ${isElectronics ? "GL-EARBUDS-001" : "GL-TSHIRT-001"}`,
     "",
     ...doc.lines.slice(1),
     "",

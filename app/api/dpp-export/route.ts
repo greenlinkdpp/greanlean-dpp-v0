@@ -45,6 +45,35 @@ ET`;
 }
 
 function getDemoPayload(product: string) {
+  if (product === "demo-wireless-earbuds") {
+    return {
+      product,
+      dpp_id: "DPP-AUDIO-DEMO-001",
+      sku: "GL-EARBUDS-001",
+      gtin: "06900000000128",
+      sgtin: "06900000000128.EARBUDS-DEMO-0001",
+      batch: "BATCH-AUDIO-2026-001",
+      carbon_footprint: "6.8 kg CO2e",
+      industry_average_carbon: "8.9 kg CO2e",
+      water_usage: "42 L",
+      certificates: ["EU Declaration of Conformity", "RoHS Restricted Substance Test Report", "REACH SVHC Screening"],
+      restricted_substances: {
+        svhc: "Not detected above 0.1% w/w",
+        lead: "Below RoHS limits",
+        cadmium: "Below RoHS limits",
+        chromium_vi: "Below RoHS limits",
+        azo_dyes: "Not applicable",
+      },
+      electronics_reserved_fields: {
+        battery_recycling_readiness: "MSDS, UN38.3 and WEEE collection path disclosed",
+        ce_rohs_evidence_chain: "CE DoC, RoHS report and REACH SVHC screening indexed",
+        firmware_security: "Firmware and security-update fields reserved",
+        spare_part_availability: "Ear tips, charging case and battery service fields reserved",
+      },
+      last_updated: "2026-06-04",
+    };
+  }
+
   return {
     product,
     dpp_id: "DPP-DEMO-001",

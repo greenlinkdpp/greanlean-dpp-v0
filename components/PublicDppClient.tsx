@@ -109,7 +109,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           consumer: "消费者透明化",
           evidence: "证据文件与数据治理",
           accessibility: "消费者可访问性",
-          textileReserve: "纺织品特定信息预留",
+          textileReserve: "产品特定信息预留",
           batchTracking: "批次追踪",
           noData: "暂无数据",
           pendingData: "该模块已预留，等待企业补充数据。",
@@ -288,7 +288,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           reachDesc: "欧盟化学品注册、评估、授权和限制法规，DPP 中常用于受限物质披露。",
           svhcTerm: "SVHC",
           svhcDesc: "高度关注物质候选清单，若超过阈值通常需要向下游披露。",
-          benchmarkTitle: "这件 T 恤的碳足迹",
+          benchmarkTitle: "该产品的碳足迹",
           thisProduct: "该产品",
           industryAverage: "行业平均",
           benchmarkAdvantage: "低于示例行业平均值约 29%，主要来自有机棉材料、低影响染整和海运/铁路组合运输假设。",
@@ -345,7 +345,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           consumer: "Consumer transparency",
           evidence: "Evidence files and data governance",
           accessibility: "Consumer accessibility",
-          textileReserve: "Textile-specific reserved fields",
+          textileReserve: "Product-specific reserved fields",
           batchTracking: "Batch tracking",
           noData: "No data yet",
           pendingData: "This module is reserved and awaiting company data.",
@@ -525,7 +525,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           reachDesc: "EU chemicals regulation for registration, evaluation, authorisation and restriction of chemicals; often used for restricted-substance disclosure.",
           svhcTerm: "SVHC",
           svhcDesc: "Substances of Very High Concern candidate list; substances above threshold usually require downstream disclosure.",
-          benchmarkTitle: "Carbon footprint of this T-shirt",
+          benchmarkTitle: "Carbon footprint of this product",
           thisProduct: "This product",
           industryAverage: "Industry average",
           benchmarkAdvantage: "About 29% below the demo industry average, mainly from organic cotton, lower-impact dyeing and sea/rail logistics assumptions.",
@@ -568,6 +568,18 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   const firstTransparency = consumerTransparency[0] || null;
   const firstIdentity = digitalIdentity[0] || null;
   const firstGovernance = governance[0] || null;
+  const categoryText = [product.category, product.subcategory, product.sku, product.name, product.name_zh]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  const isElectronics = /electronics|earbud|headphone|audio|蓝牙|耳机|电子/.test(categoryText);
+  const carbonCurrent = latestEsg?.carbon_footprint ? Number(latestEsg.carbon_footprint) : isElectronics ? 6.8 : 3.2;
+  const carbonAverage = isElectronics ? 8.9 : 4.5;
+  const waterCurrent = latestEsg?.water_usage ? Number(latestEsg.water_usage) : isElectronics ? 42 : 118;
+  const waterAverage = isElectronics ? 65 : 160;
+  const recycleLink = isElectronics
+    ? "https://environment.ec.europa.eu/topics/waste-and-recycling/waste-electrical-and-electronic-equipment-weee_en"
+    : "https://www.recyclenow.com/recycle-an-item/clothing-textiles";
   const qrUrl = `/api/qr?url=${encodeURIComponent(dppUrl)}`;
 
   const totalRecycled = useMemo(() => {
@@ -627,20 +639,82 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.lastUpdatedLabel, t.dataLastUpdatedValue],
   ];
   const heroSummary: Array<[string, any]> = [
-    [t.complianceScope, t.complianceScopeValue],
-    [t.materialProfile, t.materialProfileValue],
-    [t.performanceSnapshot, t.performanceSnapshotValue],
+    [
+      t.complianceScope,
+      isElectronics
+        ? locale === "zh"
+          ? "ESPR / CE / RoHS / REACH / WEEE / 电池与电子废弃物要求"
+          : "ESPR / CE / RoHS / REACH / WEEE / battery and e-waste requirements"
+        : t.complianceScopeValue,
+    ],
+    [
+      t.materialProfile,
+      isElectronics
+        ? locale === "zh"
+          ? "再生 ABS/PC 外壳、锂电池、PCB、硅胶耳塞与铜磁件"
+          : "Recycled ABS/PC housing, lithium-ion battery, PCB, silicone ear tips, copper and magnets"
+        : t.materialProfileValue,
+    ],
+    [
+      t.performanceSnapshot,
+      isElectronics
+        ? locale === "zh"
+          ? "续航 8 小时；充电循环 ≥500 次；IPX4 防泼溅"
+          : "8h battery life; >=500 charge cycles; IPX4 splash resistance"
+        : t.performanceSnapshotValue,
+    ],
     [t.nextAction, t.nextActionValue],
   ];
-  const performanceItems: Array<[string, any]> = [
-    [t.washDurability, "≥ 50"],
-    [t.tensileStrength, "≥ 450 N/m"],
-    [t.colorFastness, "≥ Grade 3"],
-    [t.shrinkage, "≤ 3%"],
-    [t.minimumLifetime, locale === "zh" ? "2-3 年" : "2-3 years"],
-    [t.testBasis, t.performanceBasis],
-  ];
-  const chemicalRows = [
+  const performanceItems: Array<[string, any]> = isElectronics
+    ? [
+        [locale === "zh" ? "单次续航" : "Battery life", locale === "zh" ? "8 小时" : "8 hours"],
+        [locale === "zh" ? "充电循环寿命" : "Charge-cycle life", "≥ 500"],
+        [locale === "zh" ? "蓝牙版本" : "Bluetooth version", "5.3"],
+        [locale === "zh" ? "防护等级" : "Ingress protection", "IPX4"],
+        [t.minimumLifetime, locale === "zh" ? "2 年" : "2 years"],
+        [
+          t.testBasis,
+          locale === "zh"
+            ? "示例性能声明，面向消费电子 DPP 技术文件展示；实际产品应以电池、EMC、安全和质检报告为准。"
+            : "Demo performance declaration for consumer-electronics DPP display; real products should reference battery, EMC, safety and QA reports.",
+        ],
+      ]
+    : [
+        [t.washDurability, "≥ 50"],
+        [t.tensileStrength, "≥ 450 N/m"],
+        [t.colorFastness, "≥ Grade 3"],
+        [t.shrinkage, "≤ 3%"],
+        [t.minimumLifetime, locale === "zh" ? "2-3 年" : "2-3 years"],
+        [t.testBasis, t.performanceBasis],
+      ];
+  const chemicalRows = isElectronics
+    ? [
+        {
+          item: locale === "zh" ? "RoHS 受限物质" : "RoHS restricted substances",
+          result: locale === "zh" ? "通过" : "Pass",
+          limit: "Pb, Cd, Hg, Cr(VI), PBB, PBDE below RoHS limits",
+          type: "heavy-metals",
+        },
+        {
+          item: t.svhcCandidate,
+          result: t.notDetected,
+          limit: t.svhcLimit,
+          type: "svhc",
+        },
+        {
+          item: locale === "zh" ? "电池 MSDS" : "Battery MSDS",
+          result: t.available,
+          limit: locale === "zh" ? "披露电池安全、运输和回收处理信息" : "Battery safety, transport and recycling handling information disclosed",
+          type: "msds",
+        },
+        {
+          item: locale === "zh" ? "皮肤接触材料筛查" : "Skin-contact material screening",
+          result: t.notDetected,
+          limit: locale === "zh" ? "硅胶耳塞受限物质筛查" : "Restricted-substance screening for silicone ear tips",
+          type: "svhc",
+        },
+      ]
+    : [
     {
       item: t.svhcCandidate,
       result: t.notDetected,
@@ -679,52 +753,88 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     },
   ];
   const declarationItems: Array<[string, any]> = [
-    [t.applicableEuRules, [t.declarationRule1, t.declarationRule2, t.declarationRule3, t.declarationRule4].join("\n")],
-    [t.manufacturerInfo, t.manufacturerValue],
+    [
+      t.applicableEuRules,
+      isElectronics
+        ? [
+            t.declarationRule1,
+            t.declarationRule2,
+            locale === "zh" ? "Directive 2011/65/EU - RoHS 电子电气受限物质指令" : "Directive 2011/65/EU - RoHS restriction of hazardous substances",
+            locale === "zh" ? "Directive 2012/19/EU - WEEE 电子电气废弃物指令" : "Directive 2012/19/EU - WEEE waste electrical and electronic equipment",
+            locale === "zh" ? "Directive 2014/53/EU - RED 无线电设备指令" : "Directive 2014/53/EU - Radio Equipment Directive",
+          ].join("\n")
+        : [t.declarationRule1, t.declarationRule2, t.declarationRule3, t.declarationRule4].join("\n"),
+    ],
+    [
+      t.manufacturerInfo,
+      isElectronics
+        ? locale === "zh"
+          ? "Demo Electronics Assembly Plant Co., Ltd., 18 Smart Hardware Road, Dongguan, Guangdong, China"
+          : "Demo Electronics Assembly Plant Co., Ltd., 18 Smart Hardware Road, Dongguan, Guangdong, China"
+        : t.manufacturerValue,
+    ],
     [t.importerInfo, t.importerValue],
     [t.declarationDate, t.declarationDateValue],
     [t.declarationValidity, t.declarationValidityValue],
   ];
-  const reuseItems: Array<[string, any]> = [
-    [t.takeBackPlanDetails, t.takeBackPlanValue],
-    [t.expectedResaleCycles, locale === "zh" ? "1-2 次" : "1-2 cycles"],
-    [t.resalePriceRange, locale === "zh" ? "原零售价的 20%-40%" : "20%-40% of original retail price"],
-  ];
-  const repairItems: Array<[string, any]> = [
-    [t.commonRepairTypes, t.commonRepairTypesValue],
-    [t.repairProviders, t.repairProvidersValue],
-    [t.sparePartsGuide, t.sparePartsGuideValue],
-  ];
-  const recyclingItems: Array<[string, any]> = [
-    [t.recyclableParts, t.recyclablePartsValue],
-    [t.removeBeforeRecycle, t.removeBeforeRecycleValue],
-    [t.recyclingFacilityLink, locale === "zh" ? "Recycle Now / 当地纺织品回收设施查询" : "Recycle Now / local textile recycling locator"],
-  ];
+  const reuseItems: Array<[string, any]> = isElectronics
+    ? [
+        [t.takeBackPlanDetails, locale === "zh" ? "通过授权 WEEE 回收点或品牌回收计划提交旧耳机和充电盒。" : "Return used earbuds and charging case through authorized WEEE collection points or brand take-back."],
+        [t.expectedResaleCycles, locale === "zh" ? "1 次，需通过电池健康检测" : "1 cycle, subject to battery-health screening"],
+        [t.resalePriceRange, locale === "zh" ? "原零售价的 15%-35%" : "15%-35% of original retail price"],
+      ]
+    : [
+        [t.takeBackPlanDetails, t.takeBackPlanValue],
+        [t.expectedResaleCycles, locale === "zh" ? "1-2 次" : "1-2 cycles"],
+        [t.resalePriceRange, locale === "zh" ? "原零售价的 20%-40%" : "20%-40% of original retail price"],
+      ];
+  const repairItems: Array<[string, any]> = isElectronics
+    ? [
+        [t.commonRepairTypes, locale === "zh" ? "耳塞更换、充电盒检测、电池健康评估、固件重置、清洁维护" : "Ear-tip replacement, charging-case diagnostics, battery-health check, firmware reset and cleaning"],
+        [t.repairProviders, locale === "zh" ? "Demo EU Electronics Service Network；授权电池维修服务商" : "Demo EU Electronics Service Network; authorized battery repair providers"],
+        [t.sparePartsGuide, locale === "zh" ? "优先使用原厂耳塞、充电盒和合规电池组件；避免非授权电池替换。" : "Prioritize original ear tips, charging case and compliant battery modules; avoid unauthorized battery replacement."],
+      ]
+    : [
+        [t.commonRepairTypes, t.commonRepairTypesValue],
+        [t.repairProviders, t.repairProvidersValue],
+        [t.sparePartsGuide, t.sparePartsGuideValue],
+      ];
+  const recyclingItems: Array<[string, any]> = isElectronics
+    ? [
+        [t.recyclableParts, locale === "zh" ? "ABS/PC 外壳、PCB 金属、铜件和电池材料，需按 WEEE 流程拆解。" : "ABS/PC housing, PCB metals, copper parts and battery materials after WEEE disassembly."],
+        [t.removeBeforeRecycle, locale === "zh" ? "硅胶耳塞、包装附件和可拆卸线缆；含电池部件单独处理。" : "Silicone ear tips, packaging accessories and removable cable; battery-containing parts handled separately."],
+        [t.recyclingFacilityLink, locale === "zh" ? "WEEE / 当地电子电气回收设施查询" : "WEEE / local e-waste collection locator"],
+      ]
+    : [
+        [t.recyclableParts, t.recyclablePartsValue],
+        [t.removeBeforeRecycle, t.removeBeforeRecycleValue],
+        [t.recyclingFacilityLink, locale === "zh" ? "Recycle Now / 当地纺织品回收设施查询" : "Recycle Now / local textile recycling locator"],
+      ];
   const dataSourceRows = [
     {
       point: t.carbon,
-      value: latestEsg?.carbon_footprint ? `${latestEsg.carbon_footprint} kg CO2e` : "3.2 kg CO2e",
-      source: t.carbonSource,
+      value: `${carbonCurrent} kg CO2e`,
+      source: isElectronics ? (locale === "zh" ? "LCA Database + 电子 BOM / 电池模型" : "LCA Database + electronics BOM / battery model") : t.carbonSource,
       verification: t.independentVerified,
       updated: t.dataLastUpdatedValue,
     },
     {
       point: t.water,
-      value: latestEsg?.water_usage ? `${latestEsg.water_usage} L` : "118 L",
+      value: `${waterCurrent} L`,
       source: t.waterSource,
       verification: t.supplierDeclared,
       updated: t.dataLastUpdatedValue,
     },
     {
       point: t.waste,
-      value: latestEsg?.waste_generation ? `${latestEsg.waste_generation} kg` : "0.38 kg",
+      value: latestEsg?.waste_generation ? `${latestEsg.waste_generation} kg` : isElectronics ? "0.22 kg" : "0.38 kg",
       source: t.wasteSource,
       verification: t.auditVerified,
       updated: t.dataLastUpdatedValue,
     },
     {
       point: t.recycled,
-      value: latestEsg?.recycled_content ? `${latestEsg.recycled_content}%` : "4%",
+      value: latestEsg?.recycled_content ? `${latestEsg.recycled_content}%` : isElectronics ? "18%" : "4%",
       source: t.recycledSource,
       verification: t.independentVerified,
       updated: t.dataLastUpdatedValue,
@@ -732,34 +842,88 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   ];
   const verificationItems: Array<[string, any]> = [
     [t.verificationAgency, t.verificationAgencyValue],
-    [t.verificationScope, t.verificationScopeValue],
-    [t.verificationCertificate, t.verificationCertificateValue],
+    [
+      t.verificationScope,
+      isElectronics
+        ? locale === "zh"
+          ? "碳足迹模型、RoHS/REACH 报告、电池 MSDS、CE 符合性声明和 WEEE 生命周期结束信息由第三方或文件证据验证；部分生产数据由制造商声明。"
+          : "Carbon-footprint model, RoHS/REACH reports, battery MSDS, CE declaration and WEEE end-of-life information are verified by third-party or evidence files; selected production data are manufacturer-declared."
+        : t.verificationScopeValue,
+    ],
+    [t.verificationCertificate, isElectronics ? "SGS-DPP-AUDIO-2026-018" : t.verificationCertificateValue],
     [t.verificationExpiry, t.verificationExpiryValue],
     [t.lastUpdated, t.dataLastUpdatedValue],
   ];
-  const glossaryItems = [
-    [t.gotsTerm, t.gotsDesc],
-    [t.oekoTerm, t.oekoDesc],
-    [t.reachTerm, t.reachDesc],
-    [t.svhcTerm, t.svhcDesc],
-  ];
+  const glossaryItems = isElectronics
+    ? [
+        ["CE", locale === "zh" ? "欧盟符合性标志，表明产品满足适用欧盟法规和指令要求。" : "EU conformity marking indicating the product meets applicable EU rules and directives."],
+        ["RoHS", locale === "zh" ? "电子电气设备中限制使用某些有害物质的欧盟指令。" : "EU directive restricting certain hazardous substances in electrical and electronic equipment."],
+        ["WEEE", locale === "zh" ? "电子电气废弃物回收处理体系，用于指导消费电子生命周期结束。" : "Waste electrical and electronic equipment framework for end-of-life handling."],
+        [t.reachTerm, t.reachDesc],
+        [t.svhcTerm, t.svhcDesc],
+      ]
+    : [
+        [t.gotsTerm, t.gotsDesc],
+        [t.oekoTerm, t.oekoDesc],
+        [t.reachTerm, t.reachDesc],
+        [t.svhcTerm, t.svhcDesc],
+      ];
   const simpleMetrics: Array<[string, any, IconName]> = [
-    [t.carbon, latestEsg?.carbon_footprint ? `${latestEsg.carbon_footprint} kg CO2e` : "3.2 kg CO2e", "carbon"],
+    [t.carbon, `${carbonCurrent} kg CO2e`, "carbon"],
     [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
-    [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100` : "81 / 100", "recycle"],
-    [t.minimumLifetime, locale === "zh" ? "2-3 年" : "2-3 years", "check"],
+    [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100` : isElectronics ? "58 / 100" : "81 / 100", "recycle"],
+    [t.minimumLifetime, isElectronics ? (locale === "zh" ? "2 年" : "2 years") : locale === "zh" ? "2-3 年" : "2-3 years", "check"],
   ];
-  const textileReserveItems: Array<[string, any]> = [
-    [t.microfiberPotential, t.microfiberValue],
-    [t.fullOriginTrace, t.fullOriginValue],
-    [t.animalWelfare, t.animalWelfareValue],
-    [t.laborCertification, t.laborCertificationValue],
-  ];
-  const batchHistory = [t.batchRecord1, t.batchRecord2, t.batchRecord3, t.batchRecord4];
+  const textileReserveItems: Array<[string, any]> = isElectronics
+    ? [
+        [locale === "zh" ? "电池拆解与回收准备" : "Battery removal and recycling readiness", locale === "zh" ? "预留电池护照字段；当前披露 MSDS、UN38.3 和 WEEE 回收路径。" : "Battery-passport fields reserved; MSDS, UN38.3 and WEEE path disclosed now."],
+        [locale === "zh" ? "RoHS / CE 证据链" : "RoHS / CE evidence chain", locale === "zh" ? "预留后续与欧盟系统对接的合规文件索引和验证状态。" : "Evidence-file index and verification status reserved for future EU-system connection."],
+        [locale === "zh" ? "固件与网络安全信息" : "Firmware and cybersecurity information", locale === "zh" ? "预留固件版本、蓝牙模块和安全更新记录字段。" : "Firmware version, Bluetooth module and security-update record fields reserved."],
+        [locale === "zh" ? "维修备件可用性" : "Spare-part availability", locale === "zh" ? "预留耳塞、充电盒和电池服务件的供应周期与服务商信息。" : "Ear tips, charging case and battery service-part availability fields reserved."],
+      ]
+    : [
+        [t.microfiberPotential, t.microfiberValue],
+        [t.fullOriginTrace, t.fullOriginValue],
+        [t.animalWelfare, t.animalWelfareValue],
+        [t.laborCertification, t.laborCertificationValue],
+      ];
+  const batchHistory = isElectronics
+    ? [
+        locale === "zh" ? "2026-04-16 电池、PCB 和外壳材料批次创建并绑定 RoHS / REACH 声明" : "2026-04-16 Battery, PCB and housing material batches created and linked to RoHS / REACH declarations",
+        locale === "zh" ? "2026-05-30 总装与声学质检完成，SKU 与 SGTIN 生成" : "2026-05-30 Final assembly and acoustic QA completed; SKU and SGTIN generated",
+        locale === "zh" ? "2026-06-02 出口运输记录写入，欧盟进口商仓库接收待确认" : "2026-06-02 Export shipment record added; EU importer warehouse receipt pending",
+        locale === "zh" ? "2026-06-04 DPP 数据审核并更新公开页面" : "2026-06-04 DPP data reviewed and public page updated",
+      ]
+    : [t.batchRecord1, t.batchRecord2, t.batchRecord3, t.batchRecord4];
+  const benchmarkNote = isElectronics
+    ? locale === "zh"
+      ? "低于示例消费电子同类平均值约 24%，主要来自再生塑料外壳、轻量化包装和较小物流体积假设。"
+      : "About 24% below the demo consumer-electronics average, mainly from recycled plastic housing, lightweight packaging and lower shipping-volume assumptions."
+    : t.benchmarkAdvantage;
+  const reserveIntro = isElectronics
+    ? locale === "zh"
+      ? "以下字段用于提前适配消费电子和电池相关 DPP 细化要求；当前作为预留和数据准备项展示。"
+      : "These fields are reserved for consumer-electronics and battery-related DPP extensions; currently shown as data-readiness items."
+    : t.textileReserveIntro;
+  const householdWasteText = isElectronics
+    ? locale === "zh"
+      ? "请勿将耳机、充电盒或含电池部件作为生活垃圾丢弃，应进入 WEEE 或电池回收渠道。"
+      : "Do not discard earbuds, charging case or battery-containing parts with household waste; use WEEE or battery collection streams."
+    : t.noHouseholdWasteDesc;
+  const removePartsText = isElectronics
+    ? locale === "zh"
+      ? "回收前尽量分离硅胶耳塞、包装配件和可拆卸线缆；电池部件由授权机构处理。"
+      : "Where possible, separate silicone ear tips, packaging accessories and removable cables before recycling; battery parts should be handled by authorized facilities."
+    : t.removeTrimsDesc;
+  const collectionText = isElectronics
+    ? locale === "zh"
+      ? "可维修或转售时优先延长使用寿命；无法继续使用时送至当地电子电气回收点。"
+      : "Extend product life through repair or resale where possible; send unusable units to local electronics collection points."
+    : t.textileCollectionDesc;
   const summaryMetrics: Array<[string, any, IconName]> = [
     [t.materialCount, materials.length, "layers"],
     [t.recycled, totalRecycled === null ? "0%" : `${totalRecycled}%`, "recycle"],
-    [t.carbon, latestEsg?.carbon_footprint ? `${latestEsg.carbon_footprint} kg CO2e` : "0 kg CO2e", "carbon"],
+    [t.carbon, `${carbonCurrent} kg CO2e`, "carbon"],
     [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
   ];
   const navItems: Array<[string, string, IconName]> = [
@@ -942,10 +1106,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               <ComparisonBars
                 currentLabel={t.thisProduct}
                 averageLabel={t.industryAverage}
-                currentValue={3.2}
-                averageValue={4.5}
+                currentValue={carbonCurrent}
+                averageValue={carbonAverage}
                 unit="kg CO2e"
-                note={t.benchmarkAdvantage}
+                note={benchmarkNote}
               />
             </DataCard>
           </section>
@@ -1138,18 +1302,18 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 <ComparisonBars
                   currentLabel={t.thisProduct}
                   averageLabel={t.industryAverage}
-                  currentValue={3.2}
-                  averageValue={4.5}
+                  currentValue={carbonCurrent}
+                  averageValue={carbonAverage}
                   unit="kg CO2e"
-                  note={t.benchmarkAdvantage}
+                  note={benchmarkNote}
                 />
               </DataCard>
               <DataCard title={t.visualizationTitle} icon="leaf" surface="soft">
                 <ComparisonBars
                   currentLabel={t.thisProduct}
                   averageLabel={t.industryAverage}
-                  currentValue={118}
-                  averageValue={160}
+                  currentValue={waterCurrent}
+                  averageValue={waterAverage}
                   unit="L"
                   note={t.waterBenchmark}
                 />
@@ -1195,7 +1359,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               <DataCard title={t.reuseOptions} icon="recycle" surface="soft">
                 <InfoGrid items={reuseItems} locale={locale} />
                 <a
-                  href="https://www.recyclenow.com/recycle-an-item/clothing-textiles"
+                  href={recycleLink}
                   target="_blank"
                   rel="noreferrer"
                   className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-200 bg-emerald-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-lg"
@@ -1207,10 +1371,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               <DataCard title={t.repairAndUpcycle} icon="scissors" surface="soft">
                 <InfoGrid items={repairItems} locale={locale} />
               </DataCard>
-              <DataCard title={t.textileRecycling} icon="trash" surface="soft">
+              <DataCard title={isElectronics ? (locale === "zh" ? "WEEE / 电子电气回收" : "WEEE / E-waste recycling") : t.textileRecycling} icon="trash" surface="soft">
                 <InfoGrid items={recyclingItems} locale={locale} />
                 <a
-                  href="https://www.recyclenow.com/recycle-an-item/clothing-textiles"
+                  href={recycleLink}
                   target="_blank"
                   rel="noreferrer"
                   className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
@@ -1221,9 +1385,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               </DataCard>
             </div>
             <div className="grid gap-3 md:grid-cols-3">
-              <GuideCard icon="trash" title={t.noHouseholdWaste} text={t.noHouseholdWasteDesc} />
-              <GuideCard icon="scissors" title={t.removeTrims} text={t.removeTrimsDesc} />
-              <GuideCard icon="recycle" title={t.textileCollection} text={t.textileCollectionDesc} />
+              <GuideCard icon="trash" title={t.noHouseholdWaste} text={householdWasteText} />
+              <GuideCard icon="scissors" title={isElectronics ? (locale === "zh" ? "回收前分离可拆部件" : "Separate removable parts before recycling") : t.removeTrims} text={removePartsText} />
+              <GuideCard icon="recycle" title={isElectronics ? (locale === "zh" ? "优先维修，再进入电子回收" : "Repair first, then e-waste recycling") : t.textileCollection} text={collectionText} />
             </div>
           </div>
         </Section>}
@@ -1232,7 +1396,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           <div className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="rounded-lg border border-blue-200 bg-blue-50 p-5">
               <h3 className="text-2xl font-black text-slate-950">{t.textileReserve}</h3>
-              <p className="mt-3 leading-7 text-slate-700">{t.textileReserveIntro}</p>
+              <p className="mt-3 leading-7 text-slate-700">{reserveIntro}</p>
               <p className="mt-4 text-sm font-bold text-blue-700">{t.lastUpdatedLabel}: {t.dataLastUpdatedValue}</p>
             </div>
             <InfoGrid items={textileReserveItems} locale={locale} />
@@ -1255,8 +1419,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               <ComparisonBars
                 currentLabel={t.thisProduct}
                 averageLabel={t.industryAverage}
-                currentValue={3.2}
-                averageValue={4.5}
+                currentValue={carbonCurrent}
+                averageValue={carbonAverage}
                 unit="kg CO2e"
                 note={`${t.lastUpdatedLabel}: ${t.dataLastUpdatedValue}`}
               />
