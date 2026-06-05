@@ -1186,6 +1186,24 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 src={qrUrl}
               />
               <p className="mt-3 break-all text-xs leading-5 text-slate-500">{dppUrl}</p>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                <a
+                  href={`/api/dpp-export?format=pdf&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center rounded-lg border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm font-black text-blue-700 transition hover:bg-blue-600 hover:text-white"
+                >
+                  {t.downloadPdf}
+                </a>
+                <a
+                  href={`/api/dpp-export?format=json&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm font-black text-emerald-700 transition hover:bg-emerald-600 hover:text-white"
+                >
+                  {t.downloadJson}
+                </a>
+              </div>
             </div>
           </aside>
         </div>
@@ -1199,10 +1217,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 pt-6" aria-label={t.accessibility}>
-        <div className={viewMode === "simple" ? "dpp-fade flex flex-wrap items-center justify-end gap-3" : "dpp-fade flex flex-wrap items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm"}>
-          {viewMode === "detail" && (
-            <>
+      {viewMode === "detail" && (
+        <section className="mx-auto max-w-7xl px-6 pt-6" aria-label={t.accessibility}>
+          <div className="dpp-fade flex flex-wrap items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
@@ -1222,18 +1239,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 </button>
               </div>
               <p className="text-sm font-semibold text-slate-600">{t.detailViewDesc}</p>
-            </>
-          )}
-          <div className="flex flex-wrap gap-2">
-            <a href={`/api/dpp-export?format=pdf&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-lg border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-bold text-blue-700 transition hover:bg-blue-600 hover:text-white">
-              {t.downloadPdf}
-            </a>
-            <a href={`/api/dpp-export?format=json&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-bold text-emerald-700 transition hover:bg-emerald-600 hover:text-white">
-              {t.downloadJson}
-            </a>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <nav className="sticky top-[73px] z-30 border-b border-slate-200/80 bg-[#f7faf8]/90 backdrop-blur-xl" aria-label="DPP section navigation">
         <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-6 py-3">
