@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -71,6 +72,7 @@ function addRegulatoryChemicalContext(value: any, locale: Locale) {
 
 export function PublicDppClient({ data, dppUrl }: Props) {
   const { locale } = useLanguage();
+  const searchParams = useSearchParams();
   const [activeCertificate, setActiveCertificate] = useState<any>(null);
   const [viewMode, setViewMode] = useState<"simple" | "detail">("detail");
   const {
@@ -86,6 +88,11 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     documents = [],
     governance = [],
   } = data;
+
+  useEffect(() => {
+    const view = searchParams.get("view");
+    if (view === "simple" || view === "detail") setViewMode(view);
+  }, [searchParams]);
 
   const t =
     locale === "zh"
@@ -1073,6 +1080,20 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     ["#textile-reserve", t.textileReserve, "layers"],
     ["#batch-tracking", t.batchTracking, "route"],
   ];
+  const simpleNavItems: Array<[string, string, IconName]> = [
+    ["#identity", t.productIdentity, "box"],
+    ["#materials", t.materialSource, "layers"],
+    ["#traceability", t.traceability, "route"],
+    ["#esg", t.esg, "leaf"],
+    ["#certificates", t.certificates, "certificate"],
+    ["#consumer", t.consumer, "eye"],
+  ];
+  function handleViewMode(nextMode: "simple" | "detail") {
+    setViewMode(nextMode);
+    const url = new URL(window.location.href);
+    url.searchParams.set("view", nextMode);
+    window.history.replaceState(null, "", url.toString());
+  }
   return (
     <main className="min-h-screen bg-[#f7faf8] text-slate-950" aria-label={t.passport}>
       <header className="sticky top-0 z-40 border-b border-white/70 bg-white/85 backdrop-blur-xl">
@@ -1183,7 +1204,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => setViewMode("simple")}
+              onClick={() => handleViewMode("simple")}
               aria-pressed={viewMode === "simple"}
               className={viewMode === "simple" ? "rounded-lg bg-slate-950 px-4 py-2 text-sm font-black text-white" : "rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-black text-slate-700"}
             >
@@ -1191,7 +1212,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             </button>
             <button
               type="button"
-              onClick={() => setViewMode("detail")}
+              onClick={() => handleViewMode("detail")}
               aria-pressed={viewMode === "detail"}
               className={viewMode === "detail" ? "rounded-lg bg-slate-950 px-4 py-2 text-sm font-black text-white" : "rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-black text-slate-700"}
             >
@@ -1212,7 +1233,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
 
       <nav className="sticky top-[73px] z-30 border-b border-slate-200/80 bg-[#f7faf8]/90 backdrop-blur-xl" aria-label="DPP section navigation">
         <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-6 py-3">
-          {navItems.map(([href, label, icon]) => (
+          {(viewMode === "simple" ? simpleNavItems : navItems).map(([href, label, icon]) => (
             <a
               key={href}
               href={href}
@@ -1227,25 +1248,164 @@ export function PublicDppClient({ data, dppUrl }: Props) {
 
       <div className="mx-auto max-w-7xl px-6 py-8">
         {viewMode === "simple" && (
-          <section className="dpp-fade mb-6 grid gap-4 lg:grid-cols-[1fr_1fr]">
-            <DataCard title={t.simpleView} icon="eye" surface="soft">
-              <div className="grid gap-3 sm:grid-cols-2">
-                {simpleMetrics.map(([label, value, icon]) => (
-                  <Metric key={label} label={label} value={value} locale={locale} icon={icon} />
-                ))}
+          <div className="space-y-6">
+            <section className="dpp-fade grid gap-4 lg:grid-cols-[1fr_1fr]">
+              <DataCard title={t.simpleView} icon="eye" surface="soft">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {simpleMetrics.map(([label, value, icon]) => (
+                    <Metric key={label} label={label} value={value} locale={locale} icon={icon} />
+                  ))}
+                </div>
+              </DataCard>
+              <DataCard title={t.benchmarkTitle} icon="carbon" surface="soft">
+                <ComparisonBars
+                  currentLabel={t.thisProduct}
+                  averageLabel={t.industryAverage}
+                  currentValue={carbonCurrent}
+                  averageValue={carbonAverage}
+                  unit="kg CO2e"
+                  note={benchmarkNote}
+                />
+              </DataCard>
+            </section>
+
+            <Section id="identity" title={t.productIdentity} eyebrow={t.overview} icon="box">
+              <div className="grid gap-4 lg:grid-cols-2">
+                <DataCard title={t.productRecordTitle} icon="box" surface="soft">
+                  <InfoGrid
+                    items={[
+                      [t.dppId, product.dpp_id],
+                      [t.sku, product.sku],
+                      [t.brandLabel, product.brand],
+                      [t.category, product.category],
+                      [t.gtin, firstIdentity?.gtin],
+                      [t.sgtin, sgtin],
+                    ]}
+                    locale={locale}
+                  />
+                </DataCard>
+                <DataCard title={t.consumer} icon="eye" surface="soft">
+                  <InfoGrid
+                    items={[
+                      [t.care, pick(product, locale, "care_instructions", "care_instructions_zh")],
+                      [t.repair, pick(product, locale, "repair_instructions", "repair_instructions_zh")],
+                      [t.endOfLife, pick(product, locale, "end_of_life_instructions", "end_of_life_instructions_zh")],
+                    ]}
+                    locale={locale}
+                  />
+                </DataCard>
               </div>
-            </DataCard>
-            <DataCard title={t.benchmarkTitle} icon="carbon" surface="soft">
-              <ComparisonBars
-                currentLabel={t.thisProduct}
-                averageLabel={t.industryAverage}
-                currentValue={carbonCurrent}
-                averageValue={carbonAverage}
-                unit="kg CO2e"
-                note={benchmarkNote}
-              />
-            </DataCard>
-          </section>
+            </Section>
+
+            <Section id="materials" title={t.materialSource} icon="layers">
+              {materials.length ? (
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {materials.map((material: any) => (
+                    <MaterialCard key={material.id} item={material} locale={locale} t={t} />
+                  ))}
+                </div>
+              ) : (
+                <Empty text={t.pendingData} />
+              )}
+            </Section>
+
+            <Section id="traceability" title={t.traceability} icon="route">
+              {traceability.length ? (
+                <div className="space-y-4">
+                  {traceability.slice(0, 4).map((event: any, index: number) => (
+                    <TimelineItem
+                      key={event.id || index}
+                      title={pick(event, locale, "event_name", "event_name_zh")}
+                      items={[
+                        [t.date, formatDate(event.event_date, locale)],
+                        [t.facility, pick(event, locale, "facility_name", "facility_name_zh")],
+                        [t.location, compact([event.city, event.country])],
+                        [t.transport, event.transport_method],
+                        [t.status, event.verification_status],
+                      ]}
+                      locale={locale}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <Empty text={t.pendingData} />
+              )}
+            </Section>
+
+            <Section id="esg" title={t.esg} icon="leaf">
+              <div className="grid gap-4 lg:grid-cols-2">
+                <InfoGrid
+                  items={[
+                    [t.carbon, `${carbonCurrent} kg CO2e`],
+                    [t.water, `${waterCurrent} L`],
+                    [t.energy, latestEsg?.energy_consumption ? `${latestEsg.energy_consumption} kWh` : null],
+                    [t.recycled, totalRecycled === null ? latestEsg?.recycled_content ? `${latestEsg.recycled_content}%` : null : `${totalRecycled}%`],
+                    [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100` : null],
+                    [t.takeBack, firstCircularity?.take_back_program],
+                  ]}
+                  locale={locale}
+                />
+                <DataCard title={t.visualizationTitle} icon="leaf" surface="soft">
+                  <ComparisonBars
+                    currentLabel={t.thisProduct}
+                    averageLabel={t.industryAverage}
+                    currentValue={waterCurrent}
+                    averageValue={waterAverage}
+                    unit="L"
+                    note={t.waterBenchmark}
+                  />
+                </DataCard>
+              </div>
+            </Section>
+
+            <Section id="certificates" title={t.certificates} icon="certificate">
+              {certificates.length ? (
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {certificates.slice(0, 4).map((certificate: any) => (
+                    <DataCard key={certificate.id} title={pick(certificate, locale, "certificate_name", "certificate_name_zh")} icon="certificate">
+                      <div className="mb-4">
+                        <StatusBadge value={certificate.verification_status} locale={locale} verified={t.verified} pending={t.pending} />
+                      </div>
+                      <InfoGrid
+                        items={[
+                          [t.number, certificate.certificate_number],
+                          [t.issuer, certificate.issuer],
+                          [t.expiryDate, formatDate(certificate.expiry_date, locale)],
+                        ]}
+                        locale={locale}
+                      />
+                    </DataCard>
+                  ))}
+                </div>
+              ) : (
+                <Empty text={t.pendingData} />
+              )}
+            </Section>
+
+            <Section id="consumer" title={t.consumer} icon="eye">
+              {hasConsumerData ? (
+                <div className="grid gap-4 lg:grid-cols-2">
+                  <InfoGrid
+                    items={[
+                      [t.brandStory, pick(firstTransparency, locale, "brand_story", "brand_story_zh")],
+                      [t.sustainability, pick(firstTransparency, locale, "sustainability_story", "sustainability_story_zh")],
+                      [t.notice, pick(firstTransparency, locale, "consumer_notice", "consumer_notice_zh")],
+                    ]}
+                    locale={locale}
+                  />
+                  <InfoGrid
+                    items={[
+                      [t.packaging, firstTransparency?.packaging_info],
+                      [t.endOfLife, firstCircularity?.end_of_life_info || pick(product, locale, "end_of_life_instructions", "end_of_life_instructions_zh")],
+                    ]}
+                    locale={locale}
+                  />
+                </div>
+              ) : (
+                <Empty text={t.pendingData} />
+              )}
+            </Section>
+          </div>
         )}
 
         {viewMode === "detail" && (

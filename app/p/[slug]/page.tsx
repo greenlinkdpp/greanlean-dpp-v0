@@ -1019,10 +1019,13 @@ function withFlooringDppData(data?: any) {
   };
 }
 
-export default async function PublicDppPage({ params }: { params: { slug: string } }) {
+export default async function PublicDppPage({ params, searchParams }: { params: { slug: string }; searchParams?: { view?: string; lang?: string } }) {
   const data = await getData(params.slug);
   if (!data) notFound();
   const site = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const dppUrl = `${site}/p/${data.product.public_slug}`;
+  const query = new URLSearchParams();
+  if (searchParams?.view === "simple" || searchParams?.view === "detail") query.set("view", searchParams.view);
+  if (searchParams?.lang === "zh" || searchParams?.lang === "en") query.set("lang", searchParams.lang);
+  const dppUrl = `${site}/p/${data.product.public_slug}${query.toString() ? `?${query.toString()}` : ""}`;
   return <PublicDppClient data={data} dppUrl={dppUrl} />;
 }
