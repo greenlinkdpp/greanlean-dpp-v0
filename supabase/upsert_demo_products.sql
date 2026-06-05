@@ -29,27 +29,6 @@ values
   '耳塞磨损后可更换；电池和充电盒维修建议由授权服务商处理。',
   'Do not dispose with household waste. Send earbuds, charging case and battery-containing parts to authorized WEEE collection points.',
   '请勿作为生活垃圾丢弃。耳机、充电盒和含电池部件应交至授权 WEEE 回收点。'
-),
-(
-  'WPC Composite Flooring Plank',
-  'WPC 木塑复合地板',
-  'GL-WPC-FLOOR-001',
-  'greanlean',
-  'Building Materials',
-  'WPC Composite Flooring',
-  '2026 EU Building Materials Demo',
-  'A WPC composite flooring digital product passport demo for EU exports, covering material composition, recycled content, VOC and formaldehyde evidence, production traceability, ESG data and end-of-life recovery.',
-  '面向出口欧盟 WPC 木塑复合地板的数字产品护照示例，覆盖材料组成、再生成分、VOC/甲醛证据、生产追溯、ESG 数据和生命周期结束回收路径。',
-  'published',
-  'DPP-WPC-DEMO-001',
-  'demo-wpc-flooring',
-  '/images/demo-wpc-flooring.svg',
-  'Clean with neutral detergent and damp mop. Avoid long-term standing water, strong solvents and direct high-temperature exposure.',
-  '建议使用中性清洁剂和微湿拖布清洁。避免长期积水、强溶剂和高温直晒。',
-  'Replace damaged planks through click-lock disassembly where possible. Keep spare planks from the same batch for colour matching.',
-  '局部损坏可通过锁扣拆装更换单片地板。建议保留同批次备用板以保证颜色一致。',
-  'Prioritize reuse of intact planks. Separate underlayment and trims before recycling; send WPC boards to composite-material or construction-waste recovery where available.',
-  '完好板材优先再使用。回收前分离地垫和辅料；WPC 板材建议进入复合材料或建筑废弃物回收渠道。'
 )
 on conflict (public_slug) do update set
   name = excluded.name,
@@ -78,7 +57,63 @@ declare
   flooring_id uuid;
 begin
   select id into earbuds_id from public.products where public_slug = 'demo-wireless-earbuds';
-  select id into flooring_id from public.products where public_slug = 'demo-wpc-flooring';
+  select id into flooring_id from public.products where sku = 'MS140K25B' limit 1;
+  if flooring_id is null then
+    select id into flooring_id from public.products where public_slug = 'demo-wpc-flooring';
+  end if;
+  if flooring_id is null then
+    insert into public.products (
+      name, name_zh, sku, brand, category, subcategory, season, description, description_zh,
+      status, dpp_id, public_slug, main_image, care_instructions, care_instructions_zh,
+      repair_instructions, repair_instructions_zh, end_of_life_instructions, end_of_life_instructions_zh
+    )
+    values (
+      'WPC Composite Flooring Plank',
+      'WPC 地板',
+      'MS140K25B',
+      'HUANGSHAN MEISEN',
+      'Building Materials',
+      'WPC Composite Flooring',
+      '2026 EU Building Materials Demo',
+      'A WPC composite flooring digital product passport demo for EU exports, covering material composition, recycled content, VOC and formaldehyde evidence, production traceability, ESG data and end-of-life recovery.',
+      '面向出口欧盟 WPC 木塑复合地板的数字产品护照示例，覆盖材料组成、再生成分、VOC/甲醛证据、生产追溯、ESG 数据和生命周期结束回收路径。',
+      'published',
+      'DPP-WPC-MS140K25B',
+      'demo-wpc-flooring',
+      '/images/demo-wpc-flooring.svg',
+      'Clean with neutral detergent and damp mop. Avoid long-term standing water, strong solvents and direct high-temperature exposure.',
+      '建议使用中性清洁剂和微湿拖布清洁。避免长期积水、强溶剂和高温直晒。',
+      'Replace damaged planks through click-lock disassembly where possible. Keep spare planks from the same batch for colour matching.',
+      '局部损坏可通过锁扣拆装更换单片地板。建议保留同批次备用板以保证颜色一致。',
+      'Prioritize reuse of intact planks. Separate underlayment and trims before recycling; send WPC boards to composite-material or construction-waste recovery where available.',
+      '完好板材优先再使用。回收前分离地垫和辅料；WPC 板材建议进入复合材料或建筑废弃物回收渠道。'
+    )
+    returning id into flooring_id;
+  else
+    update public.products
+    set
+      name = 'WPC Composite Flooring Plank',
+      name_zh = 'WPC 地板',
+      sku = 'MS140K25B',
+      brand = 'HUANGSHAN MEISEN',
+      category = 'Building Materials',
+      subcategory = 'WPC Composite Flooring',
+      season = '2026 EU Building Materials Demo',
+      description = 'A WPC composite flooring digital product passport demo for EU exports, covering material composition, recycled content, VOC and formaldehyde evidence, production traceability, ESG data and end-of-life recovery.',
+      description_zh = '面向出口欧盟 WPC 木塑复合地板的数字产品护照示例，覆盖材料组成、再生成分、VOC/甲醛证据、生产追溯、ESG 数据和生命周期结束回收路径。',
+      status = 'published',
+      dpp_id = 'DPP-WPC-MS140K25B',
+      public_slug = coalesce(nullif(public_slug, ''), 'demo-wpc-flooring'),
+      main_image = '/images/demo-wpc-flooring.svg',
+      care_instructions = 'Clean with neutral detergent and damp mop. Avoid long-term standing water, strong solvents and direct high-temperature exposure.',
+      care_instructions_zh = '建议使用中性清洁剂和微湿拖布清洁。避免长期积水、强溶剂和高温直晒。',
+      repair_instructions = 'Replace damaged planks through click-lock disassembly where possible. Keep spare planks from the same batch for colour matching.',
+      repair_instructions_zh = '局部损坏可通过锁扣拆装更换单片地板。建议保留同批次备用板以保证颜色一致。',
+      end_of_life_instructions = 'Prioritize reuse of intact planks. Separate underlayment and trims before recycling; send WPC boards to composite-material or construction-waste recovery where available.',
+      end_of_life_instructions_zh = '完好板材优先再使用。回收前分离地垫和辅料；WPC 板材建议进入复合材料或建筑废弃物回收渠道。',
+      updated_at = now()
+    where id = flooring_id;
+  end if;
 
   delete from public.product_materials where product_id in (earbuds_id, flooring_id);
   delete from public.product_bom where product_id in (earbuds_id, flooring_id);
@@ -208,7 +243,7 @@ begin
       'REACH-AUDIO-2026-026', 'Demo Chemical Testing Institute', '2026-05-20'::date, '2027-05-19'::date,
       'https://example.com/earbuds-reach-svhc.pdf', 'verified'),
     (flooring_id, 'EU Declaration of Performance', '欧盟性能声明 DoP', 'Construction products', '建筑产品',
-      'DOP-WPC-2026-001', 'Greanlean Flooring Demo Manufacturer', '2026-06-04'::date, '2027-06-03'::date,
+      'DOP-WPC-MS140K25B', 'HUANGSHAN MEISEN New Material Co., Ltd.', '2026-06-04'::date, '2027-06-03'::date,
       'https://example.com/wpc-flooring-dop.pdf', 'verified'),
     (flooring_id, 'VOC Emission Test Report', 'VOC 排放检测报告', 'Indoor air quality', '室内空气质量',
       'VOC-WPC-2026-018', 'Demo Building Materials Testing Institute', '2026-05-12'::date, '2027-05-11'::date,
@@ -247,7 +282,7 @@ begin
     (earbuds_id, '8a61f0d2-4f6a-4cf2-b11c-demoaudio01', '06900000000128', 'STYLE-AUDIO-001',
       'BATCH-AUDIO-2026-001', 'EARBUDS-DEMO-0001', 'https://www.greanlean.com/p/demo-wireless-earbuds',
       'QR-DPP-EARBUDS-001', 'NFC-EARBUDS-001', 'RFID-RESERVED'),
-    (flooring_id, '51e0f9f3-3c7b-45c0-9b8f-demofloor01', '06900000000203', 'STYLE-WPC-OAK-001',
+    (flooring_id, '51e0f9f3-3c7b-45c0-9b8f-demofloor01', '06900000000203', 'STYLE-WPC-MS140K25B',
       'BATCH-WPC-2026-001', 'WPC-DEMO-0001', 'https://www.greanlean.com/p/demo-wpc-flooring',
       'QR-DPP-WPC-001', 'NFC-RESERVED', 'RFID-PALLET-RESERVED');
 
@@ -278,7 +313,7 @@ Last updated: 2026-06-04',
       'greanlean admin',
       'Demo review completed
 Verifier: Demo Building Materials Testing Institute
-Certificate: DPP-WPC-2026-009
+Certificate: DPP-WPC-MS140K25B
 Valid until: 2027-06-03
 Last updated: 2026-06-05',
       87);

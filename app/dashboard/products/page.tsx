@@ -1,6 +1,7 @@
 "use client";
 
 import { ProductManager } from "@/components/ProductManager";
+import { DemoDataSyncButton } from "@/components/DemoDataSyncButton";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export default function ProductsPage() {
@@ -20,6 +21,9 @@ export default function ProductsPage() {
     <div>
       <h1 className="text-3xl font-black">{t.title}</h1>
       <p className="mt-2 text-slate-600">{t.subtitle}</p>
+      <div className="mt-6">
+        <DemoDataSyncButton />
+      </div>
       <div className="mt-8">
         <ProductManager />
       </div>
