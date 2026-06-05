@@ -1196,18 +1196,20 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </section>
       )}
 
-      <nav className="sticky top-[73px] z-30 border-b border-slate-200/80 bg-[#f7faf8]/90 backdrop-blur-xl" aria-label="DPP section navigation">
-        <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-6 py-3">
-          {(viewMode === "simple" ? simpleNavItems : navItems).map(([href, label, icon]) => (
-            <a
-              key={href}
-              href={href}
-              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-200 hover:text-brand-700"
-            >
-              <Icon name={icon} className="h-4 w-4 text-brand-700" />
-              {label}
-            </a>
-          ))}
+      <nav className="sticky top-[73px] z-30 bg-[#f7faf8]/80 py-3 backdrop-blur-xl" aria-label="DPP section navigation">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex items-center gap-2 overflow-x-auto rounded-lg border border-slate-200/80 bg-white/85 px-3 py-2 shadow-sm">
+            {(viewMode === "simple" ? simpleNavItems : navItems).map(([href, label, icon]) => (
+              <a
+                key={href}
+                href={href}
+                className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md px-3 text-sm font-bold text-slate-600 transition hover:bg-emerald-50 hover:text-brand-700"
+              >
+                <Icon name={icon} className="h-4 w-4 text-brand-700" />
+                {label}
+              </a>
+            ))}
+          </div>
         </div>
       </nav>
 
@@ -1215,31 +1217,19 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         {viewMode === "simple" && (
           <div className="space-y-6">
             <Section id="identity" title={t.productIdentity} eyebrow={t.overview} icon="box">
-              <div className="grid gap-4 lg:grid-cols-2">
-                <DataCard title={t.productRecordTitle} icon="box" surface="soft">
-                  <InfoGrid
-                    items={[
-                      [t.dppId, product.dpp_id],
-                      [t.sku, product.sku],
-                      [t.brandLabel, product.brand],
-                      [t.category, product.category],
-                      [t.gtin, firstIdentity?.gtin],
-                      [t.sgtin, sgtin],
-                    ]}
-                    locale={locale}
-                  />
-                </DataCard>
-                <DataCard title={t.consumer} icon="eye" surface="soft">
-                  <InfoGrid
-                    items={[
-                      [t.care, pick(product, locale, "care_instructions", "care_instructions_zh")],
-                      [t.repair, pick(product, locale, "repair_instructions", "repair_instructions_zh")],
-                      [t.endOfLife, pick(product, locale, "end_of_life_instructions", "end_of_life_instructions_zh")],
-                    ]}
-                    locale={locale}
-                  />
-                </DataCard>
-              </div>
+              <DataCard title={t.productRecordTitle} icon="box" surface="soft">
+                <InfoGrid
+                  items={[
+                    [t.dppId, product.dpp_id],
+                    [t.sku, product.sku],
+                    [t.brandLabel, product.brand],
+                    [t.category, product.category],
+                    [t.gtin, firstIdentity?.gtin],
+                    [t.sgtin, sgtin],
+                  ]}
+                  locale={locale}
+                />
+              </DataCard>
             </Section>
 
             <Section id="materials" title={t.materialSource} icon="layers">
