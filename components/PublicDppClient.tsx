@@ -115,7 +115,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           certificates: "认证证书",
           consumer: "消费者透明化",
           evidence: "证据文件与数据治理",
-          accessibility: "消费者可访问性",
           textileReserve: "产品特定信息预留",
           batchTracking: "批次追踪",
           noData: "暂无数据",
@@ -281,20 +280,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           dataLastUpdatedValue: "2026-06-04",
           simpleView: "简略版",
           detailView: "详细版",
-          simpleViewDesc: "核心指标给消费者快速阅读",
           detailViewDesc: "完整数据给 B2B、监管和审核使用",
           downloadPdf: "下载 DPP PDF",
           downloadJson: "下载 JSON",
-          glossaryTitle: "缩写词表",
-          glossaryIntro: "点击展开常见认证和法规术语说明。",
-          gotsTerm: "GOTS",
-          gotsDesc: "Global Organic Textile Standard，全球有机纺织品标准，用于有机纤维和加工链要求。",
-          oekoTerm: "OEKO-TEX",
-          oekoDesc: "纺织品有害物质检测与认证体系，用于证明产品经过相关化学安全筛查。",
-          reachTerm: "REACH",
-          reachDesc: "欧盟化学品注册、评估、授权和限制法规，DPP 中常用于受限物质披露。",
-          svhcTerm: "SVHC",
-          svhcDesc: "高度关注物质候选清单，若超过阈值通常需要向下游披露。",
           benchmarkTitle: "该产品的碳足迹",
           thisProduct: "该产品",
           industryAverage: "行业平均",
@@ -351,7 +339,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           certificates: "Certificates",
           consumer: "Consumer transparency",
           evidence: "Evidence files and data governance",
-          accessibility: "Consumer accessibility",
           textileReserve: "Product-specific reserved fields",
           batchTracking: "Batch tracking",
           noData: "No data yet",
@@ -518,20 +505,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           dataLastUpdatedValue: "2026-06-04",
           simpleView: "Simple view",
           detailView: "Detailed view",
-          simpleViewDesc: "Core indicators for consumers",
           detailViewDesc: "Full data for B2B, regulators and audits",
           downloadPdf: "Download DPP PDF",
           downloadJson: "Download JSON",
-          glossaryTitle: "Glossary",
-          glossaryIntro: "Expand common certification and regulatory terms.",
-          gotsTerm: "GOTS",
-          gotsDesc: "Global Organic Textile Standard, used for organic fibres and textile processing-chain requirements.",
-          oekoTerm: "OEKO-TEX",
-          oekoDesc: "A textile harmful-substance testing and certification system for chemical safety screening.",
-          reachTerm: "REACH",
-          reachDesc: "EU chemicals regulation for registration, evaluation, authorisation and restriction of chemicals; often used for restricted-substance disclosure.",
-          svhcTerm: "SVHC",
-          svhcDesc: "Substances of Very High Concern candidate list; substances above threshold usually require downstream disclosure.",
           benchmarkTitle: "Carbon footprint of this product",
           thisProduct: "This product",
           industryAverage: "Industry average",
@@ -952,28 +928,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.verificationExpiry, t.verificationExpiryValue],
     [t.lastUpdated, t.dataLastUpdatedValue],
   ];
-  const glossaryItems = isElectronics
-    ? [
-        ["CE", locale === "zh" ? "欧盟符合性标志，表明产品满足适用欧盟法规和指令要求。" : "EU conformity marking indicating the product meets applicable EU rules and directives."],
-        ["RoHS", locale === "zh" ? "电子电气设备中限制使用某些有害物质的欧盟指令。" : "EU directive restricting certain hazardous substances in electrical and electronic equipment."],
-        ["WEEE", locale === "zh" ? "电子电气废弃物回收处理体系，用于指导消费电子生命周期结束。" : "Waste electrical and electronic equipment framework for end-of-life handling."],
-        [t.reachTerm, t.reachDesc],
-        [t.svhcTerm, t.svhcDesc],
-      ]
-    : isFlooring
-      ? [
-          ["WPC", locale === "zh" ? "Wood Plastic Composite，木塑复合材料，通常由木纤维和聚合物复合制成。" : "Wood Plastic Composite, usually made from wood fibre and polymer matrix."],
-          ["VOC", locale === "zh" ? "挥发性有机化合物，建材 DPP 中常用于室内空气质量披露。" : "Volatile organic compounds, commonly disclosed for indoor-air quality in building-material DPPs."],
-          ["DoP", locale === "zh" ? "Declaration of Performance，建筑产品性能声明，用于披露适用性能和责任方信息。" : "Declaration of Performance for construction products, disclosing applicable performance and operator information."],
-          [t.reachTerm, t.reachDesc],
-          [t.svhcTerm, t.svhcDesc],
-        ]
-    : [
-        [t.gotsTerm, t.gotsDesc],
-        [t.oekoTerm, t.oekoDesc],
-        [t.reachTerm, t.reachDesc],
-        [t.svhcTerm, t.svhcDesc],
-      ];
   const simpleMetrics: Array<[string, any, IconName]> = [
     [t.carbon, `${carbonCurrent} kg CO2e`, "carbon"],
     [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
@@ -1074,7 +1028,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     ["#traceability", t.traceability, "route"],
     ["#esg", t.esg, "leaf"],
     ["#certificates", t.certificates, "certificate"],
-    ["#accessibility", t.accessibility, "eye"],
     ["#consumer", t.consumer, "eye"],
     ["#end-of-life", t.endOfLifeGuide, "recycle"],
     ["#textile-reserve", t.textileReserve, "layers"],
@@ -1218,7 +1171,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       </section>
 
       {viewMode === "detail" && (
-        <section className="mx-auto max-w-7xl px-6 pt-6" aria-label={t.accessibility}>
+        <section className="mx-auto max-w-7xl px-6 pt-6" aria-label={t.detailView}>
           <div className="dpp-fade flex flex-wrap items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex flex-wrap gap-2">
                 <button
@@ -1568,44 +1521,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             <Empty text={t.pendingData} />
           )}
         </Section>}
-
-        <Section id="accessibility" title={t.accessibility} icon="eye">
-          <div className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
-            <DataCard title={t.glossaryTitle} icon="file" surface="soft">
-              <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.glossaryIntro}</p>
-              <div className="space-y-3">
-                {glossaryItems.map(([term, desc]) => (
-                  <details key={term} className="rounded-lg border border-slate-200 bg-white p-4">
-                    <summary className="cursor-pointer font-black text-slate-950">{term}</summary>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{desc}</p>
-                  </details>
-                ))}
-              </div>
-            </DataCard>
-            <div className="space-y-4">
-              <DataCard title={t.benchmarkTitle} icon="carbon" surface="soft">
-                <ComparisonBars
-                  currentLabel={t.thisProduct}
-                  averageLabel={t.industryAverage}
-                  currentValue={carbonCurrent}
-                  averageValue={carbonAverage}
-                  unit="kg CO2e"
-                  note={benchmarkNote}
-                />
-              </DataCard>
-              <DataCard title={t.visualizationTitle} icon="leaf" surface="soft">
-                <ComparisonBars
-                  currentLabel={t.thisProduct}
-                  averageLabel={t.industryAverage}
-                  currentValue={waterCurrent}
-                  averageValue={waterAverage}
-                  unit="L"
-                  note={t.waterBenchmark}
-                />
-              </DataCard>
-            </div>
-          </div>
-        </Section>
 
         {viewMode === "detail" && <Section id="consumer" title={t.consumer} icon="eye">
           {hasConsumerData ? (
