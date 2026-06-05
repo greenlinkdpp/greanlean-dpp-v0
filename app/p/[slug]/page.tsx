@@ -16,6 +16,7 @@ async function getData(slug: string) {
   const { data: product } = await supabase.from("products").select("*").eq("public_slug", slug).eq("status", "published").single();
   if (!product) {
     if (slug === "demo-wireless-earbuds") return withElectronicsDppData();
+    if (slug === "demo-wpc-flooring") return withFlooringDppData();
     return null;
   }
   const [materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance] = await Promise.all([
@@ -38,6 +39,10 @@ async function getData(slug: string) {
 
   if (slug === "demo-wireless-earbuds") {
     return withElectronicsDppData(data);
+  }
+
+  if (slug === "demo-wpc-flooring") {
+    return withFlooringDppData(data);
   }
 
   return data;
@@ -672,6 +677,343 @@ function withElectronicsDppData(data?: any) {
             audit_status:
               "Third-party review completed\nVerifier: SGS-CSTC Standards Technical Services Co., Ltd. (Demo)\nCertificate: SGS-DPP-AUDIO-2026-018\nValid until: 2027-06-03\nLast updated: 2026-06-04",
             data_quality_score: 88,
+          },
+        ],
+  };
+}
+
+function withFlooringDppData(data?: any) {
+  const productId = data?.product?.id || "demo-flooring-product";
+  const product = {
+    ...(data?.product || {}),
+    id: productId,
+    name: data?.product?.name || "WPC Composite Flooring Plank",
+    name_zh: data?.product?.name_zh || "WPC 木塑复合地板",
+    sku: data?.product?.sku || "GL-WPC-FLOOR-001",
+    brand: data?.product?.brand || "greanlean",
+    category: data?.product?.category || "Building Materials",
+    subcategory: data?.product?.subcategory || "WPC Composite Flooring",
+    season: data?.product?.season || "2026 EU Building Materials Demo",
+    public_slug: data?.product?.public_slug || "demo-wpc-flooring",
+    dpp_id: data?.product?.dpp_id || "DPP-WPC-DEMO-001",
+    main_image: data?.product?.main_image || "/images/demo-wpc-flooring.svg",
+    description:
+      data?.product?.description ||
+      "A WPC composite flooring digital product passport demo for EU exports, covering material composition, recycled content, VOC and formaldehyde evidence, production traceability, ESG data and end-of-life recovery.",
+    description_zh:
+      data?.product?.description_zh ||
+      "面向出口欧盟 WPC 木塑复合地板的数字产品护照示例，覆盖材料组成、再生成分、VOC/甲醛证据、生产追溯、ESG 数据和生命周期结束回收路径。",
+    care_instructions:
+      data?.product?.care_instructions ||
+      "Clean with neutral detergent and damp mop. Avoid long-term standing water, strong solvents and direct high-temperature exposure.",
+    care_instructions_zh:
+      data?.product?.care_instructions_zh ||
+      "建议使用中性清洁剂和微湿拖布清洁。避免长期积水、强溶剂和高温直晒。",
+    repair_instructions:
+      data?.product?.repair_instructions ||
+      "Replace damaged planks through click-lock disassembly where possible. Keep spare planks from the same batch for colour matching.",
+    repair_instructions_zh:
+      data?.product?.repair_instructions_zh ||
+      "局部损坏可通过锁扣拆装更换单片地板。建议保留同批次备用板以保证颜色一致。",
+    end_of_life_instructions:
+      data?.product?.end_of_life_instructions ||
+      "Prioritize reuse of intact planks. Separate underlayment and trims before recycling; send WPC boards to composite-material or construction-waste recovery where available.",
+    end_of_life_instructions_zh:
+      data?.product?.end_of_life_instructions_zh ||
+      "完好板材优先再使用。回收前分离地垫和辅料；WPC 板材建议进入复合材料或建筑废弃物回收渠道。",
+  };
+
+  return {
+    product,
+    materials: data?.materials?.length
+      ? data.materials
+      : [
+          {
+            id: "demo-floor-material-1",
+            product_id: productId,
+            material_name: "Recycled wood fibre",
+            material_name_zh: "再生木纤维",
+            material_type: "Bio-based filler",
+            material_type_zh: "生物基填料",
+            percentage: 55,
+            recycled_content: 80,
+            origin_country: "China",
+            chemical_info: "Recovered wood fibre screened for heavy metals and restricted preservatives.",
+            chemical_info_zh: "再生木纤维已筛查重金属和受限防腐剂。",
+            recyclability: "Recoverable in WPC composite stream where infrastructure exists",
+            recyclability_zh: "具备条件时可进入 WPC 复合材料回收流",
+            certification: "FSC Recycled declaration (Demo)",
+          },
+          {
+            id: "demo-floor-material-2",
+            product_id: productId,
+            material_name: "Recycled HDPE / PP polymer",
+            material_name_zh: "再生 HDPE / PP 聚合物",
+            material_type: "Polymer matrix",
+            material_type_zh: "聚合物基体",
+            percentage: 35,
+            recycled_content: 60,
+            origin_country: "China",
+            chemical_info: "REACH SVHC below 0.1% w/w; phthalates screened.",
+            chemical_info_zh: "REACH SVHC 低于 0.1% w/w；已筛查邻苯二甲酸酯。",
+            recyclability: "Mechanical recycling after sorting and size reduction",
+            recyclability_zh: "分选和破碎后可机械回收",
+            certification: "GRS supplier declaration (Demo)",
+          },
+          {
+            id: "demo-floor-material-3",
+            product_id: productId,
+            material_name: "Mineral filler and additives",
+            material_name_zh: "矿物填料与助剂",
+            material_type: "Additives",
+            material_type_zh: "助剂",
+            percentage: 10,
+            recycled_content: 0,
+            origin_country: "China",
+            chemical_info: "Low-VOC stabilizers; no intentionally added lead, cadmium or hexavalent chromium.",
+            chemical_info_zh: "采用低 VOC 稳定剂；未有意添加铅、镉或六价铬。",
+            recyclability: "Remain in composite recycling stream",
+            recyclability_zh: "随复合材料整体进入回收流",
+            certification: "REACH / VOC declaration",
+          },
+        ],
+    certificates: data?.certificates?.length
+      ? data.certificates
+      : [
+          {
+            id: "demo-floor-cert-1",
+            product_id: productId,
+            certificate_name: "EU Declaration of Performance",
+            certificate_name_zh: "欧盟性能声明 DoP",
+            certificate_type: "Construction products",
+            certificate_type_zh: "建筑产品",
+            certificate_number: "DOP-WPC-2026-001",
+            issuer: "Greanlean Flooring Demo Manufacturer",
+            issue_date: "2026-06-04",
+            expiry_date: "2027-06-03",
+            certificate_url: "https://example.com/wpc-flooring-dop.pdf",
+            verification_status: "verified",
+          },
+          {
+            id: "demo-floor-cert-2",
+            product_id: productId,
+            certificate_name: "VOC Emission Test Report",
+            certificate_name_zh: "VOC 排放检测报告",
+            certificate_type: "Indoor air quality",
+            certificate_type_zh: "室内空气质量",
+            certificate_number: "VOC-WPC-2026-018",
+            issuer: "Demo Building Materials Testing Institute",
+            issue_date: "2026-05-12",
+            expiry_date: "2027-05-11",
+            certificate_url: "https://example.com/wpc-voc-report.pdf",
+            verification_status: "verified",
+          },
+          {
+            id: "demo-floor-cert-3",
+            product_id: productId,
+            certificate_name: "REACH SVHC Screening",
+            certificate_name_zh: "REACH SVHC 筛查",
+            certificate_type: "Chemical compliance",
+            certificate_type_zh: "化学合规",
+            certificate_number: "REACH-WPC-2026-026",
+            issuer: "Demo Chemical Testing Institute",
+            issue_date: "2026-05-15",
+            expiry_date: "2027-05-14",
+            certificate_url: "https://example.com/wpc-reach-svhc.pdf",
+            verification_status: "verified",
+          },
+        ],
+    esg: data?.esg?.length
+      ? data.esg
+      : [
+          {
+            id: "demo-floor-esg-1",
+            product_id: productId,
+            carbon_footprint: 12.4,
+            water_usage: 18,
+            energy_consumption: 24.6,
+            waste_generation: 0.85,
+            recycled_content: 65,
+            chemical_management: "REACH SVHC, VOC emission, formaldehyde and heavy-metal screening reviewed.",
+            lca_report_url: "https://example.com/wpc-flooring-lca-summary.pdf",
+            methodology: "Screening LCA based on wood-fibre recovery, recycled polymer share, extrusion energy and sea freight to the EU.",
+            verified_by: "Demo Building Materials Testing Institute",
+          },
+        ],
+    bom: data?.bom?.length
+      ? data.bom
+      : [
+          {
+            id: "demo-floor-bom-1",
+            product_id: productId,
+            component_name: "WPC plank core",
+            component_name_zh: "WPC 地板芯层",
+            component_type: "Composite board",
+            component_type_zh: "复合板材",
+            quantity: 1,
+            unit: "plank",
+            position: "Main body",
+          },
+          {
+            id: "demo-floor-bom-2",
+            product_id: productId,
+            component_name: "Wear-resistant surface layer",
+            component_name_zh: "耐磨表层",
+            component_type: "Surface treatment",
+            component_type_zh: "表面处理",
+            quantity: 1,
+            unit: "layer",
+            position: "Top surface",
+          },
+          {
+            id: "demo-floor-bom-3",
+            product_id: productId,
+            component_name: "Click-lock profile",
+            component_name_zh: "锁扣结构",
+            component_type: "Installation interface",
+            component_type_zh: "安装接口",
+            quantity: 2,
+            unit: "edges",
+            position: "Long edges",
+          },
+        ],
+    traceability: data?.traceability?.length
+      ? data.traceability
+      : [
+          {
+            id: "demo-floor-trace-1",
+            product_id: productId,
+            event_type: "material sourcing",
+            event_name: "Recovered wood fibre and recycled polymer sourced",
+            event_name_zh: "采购再生木纤维与再生聚合物",
+            event_date: "2026-04-08",
+            country: "China",
+            city: "Huzhou",
+            facility_name: "Demo Recycled Materials Supplier",
+            facility_name_zh: "示例再生材料供应商",
+            transport_method: "Truck",
+            verification_status: "verified",
+            notes: "Supplier recycled-content declarations and REACH screening linked.",
+            notes_zh: "已关联供应商再生成分声明和 REACH 筛查。",
+          },
+          {
+            id: "demo-floor-trace-2",
+            product_id: productId,
+            event_type: "manufacturing",
+            event_name: "Extrusion, profiling and surface finishing",
+            event_name_zh: "挤出、开槽与表面处理",
+            event_date: "2026-05-18",
+            country: "China",
+            city: "Changzhou",
+            facility_name: "Demo WPC Flooring Factory",
+            facility_name_zh: "示例 WPC 地板工厂",
+            transport_method: "Internal transfer",
+            verification_status: "verified",
+            notes: "Batch production, dimension and wear-layer records uploaded.",
+            notes_zh: "已上传批次生产、尺寸和耐磨层记录。",
+          },
+          {
+            id: "demo-floor-trace-3",
+            product_id: productId,
+            event_type: "transport",
+            event_name: "Export shipment to EU distributor",
+            event_name_zh: "出口运输至欧盟经销商",
+            event_date: "2026-06-01",
+            country: "Netherlands",
+            city: "Rotterdam",
+            facility_name: "Demo EU Building Materials Distributor",
+            facility_name_zh: "示例欧盟建材经销仓",
+            transport_method: "Sea freight + truck",
+            verification_status: "pending",
+            notes: "Carrier data reserved for future API connection.",
+            notes_zh: "运输数据预留给后续承运商 API 对接。",
+          },
+        ],
+    circularity: data?.circularity?.length
+      ? data.circularity
+      : [
+          {
+            id: "demo-floor-circularity-1",
+            product_id: productId,
+            repairability_score: 70,
+            recyclability_score: 74,
+            take_back_program: "Eligible for installer take-back and construction-waste recovery pilots.",
+            resale_supported: true,
+            remanufacturing_supported: true,
+            disassembly_guide: "Disassemble click-lock planks without adhesive where possible; separate underlayment, trims and packaging.",
+            recycling_instructions: "Sort as WPC/composite construction material; avoid mixing with PVC flooring waste.",
+            end_of_life_info: "Reuse intact planks first, then send to composite-material recycling or authorized construction-waste recovery.",
+          },
+        ],
+    consumerTransparency: data?.consumerTransparency?.length
+      ? data.consumerTransparency
+      : [
+          {
+            id: "demo-floor-consumer-1",
+            product_id: productId,
+            brand_story: "This demo shows how building-material product data can be structured into a digital product passport for EU buyers and installers.",
+            brand_story_zh: "该示例展示如何将建材产品数据结构化为面向欧盟买家和安装商的数字产品护照。",
+            sustainability_story: "Recycled wood fibre, recycled polymer content, VOC evidence and end-of-life guidance are disclosed in this DPP.",
+            sustainability_story_zh: "本 DPP 披露再生木纤维、再生聚合物成分、VOC 证据和生命周期结束指引。",
+            consumer_notice: "Colour and texture may vary by batch. Keep spare planks for repair and scan before reuse or recycling.",
+            consumer_notice_zh: "不同批次颜色和纹理可能略有差异。建议保留备用板，维修、再使用或回收前扫码查看最新信息。",
+            packaging_info: "Recyclable cardboard carton with pallet wrapping reduction plan.",
+          },
+        ],
+    digitalIdentity: data?.digitalIdentity?.length
+      ? data.digitalIdentity
+      : [
+          {
+            id: "demo-floor-identity-1",
+            product_id: productId,
+            product_uuid: "51e0f9f3-3c7b-45c0-9b8f-demofloor01",
+            gtin: "06900000000203",
+            style_id: "STYLE-WPC-OAK-001",
+            batch_id: "BATCH-WPC-2026-001",
+            serial_id: "WPC-DEMO-0001",
+            digital_link_url: "https://www.greanlean.com/p/demo-wpc-flooring",
+            qr_code_id: "QR-DPP-WPC-001",
+            nfc_id: "NFC-RESERVED",
+            rfid_epc: "RFID-PALLET-RESERVED",
+          },
+        ],
+    documents: data?.documents?.length
+      ? data.documents
+      : [
+          {
+            id: "demo-floor-document-1",
+            product_id: productId,
+            document_name: "EU Declaration of Performance",
+            document_type: "DoP",
+            file_url: "https://example.com/wpc-flooring-dop.pdf",
+            file_size: "390 KB",
+            language: "EN / ZH",
+            uploaded_by: "greanlean admin",
+            version: "v1.0",
+          },
+          {
+            id: "demo-floor-document-2",
+            product_id: productId,
+            document_name: "VOC Emission Test Report",
+            document_type: "VOC",
+            file_url: "https://example.com/wpc-voc-report.pdf",
+            file_size: "520 KB",
+            language: "EN",
+            uploaded_by: "greanlean admin",
+            version: "v1.0",
+          },
+        ],
+    governance: data?.governance?.length
+      ? data.governance
+      : [
+          {
+            id: "demo-floor-governance-1",
+            product_id: productId,
+            data_source: "Supplier recycled-content declarations, extrusion batch records, VOC/REACH reports, packaging data and logistics documents.",
+            data_owner: "greanlean admin",
+            audit_status:
+              "Demo review completed\nVerifier: Demo Building Materials Testing Institute\nCertificate: DPP-WPC-2026-009\nValid until: 2027-06-03\nLast updated: 2026-06-05",
+            data_quality_score: 87,
           },
         ],
   };

@@ -74,6 +74,35 @@ function getDemoPayload(product: string) {
     };
   }
 
+  if (product === "demo-wpc-flooring") {
+    return {
+      product,
+      dpp_id: "DPP-WPC-DEMO-001",
+      sku: "GL-WPC-FLOOR-001",
+      gtin: "06900000000203",
+      sgtin: "06900000000203.WPC-DEMO-0001",
+      batch: "BATCH-WPC-2026-001",
+      carbon_footprint: "12.4 kg CO2e",
+      industry_average_carbon: "16.8 kg CO2e",
+      water_usage: "18 L",
+      certificates: ["EU Declaration of Performance", "VOC Emission Test Report", "REACH SVHC Screening"],
+      restricted_substances: {
+        svhc: "Not detected above 0.1% w/w",
+        lead: "Not detected",
+        cadmium: "Not detected",
+        chromium_vi: "Not detected",
+        azo_dyes: "Not applicable",
+      },
+      building_material_reserved_fields: {
+        construction_product_performance: "CPR / DoP fields reserved",
+        indoor_air_quality: "VOC and formaldehyde evidence disclosed",
+        disassembly_and_reuse: "Installer take-back and WPC recovery path disclosed",
+        recycled_content_verification: "Recycled wood fibre and polymer declarations indexed",
+      },
+      last_updated: "2026-06-05",
+    };
+  }
+
   return {
     product,
     dpp_id: "DPP-DEMO-001",

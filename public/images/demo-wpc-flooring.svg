@@ -1,0 +1,23 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="900" rx="36" fill="#F8FAFC"/>
+  <rect x="90" y="88" width="1020" height="724" rx="34" fill="#FFFFFF" stroke="#DDE6EE" stroke-width="3"/>
+  <path d="M160 660L1005 356L1070 448L225 752L160 660Z" fill="#D7C3A3"/>
+  <path d="M190 598L950 324L1015 416L255 690L190 598Z" fill="#B79262"/>
+  <path d="M220 536L895 292L960 384L285 628L220 536Z" fill="#8B633E"/>
+  <path d="M250 474L840 260L905 352L315 566L250 474Z" fill="#C8A274"/>
+  <path d="M280 412L785 228L850 320L345 504L280 412Z" fill="#6F4B2F"/>
+  <path d="M160 660L225 752M190 598L255 690M220 536L285 628M250 474L315 566M280 412L345 504" stroke="#F5E8D5" stroke-width="5" stroke-linecap="round"/>
+  <path d="M335 398C454 392 574 371 690 329" stroke="#E6D2B4" stroke-width="4" stroke-linecap="round" opacity=".72"/>
+  <path d="M300 470C430 463 559 437 695 388" stroke="#7A5435" stroke-width="4" stroke-linecap="round" opacity=".45"/>
+  <path d="M255 548C410 540 560 506 740 440" stroke="#E6D2B4" stroke-width="4" stroke-linecap="round" opacity=".75"/>
+  <path d="M220 622C386 610 560 568 790 486" stroke="#7A5435" stroke-width="4" stroke-linecap="round" opacity=".38"/>
+  <rect x="725" y="132" width="295" height="168" rx="22" fill="#0F172A"/>
+  <rect x="750" y="157" width="245" height="118" rx="16" fill="#FFFFFF"/>
+  <path d="M782 192H962M782 221H920M782 250H940" stroke="#27C084" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="202" cy="195" r="64" fill="#EAF8EF"/>
+  <path d="M175 196L196 217L234 173" stroke="#27C084" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="172" y="290" width="268" height="76" rx="16" fill="#EDF7F1"/>
+  <path d="M205 318H405M205 342H350" stroke="#15803D" stroke-width="10" stroke-linecap="round"/>
+  <path d="M900 612C930 587 977 591 1002 622C1028 653 1023 699 991 724C961 747 916 742 892 711C866 679 870 637 900 612Z" fill="#EAF1FF"/>
+  <path d="M928 674L949 695L985 648" stroke="#2563EB" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -50,26 +50,29 @@ export async function GET(request: Request) {
   const product = url.searchParams.get("product") || "demo-organic-cotton-tshirt";
   const isZh = locale === "zh";
   const isElectronics = product === "demo-wireless-earbuds";
+  const isFlooring = product === "demo-wpc-flooring";
 
   const lines = [
-    "EU Declaration of Conformity",
+    isFlooring ? "EU Declaration of Performance" : "EU Declaration of Conformity",
     "",
-    `Product: ${isElectronics ? "Wireless Bluetooth Earbuds" : "Organic Cotton T-Shirt"} (${product})`,
-    `DPP ID: ${isElectronics ? "DPP-AUDIO-DEMO-001" : "DPP-DEMO-001"}`,
-    `SKU: ${isElectronics ? "GL-EARBUDS-001" : "GL-TSHIRT-001"}`,
-    `GTIN: ${isElectronics ? "06900000000128" : "06900000000012"}`,
-    `SGTIN: ${isElectronics ? "06900000000128.EARBUDS-DEMO-0001" : "06900000000012.DEMO-TEE-0001"}`,
+    `Product: ${isElectronics ? "Wireless Bluetooth Earbuds" : isFlooring ? "WPC Composite Flooring Plank" : "Organic Cotton T-Shirt"} (${product})`,
+    `DPP ID: ${isElectronics ? "DPP-AUDIO-DEMO-001" : isFlooring ? "DPP-WPC-DEMO-001" : "DPP-DEMO-001"}`,
+    `SKU: ${isElectronics ? "GL-EARBUDS-001" : isFlooring ? "GL-WPC-FLOOR-001" : "GL-TSHIRT-001"}`,
+    `GTIN: ${isElectronics ? "06900000000128" : isFlooring ? "06900000000203" : "06900000000012"}`,
+    `SGTIN: ${isElectronics ? "06900000000128.EARBUDS-DEMO-0001" : isFlooring ? "06900000000203.WPC-DEMO-0001" : "06900000000012.DEMO-TEE-0001"}`,
     "",
     "Applicable EU rules:",
     "1. Regulation (EU) 2024/1781 - ESPR framework for ecodesign requirements",
     "2. Regulation (EC) No 1907/2006 - REACH and RSL restricted substances screening",
-    isElectronics ? "3. Directive 2011/65/EU - RoHS restriction of hazardous substances" : "3. Regulation (EU) 2023/988 - General Product Safety Regulation",
-    isElectronics ? "4. Directive 2012/19/EU - WEEE waste electrical and electronic equipment" : "4. Regulation (EU) No 1007/2011 - Textile fibre names and labelling",
+    isElectronics ? "3. Directive 2011/65/EU - RoHS restriction of hazardous substances" : isFlooring ? "3. Regulation (EU) No 305/2011 - Construction Products Regulation and Declaration of Performance" : "3. Regulation (EU) 2023/988 - General Product Safety Regulation",
+    isElectronics ? "4. Directive 2012/19/EU - WEEE waste electrical and electronic equipment" : isFlooring ? "4. EN 16516 / VOC indoor-air-emission test method (demo)" : "4. Regulation (EU) No 1007/2011 - Textile fibre names and labelling",
     ...(isElectronics ? ["5. Directive 2014/53/EU - Radio Equipment Directive"] : []),
     "",
     "Manufacturer:",
     isElectronics
       ? "Demo Electronics Assembly Plant Co., Ltd., 18 Smart Hardware Road, Dongguan, Guangdong, China"
+      : isFlooring
+        ? "Demo WPC Flooring Factory Co., Ltd., 66 Composite Materials Road, Changzhou, Jiangsu, China"
       : "Demo Garment Factory Co., Ltd., 88 Textile Road, Ningbo, Zhejiang, China",
     "",
     "Importer / EU responsible party:",

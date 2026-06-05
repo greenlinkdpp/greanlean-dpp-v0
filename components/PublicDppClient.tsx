@@ -573,12 +573,15 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     .join(" ")
     .toLowerCase();
   const isElectronics = /electronics|earbud|headphone|audio|蓝牙|耳机|电子/.test(categoryText);
-  const carbonCurrent = latestEsg?.carbon_footprint ? Number(latestEsg.carbon_footprint) : isElectronics ? 6.8 : 3.2;
-  const carbonAverage = isElectronics ? 8.9 : 4.5;
-  const waterCurrent = latestEsg?.water_usage ? Number(latestEsg.water_usage) : isElectronics ? 42 : 118;
-  const waterAverage = isElectronics ? 65 : 160;
+  const isFlooring = /floor|flooring|wpc|building|construction|地板|木塑|建材/.test(categoryText);
+  const carbonCurrent = latestEsg?.carbon_footprint ? Number(latestEsg.carbon_footprint) : isElectronics ? 6.8 : isFlooring ? 12.4 : 3.2;
+  const carbonAverage = isElectronics ? 8.9 : isFlooring ? 16.8 : 4.5;
+  const waterCurrent = latestEsg?.water_usage ? Number(latestEsg.water_usage) : isElectronics ? 42 : isFlooring ? 18 : 118;
+  const waterAverage = isElectronics ? 65 : isFlooring ? 28 : 160;
   const recycleLink = isElectronics
     ? "https://environment.ec.europa.eu/topics/waste-and-recycling/waste-electrical-and-electronic-equipment-weee_en"
+    : isFlooring
+      ? "https://environment.ec.europa.eu/topics/waste-and-recycling/construction-and-demolition-waste_en"
     : "https://www.recyclenow.com/recycle-an-item/clothing-textiles";
   const qrUrl = `/api/qr?url=${encodeURIComponent(dppUrl)}`;
 
@@ -645,6 +648,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? locale === "zh"
           ? "ESPR / CE / RoHS / REACH / WEEE / 电池与电子废弃物要求"
           : "ESPR / CE / RoHS / REACH / WEEE / battery and e-waste requirements"
+        : isFlooring
+          ? locale === "zh"
+            ? "ESPR / REACH / VOC / 建筑产品性能声明 / 建筑废弃物回收"
+            : "ESPR / REACH / VOC / construction-product performance declaration / construction-waste recovery"
         : t.complianceScopeValue,
     ],
     [
@@ -653,6 +660,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? locale === "zh"
           ? "再生 ABS/PC 外壳、锂电池、PCB、硅胶耳塞与铜磁件"
           : "Recycled ABS/PC housing, lithium-ion battery, PCB, silicone ear tips, copper and magnets"
+        : isFlooring
+          ? locale === "zh"
+            ? "55% 再生木纤维 + 35% 再生 HDPE/PP + 10% 矿物填料与助剂"
+            : "55% recycled wood fibre + 35% recycled HDPE/PP + 10% mineral filler and additives"
         : t.materialProfileValue,
     ],
     [
@@ -661,6 +672,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? locale === "zh"
           ? "续航 8 小时；充电循环 ≥500 次；IPX4 防泼溅"
           : "8h battery life; >=500 charge cycles; IPX4 splash resistance"
+        : isFlooring
+          ? locale === "zh"
+            ? "耐磨等级 AC4；吸水膨胀 ≤1.5%；使用寿命 10-15 年"
+            : "AC4 wear rating; water swelling <=1.5%; 10-15 year service life"
         : t.performanceSnapshotValue,
     ],
     [t.nextAction, t.nextActionValue],
@@ -679,6 +694,20 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             : "Demo performance declaration for consumer-electronics DPP display; real products should reference battery, EMC, safety and QA reports.",
         ],
       ]
+    : isFlooring
+      ? [
+          [locale === "zh" ? "耐磨等级" : "Wear rating", "AC4"],
+          [locale === "zh" ? "吸水厚度膨胀率" : "Water-thickness swelling", "≤ 1.5%"],
+          [locale === "zh" ? "尺寸稳定性" : "Dimensional stability", "≤ 0.25%"],
+          [locale === "zh" ? "甲醛释放" : "Formaldehyde emission", "E1 / below reporting limit"],
+          [t.minimumLifetime, locale === "zh" ? "10-15 年" : "10-15 years"],
+          [
+            t.testBasis,
+            locale === "zh"
+              ? "示例性能声明，面向 WPC 地板 DPP 技术文件展示；实际产品应以耐磨、VOC、尺寸稳定性和安装测试报告为准。"
+              : "Demo performance declaration for WPC flooring DPP display; real products should reference wear, VOC, dimensional-stability and installation test reports.",
+          ],
+        ]
     : [
         [t.washDurability, "≥ 50"],
         [t.tensileStrength, "≥ 450 N/m"],
@@ -714,6 +743,33 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           type: "svhc",
         },
       ]
+    : isFlooring
+      ? [
+          {
+            item: t.svhcCandidate,
+            result: t.notDetected,
+            limit: t.svhcLimit,
+            type: "svhc",
+          },
+          {
+            item: locale === "zh" ? "VOC 排放" : "VOC emissions",
+            result: locale === "zh" ? "通过" : "Pass",
+            limit: locale === "zh" ? "室内空气质量 VOC 检测报告可查看" : "Indoor-air-quality VOC test report available",
+            type: "msds",
+          },
+          {
+            item: locale === "zh" ? "甲醛释放" : "Formaldehyde emission",
+            result: locale === "zh" ? "低于申报限值" : "Below declaration limit",
+            limit: "E1 / EN 717-1 demo criterion",
+            type: "svhc",
+          },
+          {
+            item: locale === "zh" ? "重金属 - 铅 / 镉 / 六价铬" : "Heavy metals - Pb / Cd / Cr(VI)",
+            result: t.notDetected,
+            limit: locale === "zh" ? "未有意添加；按建材 RSL 筛查" : "Not intentionally added; screened against building-materials RSL",
+            type: "heavy-metals",
+          },
+        ]
     : [
     {
       item: t.svhcCandidate,
@@ -763,6 +819,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             locale === "zh" ? "Directive 2012/19/EU - WEEE 电子电气废弃物指令" : "Directive 2012/19/EU - WEEE waste electrical and electronic equipment",
             locale === "zh" ? "Directive 2014/53/EU - RED 无线电设备指令" : "Directive 2014/53/EU - Radio Equipment Directive",
           ].join("\n")
+        : isFlooring
+          ? [
+              t.declarationRule1,
+              t.declarationRule2,
+              locale === "zh" ? "Regulation (EU) No 305/2011 - 建筑产品法规 CPR 与性能声明" : "Regulation (EU) No 305/2011 - Construction Products Regulation and Declaration of Performance",
+              locale === "zh" ? "EN 16516 / VOC 室内空气排放测试方法（示例）" : "EN 16516 / VOC indoor-air-emission test method (demo)",
+            ].join("\n")
         : [t.declarationRule1, t.declarationRule2, t.declarationRule3, t.declarationRule4].join("\n"),
     ],
     [
@@ -771,6 +834,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? locale === "zh"
           ? "Demo Electronics Assembly Plant Co., Ltd., 18 Smart Hardware Road, Dongguan, Guangdong, China"
           : "Demo Electronics Assembly Plant Co., Ltd., 18 Smart Hardware Road, Dongguan, Guangdong, China"
+        : isFlooring
+          ? "Demo WPC Flooring Factory Co., Ltd., 66 Composite Materials Road, Changzhou, Jiangsu, China"
         : t.manufacturerValue,
     ],
     [t.importerInfo, t.importerValue],
@@ -783,6 +848,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.expectedResaleCycles, locale === "zh" ? "1 次，需通过电池健康检测" : "1 cycle, subject to battery-health screening"],
         [t.resalePriceRange, locale === "zh" ? "原零售价的 15%-35%" : "15%-35% of original retail price"],
       ]
+    : isFlooring
+      ? [
+          [t.takeBackPlanDetails, locale === "zh" ? "通过安装商回收、项目余料回收或建材经销商回收计划回收旧板。" : "Return used planks through installer take-back, project offcut recovery or building-material distributor programs."],
+          [t.expectedResaleCycles, locale === "zh" ? "1 次，需通过外观和锁扣完整性筛查" : "1 cycle, subject to visual and click-lock integrity screening"],
+          [t.resalePriceRange, locale === "zh" ? "原零售价的 10%-30%" : "10%-30% of original retail price"],
+        ]
     : [
         [t.takeBackPlanDetails, t.takeBackPlanValue],
         [t.expectedResaleCycles, locale === "zh" ? "1-2 次" : "1-2 cycles"],
@@ -794,6 +865,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.repairProviders, locale === "zh" ? "Demo EU Electronics Service Network；授权电池维修服务商" : "Demo EU Electronics Service Network; authorized battery repair providers"],
         [t.sparePartsGuide, locale === "zh" ? "优先使用原厂耳塞、充电盒和合规电池组件；避免非授权电池替换。" : "Prioritize original ear tips, charging case and compliant battery modules; avoid unauthorized battery replacement."],
       ]
+    : isFlooring
+      ? [
+          [t.commonRepairTypes, locale === "zh" ? "单片替换、锁扣修复、表面划痕修补、边条更换、局部重铺" : "Single-plank replacement, click-lock repair, surface scratch repair, trim replacement and local reinstall"],
+          [t.repairProviders, locale === "zh" ? "Demo Flooring Installer Network；本地建材维修服务商" : "Demo Flooring Installer Network; local building-material repair providers"],
+          [t.sparePartsGuide, locale === "zh" ? "保留同批次备用板、边条和地垫；避免胶粘安装导致后续拆解困难。" : "Keep spare planks, trims and underlayment from the same batch; avoid adhesive installation where future disassembly is required."],
+        ]
     : [
         [t.commonRepairTypes, t.commonRepairTypesValue],
         [t.repairProviders, t.repairProvidersValue],
@@ -805,6 +882,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.removeBeforeRecycle, locale === "zh" ? "硅胶耳塞、包装附件和可拆卸线缆；含电池部件单独处理。" : "Silicone ear tips, packaging accessories and removable cable; battery-containing parts handled separately."],
         [t.recyclingFacilityLink, locale === "zh" ? "WEEE / 当地电子电气回收设施查询" : "WEEE / local e-waste collection locator"],
       ]
+    : isFlooring
+      ? [
+          [t.recyclableParts, locale === "zh" ? "WPC 主板材、再生聚合物和木纤维复合料，可进入复合材料或建筑废弃物回收试点。" : "WPC main planks, recycled polymer and wood-fibre composite, suitable for composite-material or construction-waste recovery pilots."],
+          [t.removeBeforeRecycle, locale === "zh" ? "地垫、金属边条、包装薄膜和安装辅料需单独分离。" : "Underlayment, metal trims, wrapping film and installation accessories should be separated."],
+          [t.recyclingFacilityLink, locale === "zh" ? "建筑废弃物 / 复合材料回收设施查询" : "Construction-waste / composite-material recovery locator"],
+        ]
     : [
         [t.recyclableParts, t.recyclablePartsValue],
         [t.removeBeforeRecycle, t.removeBeforeRecycleValue],
@@ -814,7 +897,11 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     {
       point: t.carbon,
       value: `${carbonCurrent} kg CO2e`,
-      source: isElectronics ? (locale === "zh" ? "LCA Database + 电子 BOM / 电池模型" : "LCA Database + electronics BOM / battery model") : t.carbonSource,
+      source: isElectronics
+        ? locale === "zh" ? "LCA Database + 电子 BOM / 电池模型" : "LCA Database + electronics BOM / battery model"
+        : isFlooring
+          ? locale === "zh" ? "LCA Database + WPC 配方 / 挤出能耗模型" : "LCA Database + WPC formulation / extrusion-energy model"
+        : t.carbonSource,
       verification: t.independentVerified,
       updated: t.dataLastUpdatedValue,
     },
@@ -827,14 +914,14 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     },
     {
       point: t.waste,
-      value: latestEsg?.waste_generation ? `${latestEsg.waste_generation} kg` : isElectronics ? "0.22 kg" : "0.38 kg",
+      value: latestEsg?.waste_generation ? `${latestEsg.waste_generation} kg` : isElectronics ? "0.22 kg" : isFlooring ? "0.85 kg" : "0.38 kg",
       source: t.wasteSource,
       verification: t.auditVerified,
       updated: t.dataLastUpdatedValue,
     },
     {
       point: t.recycled,
-      value: latestEsg?.recycled_content ? `${latestEsg.recycled_content}%` : isElectronics ? "18%" : "4%",
+      value: latestEsg?.recycled_content ? `${latestEsg.recycled_content}%` : isElectronics ? "18%" : isFlooring ? "65%" : "4%",
       source: t.recycledSource,
       verification: t.independentVerified,
       updated: t.dataLastUpdatedValue,
@@ -848,9 +935,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? locale === "zh"
           ? "碳足迹模型、RoHS/REACH 报告、电池 MSDS、CE 符合性声明和 WEEE 生命周期结束信息由第三方或文件证据验证；部分生产数据由制造商声明。"
           : "Carbon-footprint model, RoHS/REACH reports, battery MSDS, CE declaration and WEEE end-of-life information are verified by third-party or evidence files; selected production data are manufacturer-declared."
+        : isFlooring
+          ? locale === "zh"
+            ? "碳足迹模型、VOC/甲醛检测、REACH 筛查、欧盟性能声明和再生成分声明由第三方或文件证据验证；部分生产数据由制造商声明。"
+            : "Carbon-footprint model, VOC/formaldehyde tests, REACH screening, EU Declaration of Performance and recycled-content declarations are verified by third-party or evidence files; selected production data are manufacturer-declared."
         : t.verificationScopeValue,
     ],
-    [t.verificationCertificate, isElectronics ? "SGS-DPP-AUDIO-2026-018" : t.verificationCertificateValue],
+    [t.verificationCertificate, isElectronics ? "SGS-DPP-AUDIO-2026-018" : isFlooring ? "DPP-WPC-2026-009" : t.verificationCertificateValue],
     [t.verificationExpiry, t.verificationExpiryValue],
     [t.lastUpdated, t.dataLastUpdatedValue],
   ];
@@ -862,6 +953,14 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.reachTerm, t.reachDesc],
         [t.svhcTerm, t.svhcDesc],
       ]
+    : isFlooring
+      ? [
+          ["WPC", locale === "zh" ? "Wood Plastic Composite，木塑复合材料，通常由木纤维和聚合物复合制成。" : "Wood Plastic Composite, usually made from wood fibre and polymer matrix."],
+          ["VOC", locale === "zh" ? "挥发性有机化合物，建材 DPP 中常用于室内空气质量披露。" : "Volatile organic compounds, commonly disclosed for indoor-air quality in building-material DPPs."],
+          ["DoP", locale === "zh" ? "Declaration of Performance，建筑产品性能声明，用于披露适用性能和责任方信息。" : "Declaration of Performance for construction products, disclosing applicable performance and operator information."],
+          [t.reachTerm, t.reachDesc],
+          [t.svhcTerm, t.svhcDesc],
+        ]
     : [
         [t.gotsTerm, t.gotsDesc],
         [t.oekoTerm, t.oekoDesc],
@@ -871,8 +970,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   const simpleMetrics: Array<[string, any, IconName]> = [
     [t.carbon, `${carbonCurrent} kg CO2e`, "carbon"],
     [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
-    [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100` : isElectronics ? "58 / 100" : "81 / 100", "recycle"],
-    [t.minimumLifetime, isElectronics ? (locale === "zh" ? "2 年" : "2 years") : locale === "zh" ? "2-3 年" : "2-3 years", "check"],
+    [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100` : isElectronics ? "58 / 100" : isFlooring ? "74 / 100" : "81 / 100", "recycle"],
+    [t.minimumLifetime, isElectronics ? (locale === "zh" ? "2 年" : "2 years") : isFlooring ? (locale === "zh" ? "10-15 年" : "10-15 years") : locale === "zh" ? "2-3 年" : "2-3 years", "check"],
   ];
   const textileReserveItems: Array<[string, any]> = isElectronics
     ? [
@@ -881,6 +980,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [locale === "zh" ? "固件与网络安全信息" : "Firmware and cybersecurity information", locale === "zh" ? "预留固件版本、蓝牙模块和安全更新记录字段。" : "Firmware version, Bluetooth module and security-update record fields reserved."],
         [locale === "zh" ? "维修备件可用性" : "Spare-part availability", locale === "zh" ? "预留耳塞、充电盒和电池服务件的供应周期与服务商信息。" : "Ear tips, charging case and battery service-part availability fields reserved."],
       ]
+    : isFlooring
+      ? [
+          [locale === "zh" ? "建筑产品性能扩展" : "Construction-product performance extension", locale === "zh" ? "预留 CPR / DoP 对接字段、适用标准、安装方式和性能等级。" : "CPR / DoP integration fields, applicable standards, installation method and performance classes reserved."],
+          [locale === "zh" ? "室内空气质量证据" : "Indoor-air-quality evidence", locale === "zh" ? "预留 VOC、甲醛、气味等级和低排放材料声明字段。" : "VOC, formaldehyde, odour class and low-emission material declaration fields reserved."],
+          [locale === "zh" ? "拆解与再使用" : "Disassembly and reuse", locale === "zh" ? "预留项目拆除记录、旧板再使用筛选和建筑废弃物回收路径。" : "Project removal records, reuse screening and construction-waste recovery fields reserved."],
+          [locale === "zh" ? "再生成分验证" : "Recycled-content verification", locale === "zh" ? "预留再生木纤维、再生塑料来源和批次质量平衡证据。" : "Recycled wood fibre, recycled polymer origin and batch mass-balance evidence reserved."],
+        ]
     : [
         [t.microfiberPotential, t.microfiberValue],
         [t.fullOriginTrace, t.fullOriginValue],
@@ -894,31 +1000,58 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         locale === "zh" ? "2026-06-02 出口运输记录写入，欧盟进口商仓库接收待确认" : "2026-06-02 Export shipment record added; EU importer warehouse receipt pending",
         locale === "zh" ? "2026-06-04 DPP 数据审核并更新公开页面" : "2026-06-04 DPP data reviewed and public page updated",
       ]
+    : isFlooring
+      ? [
+          locale === "zh" ? "2026-04-08 再生木纤维与再生聚合物批次创建并绑定供应商声明" : "2026-04-08 Recycled wood fibre and polymer batches created and linked to supplier declarations",
+          locale === "zh" ? "2026-05-18 挤出、开槽和表面处理完成，批次质检记录上传" : "2026-05-18 Extrusion, profiling and surface finishing completed; batch QA records uploaded",
+          locale === "zh" ? "2026-06-01 出口运输记录写入，鹿特丹经销仓接收待确认" : "2026-06-01 Export shipment record added; Rotterdam distributor receipt pending",
+          locale === "zh" ? "2026-06-05 地板 DPP 数据审核并更新公开页面" : "2026-06-05 Flooring DPP data reviewed and public page updated",
+        ]
     : [t.batchRecord1, t.batchRecord2, t.batchRecord3, t.batchRecord4];
   const benchmarkNote = isElectronics
     ? locale === "zh"
       ? "低于示例消费电子同类平均值约 24%，主要来自再生塑料外壳、轻量化包装和较小物流体积假设。"
       : "About 24% below the demo consumer-electronics average, mainly from recycled plastic housing, lightweight packaging and lower shipping-volume assumptions."
+    : isFlooring
+      ? locale === "zh"
+        ? "低于示例同类地板平均值约 26%，主要来自较高再生成分、木纤维替代和海运运输假设。"
+        : "About 26% below the demo flooring average, mainly from higher recycled content, wood-fibre substitution and sea-freight assumptions."
     : t.benchmarkAdvantage;
   const reserveIntro = isElectronics
     ? locale === "zh"
       ? "以下字段用于提前适配消费电子和电池相关 DPP 细化要求；当前作为预留和数据准备项展示。"
       : "These fields are reserved for consumer-electronics and battery-related DPP extensions; currently shown as data-readiness items."
+    : isFlooring
+      ? locale === "zh"
+        ? "以下字段用于提前适配建材、建筑产品性能声明和室内空气质量相关 DPP 要求；当前作为预留和数据准备项展示。"
+        : "These fields are reserved for building-material, construction-product performance and indoor-air-quality DPP requirements; currently shown as data-readiness items."
     : t.textileReserveIntro;
   const householdWasteText = isElectronics
     ? locale === "zh"
       ? "请勿将耳机、充电盒或含电池部件作为生活垃圾丢弃，应进入 WEEE 或电池回收渠道。"
       : "Do not discard earbuds, charging case or battery-containing parts with household waste; use WEEE or battery collection streams."
+    : isFlooring
+      ? locale === "zh"
+        ? "请勿将整批 WPC 地板混入普通生活垃圾；拆除后应进入建材回收或建筑废弃物分选渠道。"
+        : "Do not mix removed WPC flooring with ordinary household waste; use building-material recovery or construction-waste sorting channels."
     : t.noHouseholdWasteDesc;
   const removePartsText = isElectronics
     ? locale === "zh"
       ? "回收前尽量分离硅胶耳塞、包装配件和可拆卸线缆；电池部件由授权机构处理。"
       : "Where possible, separate silicone ear tips, packaging accessories and removable cables before recycling; battery parts should be handled by authorized facilities."
+    : isFlooring
+      ? locale === "zh"
+        ? "回收前分离地垫、金属边条、包装薄膜和安装辅料；避免混入 PVC 地板废料。"
+        : "Separate underlayment, metal trims, wrapping film and installation accessories before recycling; avoid mixing with PVC flooring waste."
     : t.removeTrimsDesc;
   const collectionText = isElectronics
     ? locale === "zh"
       ? "可维修或转售时优先延长使用寿命；无法继续使用时送至当地电子电气回收点。"
       : "Extend product life through repair or resale where possible; send unusable units to local electronics collection points."
+    : isFlooring
+      ? locale === "zh"
+        ? "可拆卸完整板材优先再使用；无法再使用时进入 WPC 复合材料或建筑废弃物回收试点。"
+        : "Reuse intact removable planks first; send unusable material to WPC composite or construction-waste recovery pilots."
     : t.textileCollectionDesc;
   const summaryMetrics: Array<[string, any, IconName]> = [
     [t.materialCount, materials.length, "layers"],
@@ -1371,7 +1504,21 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               <DataCard title={t.repairAndUpcycle} icon="scissors" surface="soft">
                 <InfoGrid items={repairItems} locale={locale} />
               </DataCard>
-              <DataCard title={isElectronics ? (locale === "zh" ? "WEEE / 电子电气回收" : "WEEE / E-waste recycling") : t.textileRecycling} icon="trash" surface="soft">
+              <DataCard
+                title={
+                  isElectronics
+                    ? locale === "zh"
+                      ? "WEEE / 电子电气回收"
+                      : "WEEE / E-waste recycling"
+                    : isFlooring
+                      ? locale === "zh"
+                        ? "建筑废弃物 / WPC 回收"
+                        : "Construction-waste / WPC recovery"
+                      : t.textileRecycling
+                }
+                icon="trash"
+                surface="soft"
+              >
                 <InfoGrid items={recyclingItems} locale={locale} />
                 <a
                   href={recycleLink}
@@ -1386,8 +1533,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             </div>
             <div className="grid gap-3 md:grid-cols-3">
               <GuideCard icon="trash" title={t.noHouseholdWaste} text={householdWasteText} />
-              <GuideCard icon="scissors" title={isElectronics ? (locale === "zh" ? "回收前分离可拆部件" : "Separate removable parts before recycling") : t.removeTrims} text={removePartsText} />
-              <GuideCard icon="recycle" title={isElectronics ? (locale === "zh" ? "优先维修，再进入电子回收" : "Repair first, then e-waste recycling") : t.textileCollection} text={collectionText} />
+              <GuideCard icon="scissors" title={isElectronics || isFlooring ? (locale === "zh" ? "回收前分离可拆部件" : "Separate removable parts before recycling") : t.removeTrims} text={removePartsText} />
+              <GuideCard icon="recycle" title={isElectronics ? (locale === "zh" ? "优先维修，再进入电子回收" : "Repair first, then e-waste recycling") : isFlooring ? (locale === "zh" ? "优先再使用，再进入建材回收" : "Reuse first, then building-material recovery") : t.textileCollection} text={collectionText} />
             </div>
           </div>
         </Section>}
