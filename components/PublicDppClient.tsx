@@ -1200,31 +1200,35 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       </section>
 
       <section className="mx-auto max-w-7xl px-6 pt-6" aria-label={t.accessibility}>
-        <div className="dpp-fade flex flex-wrap items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <div className={viewMode === "simple" ? "dpp-fade flex flex-wrap items-center justify-end gap-3" : "dpp-fade flex flex-wrap items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm"}>
+          {viewMode === "detail" && (
+            <>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleViewMode("simple")}
+                  aria-pressed={false}
+                  className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-black text-slate-700"
+                >
+                  {t.simpleView}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleViewMode("detail")}
+                  aria-pressed={true}
+                  className="rounded-lg bg-slate-950 px-4 py-2 text-sm font-black text-white"
+                >
+                  {t.detailView}
+                </button>
+              </div>
+              <p className="text-sm font-semibold text-slate-600">{t.detailViewDesc}</p>
+            </>
+          )}
           <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => handleViewMode("simple")}
-              aria-pressed={viewMode === "simple"}
-              className={viewMode === "simple" ? "rounded-lg bg-slate-950 px-4 py-2 text-sm font-black text-white" : "rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-black text-slate-700"}
-            >
-              {t.simpleView}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleViewMode("detail")}
-              aria-pressed={viewMode === "detail"}
-              className={viewMode === "detail" ? "rounded-lg bg-slate-950 px-4 py-2 text-sm font-black text-white" : "rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-black text-slate-700"}
-            >
-              {t.detailView}
-            </button>
-          </div>
-          <p className="text-sm font-semibold text-slate-600">{viewMode === "simple" ? t.simpleViewDesc : t.detailViewDesc}</p>
-          <div className="flex flex-wrap gap-2">
-            <a href={`/api/dpp-export?format=pdf&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`} target="_blank" rel="noreferrer" className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-bold text-blue-700 transition hover:bg-blue-600 hover:text-white">
+            <a href={`/api/dpp-export?format=pdf&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-lg border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-bold text-blue-700 transition hover:bg-blue-600 hover:text-white">
               {t.downloadPdf}
             </a>
-            <a href={`/api/dpp-export?format=json&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`} target="_blank" rel="noreferrer" className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-700 transition hover:bg-emerald-600 hover:text-white">
+            <a href={`/api/dpp-export?format=json&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-bold text-emerald-700 transition hover:bg-emerald-600 hover:text-white">
               {t.downloadJson}
             </a>
           </div>
@@ -1249,26 +1253,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       <div className="mx-auto max-w-7xl px-6 py-8">
         {viewMode === "simple" && (
           <div className="space-y-6">
-            <section className="dpp-fade grid gap-4 lg:grid-cols-[1fr_1fr]">
-              <DataCard title={t.simpleView} icon="eye" surface="soft">
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {simpleMetrics.map(([label, value, icon]) => (
-                    <Metric key={label} label={label} value={value} locale={locale} icon={icon} />
-                  ))}
-                </div>
-              </DataCard>
-              <DataCard title={t.benchmarkTitle} icon="carbon" surface="soft">
-                <ComparisonBars
-                  currentLabel={t.thisProduct}
-                  averageLabel={t.industryAverage}
-                  currentValue={carbonCurrent}
-                  averageValue={carbonAverage}
-                  unit="kg CO2e"
-                  note={benchmarkNote}
-                />
-              </DataCard>
-            </section>
-
             <Section id="identity" title={t.productIdentity} eyebrow={t.overview} icon="box">
               <div className="grid gap-4 lg:grid-cols-2">
                 <DataCard title={t.productRecordTitle} icon="box" surface="soft">
