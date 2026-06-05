@@ -278,9 +278,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           verificationExpiry: "验证有效期",
           verificationExpiryValue: "2026-06-04 至 2027-06-03",
           dataLastUpdatedValue: "2026-06-04",
-          simpleView: "简略版",
-          detailView: "详细版",
-          detailViewDesc: "完整数据给 B2B、监管和审核使用",
           downloadPdf: "下载 DPP PDF",
           downloadJson: "下载 JSON",
           benchmarkTitle: "该产品的碳足迹",
@@ -503,9 +500,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           verificationExpiry: "Verification validity",
           verificationExpiryValue: "2026-06-04 to 2027-06-03",
           dataLastUpdatedValue: "2026-06-04",
-          simpleView: "Simple view",
-          detailView: "Detailed view",
-          detailViewDesc: "Full data for B2B, regulators and audits",
           downloadPdf: "Download DPP PDF",
           downloadJson: "Download JSON",
           benchmarkTitle: "Carbon footprint of this product",
@@ -1041,12 +1035,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     ["#certificates", t.certificates, "certificate"],
     ["#consumer", t.consumer, "eye"],
   ];
-  function handleViewMode(nextMode: "simple" | "detail") {
-    setViewMode(nextMode);
-    const url = new URL(window.location.href);
-    url.searchParams.set("view", nextMode);
-    window.history.replaceState(null, "", url.toString());
-  }
+  const currentNavItems = viewMode === "simple" ? simpleNavItems : navItems;
+
   return (
     <main className="min-h-screen bg-[#f7faf8] text-slate-950" aria-label={t.passport}>
       <header className="sticky top-0 z-40 border-b border-white/70 bg-white/85 backdrop-blur-xl">
@@ -1170,50 +1160,37 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </div>
       </section>
 
-      {viewMode === "detail" && (
-        <section className="mx-auto max-w-7xl px-6 pt-6" aria-label={t.detailView}>
-          <div className="dpp-fade flex flex-wrap items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleViewMode("simple")}
-                  aria-pressed={false}
-                  className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-black text-slate-700"
-                >
-                  {t.simpleView}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleViewMode("detail")}
-                  aria-pressed={true}
-                  className="rounded-lg bg-slate-950 px-4 py-2 text-sm font-black text-white"
-                >
-                  {t.detailView}
-                </button>
-              </div>
-              <p className="text-sm font-semibold text-slate-600">{t.detailViewDesc}</p>
-          </div>
-        </section>
-      )}
-
-      <nav className="sticky top-[73px] z-30 bg-[#f7faf8]/80 py-3 backdrop-blur-xl" aria-label="DPP section navigation">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex items-center gap-2 overflow-x-auto rounded-lg border border-slate-200/80 bg-white/85 px-3 py-2 shadow-sm">
-            {(viewMode === "simple" ? simpleNavItems : navItems).map(([href, label, icon]) => (
+      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-8 lg:grid-cols-[220px_minmax(0,1fr)]">
+        <aside className="hidden lg:block">
+          <nav className="sticky top-24 space-y-1 rounded-lg border border-slate-200/80 bg-white/75 p-2 shadow-sm backdrop-blur-xl" aria-label="DPP section navigation">
+            <p className="px-3 py-2 text-xs font-black uppercase tracking-wide text-slate-400">{t.passport}</p>
+            {currentNavItems.map(([href, label, icon]) => (
               <a
                 key={href}
                 href={href}
-                className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md px-3 text-sm font-bold text-slate-600 transition hover:bg-emerald-50 hover:text-brand-700"
+                className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-emerald-50 hover:text-brand-700"
               >
                 <Icon name={icon} className="h-4 w-4 text-brand-700" />
-                {label}
+                <span className="leading-5">{label}</span>
               </a>
             ))}
-          </div>
-        </div>
-      </nav>
+          </nav>
+        </aside>
 
-      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="min-w-0">
+        <nav className="mb-6 flex gap-2 overflow-x-auto lg:hidden" aria-label="DPP section navigation">
+          {currentNavItems.map(([href, label, icon]) => (
+            <a
+              key={href}
+              href={href}
+              className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-slate-200 bg-white/85 px-3 text-sm font-bold text-slate-600 shadow-sm transition hover:border-emerald-200 hover:text-brand-700"
+            >
+              <Icon name={icon} className="h-4 w-4 text-brand-700" />
+              {label}
+            </a>
+          ))}
+        </nav>
+
         {viewMode === "simple" && (
           <div className="space-y-6">
             <Section id="identity" title={t.productIdentity} eyebrow={t.overview} icon="box">
@@ -1672,6 +1649,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           <p className="mt-3 max-w-3xl leading-7 text-slate-300">{t.footerText}</p>
           <p className="mt-4 text-sm font-semibold text-slate-400">greanlean.com</p>
         </section>
+        </div>
       </div>
 
       {activeCertificate && (
