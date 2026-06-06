@@ -650,8 +650,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           : "Recycled ABS/PC housing, lithium-ion battery, PCB, silicone ear tips, copper and magnets"
         : isFlooring
           ? locale === "zh"
-            ? "55% 再生木纤维 + 35% 再生 HDPE/PP + 10% 矿物填料与助剂"
-            : "55% recycled wood fibre + 35% recycled HDPE/PP + 10% mineral filler and additives"
+            ? "60% 木纤维 + 30% 再生 HDPE + 7% 稳定剂助剂 + 3% 棕色母粒"
+            : "60% wood fiber + 30% recycled HDPE + 7% stabilizer additives + 3% brown masterbatch"
           : isFurniture
             ? locale === "zh"
               ? "42% 钢制框架 + 28% 再生 PP/PA 塑料件 + 30% 网布与海绵"
@@ -666,8 +666,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           : "8h battery life; >=500 charge cycles; IPX4 splash resistance"
         : isFlooring
           ? locale === "zh"
-            ? "耐磨等级 AC4；吸水膨胀 ≤1.5%；使用寿命 10-15 年"
-            : "AC4 wear rating; water swelling <=1.5%; 10-15 year service life"
+            ? "140x25mm；2.55kg/m；SANDING 表面；户外 decking 使用"
+            : "140x25mm; 2.55kg/m; SANDING finish; outdoor decking use"
           : isFurniture
             ? locale === "zh"
               ? "耐久性测试通过；可更换坐垫/脚轮/气压杆；使用寿命 7-10 年"
@@ -699,10 +699,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       ]
     : isFlooring
       ? [
-          [locale === "zh" ? "耐磨等级" : "Wear rating", "AC4"],
-          [locale === "zh" ? "吸水厚度膨胀率" : "Water-thickness swelling", "≤ 1.5%"],
-          [locale === "zh" ? "尺寸稳定性" : "Dimensional stability", "≤ 0.25%"],
-          [locale === "zh" ? "甲醛释放" : "Formaldehyde emission", "E1 / below reporting limit"],
+          [locale === "zh" ? "产品尺寸" : "Dimensions", "140x25mm"],
+          [locale === "zh" ? "单位重量" : "Unit weight", "2.55kg/m"],
+          [locale === "zh" ? "表面工艺" : "Surface finish", "SANDING"],
+          [locale === "zh" ? "适用用途" : "Intended use", "OUTDOOR DECKING"],
           [t.minimumLifetime, locale === "zh" ? "10-15 年" : "10-15 years"],
           [
             t.testBasis,
