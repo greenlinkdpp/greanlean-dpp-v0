@@ -82,7 +82,8 @@ function demoPayload(product: string) {
       identity: { gtin: "06900000000203", sgtin: "06900000000203.TRACE-W2605-05", batch_id: "W2605-05", serial_id: "TRACE-W2605-05" },
       esg: { carbon_footprint: 12, water_usage: 120, energy_consumption: 15, waste_generation: 0.7, recycled_content: 30 },
       certificates: ["EU Declaration of Performance", "FSC Certificate BV-COC-154663", "REACH Declaration", "VOC Test Report", "ISO9001 Certificate", "Installation Guide", "Warranty Document"],
-      materials: ["Wood Fiber 60%", "Recycled HDPE 30%", "Stabilizer Additives 7%", "Brown Masterbatch 3%", "Pallet", "Stainless Steel Clip And Screw with Narrow Gap (304)"],
+      materials: ["Wood Fiber 60%", "Recycled HDPE 30%", "Stabilizer Additives 7%", "Brown Masterbatch 3%"],
+      bom: ["Pallet", "Stainless Steel Clip And Screw with Narrow Gap (304)"],
       circularity: {
         renewable_content: 60,
         recyclable: "Yes",

@@ -109,6 +109,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           overview: "产品概览",
           productIdentity: "产品基本信息",
           materialSource: "材料组成与来源",
+          materialFormula: "材料配方",
+          componentSupplement: "组件、包装与辅料",
+          componentSupplementIntro: "该清单用于补充包装、配件和可更换组件，不计入主材料配方占比。",
+          itemName: "名称",
           chemicalRestricted: "化学品与受限物质",
           productPerformance: "产品性能",
           traceability: "生产与运输追溯",
@@ -332,6 +336,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           overview: "Product overview",
           productIdentity: "Product basics",
           materialSource: "Materials and sources",
+          materialFormula: "Material formula",
+          componentSupplement: "Components, packaging and accessories",
+          componentSupplementIntro: "This list supplements packaging, accessories and replaceable components; it is not counted in the primary material formula.",
+          itemName: "Name",
           chemicalRestricted: "Chemicals and restricted substances",
           productPerformance: "Product performance",
           traceability: "Production and transport traceability",
@@ -569,13 +577,50 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         : "https://www.recyclenow.com/recycle-an-item/clothing-textiles";
   const qrUrl = `/api/qr?url=${encodeURIComponent(dppUrl)}`;
 
+  const compositionMaterials = useMemo(() => {
+    return materials.filter((material: any) => material.percentage !== null && material.percentage !== undefined && material.percentage !== "");
+  }, [materials]);
+
+  const supplementalComponents = useMemo(() => {
+    const rows = new Map<string, any>();
+    const addRow = (row: any) => {
+      const name = String(row.component_name || row.material_name || "").trim();
+      if (!name) return;
+      const key = name.toLowerCase();
+      if (!rows.has(key)) rows.set(key, row);
+    };
+
+    bom.forEach((component: any) => {
+      const name = String(component.component_name || "").toLowerCase();
+      if (isFlooring && (name.includes("wpc plank") || name.includes(String(product?.sku || "").toLowerCase()))) return;
+      addRow(component);
+    });
+
+    materials
+      .filter((material: any) => material.percentage === null || material.percentage === undefined || material.percentage === "")
+      .forEach((material: any) => {
+        addRow({
+          id: `material-${material.id}`,
+          component_name: material.material_name,
+          component_name_zh: material.material_name_zh,
+          component_type: material.material_type,
+          component_type_zh: material.material_type_zh,
+          quantity: null,
+          unit: null,
+          position: material.certification || material.recyclability,
+        });
+      });
+
+    return Array.from(rows.values());
+  }, [bom, isFlooring, materials, product?.sku]);
+
   const totalRecycled = useMemo(() => {
-    if (!materials.length) return null;
-    const weighted = materials.reduce((sum: number, material: any) => {
+    if (!compositionMaterials.length) return null;
+    const weighted = compositionMaterials.reduce((sum: number, material: any) => {
       return sum + (Number(material.percentage || 0) * Number(material.recycled_content || 0)) / 100;
     }, 0);
     return Math.round(weighted);
-  }, [materials]);
+  }, [compositionMaterials]);
 
   const verifiedCertificates = certificates.filter((certificate: any) => {
     return String(certificate.verification_status || "").toLowerCase() === "verified";
@@ -1141,7 +1186,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           : "Repair, refurbish or resell intact components first; disassemble unusable parts into local material recovery channels."
     : t.textileCollectionDesc;
   const summaryMetrics: Array<[string, any, IconName]> = [
-    [t.materialCount, materials.length, "layers"],
+    [t.materialCount, compositionMaterials.length, "layers"],
     [t.recycled, totalRecycled === null ? "0%" : `${totalRecycled}%`, "recycle"],
     [t.carbon, `${carbonCurrent} kg CO2e`, "carbon"],
     [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
@@ -1339,9 +1384,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             </Section>
 
             <Section id="materials" title={t.materialSource} icon="layers">
-              {materials.length ? (
+              {compositionMaterials.length ? (
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  {materials.map((material: any) => (
+                  {compositionMaterials.map((material: any) => (
                     <MaterialCard key={material.id} item={material} locale={locale} t={t} />
                   ))}
                 </div>
@@ -1468,23 +1513,24 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         )}
 
         {viewMode === "detail" && <Section id="materials" title={t.materialSource} icon="layers">
-          {materials.length || bom.length ? (
-            <div className="grid gap-4 lg:grid-cols-2">
-              {materials.map((material: any) => (
-                <MaterialCard key={material.id} item={material} locale={locale} t={t} />
-              ))}
-              {bom.map((component: any) => (
-                <DataCard key={component.id} title={pick(component, locale, "component_name", "component_name_zh")} icon="tag">
-                  <InfoGrid
-                    items={[
-                      [t.component, pick(component, locale, "component_type", "component_type_zh")],
-                      [t.quantity, compact([component.quantity, component.unit])],
-                      [t.position, component.position],
-                    ]}
-                    locale={locale}
-                  />
+          {compositionMaterials.length || supplementalComponents.length ? (
+            <div className="space-y-5">
+              {compositionMaterials.length ? (
+                <div>
+                  <p className="mb-3 text-sm font-black text-brand-700">{t.materialFormula}</p>
+                  <div className="grid gap-4 lg:grid-cols-2">
+                    {compositionMaterials.map((material: any) => (
+                      <MaterialCard key={material.id} item={material} locale={locale} t={t} />
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              {supplementalComponents.length ? (
+                <DataCard title={t.componentSupplement} icon="tag" surface="soft">
+                  <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.componentSupplementIntro}</p>
+                  <ComponentSupplementTable rows={supplementalComponents} locale={locale} t={t} />
                 </DataCard>
-              ))}
+              ) : null}
             </div>
           ) : (
             <Empty text={t.pendingData} />
@@ -2183,6 +2229,41 @@ function ChemicalTable({
               <Icon name="pdf" className="h-4 w-4" />
               {t.downloadReport}
             </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ComponentSupplementTable({ rows, locale, t }: { rows: any[]; locale: Locale; t: any }) {
+  return (
+    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="hidden grid-cols-[1.2fr_1fr_0.7fr_1.4fr] bg-slate-950 px-4 py-3 text-xs font-black uppercase text-white md:grid">
+        <span>{t.itemName}</span>
+        <span>{t.component}</span>
+        <span>{t.quantity}</span>
+        <span>{t.position}</span>
+      </div>
+      <div className="divide-y divide-slate-100">
+        {rows.map((row: any, index: number) => (
+          <div key={row.id || `${row.component_name || row.material_name}-${index}`} className="grid gap-3 px-4 py-4 md:grid-cols-[1.2fr_1fr_0.7fr_1.4fr] md:items-center">
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.itemName}</p>
+              <p className="font-black text-slate-950">{pick(row, locale, "component_name", "component_name_zh")}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.component}</p>
+              <p className="text-sm font-semibold leading-6 text-slate-700">{pick(row, locale, "component_type", "component_type_zh")}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.quantity}</p>
+              <p className="text-sm font-semibold leading-6 text-slate-700">{valueOrDash(compact([row.quantity, row.unit]), locale)}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.position}</p>
+              <p className="text-sm font-semibold leading-6 text-slate-700">{valueOrDash(row.position, locale)}</p>
+            </div>
           </div>
         ))}
       </div>
