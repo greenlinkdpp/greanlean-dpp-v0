@@ -112,7 +112,7 @@ insert into public.product_esg_metrics (
 )
 select id, 3.2, 118, 8.4, 0.38, 4,
   'Restricted substance list and supplier declarations reviewed.',
-  'https://example.com/lca-demo-report.pdf',
+  '/api/dpp-export?format=pdf&product=demo-organic-cotton-tshirt',
   'Internal screening LCA based on factory energy, material composition and logistics assumptions.',
   'greanlean review'
 from demo;
@@ -143,12 +143,12 @@ insert into public.product_certificates (
 )
 select id, 'GOTS Scope Certificate', 'GOTS 范围证书', 'Material', '材料认证',
   'GOTS-DEMO-2026-001', 'Demo Certification Body', '2026-01-15'::date, '2027-01-14'::date,
-  'https://example.com/gots-demo-certificate.pdf', 'verified'
+  '/api/chemical-document?type=svhc&product=demo-organic-cotton-tshirt', 'verified'
 from demo
 union all
 select id, 'OEKO-TEX Standard 100', 'OEKO-TEX Standard 100', 'Chemical safety', '化学安全',
   'OEKO-DEMO-2026-018', 'Demo Textile Testing Institute', '2026-02-01'::date, '2027-01-31'::date,
-  'https://example.com/oeko-tex-demo-certificate.pdf', 'verified'
+  '/api/chemical-document?type=heavy-metals&product=demo-organic-cotton-tshirt', 'verified'
 from demo;
 
 with demo as (
@@ -193,7 +193,7 @@ with demo as (
 insert into public.product_documents (
   product_id, document_name, document_type, file_url, file_size, language, uploaded_by, version
 )
-select id, 'Demo LCA Summary', 'LCA', 'https://example.com/lca-demo-report.pdf',
+select id, 'Demo LCA Summary', 'LCA', '/api/dpp-export?format=pdf&product=demo-organic-cotton-tshirt',
   '420 KB', 'EN / ZH', 'greanlean admin', 'v1.0'
 from demo;
 

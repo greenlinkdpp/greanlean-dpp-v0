@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import clsx from "clsx";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -12,6 +13,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { locale } = useLanguage();
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   const t = locale === "zh"
       ? {
@@ -51,6 +53,44 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   async function signOut() {
     await createSupabaseClient().auth.signOut();
     router.push(`/login?lang=${locale}`);
+  }
+
+  useEffect(() => {
+    let active = true;
+
+    async function checkAuth() {
+      const {
+        data: { user },
+      } = await createSupabaseClient().auth.getUser();
+
+      if (!active) return;
+
+      if (!user) {
+        router.replace(`/login?lang=${locale}`);
+        return;
+      }
+
+      setCheckingAuth(false);
+    }
+
+    checkAuth();
+
+    return () => {
+      active = false;
+    };
+  }, [locale, router]);
+
+  if (checkingAuth) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-slate-950 px-6 text-white">
+        <div className="text-center">
+          <BrandLogo href={`/?lang=${locale}`} size="md" />
+          <p className="mt-6 text-sm font-semibold text-slate-300">
+            {locale === "zh" ? "正在检查登录状态..." : "Checking session..."}
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

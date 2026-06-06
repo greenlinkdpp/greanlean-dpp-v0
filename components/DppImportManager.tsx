@@ -216,7 +216,7 @@ const modules: ImportModule[] = [
       result: "Pass",
       limit_or_criterion: "Pb, Cd, Hg, Cr(VI), PBB, PBDE below RoHS limits",
       regulation: "RoHS / REACH",
-      report_url: "https://example.com/earbuds-rohs-report.pdf",
+      report_url: "/api/chemical-document?type=heavy-metals&product=demo-wireless-earbuds",
       verification_status: "verified",
       last_updated: "2026-06-04",
     },
@@ -244,7 +244,7 @@ const modules: ImportModule[] = [
       metric_value: "8",
       unit: "hours",
       test_method: "Playback at 50% volume",
-      report_url: "https://example.com/earbuds-performance.pdf",
+      report_url: "/api/dpp-export?format=pdf&product=demo-wireless-earbuds",
       verification_status: "verified",
       last_updated: "2026-06-04",
     },
@@ -375,7 +375,7 @@ const modules: ImportModule[] = [
       issuer: "Greanlean Electronics Demo Manufacturer",
       issue_date: "2026-06-04",
       expiry_date: "2027-06-03",
-      certificate_url: "https://example.com/earbuds-eu-doc.pdf",
+      certificate_url: "/api/declaration?product=demo-wireless-earbuds",
       verification_status: "verified",
     },
   },
@@ -438,7 +438,7 @@ const modules: ImportModule[] = [
       sku: "GL-EARBUDS-001",
       document_name: "EU Declaration of Conformity",
       document_type: "DoC",
-      file_url: "https://example.com/earbuds-eu-doc.pdf",
+      file_url: "/api/declaration?product=demo-wireless-earbuds",
       file_size: "360 KB",
       language: "EN / ZH",
       uploaded_by: "greanlean admin",
@@ -492,6 +492,7 @@ const numericColumns = new Set([
 
 const dateColumns = new Set(["production_date", "event_date", "issue_date", "expiry_date", "last_updated", "verification_expiry"]);
 const urlColumns = new Set(["main_image_url", "certificate_url", "digital_link_url", "report_url", "file_url"]);
+const knownColumns = new Map(modules.map((moduleConfig) => [moduleConfig.key, new Set(moduleConfig.columns)]));
 
 function clean(value: string | undefined) {
   const trimmed = String(value || "").trim();
@@ -916,6 +917,7 @@ function detectModule(fileName: string, fallback: ModuleKey) {
 function validateUploads(uploads: ParsedUpload[]) {
   const issues: ValidationIssue[] = [];
   const productSkus = new Set<string>();
+  const seenSkus = new Set<string>();
   const materialTotals = new Map<string, number>();
 
   uploads
@@ -934,6 +936,16 @@ function validateUploads(uploads: ParsedUpload[]) {
     upload.rows.forEach((row, index) => {
       const rowNumber = index + 2;
 
+      Object.keys(row).forEach((field) => {
+        if (field && !knownColumns.get(upload.moduleKey)?.has(field)) {
+          issues.push({
+            moduleKey: upload.moduleKey,
+            row: rowNumber,
+            message: `Unknown column: ${field}`,
+          });
+        }
+      });
+
       moduleConfig.required.forEach((field) => {
         if (!row[field]?.trim()) {
           issues.push({
@@ -943,6 +955,18 @@ function validateUploads(uploads: ParsedUpload[]) {
           });
         }
       });
+
+      if (upload.moduleKey === "Products" && row.sku?.trim()) {
+        const sku = row.sku.trim();
+        if (seenSkus.has(sku)) {
+          issues.push({
+            moduleKey: upload.moduleKey,
+            row: rowNumber,
+            message: `Duplicate SKU in Products sheet: ${sku}`,
+          });
+        }
+        seenSkus.add(sku);
+      }
 
       if (upload.moduleKey !== "Products" && row.sku && productSkus.size > 0 && !productSkus.has(row.sku)) {
         issues.push({
@@ -1000,6 +1024,44 @@ function validateUploads(uploads: ParsedUpload[]) {
 
 function rowsFor(uploads: ParsedUpload[], moduleKey: ModuleKey) {
   return uploads.filter((upload) => upload.moduleKey === moduleKey).flatMap((upload) => upload.rows);
+}
+
+async function clearExistingRows(
+  supabase: ReturnType<typeof createSupabaseClient>,
+  uploads: ParsedUpload[],
+  productIds: Map<string, string>
+) {
+  const importedModules = new Set(uploads.map((upload) => upload.moduleKey));
+  const affectedProductIds = Array.from(
+    new Set(
+      uploads
+        .flatMap((upload) => upload.rows.map((row) => (row.sku ? productIds.get(row.sku) : null)))
+        .filter(Boolean) as string[]
+    )
+  );
+
+  if (!affectedProductIds.length) return;
+
+  const tablesToClear = new Set<string>();
+  if (importedModules.has("DigitalIdentity")) tablesToClear.add("product_digital_identity");
+  if (importedModules.has("BOM")) tablesToClear.add("product_bom");
+  if (importedModules.has("Materials")) tablesToClear.add("product_materials");
+  if (importedModules.has("Traceability")) tablesToClear.add("product_traceability");
+  if (importedModules.has("ESG")) tablesToClear.add("product_esg_metrics");
+  const esgIncludesCircularity = rowsFor(uploads, "ESG").some((row) => row.recyclability_score || row.repairability_score);
+  if (esgIncludesCircularity) tablesToClear.add("product_circularity");
+  if (importedModules.has("Circularity")) tablesToClear.add("product_circularity");
+  if (importedModules.has("Certificates")) tablesToClear.add("product_certificates");
+  if (importedModules.has("ConsumerTransparency")) tablesToClear.add("product_consumer_transparency");
+  if (importedModules.has("DataGovernance")) tablesToClear.add("product_data_governance");
+  if (importedModules.has("ChemicalCompliance") || importedModules.has("ProductPerformance") || importedModules.has("Documents")) {
+    tablesToClear.add("product_documents");
+  }
+
+  for (const table of Array.from(tablesToClear)) {
+    const { error } = await supabase.from(table).delete().in("product_id", affectedProductIds);
+    if (error) throw error;
+  }
 }
 
 function stringRecord(record: Record<string, string | number>) {
@@ -1081,7 +1143,7 @@ function buildDemoUploads(): ParsedUpload[] {
           result: "Not detected above 0.1% w/w",
           limit_or_criterion: "Candidate list substances below reporting threshold",
           regulation: "REACH",
-          report_url: "https://example.com/earbuds-reach-svhc.pdf",
+          report_url: "/api/chemical-document?type=svhc&product=demo-wireless-earbuds",
         },
         {
           ...stringRecord(moduleConfig.sample),
@@ -1089,7 +1151,7 @@ function buildDemoUploads(): ParsedUpload[] {
           result: "Available",
           limit_or_criterion: "Material safety and transport handling information disclosed",
           regulation: "Battery safety / transport",
-          report_url: "https://example.com/earbuds-battery-msds.pdf",
+          report_url: "/api/chemical-document?type=msds&product=demo-wireless-earbuds",
         }
       );
     }
@@ -1236,6 +1298,7 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
   };
 
   const productIds = await ensureProducts(supabase, uploads, stats);
+  await clearExistingRows(supabase, uploads, productIds);
 
   for (const row of rowsFor(uploads, "DigitalIdentity")) {
     const productId = row.sku ? productIds.get(row.sku) : null;

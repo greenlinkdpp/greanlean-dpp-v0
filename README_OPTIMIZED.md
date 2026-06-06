@@ -1,43 +1,23 @@
-# greanlean DPP Optimized Version
+# greanlean DPP Optimization Notes
 
-Optimized for the current Supabase database schema.
+This file is kept as a short implementation note. Use `README.md` as the current setup and deployment guide.
 
-## Includes
+## Current Stable Baseline
 
-- Public DPP page language dropdown: English / 中文
-- Public DPP page modules: product overview, digital identity, BOM/components, materials, supply-chain traceability, ESG, certificates, circularity, consumer transparency, documents, data governance
-- Backend product editor modules for the same data groups
-- Product manager search, status filter, pagination, delete, bilingual fields
-- Supabase patch: `supabase/optimization_patch.sql`
+- Public website with bilingual content and DPP demo showroom
+- Public DPP pages with simple and detail views
+- Four demo categories: textile, consumer electronics, WPC flooring and furniture
+- Admin workspace with product center, supplier library and bulk import
+- CSV / XLSX import templates aligned to the current DPP modules
+- PDF / JSON export endpoint that reads live product data first and falls back to demo data
+- Local-preview-first workflow before Vercel production deployment
 
-## Required Supabase step
+## Next Productization Step
 
-Run this in Supabase SQL Editor before testing the optimized backend and public DPP page:
+The next major architecture step should be company-level data isolation:
 
-```text
-supabase/optimization_patch.sql
-```
-
-It is safe to run multiple times.
-
-## Local test
-
-```bash
-npm install
-npm run dev
-```
-
-Test:
-
-```text
-http://localhost:3000/dashboard/products
-http://localhost:3000/p/demo-organic-cotton-tshirt
-```
-
-## Deploy
-
-```bash
-git add .
-git commit -m "Optimize greanlean DPP system"
-git push
-```
+- `companies`
+- user profiles and company memberships
+- `company_id` on products and related DPP tables
+- RLS policies scoped by company membership
+- server-side admin write APIs for sensitive operations

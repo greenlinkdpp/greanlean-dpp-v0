@@ -453,7 +453,7 @@ begin
     0.38,
     4,
     'Restricted substance list and supplier declarations reviewed.',
-    'https://example.com/lca-demo-report.pdf',
+    '/api/dpp-export?format=pdf&product=demo-organic-cotton-tshirt',
     'Internal screening LCA based on factory energy, material composition and logistics assumptions.',
     'greanlean review'
   );
@@ -490,7 +490,7 @@ begin
       'Demo Certification Body',
       '2026-01-15'::date,
       '2027-01-14'::date,
-      'https://example.com/gots-demo-certificate.pdf',
+      '/api/chemical-document?type=svhc&product=demo-organic-cotton-tshirt',
       'verified'
     ),
     (
@@ -503,7 +503,7 @@ begin
       'Demo Textile Testing Institute',
       '2026-02-01'::date,
       '2027-01-31'::date,
-      'https://example.com/oeko-tex-demo-certificate.pdf',
+      '/api/chemical-document?type=heavy-metals&product=demo-organic-cotton-tshirt',
       'verified'
     );
 
@@ -546,7 +546,7 @@ begin
     demo_product_id,
     'Demo LCA Summary',
     'LCA',
-    'https://example.com/lca-demo-report.pdf',
+    '/api/dpp-export?format=pdf&product=demo-organic-cotton-tshirt',
     '420 KB',
     'EN / ZH',
     'greanlean admin',

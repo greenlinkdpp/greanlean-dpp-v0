@@ -204,12 +204,12 @@ begin
   values
     (earbuds_id, 6.8, 42, 15.5, 0.22, 18,
       'RoHS, REACH SVHC, battery MSDS and supplier declarations reviewed.',
-      'https://example.com/earbuds-lca-summary.pdf',
+      '/api/dpp-export?format=pdf&product=demo-wireless-earbuds',
       'Screening LCA based on component BOM, battery data, assembly energy and export logistics assumptions.',
       'SGS-CSTC Standards Technical Services Co., Ltd. (Demo)'),
     (flooring_id, 12.4, 18, 24.6, 0.85, 65,
       'REACH SVHC, VOC emission, formaldehyde and heavy-metal screening reviewed.',
-      'https://example.com/wpc-flooring-lca-summary.pdf',
+      '/api/dpp-export?format=pdf&product=demo-wpc-flooring',
       'Screening LCA based on wood-fibre recovery, recycled polymer share, extrusion energy and sea freight to the EU.',
       'Demo Building Materials Testing Institute');
 
@@ -235,22 +235,22 @@ begin
   values
     (earbuds_id, 'EU Declaration of Conformity', '欧盟符合性声明', 'DoC / CE', '符合性声明 / CE',
       'CE-DOC-AUDIO-2026-001', 'Greanlean Electronics Demo Manufacturer', '2026-06-04'::date, '2027-06-03'::date,
-      'https://example.com/earbuds-eu-doc.pdf', 'verified'),
+      '/api/declaration?product=demo-wireless-earbuds', 'verified'),
     (earbuds_id, 'RoHS Restricted Substance Test Report', 'RoHS 受限物质检测报告', 'Chemical compliance', '化学合规',
       'ROHS-AUDIO-2026-018', 'SGS-CSTC Standards Technical Services Co., Ltd. (Demo)', '2026-05-18'::date, '2027-05-17'::date,
-      'https://example.com/earbuds-rohs-report.pdf', 'verified'),
+      '/api/chemical-document?type=heavy-metals&product=demo-wireless-earbuds', 'verified'),
     (earbuds_id, 'REACH SVHC Screening', 'REACH SVHC 筛查', 'Chemical compliance', '化学合规',
       'REACH-AUDIO-2026-026', 'Demo Chemical Testing Institute', '2026-05-20'::date, '2027-05-19'::date,
-      'https://example.com/earbuds-reach-svhc.pdf', 'verified'),
+      '/api/chemical-document?type=svhc&product=demo-wireless-earbuds', 'verified'),
     (flooring_id, 'EU Declaration of Performance', '欧盟性能声明 DoP', 'Construction products', '建筑产品',
       'DOP-WPC-MS140K25B', 'HUANGSHAN MEISEN New Material Co., Ltd.', '2026-06-04'::date, '2027-06-03'::date,
-      'https://example.com/wpc-flooring-dop.pdf', 'verified'),
+      '/api/declaration?product=demo-wpc-flooring', 'verified'),
     (flooring_id, 'VOC Emission Test Report', 'VOC 排放检测报告', 'Indoor air quality', '室内空气质量',
       'VOC-WPC-2026-018', 'Demo Building Materials Testing Institute', '2026-05-12'::date, '2027-05-11'::date,
-      'https://example.com/wpc-voc-report.pdf', 'verified'),
+      '/api/chemical-document?type=heavy-metals&product=demo-wpc-flooring', 'verified'),
     (flooring_id, 'REACH SVHC Screening', 'REACH SVHC 筛查', 'Chemical compliance', '化学合规',
       'REACH-WPC-2026-026', 'Demo Chemical Testing Institute', '2026-05-15'::date, '2027-05-14'::date,
-      'https://example.com/wpc-reach-svhc.pdf', 'verified');
+      '/api/chemical-document?type=svhc&product=demo-wpc-flooring', 'verified');
 
   insert into public.product_consumer_transparency (
     product_id, brand_story, brand_story_zh, sustainability_story, sustainability_story_zh,
@@ -290,10 +290,10 @@ begin
     product_id, document_name, document_type, file_url, file_size, language, uploaded_by, version
   )
   values
-    (earbuds_id, 'EU Declaration of Conformity', 'DoC', 'https://example.com/earbuds-eu-doc.pdf', '360 KB', 'EN / ZH', 'greanlean admin', 'v1.0'),
-    (earbuds_id, 'Battery MSDS', 'MSDS', 'https://example.com/earbuds-battery-msds.pdf', '480 KB', 'EN', 'greanlean admin', 'v1.0'),
-    (flooring_id, 'EU Declaration of Performance', 'DoP', 'https://example.com/wpc-flooring-dop.pdf', '390 KB', 'EN / ZH', 'greanlean admin', 'v1.0'),
-    (flooring_id, 'VOC Emission Test Report', 'VOC', 'https://example.com/wpc-voc-report.pdf', '520 KB', 'EN', 'greanlean admin', 'v1.0');
+    (earbuds_id, 'EU Declaration of Conformity', 'DoC', '/api/declaration?product=demo-wireless-earbuds', '360 KB', 'EN / ZH', 'greanlean admin', 'v1.0'),
+    (earbuds_id, 'Battery MSDS', 'MSDS', '/api/chemical-document?type=msds&product=demo-wireless-earbuds', '480 KB', 'EN', 'greanlean admin', 'v1.0'),
+    (flooring_id, 'EU Declaration of Performance', 'DoP', '/api/declaration?product=demo-wpc-flooring', '390 KB', 'EN / ZH', 'greanlean admin', 'v1.0'),
+    (flooring_id, 'VOC Emission Test Report', 'VOC', '/api/chemical-document?type=heavy-metals&product=demo-wpc-flooring', '520 KB', 'EN', 'greanlean admin', 'v1.0');
 
   insert into public.product_data_governance (
     product_id, data_source, data_owner, audit_status, data_quality_score

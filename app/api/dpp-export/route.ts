@@ -1,3 +1,5 @@
+import { createSupabaseClient } from "@/lib/supabase";
+
 function escapePdfText(value: string) {
   return value.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
 }
@@ -44,117 +46,203 @@ ET`;
   return pdf;
 }
 
-function getDemoPayload(product: string) {
-  if (product === "demo-wireless-earbuds") {
-    return {
-      product,
-      dpp_id: "DPP-AUDIO-DEMO-001",
-      sku: "GL-EARBUDS-001",
-      gtin: "06900000000128",
-      sgtin: "06900000000128.EARBUDS-DEMO-0001",
-      batch: "BATCH-AUDIO-2026-001",
-      carbon_footprint: "6.8 kg CO2e",
-      industry_average_carbon: "8.9 kg CO2e",
-      water_usage: "42 L",
+function latest<T>(rows: T[]) {
+  return rows[0] || null;
+}
+
+function compact(values: Array<string | number | null | undefined>) {
+  return values.filter((value) => value !== null && value !== undefined && value !== "").join(" ");
+}
+
+async function safeSelect(supabase: ReturnType<typeof createSupabaseClient>, table: string, productId: string, orderBy = "created_at") {
+  const { data } = await supabase.from(table).select("*").eq("product_id", productId).order(orderBy, { ascending: orderBy.includes("date") });
+  return data || [];
+}
+
+function demoPayload(product: string) {
+  const demos: Record<string, any> = {
+    "demo-wireless-earbuds": {
+      product: { slug: product, name: "Wireless Bluetooth Earbuds", name_zh: "无线蓝牙耳机", sku: "GL-EARBUDS-001", dpp_id: "DPP-AUDIO-DEMO-001", category: "Consumer Electronics" },
+      identity: { gtin: "06900000000128", sgtin: "06900000000128.EARBUDS-DEMO-0001", batch_id: "BATCH-AUDIO-2026-001" },
+      esg: { carbon_footprint: 6.8, water_usage: 42, recycled_content: 18 },
       certificates: ["EU Declaration of Conformity", "RoHS Restricted Substance Test Report", "REACH SVHC Screening"],
-      restricted_substances: {
-        svhc: "Not detected above 0.1% w/w",
-        lead: "Below RoHS limits",
-        cadmium: "Below RoHS limits",
-        chromium_vi: "Below RoHS limits",
-        azo_dyes: "Not applicable",
-      },
-      electronics_reserved_fields: {
-        battery_recycling_readiness: "MSDS, UN38.3 and WEEE collection path disclosed",
-        ce_rohs_evidence_chain: "CE DoC, RoHS report and REACH SVHC screening indexed",
-        firmware_security: "Firmware and security-update fields reserved",
-        spare_part_availability: "Ear tips, charging case and battery service fields reserved",
-      },
-      last_updated: "2026-06-04",
-    };
-  }
-
-  if (product === "demo-wpc-flooring") {
-    return {
-      product,
-      dpp_id: "DPP-WPC-DEMO-001",
-      sku: "GL-WPC-FLOOR-001",
-      gtin: "06900000000203",
-      sgtin: "06900000000203.WPC-DEMO-0001",
-      batch: "BATCH-WPC-2026-001",
-      carbon_footprint: "12.4 kg CO2e",
-      industry_average_carbon: "16.8 kg CO2e",
-      water_usage: "18 L",
-      certificates: ["EU Declaration of Performance", "VOC Emission Test Report", "REACH SVHC Screening"],
-      restricted_substances: {
-        svhc: "Not detected above 0.1% w/w",
-        lead: "Not detected",
-        cadmium: "Not detected",
-        chromium_vi: "Not detected",
-        azo_dyes: "Not applicable",
-      },
-      building_material_reserved_fields: {
-        construction_product_performance: "CPR / DoP fields reserved",
-        indoor_air_quality: "VOC and formaldehyde evidence disclosed",
-        disassembly_and_reuse: "Installer take-back and WPC recovery path disclosed",
-        recycled_content_verification: "Recycled wood fibre and polymer declarations indexed",
-      },
+      materials: ["Recycled ABS / PC plastic", "Lithium-ion battery", "PCB and electronic components"],
       last_updated: "2026-06-05",
-    };
-  }
+    },
+    "demo-wpc-flooring": {
+      product: { slug: product, name: "WPC Composite Flooring Plank", name_zh: "WPC 地板", sku: "MS140K25B", dpp_id: "DPP-WPC-DEMO-001", category: "Building Materials" },
+      identity: { gtin: "06900000000203", sgtin: "06900000000203.WPC-DEMO-0001", batch_id: "BATCH-WPC-2026-001" },
+      esg: { carbon_footprint: 12.4, water_usage: 18, recycled_content: 65 },
+      certificates: ["EU Declaration of Performance", "VOC Emission Test Report", "REACH SVHC Screening"],
+      materials: ["Recycled wood fibre", "Recycled PE / PP polymer", "Additives and color masterbatch"],
+      last_updated: "2026-06-05",
+    },
+    "demo-office-chair": {
+      product: { slug: product, name: "Disassemblable Office Chair", name_zh: "可拆解办公椅", sku: "GL-CHAIR-001", dpp_id: "DPP-FURN-DEMO-001", category: "Furniture" },
+      identity: { gtin: "06900000000302", sgtin: "06900000000302.CHAIR-DEMO-0001", batch_id: "BATCH-FURN-2026-001" },
+      esg: { carbon_footprint: 28.6, water_usage: 76, recycled_content: 34 },
+      certificates: ["Furniture Durability Test Report", "REACH SVHC and Heavy Metal Screening"],
+      materials: ["Powder coated steel", "Recycled PP / nylon", "Polyester mesh and PU foam"],
+      last_updated: "2026-06-06",
+    },
+  };
 
-  return {
-    product,
-    dpp_id: "DPP-DEMO-001",
-    sku: "GL-TSHIRT-001",
-    gtin: "06900000000012",
-    sgtin: "06900000000012.DEMO-TEE-0001",
-    batch: "BATCH-2026-001",
-    carbon_footprint: "3.2 kg CO2e",
-    industry_average_carbon: "4.5 kg CO2e",
-    water_usage: "118 L",
+  return demos[product] || {
+    product: { slug: product, name: "Organic Cotton T-Shirt", name_zh: "有机棉基础 T 恤", sku: "GL-TSHIRT-001", dpp_id: "DPP-DEMO-001", category: "Textile & Apparel" },
+    identity: { gtin: "06900000000012", sgtin: "06900000000012.DEMO-TEE-0001", batch_id: "BATCH-2026-001" },
+    esg: { carbon_footprint: 3.2, water_usage: 118, recycled_content: 4 },
     certificates: ["GOTS Scope Certificate", "OEKO-TEX Standard 100", "EU Declaration of Conformity"],
-    restricted_substances: {
-      svhc: "Not detected above 0.1% w/w",
-      lead: "< 10 mg/kg",
-      cadmium: "< 1 mg/kg",
-      chromium_vi: "Not detected",
-      azo_dyes: "Not detected",
-    },
-    textile_reserved_fields: {
-      microfiber_release_potential: "Low to medium, pending washing-simulation test confirmation",
-      origin_traceability: "Xinjiang/Aksu cotton source -> Ningbo manufacturing -> Hamburg EU warehouse",
-      animal_welfare: "Not applicable",
-      labour_conditions: "SA8000 / BSCI reserved; supplier declaration recorded",
-    },
+    materials: ["Organic cotton", "Recycled polyester sewing thread"],
     last_updated: "2026-06-04",
   };
+}
+
+async function databasePayload(productSlug: string) {
+  const supabase = createSupabaseClient();
+  const { data: product } = await supabase
+    .from("products")
+    .select("*")
+    .eq("public_slug", productSlug)
+    .eq("status", "published")
+    .maybeSingle();
+
+  if (!product?.id) return null;
+
+  const [materials, certificates, esgRows, bom, traceability, circularity, digitalIdentity, documents, governance] = await Promise.all([
+    safeSelect(supabase, "product_materials", product.id),
+    safeSelect(supabase, "product_certificates", product.id),
+    safeSelect(supabase, "product_esg_metrics", product.id),
+    safeSelect(supabase, "product_bom", product.id),
+    safeSelect(supabase, "product_traceability", product.id, "event_date"),
+    safeSelect(supabase, "product_circularity", product.id),
+    safeSelect(supabase, "product_digital_identity", product.id),
+    safeSelect(supabase, "product_documents", product.id),
+    safeSelect(supabase, "product_data_governance", product.id),
+  ]);
+
+  const identity = latest<any>(digitalIdentity);
+  const esg = latest<any>(esgRows);
+  const circularityRow = latest<any>(circularity);
+  const sgtin = identity?.gtin && identity?.serial_id ? `${identity.gtin}.${identity.serial_id}` : null;
+
+  return {
+    product: {
+      slug: product.public_slug,
+      name: product.name,
+      name_zh: product.name_zh,
+      sku: product.sku,
+      brand: product.brand,
+      category: product.category,
+      subcategory: product.subcategory,
+      dpp_id: product.dpp_id,
+      main_image: product.main_image,
+      status: product.status,
+      updated_at: product.updated_at,
+    },
+    identity: {
+      gtin: identity?.gtin,
+      sgtin,
+      batch_id: identity?.batch_id,
+      serial_id: identity?.serial_id,
+      digital_link_url: identity?.digital_link_url,
+      qr_code_id: identity?.qr_code_id,
+      nfc_id: identity?.nfc_id,
+      rfid_epc: identity?.rfid_epc,
+    },
+    materials: materials.map((item: any) => ({
+      name: item.material_name,
+      name_zh: item.material_name_zh,
+      type: item.material_type,
+      percentage: item.percentage,
+      recycled_content: item.recycled_content,
+      origin_country: item.origin_country,
+      certification: item.certification,
+    })),
+    bom: bom.map((item: any) => ({
+      component: item.component_name,
+      type: item.component_type,
+      quantity: compact([item.quantity, item.unit]),
+      position: item.position,
+    })),
+    traceability: traceability.map((item: any) => ({
+      event: item.event_name,
+      event_zh: item.event_name_zh,
+      type: item.event_type,
+      date: item.event_date,
+      facility: item.facility_name,
+      location: compact([item.city, item.country]),
+      verification_status: item.verification_status,
+    })),
+    esg: {
+      carbon_footprint: esg?.carbon_footprint,
+      water_usage: esg?.water_usage,
+      energy_consumption: esg?.energy_consumption,
+      waste_generation: esg?.waste_generation,
+      recycled_content: esg?.recycled_content,
+      methodology: esg?.methodology,
+      verified_by: esg?.verified_by,
+      repairability_score: circularityRow?.repairability_score,
+      recyclability_score: circularityRow?.recyclability_score,
+      take_back_program: circularityRow?.take_back_program,
+    },
+    certificates: certificates.map((item: any) => ({
+      name: item.certificate_name,
+      type: item.certificate_type,
+      number: item.certificate_number,
+      issuer: item.issuer,
+      issue_date: item.issue_date,
+      expiry_date: item.expiry_date,
+      verification_status: item.verification_status,
+    })),
+    documents: documents.map((item: any) => ({
+      name: item.document_name,
+      type: item.document_type,
+      url: item.file_url,
+      language: item.language,
+      version: item.version,
+    })),
+    governance: governance.map((item: any) => ({
+      data_source: item.data_source,
+      data_owner: item.data_owner,
+      audit_status: item.audit_status,
+      data_quality_score: item.data_quality_score,
+    })),
+    last_updated: product.updated_at || product.created_at,
+  };
+}
+
+function pdfLines(payload: any) {
+  return [
+    "Digital Product Passport Export",
+    "",
+    `Product: ${payload.product.name || payload.product.slug}`,
+    `Chinese name: ${payload.product.name_zh || "-"}`,
+    `DPP ID: ${payload.product.dpp_id || "-"}`,
+    `SKU: ${payload.product.sku || "-"}`,
+    `Category: ${payload.product.category || "-"}`,
+    `GTIN: ${payload.identity?.gtin || "-"}`,
+    `SGTIN: ${payload.identity?.sgtin || "-"}`,
+    `Batch: ${payload.identity?.batch_id || "-"}`,
+    "",
+    `Materials: ${(payload.materials || []).map((item: any) => item.name || item).join(", ") || "-"}`,
+    `Carbon footprint: ${payload.esg?.carbon_footprint ?? "-"} kg CO2e`,
+    `Water usage: ${payload.esg?.water_usage ?? "-"} L`,
+    `Recycled content: ${payload.esg?.recycled_content ?? "-"}%`,
+    `Certificates: ${(payload.certificates || []).map((item: any) => item.name || item).join(", ") || "-"}`,
+    `Last updated: ${payload.last_updated || "-"}`,
+    "",
+    "Demo notice: generated by greanlean DPP. Replace demo evidence with official product documents for real products.",
+  ];
 }
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const format = url.searchParams.get("format") || "json";
   const product = url.searchParams.get("product") || "demo-organic-cotton-tshirt";
-  const payload = getDemoPayload(product);
+  const payload = (await databasePayload(product)) || demoPayload(product);
 
   if (format === "pdf") {
-    const lines = [
-      "Digital Product Passport Export",
-      "",
-      `Product: ${payload.product}`,
-      `DPP ID: ${payload.dpp_id}`,
-      `SKU: ${payload.sku}`,
-      `GTIN: ${payload.gtin}`,
-      `SGTIN: ${payload.sgtin}`,
-      `Batch: ${payload.batch}`,
-      `Carbon footprint: ${payload.carbon_footprint}`,
-      `Water usage: ${payload.water_usage}`,
-      `Certificates: ${payload.certificates.join(", ")}`,
-      `SVHC: ${payload.restricted_substances.svhc}`,
-      `Last updated: ${payload.last_updated}`,
-    ];
-
-    return new Response(buildPdf(lines), {
+    return new Response(buildPdf(pdfLines(payload)), {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `inline; filename="dpp-${product}.pdf"`,
