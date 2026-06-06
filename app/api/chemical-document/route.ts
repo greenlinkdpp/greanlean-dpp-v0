@@ -94,9 +94,10 @@ export async function GET(request: Request) {
   const lines = [
     doc.title,
     "",
-    `Product: ${isElectronics ? "Wireless Bluetooth Earbuds" : isFlooring ? "WPC Composite Flooring Plank" : "Organic Cotton T-Shirt"} (${product})`,
-    `DPP ID: ${isElectronics ? "DPP-AUDIO-DEMO-001" : isFlooring ? "DPP-WPC-DEMO-001" : "DPP-DEMO-001"}`,
-    `SKU: ${isElectronics ? "GL-EARBUDS-001" : isFlooring ? "GL-WPC-FLOOR-001" : "GL-TSHIRT-001"}`,
+    `Product: ${isElectronics ? "Wireless Bluetooth Earbuds" : isFlooring ? "WPC PLANK" : "Organic Cotton T-Shirt"} (${product})`,
+    `DPP ID: ${isElectronics ? "DPP-AUDIO-DEMO-001" : isFlooring ? "DPP-WPC-MS140K25B" : "DPP-DEMO-001"}`,
+    `SKU: ${isElectronics ? "GL-EARBUDS-001" : isFlooring ? "MS140K25B" : "GL-TSHIRT-001"}`,
+    ...(isFlooring ? ["Batch/Lot: W2605-05", "Material formula: Wood Fiber 60%, Recycled HDPE 30%, Stabilizer Additives 7%, Brown Masterbatch 3%", "Hazardous substance presence: No SVHC declared"] : []),
     "",
     ...doc.lines.slice(1),
     "",

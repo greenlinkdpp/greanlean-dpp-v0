@@ -55,11 +55,23 @@ export async function GET(request: Request) {
   const lines = [
     isFlooring ? "EU Declaration of Performance" : "EU Declaration of Conformity",
     "",
-    `Product: ${isElectronics ? "Wireless Bluetooth Earbuds" : isFlooring ? "WPC Composite Flooring Plank" : "Organic Cotton T-Shirt"} (${product})`,
-    `DPP ID: ${isElectronics ? "DPP-AUDIO-DEMO-001" : isFlooring ? "DPP-WPC-DEMO-001" : "DPP-DEMO-001"}`,
-    `SKU: ${isElectronics ? "GL-EARBUDS-001" : isFlooring ? "GL-WPC-FLOOR-001" : "GL-TSHIRT-001"}`,
+    `Product: ${isElectronics ? "Wireless Bluetooth Earbuds" : isFlooring ? "WPC PLANK" : "Organic Cotton T-Shirt"} (${product})`,
+    `DPP ID: ${isElectronics ? "DPP-AUDIO-DEMO-001" : isFlooring ? "DPP-WPC-MS140K25B" : "DPP-DEMO-001"}`,
+    `SKU: ${isElectronics ? "GL-EARBUDS-001" : isFlooring ? "MS140K25B" : "GL-TSHIRT-001"}`,
     `GTIN: ${isElectronics ? "06900000000128" : isFlooring ? "06900000000203" : "06900000000012"}`,
-    `SGTIN: ${isElectronics ? "06900000000128.EARBUDS-DEMO-0001" : isFlooring ? "06900000000203.WPC-DEMO-0001" : "06900000000012.DEMO-TEE-0001"}`,
+    `SGTIN: ${isElectronics ? "06900000000128.EARBUDS-DEMO-0001" : isFlooring ? "06900000000203.TRACE-W2605-05" : "06900000000012.DEMO-TEE-0001"}`,
+    ...(isFlooring
+      ? [
+          "Model: MS140K25B",
+          "Batch/Lot: W2605-05",
+          "Dimensions: 140x25mm",
+          "Weight: 2.55kg/m",
+          "Surface finish: SANDING",
+          "Colours: WOOD / COFFEE / DARK GREY / LIGHT GREY",
+          "Intended use: OUTDOOR DECKING",
+          "Country of origin: CHINA",
+        ]
+      : []),
     "",
     "Applicable EU rules:",
     "1. Regulation (EU) 2024/1781 - ESPR framework for ecodesign requirements",
@@ -72,14 +84,14 @@ export async function GET(request: Request) {
     isElectronics
       ? "Demo Electronics Assembly Plant Co., Ltd., 18 Smart Hardware Road, Dongguan, Guangdong, China"
       : isFlooring
-        ? "Demo WPC Flooring Factory Co., Ltd., 66 Composite Materials Road, Changzhou, Jiangsu, China"
+        ? "HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD, Huangshan, Anhui, China"
       : "Demo Garment Factory Co., Ltd., 88 Textile Road, Ningbo, Zhejiang, China",
     "",
     "Importer / EU responsible party:",
     "Greanlean EU Compliance GmbH, Demo Strasse 12, 20457 Hamburg, Germany",
     "",
-    "Declaration date: 2026-06-04",
-    "Validity: 2026-06-04 to 2027-06-03",
+    isFlooring ? "Declaration date: 2026-05-20" : "Declaration date: 2026-06-04",
+    isFlooring ? "Validity: 2026-05-20 to 2027-05-19" : "Validity: 2026-06-04 to 2027-06-03",
     "",
     isZh
       ? "Demo notice: this PDF is generated for DPP demonstration and should be replaced by the signed official declaration for real products."

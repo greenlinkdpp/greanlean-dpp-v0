@@ -707,8 +707,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           [
             t.testBasis,
             locale === "zh"
-              ? "示例性能声明，面向 WPC 地板 DPP 技术文件展示；实际产品应以耐磨、VOC、尺寸稳定性和安装测试报告为准。"
-              : "Demo performance declaration for WPC flooring DPP display; real products should reference wear, VOC, dimensional-stability and installation test reports.",
+              ? "示例性能声明，面向 WPC PLANK / MS140K25B 户外 decking DPP 技术文件展示；实际产品应以 VOC、尺寸稳定性、安装和质保文件为准。"
+              : "Demo performance declaration for WPC PLANK / MS140K25B outdoor decking DPP display; real products should reference VOC, dimensional-stability, installation and warranty documents.",
           ],
         ]
       : isFurniture
@@ -886,7 +886,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ? "Demo Electronics Assembly Plant Co., Ltd., 18 Smart Hardware Road, Dongguan, Guangdong, China"
           : "Demo Electronics Assembly Plant Co., Ltd., 18 Smart Hardware Road, Dongguan, Guangdong, China"
         : isFlooring
-          ? "Demo WPC Flooring Factory Co., Ltd., 66 Composite Materials Road, Changzhou, Jiangsu, China"
+          ? "HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD, Huangshan, Anhui, China"
           : isFurniture
             ? "Demo Office Furniture Factory Co., Ltd., 28 Modular Furniture Road, Anji, Zhejiang, China"
         : t.manufacturerValue,
@@ -1038,7 +1038,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           [locale === "zh" ? "建筑产品性能扩展" : "Construction-product performance extension", locale === "zh" ? "预留 CPR / DoP 对接字段、适用标准、安装方式和性能等级。" : "CPR / DoP integration fields, applicable standards, installation method and performance classes reserved."],
           [locale === "zh" ? "室内空气质量证据" : "Indoor-air-quality evidence", locale === "zh" ? "预留 VOC、甲醛、气味等级和低排放材料声明字段。" : "VOC, formaldehyde, odour class and low-emission material declaration fields reserved."],
           [locale === "zh" ? "拆解与再使用" : "Disassembly and reuse", locale === "zh" ? "预留项目拆除记录、旧板再使用筛选和建筑废弃物回收路径。" : "Project removal records, reuse screening and construction-waste recovery fields reserved."],
-          [locale === "zh" ? "再生成分验证" : "Recycled-content verification", locale === "zh" ? "预留再生木纤维、再生塑料来源和批次质量平衡证据。" : "Recycled wood fibre, recycled polymer origin and batch mass-balance evidence reserved."],
+          [locale === "zh" ? "再生成分验证" : "Recycled-content verification", locale === "zh" ? "预留 60% 木纤维、30% 再生 HDPE、稳定剂和色母粒的供应商证据与批次质量平衡。" : "Supplier evidence and batch mass-balance reserved for 60% wood fiber, 30% recycled HDPE, stabilizer additives and masterbatch."],
         ]
       : isFurniture
         ? [
@@ -1062,10 +1062,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       ]
     : isFlooring
       ? [
-          locale === "zh" ? "2026-04-08 再生木纤维与再生聚合物批次创建并绑定供应商声明" : "2026-04-08 Recycled wood fibre and polymer batches created and linked to supplier declarations",
-          locale === "zh" ? "2026-05-18 挤出、开槽和表面处理完成，批次质检记录上传" : "2026-05-18 Extrusion, profiling and surface finishing completed; batch QA records uploaded",
-          locale === "zh" ? "2026-06-01 出口运输记录写入，鹿特丹经销仓接收待确认" : "2026-06-01 Export shipment record added; Rotterdam distributor receipt pending",
-          locale === "zh" ? "2026-06-05 地板 DPP 数据审核并更新公开页面" : "2026-06-05 Flooring DPP data reviewed and public page updated",
+          locale === "zh" ? "2026-04-20 木纤维、再生 HDPE、包装托盘和 304 不锈钢安装辅料供应商已绑定" : "2026-04-20 Wood fiber, recycled HDPE, pallet and 304 stainless accessory suppliers linked",
+          locale === "zh" ? "2026-05-01 MS140K25B 开始挤出、砂光和型材加工，规格 140x25mm / 2.55kg/m" : "2026-05-01 MS140K25B extrusion, sanding and profile finishing started; 140x25mm / 2.55kg/m",
+          locale === "zh" ? "2026-05-20 W2605-05 批次质检放行并生成 TRACE-W2605-05" : "2026-05-20 Batch W2605-05 released and TRACE-W2605-05 generated",
+          locale === "zh" ? "2026-06-07 根据地板DPP.xlsx 更新公开 DPP 页面与下载数据" : "2026-06-07 Public DPP page and export data updated from 地板DPP.xlsx",
         ]
       : isFurniture
         ? [
@@ -1107,8 +1107,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       : "Do not discard earbuds, charging case or battery-containing parts with household waste; use WEEE or battery collection streams."
     : isFlooring
       ? locale === "zh"
-        ? "请勿将整批 WPC 地板混入普通生活垃圾；拆除后应进入建材回收或建筑废弃物分选渠道。"
-        : "Do not mix removed WPC flooring with ordinary household waste; use building-material recovery or construction-waste sorting channels."
+        ? "请勿将 WPC PLANK 混入普通生活垃圾或直接填埋；拆除后应进入建材回收或复合材料再加工渠道。"
+        : "Do not mix WPC PLANK with ordinary household waste or landfill directly; use building-material recovery or composite-material reprocessing channels."
       : isFurniture
         ? locale === "zh"
           ? "可再使用或可维修时请勿作为混合垃圾丢弃；优先进入家具翻新、大件回收或授权回收渠道。"
@@ -1120,8 +1120,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       : "Where possible, separate silicone ear tips, packaging accessories and removable cables before recycling; battery parts should be handled by authorized facilities."
     : isFlooring
       ? locale === "zh"
-        ? "回收前分离地垫、金属边条、包装薄膜和安装辅料；避免混入 PVC 地板废料。"
-        : "Separate underlayment, metal trims, wrapping film and installation accessories before recycling; avoid mixing with PVC flooring waste."
+        ? "回收前移除 304 不锈钢卡扣和螺丝，托盘与金属紧固件分别回收；避免混入 PVC 废料。"
+        : "Remove 304 stainless clips and screws before recycling; recycle pallet and metal fasteners separately and avoid mixing with PVC waste."
       : isFurniture
         ? locale === "zh"
           ? "回收前分离脚轮、扶手、气压杆、坐垫、网布和紧固件，按金属、塑料和纺织/海绵流处理。"
@@ -1133,8 +1133,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       : "Extend product life through repair or resale where possible; send unusable units to local electronics collection points."
     : isFlooring
       ? locale === "zh"
-        ? "可拆卸完整板材优先再使用；无法再使用时进入 WPC 复合材料或建筑废弃物回收试点。"
-        : "Reuse intact removable planks first; send unusable material to WPC composite or construction-waste recovery pilots."
+        ? "完整板材优先再使用；无法再使用时进行机械回收，并再加工为复合材料产品。"
+        : "Reuse intact planks first; mechanically recycle unusable material and reprocess it into composite products."
       : isFurniture
         ? locale === "zh"
           ? "完好部件优先维修、翻新或转售；无法继续使用时按材料拆解进入当地回收渠道。"
