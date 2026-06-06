@@ -12,7 +12,7 @@ button,a,input,select,textarea{@apply outline-none}
 
 .brand-wordmark{
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.05rem;
+  font-size: inherit;
   font-style: italic;
   font-weight: 900;
   letter-spacing: 0;

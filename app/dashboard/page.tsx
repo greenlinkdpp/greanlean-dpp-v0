@@ -14,14 +14,6 @@ export default function DashboardPage() {
             "围绕一个产品逐步补齐公开 DPP、证据链和欧盟合规披露所需的数据，最后发布二维码页面。",
           primary: "进入产品中心",
           secondary: "批量导入数据",
-          demo: "查看服装 Demo",
-          electronicsDemo: "查看耳机 Demo",
-          currentModel: "当前数据库模型",
-          modelDesc:
-            "数据库和导入模板已按当前 DPP 展示页拆成产品身份、数字身份、BOM、材料、化学合规、产品性能、追溯、ESG、循环、证书、消费者透明化、证据文件和数据治理。",
-          resetTitle: "数据库重置",
-          resetDesc:
-            "如需清空历史测试数据并只保留 demo，请在 Supabase SQL Editor 运行 supabase/reset_to_demo.sql。",
           product: "产品身份与数据载体",
           productDesc: "录入名称、SKU、品牌、图片、DPP ID、GTIN、SGTIN、批次、序列号、二维码/NFC/RFID 和公开链接。",
           bom: "BOM 与材料来源",
@@ -51,14 +43,6 @@ export default function DashboardPage() {
             "Complete the public DPP, evidence chain and EU compliance disclosure data behind one product, then publish the QR page.",
           primary: "Open Product Hub",
           secondary: "Bulk Import Data",
-          demo: "View Apparel Demo",
-          electronicsDemo: "View Earbuds Demo",
-          currentModel: "Current database model",
-          modelDesc:
-            "The database and import templates are aligned to product identity, digital identity, BOM, materials, chemical compliance, performance, traceability, ESG, circularity, certificates, consumer transparency, evidence files and governance.",
-          resetTitle: "Database reset",
-          resetDesc:
-            "To clear historical test data and keep only the demo, run supabase/reset_to_demo.sql in Supabase SQL Editor.",
           product: "Product identity and data carrier",
           productDesc: "Enter name, SKU, brand, image, DPP ID, GTIN, SGTIN, batch, serial, QR/NFC/RFID and public link.",
           bom: "BOM and material sources",
@@ -93,14 +77,13 @@ export default function DashboardPage() {
     { title: t.certificates, desc: t.certificatesDesc, href: "/dashboard/products", action: t.editInProduct },
     { title: t.consumer, desc: t.consumerDesc, href: "/dashboard/products", action: t.editInProduct },
     { title: t.governance, desc: t.governanceDesc, href: "/dashboard/import", action: t.secondary },
-    { title: t.publish, desc: t.publishDesc, href: "/p/demo-organic-cotton-tshirt?lang=zh", action: t.demo },
+    { title: t.publish, desc: t.publishDesc, href: "/p/demo-organic-cotton-tshirt?lang=zh", action: t.open },
   ];
 
   return (
     <div className="space-y-8">
-      <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-        <div className="grid gap-0 lg:grid-cols-[1fr_380px]">
-          <div className="p-6 lg:p-8">
+      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
+        <div className="max-w-5xl">
             <p className="text-sm font-bold text-brand-700">greanlean DPP</p>
             <h1 className="mt-3 text-3xl font-black lg:text-4xl">{t.title}</h1>
             <p className="mt-3 max-w-3xl leading-7 text-slate-600">{t.subtitle}</p>
@@ -112,23 +95,7 @@ export default function DashboardPage() {
               <Link className="btn-secondary" href="/dashboard/import?demo=1">
                 {t.secondary}
               </Link>
-              <Link className="btn-secondary" href="/p/demo-organic-cotton-tshirt?lang=zh" target="_blank">
-                {t.demo}
-              </Link>
-              <Link className="btn-secondary" href="/p/demo-wireless-earbuds?lang=zh" target="_blank">
-                {t.electronicsDemo}
-              </Link>
             </div>
-          </div>
-
-          <aside className="bg-slate-950 p-6 text-white lg:p-8">
-            <h2 className="text-xl font-black">{t.currentModel}</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-300">{t.modelDesc}</p>
-            <div className="mt-6 rounded-lg border border-white/10 bg-white/10 p-4">
-              <p className="font-bold text-brand-100">{t.resetTitle}</p>
-              <p className="mt-2 text-sm leading-6 text-slate-300">{t.resetDesc}</p>
-            </div>
-          </aside>
         </div>
       </section>
 

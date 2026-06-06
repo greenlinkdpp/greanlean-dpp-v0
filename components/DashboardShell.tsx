@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase";
 import { useLanguage } from "@/components/LanguageProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -55,10 +56,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-white/10 bg-slate-950 p-6 lg:block">
-        <Link href="/dashboard" className="flex items-center gap-3 font-bold">
-          <span className="grid h-10 w-10 place-items-center rounded-lg bg-brand-500 text-slate-950">G</span>
-          <span>greanlean DPP</span>
-        </Link>
+        <BrandLogo href="/dashboard" size="md" />
 
         <nav className="mt-10 space-y-2">
           {nav.map(([label, href]) => (
@@ -87,10 +85,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <div className="min-h-screen bg-slate-50 text-slate-950">
           <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur lg:hidden">
             <div className="flex items-center justify-between gap-3">
-              <Link href="/dashboard" className="flex items-center gap-3 font-bold">
-                <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white">G</span>
-                <span>greanlean DPP</span>
-              </Link>
+              <BrandLogo href="/dashboard" size="sm" />
               <LanguageSwitcher />
             </div>
 
@@ -114,7 +109,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <div className="mb-6 hidden items-center justify-between lg:flex">
               <div>
                 <p className="text-sm font-semibold text-slate-500">{t.workspace}</p>
-                <p className="mt-1 text-lg font-black text-slate-950">greanlean DPP</p>
+                <div className="mt-1">
+                  <BrandLogo href="/dashboard" size="sm" />
+                </div>
               </div>
               <LanguageSwitcher />
             </div>

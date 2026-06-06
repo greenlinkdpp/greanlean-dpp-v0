@@ -17,6 +17,7 @@ async function getData(slug: string) {
   if (!product) {
     if (slug === "demo-wireless-earbuds") return withElectronicsDppData();
     if (slug === "demo-wpc-flooring") return withFlooringDppData();
+    if (slug === "demo-office-chair") return withFurnitureDppData();
     return null;
   }
   const [materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance] = await Promise.all([
@@ -43,6 +44,10 @@ async function getData(slug: string) {
 
   if (slug === "demo-wpc-flooring") {
     return withFlooringDppData(data);
+  }
+
+  if (slug === "demo-office-chair") {
+    return withFurnitureDppData(data);
   }
 
   return data;
@@ -331,6 +336,10 @@ function withDemoDppData(data: any) {
 
 function withElectronicsDppData(data?: any) {
   const productId = data?.product?.id || "demo-electronics-product";
+  const mainImage =
+    data?.product?.main_image && !String(data.product.main_image).endsWith(".svg")
+      ? data.product.main_image
+      : "/images/demo-wireless-earbuds.png";
   const product = {
     ...(data?.product || {}),
     id: productId,
@@ -343,7 +352,7 @@ function withElectronicsDppData(data?: any) {
     season: data?.product?.season || "2026 Audio Export Series",
     public_slug: data?.product?.public_slug || "demo-wireless-earbuds",
     dpp_id: data?.product?.dpp_id || "DPP-AUDIO-DEMO-001",
-    main_image: data?.product?.main_image || "/images/demo-wireless-earbuds.svg",
+    main_image: mainImage,
     description:
       data?.product?.description ||
       "A consumer electronics digital product passport demo for EU exports, covering GS1 identifiers, RoHS and REACH evidence, battery and WEEE end-of-life information.",
@@ -1014,6 +1023,299 @@ function withFlooringDppData(data?: any) {
             audit_status:
               "Demo review completed\nVerifier: Demo Building Materials Testing Institute\nCertificate: DPP-WPC-2026-009\nValid until: 2027-06-03\nLast updated: 2026-06-05",
             data_quality_score: 87,
+          },
+        ],
+  };
+}
+
+function withFurnitureDppData(data?: any) {
+  const productId = data?.product?.id || "demo-furniture-product";
+  const product = {
+    ...(data?.product || {}),
+    id: productId,
+    name: data?.product?.name || "Disassemblable Ergonomic Office Chair",
+    name_zh: data?.product?.name_zh || "可拆解人体工学办公椅",
+    sku: data?.product?.sku || "GL-CHAIR-001",
+    brand: data?.product?.brand || "greanlean",
+    category: data?.product?.category || "Furniture",
+    subcategory: data?.product?.subcategory || "Office Chair",
+    season: data?.product?.season || "2026 EU Furniture Demo",
+    public_slug: data?.product?.public_slug || "demo-office-chair",
+    dpp_id: data?.product?.dpp_id || "DPP-FURN-DEMO-001",
+    main_image: data?.product?.main_image || "/images/demo-office-chair.svg",
+    description:
+      data?.product?.description ||
+      "A furniture digital product passport demo for EU exports, covering material composition, recycled content, durability testing, repairability, disassembly and end-of-life recovery.",
+    description_zh:
+      data?.product?.description_zh ||
+      "面向出口欧盟家具产品的数字产品护照示例，覆盖材料组成、再生成分、耐久性测试、可维修性、拆解和生命周期结束回收路径。",
+    care_instructions:
+      data?.product?.care_instructions ||
+      "Wipe frame with a damp cloth. Vacuum mesh regularly. Avoid direct sunlight, corrosive cleaners and overload beyond rated capacity.",
+    care_instructions_zh:
+      data?.product?.care_instructions_zh ||
+      "金属框架可用微湿布清洁，网布建议定期吸尘。避免长期日晒、腐蚀性清洁剂和超额承重。",
+    repair_instructions:
+      data?.product?.repair_instructions ||
+      "Seat cushion, armrest pads, castors and gas lift are replaceable modules. Use compatible spare parts and keep fasteners sorted during repair.",
+    repair_instructions_zh:
+      data?.product?.repair_instructions_zh ||
+      "坐垫、扶手垫、脚轮和气压杆为可更换模块。维修时使用兼容备件，并分类保存紧固件。",
+    end_of_life_instructions:
+      data?.product?.end_of_life_instructions ||
+      "Disassemble metal frame, plastic parts, textile mesh and foam before recycling where possible. Reuse intact components through furniture refurbishment channels first.",
+    end_of_life_instructions_zh:
+      data?.product?.end_of_life_instructions_zh ||
+      "回收前尽量拆分金属框架、塑料件、网布和海绵。完好部件优先进入家具翻新或再使用渠道。",
+  };
+
+  return {
+    product,
+    materials: data?.materials?.length
+      ? data.materials
+      : [
+          {
+            id: "demo-chair-material-1",
+            product_id: productId,
+            material_name: "Powder-coated steel frame",
+            material_name_zh: "粉末喷涂钢制框架",
+            material_type: "Metal",
+            material_type_zh: "金属",
+            percentage: 42,
+            recycled_content: 35,
+            origin_country: "China",
+            chemical_info: "REACH SVHC screened; coating tested for lead, cadmium and hexavalent chromium.",
+            chemical_info_zh: "已筛查 REACH SVHC；涂层检测铅、镉和六价铬。",
+            recyclability: "Separable steel recycling stream",
+            recyclability_zh: "可拆解进入钢材回收流",
+            certification: "REACH / heavy metal screening",
+          },
+          {
+            id: "demo-chair-material-2",
+            product_id: productId,
+            material_name: "Recycled PP / PA plastic parts",
+            material_name_zh: "再生 PP / PA 塑料件",
+            material_type: "Polymer",
+            material_type_zh: "聚合物",
+            percentage: 28,
+            recycled_content: 45,
+            origin_country: "China",
+            chemical_info: "Phthalates and flame-retardant screening completed.",
+            chemical_info_zh: "已完成邻苯二甲酸酯和阻燃剂筛查。",
+            recyclability: "Mechanical recycling after sorting by polymer type",
+            recyclability_zh: "按聚合物类型分选后可机械回收",
+            certification: "GRS supplier declaration (Demo)",
+          },
+          {
+            id: "demo-chair-material-3",
+            product_id: productId,
+            material_name: "Polyester mesh and PU foam",
+            material_name_zh: "涤纶网布与 PU 海绵",
+            material_type: "Textile / foam",
+            material_type_zh: "纺织 / 海绵",
+            percentage: 30,
+            recycled_content: 18,
+            origin_country: "China",
+            chemical_info: "Skin-contact textile screened against REACH and OEKO-TEX substance requirements.",
+            chemical_info_zh: "接触皮肤纺织材料按 REACH 和 OEKO-TEX 物质要求筛查。",
+            recyclability: "Reuse or textile/foam recovery where local facilities exist",
+            recyclability_zh: "具备设施时可再使用或进入纺织/海绵回收",
+            certification: "OEKO-TEX supplier declaration (Demo)",
+          },
+        ],
+    certificates: data?.certificates?.length
+      ? data.certificates
+      : [
+          {
+            id: "demo-chair-cert-1",
+            product_id: productId,
+            certificate_name: "Furniture Durability Test Report",
+            certificate_name_zh: "家具耐久性测试报告",
+            certificate_type: "Performance",
+            certificate_type_zh: "性能测试",
+            certificate_number: "EN1335-CHAIR-2026-011",
+            issuer: "Demo Furniture Testing Institute",
+            issue_date: "2026-05-16",
+            expiry_date: "2027-05-15",
+            certificate_url: "https://example.com/office-chair-en1335-test.pdf",
+            verification_status: "verified",
+          },
+          {
+            id: "demo-chair-cert-2",
+            product_id: productId,
+            certificate_name: "REACH SVHC and Heavy Metal Screening",
+            certificate_name_zh: "REACH SVHC 与重金属筛查",
+            certificate_type: "Chemical compliance",
+            certificate_type_zh: "化学合规",
+            certificate_number: "REACH-FURN-2026-024",
+            issuer: "Demo Chemical Testing Institute",
+            issue_date: "2026-05-20",
+            expiry_date: "2027-05-19",
+            certificate_url: "https://example.com/office-chair-reach-report.pdf",
+            verification_status: "verified",
+          },
+        ],
+    esg: data?.esg?.length
+      ? data.esg
+      : [
+          {
+            id: "demo-chair-esg-1",
+            product_id: productId,
+            carbon_footprint: 28.6,
+            water_usage: 76,
+            energy_consumption: 58,
+            waste_generation: 1.4,
+            recycled_content: 34,
+            chemical_management: "REACH SVHC, coating heavy metals, textile contact materials and foam additives reviewed.",
+            lca_report_url: "https://example.com/office-chair-lca-summary.pdf",
+            methodology: "Screening LCA based on steel frame, polymer content, upholstery, assembly energy and sea freight to the EU.",
+            verified_by: "Demo Furniture Testing Institute",
+          },
+        ],
+    bom: data?.bom?.length
+      ? data.bom
+      : [
+          { id: "demo-chair-bom-1", product_id: productId, component_name: "Steel base and frame", component_name_zh: "钢制底座与框架", component_type: "Structural part", component_type_zh: "结构件", quantity: 1, unit: "set", position: "Base / back frame" },
+          { id: "demo-chair-bom-2", product_id: productId, component_name: "Seat cushion module", component_name_zh: "坐垫模块", component_type: "Replaceable module", component_type_zh: "可更换模块", quantity: 1, unit: "pc", position: "Seat" },
+          { id: "demo-chair-bom-3", product_id: productId, component_name: "Armrest and castor kit", component_name_zh: "扶手与脚轮套件", component_type: "Spare-part kit", component_type_zh: "备件套件", quantity: 1, unit: "set", position: "Side / base" },
+        ],
+    traceability: data?.traceability?.length
+      ? data.traceability
+      : [
+          {
+            id: "demo-chair-trace-1",
+            product_id: productId,
+            event_type: "material sourcing",
+            event_name: "Steel tube, recycled plastic and mesh sourced",
+            event_name_zh: "采购钢管、再生塑料与网布",
+            event_date: "2026-04-12",
+            country: "China",
+            city: "Foshan",
+            facility_name: "Demo Furniture Materials Supplier",
+            facility_name_zh: "示例家具材料供应商",
+            transport_method: "Truck",
+            verification_status: "verified",
+            notes: "Supplier declarations, recycled-content statement and REACH screening linked.",
+            notes_zh: "已关联供应商声明、再生成分声明和 REACH 筛查。",
+          },
+          {
+            id: "demo-chair-trace-2",
+            product_id: productId,
+            event_type: "manufacturing",
+            event_name: "Frame welding, upholstery and final assembly",
+            event_name_zh: "框架焊接、软包与总装",
+            event_date: "2026-05-22",
+            country: "China",
+            city: "Anji",
+            facility_name: "Demo Office Furniture Factory",
+            facility_name_zh: "示例办公家具工厂",
+            transport_method: "Internal transfer",
+            verification_status: "verified",
+            notes: "Batch production, torque check and durability sample test uploaded.",
+            notes_zh: "已上传批次生产、扭矩检查和耐久性抽检记录。",
+          },
+          {
+            id: "demo-chair-trace-3",
+            product_id: productId,
+            event_type: "transport",
+            event_name: "Export shipment to EU furniture distributor",
+            event_name_zh: "出口运输至欧盟家具经销商",
+            event_date: "2026-06-03",
+            country: "Netherlands",
+            city: "Rotterdam",
+            facility_name: "Demo EU Furniture Distributor",
+            facility_name_zh: "示例欧盟家具经销仓",
+            transport_method: "Sea freight + truck",
+            verification_status: "pending",
+            notes: "Shipment and warehouse data reserved for future logistics API connection.",
+            notes_zh: "运输和仓储数据预留给后续物流 API 对接。",
+          },
+        ],
+    circularity: data?.circularity?.length
+      ? data.circularity
+      : [
+          {
+            id: "demo-chair-circularity-1",
+            product_id: productId,
+            repairability_score: 82,
+            recyclability_score: 78,
+            take_back_program: "Eligible for office furniture refurbishment and parts harvesting pilot.",
+            resale_supported: true,
+            remanufacturing_supported: true,
+            disassembly_guide: "Remove castors, armrests, gas lift, seat cushion and back mesh before separating metal and plastic streams.",
+            recycling_instructions: "Prioritize reuse and refurbishment; recycle steel frame, sorted plastics and textile/foam through authorized channels.",
+            end_of_life_info: "Do not dispose as mixed waste where bulky-waste or furniture recovery services are available.",
+          },
+        ],
+    consumerTransparency: data?.consumerTransparency?.length
+      ? data.consumerTransparency
+      : [
+          {
+            id: "demo-chair-consumer-1",
+            product_id: productId,
+            brand_story: "This demo shows how furniture data can be organized into a repairable and reusable product passport.",
+            brand_story_zh: "该示例展示如何将家具数据组织成支持维修和再使用的数字产品护照。",
+            sustainability_story: "Recycled metal and plastic content, replaceable modules and disassembly instructions are disclosed.",
+            sustainability_story_zh: "披露再生金属和塑料含量、可更换模块和拆解说明。",
+            consumer_notice: "Check fasteners periodically. Scan before resale, repair or bulky-waste collection for the latest product information.",
+            consumer_notice_zh: "建议定期检查紧固件。转售、维修或大件回收前可扫码查看最新产品信息。",
+            packaging_info: "Flat-pack cardboard carton with reduced EPS foam and reusable parts bag.",
+          },
+        ],
+    digitalIdentity: data?.digitalIdentity?.length
+      ? data.digitalIdentity
+      : [
+          {
+            id: "demo-chair-identity-1",
+            product_id: productId,
+            product_uuid: "e01b59d5-0f1f-4a7d-a25d-demochair01",
+            gtin: "06900000000302",
+            style_id: "STYLE-FURN-CHAIR-001",
+            batch_id: "BATCH-FURN-2026-001",
+            serial_id: "CHAIR-DEMO-0001",
+            digital_link_url: "https://www.greanlean.com/p/demo-office-chair",
+            qr_code_id: "QR-DPP-CHAIR-001",
+            nfc_id: "NFC-CHAIR-RESERVED",
+            rfid_epc: "RFID-CARTON-RESERVED",
+          },
+        ],
+    documents: data?.documents?.length
+      ? data.documents
+      : [
+          {
+            id: "demo-chair-document-1",
+            product_id: productId,
+            document_name: "Furniture Durability Test Report",
+            document_type: "Performance",
+            file_url: "https://example.com/office-chair-en1335-test.pdf",
+            file_size: "510 KB",
+            language: "EN / ZH",
+            uploaded_by: "greanlean admin",
+            version: "v1.0",
+          },
+          {
+            id: "demo-chair-document-2",
+            product_id: productId,
+            document_name: "REACH SVHC Screening Report",
+            document_type: "Chemical",
+            file_url: "https://example.com/office-chair-reach-report.pdf",
+            file_size: "460 KB",
+            language: "EN",
+            uploaded_by: "greanlean admin",
+            version: "v1.0",
+          },
+        ],
+    governance: data?.governance?.length
+      ? data.governance
+      : [
+          {
+            id: "demo-chair-governance-1",
+            product_id: productId,
+            data_source: "Supplier declarations, recycled-content statements, durability reports, production batch records, packaging data and logistics documents.",
+            data_owner: "greanlean admin",
+            audit_status:
+              "Demo review completed\nVerifier: Demo Furniture Testing Institute\nCertificate: DPP-FURN-2026-021\nValid until: 2027-06-03\nLast updated: 2026-06-06",
+            data_quality_score: 89,
           },
         ],
   };

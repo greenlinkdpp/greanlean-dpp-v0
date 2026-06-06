@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/components/LanguageProvider";
 
@@ -29,25 +30,19 @@ export function PublicHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
-        <Link href={`/${langQuery}`} className="flex items-center gap-3 font-bold">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white shadow-sm">
-            G
-          </span>
-
-          <span className="brand-wordmark">GREANLEAN</span>
-        </Link>
+        <BrandLogo href={`/${langQuery}`} size="lg" />
 
         <nav className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
           <a className="transition hover:text-slate-950" href={`/${langQuery}`}>
             {t.home}
           </a>
 
-          <a className="transition hover:text-slate-950" href={`/${langQuery}#solutions`}>
-            {t.solutions}
+          <a className="transition hover:text-slate-950" href={`/${langQuery}#showroom`}>
+            {t.dpp}
           </a>
 
-          <a className="transition hover:text-slate-950" href={`/${langQuery}#dpp`}>
-            {t.dpp}
+          <a className="transition hover:text-slate-950" href={`/${langQuery}#solutions`}>
+            {t.solutions}
           </a>
 
           <a className="transition hover:text-slate-950" href={`/${langQuery}#contact`}>

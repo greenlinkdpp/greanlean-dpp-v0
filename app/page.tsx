@@ -1,25 +1,58 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { LeadForm } from "@/components/LeadForm";
 import { PublicHeader } from "@/components/PublicHeader";
 import { useLanguage } from "@/components/LanguageProvider";
+import { createSupabaseClient } from "@/lib/supabase";
+
+type DemoProduct = {
+  public_slug: string;
+  main_image: string | null;
+};
 
 export default function Home() {
   const { locale } = useLanguage();
+  const [demoProducts, setDemoProducts] = useState<Record<string, DemoProduct>>({});
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadDemoProducts() {
+      const { data } = await createSupabaseClient()
+        .from("products")
+        .select("public_slug, main_image")
+        .in("public_slug", ["demo-organic-cotton-tshirt", "demo-wireless-earbuds", "demo-wpc-flooring", "demo-office-chair"]);
+
+      if (!active) return;
+
+      setDemoProducts(
+        Object.fromEntries((data || []).map((item) => [item.public_slug, item]))
+      );
+    }
+
+    loadDemoProducts();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const t =
     locale === "zh"
       ? {
           badge: "面向欧盟市场的 DPP 合规数据服务",
-          title: "产品数字护照的欧盟合规解决方案",
+          titleLine1: "产品数字护照",
+          titleLine2: "欧盟合规解决方案",
           subtitle1: "帮助中国制造企业应对欧盟 DPP 逐步强制落地要求，提前建立产品身份、供应链证据、环境数据和证书链。",
           subtitle2: "快速生成、验证、更新产品电子护照，让欧洲买家、监管方和消费者看懂产品全生命周期。",
           primaryCta: "立即查看 Demo DPP",
           secondaryCta: "了解 2027 年要求",
           metric1: "适配品类",
           metric1Value: "多行业",
-          metric1Desc: "纺织、地板、金属配件、消费电子",
+          metric1Desc: "纺织、家具、地板、消费电子",
           metric2: "DPP 模块",
           metric2Value: "13 项",
           metric2Desc: "身份、材料、追溯、ESG、证据链等",
@@ -37,22 +70,22 @@ export default function Home() {
           case2Desc: "展示 CE、RoHS、REACH、WEEE、电池 MSDS、性能指标和电子废弃物回收路径。",
           case3: "WPC 木塑复合地板",
           case3Desc: "展示再生成分、VOC/甲醛、建筑产品性能声明、供应链追溯和建材回收路径。",
-          case4: "面料卷",
-          case4Desc: "适合上游面料供应商向成衣客户提供可追溯材料数据。",
+          case4: "可拆解办公椅",
+          case4Desc: "展示家具材料组成、耐久性、可维修性、可拆解设计、再生成分和回收路径。",
           viewPassport: "查看完整 DPP 护照",
           comingSoon: "样例准备中",
-          comparisonTitle: "产品透明度对比",
-          comparisonSubtitle: "传统品牌展示的是营销信息，DPP 品牌展示的是可验证数据。",
-          traditional: "传统品牌",
-          dppBrand: "greanlean DPP 品牌",
-          compare1: "只展示成分与洗标",
-          compare2: "证书散落在邮件和网盘",
-          compare3: "供应链路径不可见",
-          compare4: "消费者不知道如何维修/回收",
-          compare5: "产品身份、批次和二维码绑定",
-          compare6: "证书、检测报告和声明可下载",
-          compare7: "原料、制造、运输时间线可展开",
-          compare8: "End of Life 回收与再使用方案清晰",
+          comparisonTitle: "从静态资料到可验证 DPP 数据底座",
+          comparisonSubtitle: "ESPR 下的数字产品护照不是宣传页，而是把产品身份、合规证据、可持续信息和循环利用说明组织成可读取、可更新、可核验的数据结构。",
+          traditional: "传统资料管理",
+          dppBrand: "greanlean DPP 数据底座",
+          compare1: "产品资料分散在 Excel、PDF、邮件和网盘中",
+          compare2: "证书、检测报告与具体 SKU / 批次没有稳定关联",
+          compare3: "材料来源、关注物质、维修回收信息难以持续更新",
+          compare4: "买家、监管方和消费者看到的信息版本不一致",
+          compare5: "用 DPP ID、GTIN / SGTIN、批次和二维码建立唯一身份",
+          compare6: "证书、DoC、检测报告、MSDS 与产品页面形成证据链",
+          compare7: "按材料、供应链、ESG、循环性和消费者说明分模块披露",
+          compare8: "同一数据可输出网页、二维码、PDF / JSON，并为未来系统对接预留",
           guideTitle: "2027 年前，企业应该先准备什么",
           guideSubtitle: "欧盟 DPP 要求会按产品组逐步细化。现在最重要的是把产品数据从文件夹变成可更新、可验证、可对接的结构化资产。",
           guide1: "梳理产品身份",
@@ -63,21 +96,36 @@ export default function Home() {
           guide3Desc: "碳、水、能源、废弃物、耐用性、可维修性和可回收性。",
           guide4: "生成公开 DPP",
           guide4Desc: "中英文页面、二维码、PDF/JSON 下载和后续更新机制。",
-          serviceTitle: "从资料整理到 DPP 页面上线",
-          serviceSubtitle: "greanlean 帮你把分散的产品资料转成可展示、可审核、可持续维护的数字产品护照。",
+          serviceTitle: "DPP 落地流程",
+          serviceSubtitle: "greanlean 将企业现有产品文件整理成符合 DPP 逻辑的数据包，再发布为可扫码访问、可审查、可维护的数字产品护照。",
+          serviceStep1: "资料收集",
+          serviceStep1Desc: "汇总产品规格、BOM、材料来源、供应商声明、证书、检测报告和物流信息。",
+          serviceStep2: "字段映射",
+          serviceStep2Desc: "按 ESPR/DPP 常见信息要求整理为身份、材料、关注物质、性能、ESG、证据和循环性模块。",
+          serviceStep3: "证据校验",
+          serviceStep3Desc: "检查证书有效期、报告编号、声明主体、SKU/批次关联和缺失字段。",
+          serviceStep4: "发布维护",
+          serviceStep4Desc: "生成中英 DPP 页面、二维码和 PDF/JSON，并支持后续证书或批次数据更新。",
           contactTitle: "开始 DPP 准备度评估",
           contactSubtitle: "告诉我们你的产品类别、目标市场和现有资料情况，我们会帮你判断第一阶段应该先补哪些数据。",
+          footerTagline: "欧盟 DPP 与 ESPR 合规数据服务，帮助出口企业把产品资料整理成可展示、可审核、可维护的数字产品护照。",
+          footerDemo: "DPP 示例",
+          footerSolutions: "解决方案",
+          footerContact: "联系我们",
+          footerDashboard: "DPP 后台",
+          footerCopyright: "© 2026 greanlean. 保留所有权利。",
         }
       : {
           badge: "DPP compliance data service for the EU market",
-          title: "EU compliance solutions for Digital Product Passports",
+          titleLine1: "EU compliance solutions",
+          titleLine2: "for Digital Product Passports",
           subtitle1: "Help Chinese manufacturers prepare for phased EU DPP requirements by structuring product identity, supply-chain evidence, environmental data and certificate chains.",
           subtitle2: "Generate, verify and update electronic product passports so European buyers, regulators and consumers can understand the full product lifecycle.",
           primaryCta: "View Demo DPP now",
           secondaryCta: "Learn 2027 requirements",
           metric1: "Product scope",
           metric1Value: "Multi-sector",
-          metric1Desc: "textiles, flooring, metal parts and electronics",
+          metric1Desc: "textiles, furniture, flooring and electronics",
           metric2: "DPP modules",
           metric2Value: "13",
           metric2Desc: "identity, materials, traceability, ESG and evidence",
@@ -95,22 +143,22 @@ export default function Home() {
           case2Desc: "Shows CE, RoHS, REACH, WEEE, battery MSDS, performance indicators and e-waste recovery paths.",
           case3: "WPC composite flooring",
           case3Desc: "Shows recycled content, VOC/formaldehyde evidence, construction-product declaration, traceability and building-material recovery.",
-          case4: "Fabric roll",
-          case4Desc: "Helps upstream fabric suppliers provide traceable material data to garment customers.",
+          case4: "Disassemblable office chair",
+          case4Desc: "Shows furniture materials, durability, repairability, disassembly design, recycled content and recovery paths.",
           viewPassport: "View full DPP passport",
           comingSoon: "Sample in preparation",
-          comparisonTitle: "Product transparency comparison",
-          comparisonSubtitle: "Traditional brands show marketing information. DPP brands show verifiable product data.",
-          traditional: "Traditional brand",
-          dppBrand: "greanlean DPP brand",
-          compare1: "Only composition and care label",
-          compare2: "Certificates scattered in emails and folders",
-          compare3: "Supply-chain path is invisible",
-          compare4: "Consumers do not know how to repair or recycle",
-          compare5: "Product identity, batch and QR code connected",
-          compare6: "Certificates, test reports and declarations downloadable",
-          compare7: "Material, manufacturing and logistics timeline expandable",
-          compare8: "End of Life reuse and recycling plan is clear",
+          comparisonTitle: "From static files to a verifiable DPP data layer",
+          comparisonSubtitle: "Under ESPR, a Digital Product Passport is not a campaign page. It structures product identity, compliance evidence, sustainability data and circularity guidance into information that can be read, updated and verified.",
+          traditional: "Traditional file management",
+          dppBrand: "greanlean DPP data layer",
+          compare1: "Product files are split across spreadsheets, PDFs, emails and folders",
+          compare2: "Certificates and test reports are not reliably tied to SKU or batch",
+          compare3: "Material origin, substances of concern and end-of-life data are hard to maintain",
+          compare4: "Buyers, regulators and consumers may see different versions of product information",
+          compare5: "DPP ID, GTIN / SGTIN, batch and QR code create a stable product identity",
+          compare6: "Certificates, DoC, test reports and MSDS become a linked evidence chain",
+          compare7: "Materials, supply chain, ESG, circularity and consumer notes are disclosed by module",
+          compare8: "The same data can power web pages, QR codes, PDF / JSON and future system integration",
           guideTitle: "What to prepare before 2027",
           guideSubtitle: "EU DPP requirements will be specified by product group. The priority is to turn product files into structured assets that can be updated, verified and connected.",
           guide1: "Map product identity",
@@ -121,10 +169,24 @@ export default function Home() {
           guide3Desc: "Carbon, water, energy, waste, durability, repairability and recyclability.",
           guide4: "Publish public DPP",
           guide4Desc: "Bilingual page, QR code, PDF/JSON download and update mechanism.",
-          serviceTitle: "From product files to live DPP pages",
-          serviceSubtitle: "greanlean turns scattered product documentation into digital product passports that are visible, auditable and maintainable.",
+          serviceTitle: "DPP implementation workflow",
+          serviceSubtitle: "greanlean turns existing product documentation into a DPP-ready data package, then publishes a scannable, reviewable and maintainable Digital Product Passport.",
+          serviceStep1: "Collect files",
+          serviceStep1Desc: "Gather product specs, BOM, material origin, supplier declarations, certificates, test reports and logistics data.",
+          serviceStep2: "Map fields",
+          serviceStep2Desc: "Structure the data into identity, materials, substances of concern, performance, ESG, evidence and circularity modules.",
+          serviceStep3: "Check evidence",
+          serviceStep3Desc: "Review certificate validity, report numbers, responsible parties, SKU/batch links and missing fields.",
+          serviceStep4: "Publish and maintain",
+          serviceStep4Desc: "Generate bilingual DPP pages, QR codes and PDF/JSON exports, with updates for future certificates and batches.",
           contactTitle: "Start your DPP readiness assessment",
           contactSubtitle: "Tell us your product category, target markets and current documentation. We will identify which data to prepare first.",
+          footerTagline: "EU DPP and ESPR compliance data service for turning product documentation into presentable, reviewable and maintainable Digital Product Passports.",
+          footerDemo: "DPP demo",
+          footerSolutions: "Solutions",
+          footerContact: "Contact",
+          footerDashboard: "DPP login",
+          footerCopyright: "© 2026 greanlean. All rights reserved.",
         };
 
   const metrics = [
@@ -134,42 +196,54 @@ export default function Home() {
     [t.metric4, t.metric4Value, t.metric4Desc],
   ];
 
-  const cases = [
-    {
-      title: t.case1,
-      desc: t.case1Desc,
-      image: "/images/demo-organic-cotton-tshirt.png",
-      href: "/p/demo-organic-cotton-tshirt?lang=zh",
-      ready: true,
-    },
-    {
-      title: t.case2,
-      desc: t.case2Desc,
-      image: "/images/demo-wireless-earbuds.svg",
-      href: "/p/demo-wireless-earbuds?lang=zh",
-      ready: true,
-    },
-    {
-      title: t.case3,
-      desc: t.case3Desc,
-      image: "/images/demo-wpc-flooring.svg",
-      href: "/p/demo-wpc-flooring?lang=zh",
-      ready: true,
-    },
-    {
-      title: t.case4,
-      desc: t.case4Desc,
-      image: "/images/dpp-hero.png",
-      href: "#showroom",
-      ready: false,
-    },
-  ];
+  const cases = useMemo(
+    () => [
+      {
+        title: t.case1,
+        desc: t.case1Desc,
+        image: demoProducts["demo-organic-cotton-tshirt"]?.main_image || "/images/demo-organic-cotton-tshirt.png",
+        href: "/p/demo-organic-cotton-tshirt?lang=zh",
+        ready: true,
+      },
+      {
+        title: t.case2,
+        desc: t.case2Desc,
+        image:
+          demoProducts["demo-wireless-earbuds"]?.main_image && !demoProducts["demo-wireless-earbuds"]?.main_image?.endsWith(".svg")
+            ? demoProducts["demo-wireless-earbuds"]?.main_image
+            : "/images/demo-wireless-earbuds.png",
+        href: "/p/demo-wireless-earbuds?lang=zh",
+        ready: true,
+      },
+      {
+        title: t.case3,
+        desc: t.case3Desc,
+        image: demoProducts["demo-wpc-flooring"]?.main_image || "/images/demo-wpc-flooring.svg",
+        href: "/p/demo-wpc-flooring?lang=zh",
+        ready: true,
+      },
+      {
+        title: t.case4,
+        desc: t.case4Desc,
+        image: demoProducts["demo-office-chair"]?.main_image || "/images/demo-office-chair.svg",
+        href: "/p/demo-office-chair?lang=zh",
+        ready: true,
+      },
+    ],
+    [demoProducts, t.case1, t.case1Desc, t.case2, t.case2Desc, t.case3, t.case3Desc, t.case4, t.case4Desc]
+  );
 
   const guide = [
     [t.guide1, t.guide1Desc],
     [t.guide2, t.guide2Desc],
     [t.guide3, t.guide3Desc],
     [t.guide4, t.guide4Desc],
+  ];
+  const serviceSteps = [
+    [t.serviceStep1, t.serviceStep1Desc],
+    [t.serviceStep2, t.serviceStep2Desc],
+    [t.serviceStep3, t.serviceStep3Desc],
+    [t.serviceStep4, t.serviceStep4Desc],
   ];
 
   return (
@@ -186,16 +260,17 @@ export default function Home() {
           </div>
 
           <div className="relative mx-auto max-w-7xl px-6 py-16 lg:py-24">
-            <div className="max-w-4xl dpp-fade">
+            <div className="max-w-5xl dpp-fade">
               <p className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-brand-100 backdrop-blur">
                 {t.badge}
               </p>
 
-              <h1 className="mt-6 text-4xl font-black leading-[1.08] md:text-5xl lg:text-6xl">
-                {t.title}
+              <h1 className="mt-6 max-w-[980px] text-4xl font-black leading-[1.08] md:text-5xl lg:text-[4.5rem]">
+                <span className="block">{t.titleLine1}</span>
+                <span className="block">{t.titleLine2}</span>
               </h1>
 
-              <div className="mt-6 max-w-3xl space-y-3 text-lg leading-8 text-slate-200">
+              <div className="mt-6 max-w-[1120px] space-y-3 text-lg leading-9 text-slate-200">
                 <p>{t.subtitle1}</p>
                 <p>{t.subtitle2}</p>
               </div>
@@ -291,9 +366,22 @@ export default function Home() {
         </section>
 
         <section id="solutions" className="mx-auto max-w-7xl px-6 py-16 lg:py-20">
-          <div className="rounded-lg border border-slate-200 bg-white p-8 shadow-sm lg:p-10">
-            <h2 className="text-3xl font-black text-slate-950">{t.serviceTitle}</h2>
-            <p className="mt-4 max-w-4xl text-lg leading-8 text-slate-600">{t.serviceSubtitle}</p>
+          <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 p-8 lg:p-10">
+              <h2 className="text-3xl font-black text-slate-950">{t.serviceTitle}</h2>
+              <p className="mt-4 max-w-4xl text-lg leading-8 text-slate-600">{t.serviceSubtitle}</p>
+            </div>
+            <div className="grid gap-0 md:grid-cols-2 xl:grid-cols-4">
+              {serviceSteps.map(([title, desc], index) => (
+                <div key={title} className="border-b border-slate-200 p-6 last:border-b-0 md:border-r md:even:border-r-0 xl:border-b-0 xl:even:border-r xl:last:border-r-0">
+                  <span className="grid h-10 w-10 place-items-center rounded-lg bg-slate-950 text-sm font-black text-white">
+                    {index + 1}
+                  </span>
+                  <h3 className="mt-5 text-lg font-black text-slate-950">{title}</h3>
+                  <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">{desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -306,7 +394,44 @@ export default function Home() {
           <LeadForm />
         </section>
       </main>
+
+      <HomeFooter t={t} locale={locale} />
     </>
+  );
+}
+
+function HomeFooter({ t, locale }: { t: any; locale: "zh" | "en" }) {
+  const links = [
+    [t.footerDemo, `/p/demo-organic-cotton-tshirt?lang=${locale}`],
+    [t.footerSolutions, `/?lang=${locale}#solutions`],
+    [t.footerContact, `/?lang=${locale}#contact`],
+    [t.footerDashboard, `/login?lang=${locale}`],
+  ];
+
+  return (
+    <footer className="border-t border-slate-200 bg-white">
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+          <div>
+            <BrandLogo href={`/?lang=${locale}`} size="md" />
+            <p className="mt-4 max-w-2xl text-sm font-semibold leading-6 text-slate-500">{t.footerTagline}</p>
+          </div>
+
+          <nav className="flex flex-wrap gap-3" aria-label="Footer navigation">
+            {links.map(([label, href]) => (
+              <Link key={label} href={href} className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-black text-slate-700 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-brand-700">
+                {label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-5 text-sm font-semibold text-slate-500">
+          <span>{t.footerCopyright}</span>
+          <span>greanlean.com</span>
+        </div>
+      </div>
+    </footer>
   );
 }
 

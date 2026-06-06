@@ -22,7 +22,7 @@ values
   'published',
   'DPP-AUDIO-DEMO-001',
   'demo-wireless-earbuds',
-  '/images/demo-wireless-earbuds.svg',
+  '/images/demo-wireless-earbuds.png',
   'Keep dry, clean ear tips regularly and avoid prolonged exposure to heat. Use the original charging case and cable where possible.',
   '保持干燥，定期清洁耳塞，避免长时间高温暴露。建议使用原配充电盒和线缆。',
   'Replace ear tips when worn. Battery and charging case repair should be handled by an authorized service provider.',

@@ -92,7 +92,7 @@ const modules: ImportModule[] = [
       subcategory: "Wireless Earbuds",
       description_en: "Demo consumer electronics product for EU DPP, RoHS, REACH and WEEE data disclosure.",
       description_zh: "用于欧盟 DPP、RoHS、REACH 和 WEEE 数据披露的消费电子示例产品。",
-      main_image_url: "/images/demo-wireless-earbuds.svg",
+      main_image_url: "/images/demo-wireless-earbuds.png",
       batch_id: "BATCH-AUDIO-2026-001",
       production_date: "2026-05-28",
       origin_country: "China",

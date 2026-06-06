@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/components/LanguageProvider";
 
@@ -178,8 +179,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           dataOwner: "数据负责人",
           audit: "审计状态",
           quality: "数据质量",
-          footerTitle: "由 greanlean DPP 提供支持",
-          footerText: "该页面用于披露产品身份、材料来源、供应链追溯、ESG、证书和消费者透明化信息。",
+          footerTagline: "欧盟 DPP 与 ESPR 合规数据服务",
+          footerDemo: "DPP 示例",
+          footerContact: "联系我们",
+          footerCopyright: "© 2026 greanlean. 保留所有权利。",
           productRecordTitle: "产品身份档案",
           digitalIdentityTitle: "数据载体与唯一标识",
           gs1Note: "兼容 GS1 GTIN / SGTIN 唯一标识结构，用于产品级与单品级追溯。",
@@ -399,9 +402,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           dataOwner: "Data owner",
           audit: "Audit status",
           quality: "Data quality",
-          footerTitle: "Powered by greanlean DPP",
-          footerText:
-            "This page discloses product identity, material sources, supply-chain traceability, ESG, certificates and consumer transparency information.",
+          footerTagline: "EU DPP and ESPR compliance data service",
+          footerDemo: "DPP demos",
+          footerContact: "Contact",
+          footerCopyright: "© 2026 greanlean. All rights reserved.",
           productRecordTitle: "Product identity record",
           digitalIdentityTitle: "Data carrier and identifiers",
           gs1Note: "Compatible with GS1 GTIN / SGTIN identity structure for product-level and item-level traceability.",
@@ -551,15 +555,18 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     .toLowerCase();
   const isElectronics = /electronics|earbud|headphone|audio|蓝牙|耳机|电子/.test(categoryText);
   const isFlooring = /floor|flooring|wpc|building|construction|地板|木塑|建材/.test(categoryText);
-  const carbonCurrent = latestEsg?.carbon_footprint ? Number(latestEsg.carbon_footprint) : isElectronics ? 6.8 : isFlooring ? 12.4 : 3.2;
-  const carbonAverage = isElectronics ? 8.9 : isFlooring ? 16.8 : 4.5;
-  const waterCurrent = latestEsg?.water_usage ? Number(latestEsg.water_usage) : isElectronics ? 42 : isFlooring ? 18 : 118;
-  const waterAverage = isElectronics ? 65 : isFlooring ? 28 : 160;
+  const isFurniture = /furniture|chair|office chair|办公椅|家具/.test(categoryText);
+  const carbonCurrent = latestEsg?.carbon_footprint ? Number(latestEsg.carbon_footprint) : isElectronics ? 6.8 : isFlooring ? 12.4 : isFurniture ? 28.6 : 3.2;
+  const carbonAverage = isElectronics ? 8.9 : isFlooring ? 16.8 : isFurniture ? 36.5 : 4.5;
+  const waterCurrent = latestEsg?.water_usage ? Number(latestEsg.water_usage) : isElectronics ? 42 : isFlooring ? 18 : isFurniture ? 76 : 118;
+  const waterAverage = isElectronics ? 65 : isFlooring ? 28 : isFurniture ? 110 : 160;
   const recycleLink = isElectronics
     ? "https://environment.ec.europa.eu/topics/waste-and-recycling/waste-electrical-and-electronic-equipment-weee_en"
     : isFlooring
       ? "https://environment.ec.europa.eu/topics/waste-and-recycling/construction-and-demolition-waste_en"
-    : "https://www.recyclenow.com/recycle-an-item/clothing-textiles";
+      : isFurniture
+        ? "https://environment.ec.europa.eu/topics/waste-and-recycling/waste-framework-directive_en"
+        : "https://www.recyclenow.com/recycle-an-item/clothing-textiles";
   const qrUrl = `/api/qr?url=${encodeURIComponent(dppUrl)}`;
 
   const totalRecycled = useMemo(() => {
@@ -629,6 +636,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ? locale === "zh"
             ? "ESPR / REACH / VOC / 建筑产品性能声明 / 建筑废弃物回收"
             : "ESPR / REACH / VOC / construction-product performance declaration / construction-waste recovery"
+          : isFurniture
+            ? locale === "zh"
+              ? "ESPR / REACH / 耐久性测试 / 可维修性 / 家具再使用与回收"
+              : "ESPR / REACH / durability testing / repairability / furniture reuse and recovery"
         : t.complianceScopeValue,
     ],
     [
@@ -641,6 +652,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ? locale === "zh"
             ? "55% 再生木纤维 + 35% 再生 HDPE/PP + 10% 矿物填料与助剂"
             : "55% recycled wood fibre + 35% recycled HDPE/PP + 10% mineral filler and additives"
+          : isFurniture
+            ? locale === "zh"
+              ? "42% 钢制框架 + 28% 再生 PP/PA 塑料件 + 30% 网布与海绵"
+              : "42% steel frame + 28% recycled PP/PA plastic parts + 30% mesh and foam"
         : t.materialProfileValue,
     ],
     [
@@ -653,9 +668,20 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ? locale === "zh"
             ? "耐磨等级 AC4；吸水膨胀 ≤1.5%；使用寿命 10-15 年"
             : "AC4 wear rating; water swelling <=1.5%; 10-15 year service life"
+          : isFurniture
+            ? locale === "zh"
+              ? "耐久性测试通过；可更换坐垫/脚轮/气压杆；使用寿命 7-10 年"
+              : "Durability test passed; replaceable cushion/castors/gas lift; 7-10 year service life"
         : t.performanceSnapshotValue,
     ],
-    [t.nextAction, t.nextActionValue],
+    [
+      t.nextAction,
+      isFurniture
+        ? locale === "zh"
+          ? "查看耐久性报告、维修备件、拆解回收指南和 DPP 数据下载"
+          : "View durability report, spare parts, disassembly guidance and DPP downloads"
+        : t.nextActionValue,
+    ],
   ];
   const performanceItems: Array<[string, any]> = isElectronics
     ? [
@@ -685,6 +711,20 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               : "Demo performance declaration for WPC flooring DPP display; real products should reference wear, VOC, dimensional-stability and installation test reports.",
           ],
         ]
+      : isFurniture
+        ? [
+            [locale === "zh" ? "座椅耐久性" : "Seating durability", locale === "zh" ? "通过 100,000 次循环测试" : "Pass, 100,000-cycle test"],
+            [locale === "zh" ? "静载承重" : "Static load rating", "136 kg"],
+            [locale === "zh" ? "可更换模块" : "Replaceable modules", locale === "zh" ? "坐垫、扶手、脚轮、气压杆" : "Seat cushion, armrests, castors, gas lift"],
+            [locale === "zh" ? "拆解工具" : "Disassembly tools", locale === "zh" ? "六角扳手 + 标准螺丝刀" : "Hex key + standard screwdriver"],
+            [t.minimumLifetime, locale === "zh" ? "7-10 年" : "7-10 years"],
+            [
+              t.testBasis,
+              locale === "zh"
+                ? "示例性能声明，面向家具 DPP 技术文件展示；实际产品应以耐久性、稳定性、承重和材料测试报告为准。"
+                : "Demo performance declaration for furniture DPP display; real products should reference durability, stability, load and material test reports.",
+            ],
+          ]
     : [
         [t.washDurability, "≥ 50"],
         [t.tensileStrength, "≥ 450 N/m"],
@@ -719,7 +759,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           limit: locale === "zh" ? "硅胶耳塞受限物质筛查" : "Restricted-substance screening for silicone ear tips",
           type: "svhc",
         },
-      ]
+        ]
     : isFlooring
       ? [
           {
@@ -747,6 +787,33 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             type: "heavy-metals",
           },
         ]
+      : isFurniture
+        ? [
+            {
+              item: t.svhcCandidate,
+              result: t.notDetected,
+              limit: t.svhcLimit,
+              type: "svhc",
+            },
+            {
+              item: locale === "zh" ? "涂层重金属 - 铅 / 镉 / 六价铬" : "Coating heavy metals - Pb / Cd / Cr(VI)",
+              result: t.notDetected,
+              limit: locale === "zh" ? "按家具和表面涂层 RSL 筛查" : "Screened against furniture and surface-coating RSL",
+              type: "heavy-metals",
+            },
+            {
+              item: locale === "zh" ? "邻苯二甲酸酯与阻燃剂" : "Phthalates and flame retardants",
+              result: locale === "zh" ? "通过" : "Pass",
+              limit: locale === "zh" ? "塑料件和海绵添加剂筛查完成" : "Plastic and foam additive screening completed",
+              type: "svhc",
+            },
+            {
+              item: locale === "zh" ? "接触皮肤网布材料" : "Skin-contact mesh textile",
+              result: locale === "zh" ? "通过" : "Pass",
+              limit: locale === "zh" ? "按 REACH / OEKO-TEX 物质要求筛查" : "Screened against REACH / OEKO-TEX substance requirements",
+              type: "azo",
+            },
+          ]
     : [
     {
       item: t.svhcCandidate,
@@ -803,6 +870,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               locale === "zh" ? "Regulation (EU) No 305/2011 - 建筑产品法规 CPR 与性能声明" : "Regulation (EU) No 305/2011 - Construction Products Regulation and Declaration of Performance",
               locale === "zh" ? "EN 16516 / VOC 室内空气排放测试方法（示例）" : "EN 16516 / VOC indoor-air-emission test method (demo)",
             ].join("\n")
+          : isFurniture
+            ? [
+                t.declarationRule1,
+                t.declarationRule2,
+                locale === "zh" ? "REACH - 家具材料、涂层和接触材料受限物质筛查" : "REACH - restricted-substance screening for furniture materials, coatings and contact materials",
+                locale === "zh" ? "EN 1335 / 家具耐久性和安全性能测试（示例）" : "EN 1335 / furniture durability and safety performance testing (demo)",
+              ].join("\n")
         : [t.declarationRule1, t.declarationRule2, t.declarationRule3, t.declarationRule4].join("\n"),
     ],
     [
@@ -813,6 +887,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           : "Demo Electronics Assembly Plant Co., Ltd., 18 Smart Hardware Road, Dongguan, Guangdong, China"
         : isFlooring
           ? "Demo WPC Flooring Factory Co., Ltd., 66 Composite Materials Road, Changzhou, Jiangsu, China"
+          : isFurniture
+            ? "Demo Office Furniture Factory Co., Ltd., 28 Modular Furniture Road, Anji, Zhejiang, China"
         : t.manufacturerValue,
     ],
     [t.importerInfo, t.importerValue],
@@ -831,6 +907,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           [t.expectedResaleCycles, locale === "zh" ? "1 次，需通过外观和锁扣完整性筛查" : "1 cycle, subject to visual and click-lock integrity screening"],
           [t.resalePriceRange, locale === "zh" ? "原零售价的 10%-30%" : "10%-30% of original retail price"],
         ]
+      : isFurniture
+        ? [
+            [t.takeBackPlanDetails, locale === "zh" ? "通过办公家具翻新、经销商回收或企业大件家具回收计划提交。" : "Return through office-furniture refurbishment, distributor take-back or corporate bulky-furniture recovery programs."],
+            [t.expectedResaleCycles, locale === "zh" ? "1-2 次，需通过稳定性和外观筛查" : "1-2 cycles, subject to stability and appearance screening"],
+            [t.resalePriceRange, locale === "zh" ? "原零售价的 25%-50%" : "25%-50% of original retail price"],
+          ]
     : [
         [t.takeBackPlanDetails, t.takeBackPlanValue],
         [t.expectedResaleCycles, locale === "zh" ? "1-2 次" : "1-2 cycles"],
@@ -848,6 +930,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           [t.repairProviders, locale === "zh" ? "Demo Flooring Installer Network；本地建材维修服务商" : "Demo Flooring Installer Network; local building-material repair providers"],
           [t.sparePartsGuide, locale === "zh" ? "保留同批次备用板、边条和地垫；避免胶粘安装导致后续拆解困难。" : "Keep spare planks, trims and underlayment from the same batch; avoid adhesive installation where future disassembly is required."],
         ]
+      : isFurniture
+        ? [
+            [t.commonRepairTypes, locale === "zh" ? "脚轮更换、扶手垫更换、坐垫模块更换、气压杆更换、螺丝紧固" : "Castor replacement, armrest-pad replacement, seat-cushion replacement, gas-lift replacement and fastener tightening"],
+            [t.repairProviders, locale === "zh" ? "Demo EU Furniture Service Network；本地办公家具维修服务商" : "Demo EU Furniture Service Network; local office-furniture repair providers"],
+            [t.sparePartsGuide, locale === "zh" ? "优先使用兼容脚轮、扶手、坐垫和气压杆；维修前记录批次和紧固件位置。" : "Prioritize compatible castors, armrests, cushions and gas lifts; record batch and fastener positions before repair."],
+          ]
     : [
         [t.commonRepairTypes, t.commonRepairTypesValue],
         [t.repairProviders, t.repairProvidersValue],
@@ -865,6 +953,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           [t.removeBeforeRecycle, locale === "zh" ? "地垫、金属边条、包装薄膜和安装辅料需单独分离。" : "Underlayment, metal trims, wrapping film and installation accessories should be separated."],
           [t.recyclingFacilityLink, locale === "zh" ? "建筑废弃物 / 复合材料回收设施查询" : "Construction-waste / composite-material recovery locator"],
         ]
+      : isFurniture
+        ? [
+            [t.recyclableParts, locale === "zh" ? "钢制框架、再生塑料件、脚轮金属件和可拆卸包装材料。" : "Steel frame, recycled plastic parts, castor metals and removable packaging materials."],
+            [t.removeBeforeRecycle, locale === "zh" ? "坐垫、网布、海绵、气压杆和紧固件需按材料分离。" : "Seat cushion, mesh, foam, gas lift and fasteners should be separated by material stream."],
+            [t.recyclingFacilityLink, locale === "zh" ? "大件家具 / 金属与塑料回收设施查询" : "Bulky-furniture / metal and plastic recovery locator"],
+          ]
     : [
         [t.recyclableParts, t.recyclablePartsValue],
         [t.removeBeforeRecycle, t.removeBeforeRecycleValue],
@@ -916,9 +1010,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ? locale === "zh"
             ? "碳足迹模型、VOC/甲醛检测、REACH 筛查、欧盟性能声明和再生成分声明由第三方或文件证据验证；部分生产数据由制造商声明。"
             : "Carbon-footprint model, VOC/formaldehyde tests, REACH screening, EU Declaration of Performance and recycled-content declarations are verified by third-party or evidence files; selected production data are manufacturer-declared."
+          : isFurniture
+            ? locale === "zh"
+              ? "碳足迹模型、耐久性测试、REACH/重金属筛查、再生成分声明和可拆解设计由第三方或文件证据验证；部分生产数据由制造商声明。"
+              : "Carbon-footprint model, durability tests, REACH/heavy-metal screening, recycled-content declarations and disassembly design are verified by third-party or evidence files; selected production data are manufacturer-declared."
         : t.verificationScopeValue,
     ],
-    [t.verificationCertificate, isElectronics ? "SGS-DPP-AUDIO-2026-018" : isFlooring ? "DPP-WPC-2026-009" : t.verificationCertificateValue],
+    [t.verificationCertificate, isElectronics ? "SGS-DPP-AUDIO-2026-018" : isFlooring ? "DPP-WPC-2026-009" : isFurniture ? "DPP-FURN-2026-021" : t.verificationCertificateValue],
     [t.verificationExpiry, t.verificationExpiryValue],
     [t.lastUpdated, t.dataLastUpdatedValue],
   ];
@@ -926,7 +1024,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.carbon, `${carbonCurrent} kg CO2e`, "carbon"],
     [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
     [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100` : isElectronics ? "58 / 100" : isFlooring ? "74 / 100" : "81 / 100", "recycle"],
-    [t.minimumLifetime, isElectronics ? (locale === "zh" ? "2 年" : "2 years") : isFlooring ? (locale === "zh" ? "10-15 年" : "10-15 years") : locale === "zh" ? "2-3 年" : "2-3 years", "check"],
+    [t.minimumLifetime, isElectronics ? (locale === "zh" ? "2 年" : "2 years") : isFlooring ? (locale === "zh" ? "10-15 年" : "10-15 years") : isFurniture ? (locale === "zh" ? "7-10 年" : "7-10 years") : locale === "zh" ? "2-3 年" : "2-3 years", "check"],
   ];
   const textileReserveItems: Array<[string, any]> = isElectronics
     ? [
@@ -942,6 +1040,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           [locale === "zh" ? "拆解与再使用" : "Disassembly and reuse", locale === "zh" ? "预留项目拆除记录、旧板再使用筛选和建筑废弃物回收路径。" : "Project removal records, reuse screening and construction-waste recovery fields reserved."],
           [locale === "zh" ? "再生成分验证" : "Recycled-content verification", locale === "zh" ? "预留再生木纤维、再生塑料来源和批次质量平衡证据。" : "Recycled wood fibre, recycled polymer origin and batch mass-balance evidence reserved."],
         ]
+      : isFurniture
+        ? [
+            [locale === "zh" ? "家具耐久性扩展" : "Furniture durability extension", locale === "zh" ? "预留 EN 1335 / 稳定性 / 承重测试报告索引和验证状态。" : "EN 1335 / stability / load-test report index and verification status reserved."],
+            [locale === "zh" ? "维修备件可用性" : "Spare-part availability", locale === "zh" ? "预留脚轮、扶手、坐垫和气压杆的备件周期与兼容型号。" : "Castor, armrest, cushion and gas-lift availability and compatible models reserved."],
+            [locale === "zh" ? "拆解与再制造" : "Disassembly and remanufacturing", locale === "zh" ? "预留拆解步骤、紧固件类型、再制造检查和部件再使用状态。" : "Disassembly steps, fastener types, remanufacturing checks and component reuse status reserved."],
+            [locale === "zh" ? "材料循环证据" : "Material circularity evidence", locale === "zh" ? "预留钢材、再生塑料、网布和海绵的回收渠道与质量平衡证据。" : "Steel, recycled plastic, mesh and foam recovery channels and mass-balance evidence reserved."],
+          ]
     : [
         [t.microfiberPotential, t.microfiberValue],
         [t.fullOriginTrace, t.fullOriginValue],
@@ -962,6 +1067,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           locale === "zh" ? "2026-06-01 出口运输记录写入，鹿特丹经销仓接收待确认" : "2026-06-01 Export shipment record added; Rotterdam distributor receipt pending",
           locale === "zh" ? "2026-06-05 地板 DPP 数据审核并更新公开页面" : "2026-06-05 Flooring DPP data reviewed and public page updated",
         ]
+      : isFurniture
+        ? [
+            locale === "zh" ? "2026-04-12 钢材、再生塑料和网布批次创建并绑定供应商声明" : "2026-04-12 Steel, recycled plastic and mesh batches created and linked to supplier declarations",
+            locale === "zh" ? "2026-05-22 框架焊接、软包和总装完成，耐久性抽检记录上传" : "2026-05-22 Frame welding, upholstery and assembly completed; durability sample records uploaded",
+            locale === "zh" ? "2026-06-03 出口运输记录写入，鹿特丹家具经销仓接收待确认" : "2026-06-03 Export shipment record added; Rotterdam furniture distributor receipt pending",
+            locale === "zh" ? "2026-06-06 家具 DPP 数据审核并更新公开页面" : "2026-06-06 Furniture DPP data reviewed and public page updated",
+          ]
     : [t.batchRecord1, t.batchRecord2, t.batchRecord3, t.batchRecord4];
   const benchmarkNote = isElectronics
     ? locale === "zh"
@@ -971,6 +1083,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       ? locale === "zh"
         ? "低于示例同类地板平均值约 26%，主要来自较高再生成分、木纤维替代和海运运输假设。"
         : "About 26% below the demo flooring average, mainly from higher recycled content, wood-fibre substitution and sea-freight assumptions."
+      : isFurniture
+        ? locale === "zh"
+          ? "低于示例办公家具同类平均值约 22%，主要来自再生钢材、再生塑料部件、模块化维修和扁平化包装假设。"
+          : "About 22% below the demo office-furniture average, mainly from recycled steel, recycled plastic parts, modular repair and flat-pack packaging assumptions."
     : t.benchmarkAdvantage;
   const reserveIntro = isElectronics
     ? locale === "zh"
@@ -980,6 +1096,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       ? locale === "zh"
         ? "以下字段用于提前适配建材、建筑产品性能声明和室内空气质量相关 DPP 要求；当前作为预留和数据准备项展示。"
         : "These fields are reserved for building-material, construction-product performance and indoor-air-quality DPP requirements; currently shown as data-readiness items."
+      : isFurniture
+        ? locale === "zh"
+          ? "以下字段用于提前适配家具耐久性、维修、拆解、再使用和材料循环相关 DPP 要求；当前作为预留和数据准备项展示。"
+          : "These fields are reserved for furniture durability, repair, disassembly, reuse and material-circularity DPP requirements; currently shown as data-readiness items."
     : t.textileReserveIntro;
   const householdWasteText = isElectronics
     ? locale === "zh"
@@ -989,6 +1109,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       ? locale === "zh"
         ? "请勿将整批 WPC 地板混入普通生活垃圾；拆除后应进入建材回收或建筑废弃物分选渠道。"
         : "Do not mix removed WPC flooring with ordinary household waste; use building-material recovery or construction-waste sorting channels."
+      : isFurniture
+        ? locale === "zh"
+          ? "可再使用或可维修时请勿作为混合垃圾丢弃；优先进入家具翻新、大件回收或授权回收渠道。"
+          : "Do not discard as mixed waste when reuse or repair is possible; prioritize furniture refurbishment, bulky-waste recovery or authorized collection."
     : t.noHouseholdWasteDesc;
   const removePartsText = isElectronics
     ? locale === "zh"
@@ -998,6 +1122,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       ? locale === "zh"
         ? "回收前分离地垫、金属边条、包装薄膜和安装辅料；避免混入 PVC 地板废料。"
         : "Separate underlayment, metal trims, wrapping film and installation accessories before recycling; avoid mixing with PVC flooring waste."
+      : isFurniture
+        ? locale === "zh"
+          ? "回收前分离脚轮、扶手、气压杆、坐垫、网布和紧固件，按金属、塑料和纺织/海绵流处理。"
+          : "Separate castors, armrests, gas lift, cushion, mesh and fasteners before sorting into metal, plastic and textile/foam streams."
     : t.removeTrimsDesc;
   const collectionText = isElectronics
     ? locale === "zh"
@@ -1007,6 +1135,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       ? locale === "zh"
         ? "可拆卸完整板材优先再使用；无法再使用时进入 WPC 复合材料或建筑废弃物回收试点。"
         : "Reuse intact removable planks first; send unusable material to WPC composite or construction-waste recovery pilots."
+      : isFurniture
+        ? locale === "zh"
+          ? "完好部件优先维修、翻新或转售；无法继续使用时按材料拆解进入当地回收渠道。"
+          : "Repair, refurbish or resell intact components first; disassemble unusable parts into local material recovery channels."
     : t.textileCollectionDesc;
   const summaryMetrics: Array<[string, any, IconName]> = [
     [t.materialCount, materials.length, "layers"],
@@ -1041,10 +1173,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     <main className="min-h-screen bg-[#f7faf8] text-slate-950" aria-label={t.passport}>
       <header className="sticky top-0 z-40 border-b border-white/70 bg-white/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-6 py-4">
-          <Link href={`/?lang=${locale}`} className="flex items-center gap-3 font-bold">
-            <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white shadow-sm">G</span>
-            <span>{t.brand}</span>
-          </Link>
+          <BrandLogo href={`/?lang=${locale}`} size="md" />
 
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
@@ -1152,7 +1281,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </div>
       </section>
 
-      <section className="relative z-10 mx-auto -mt-6 max-w-7xl px-6">
+      <section className="relative z-10 mx-auto -mt-6 max-w-[1680px] px-6">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {summaryMetrics.map(([label, value, icon]) => (
             <Metric key={label} label={label} value={value} locale={locale} icon={icon} />
@@ -1160,8 +1289,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </div>
       </section>
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-8 lg:grid-cols-[220px_minmax(0,1fr)]">
-        <aside className="hidden lg:block">
+      <div className="mx-auto grid max-w-[1680px] gap-6 px-6 py-8 xl:grid-cols-[184px_minmax(0,1fr)]">
+        <aside className="hidden xl:block">
           <nav className="sticky top-24 space-y-1 rounded-lg border border-slate-200/80 bg-white/75 p-2 shadow-sm backdrop-blur-xl" aria-label="DPP section navigation">
             <p className="px-3 py-2 text-xs font-black uppercase tracking-wide text-slate-400">{t.passport}</p>
             {currentNavItems.map(([href, label, icon]) => (
@@ -1178,7 +1307,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </aside>
 
         <div className="min-w-0">
-        <nav className="mb-6 flex gap-2 overflow-x-auto lg:hidden" aria-label="DPP section navigation">
+        <nav className="mb-6 flex gap-2 overflow-x-auto xl:hidden" aria-label="DPP section navigation">
           {currentNavItems.map(([href, label, icon]) => (
             <a
               key={href}
@@ -1522,7 +1651,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               <h3 className="mt-2 text-2xl font-black text-slate-950">{t.endOfLife}</h3>
               <p className="mt-3 leading-7 text-slate-700">{t.endOfLifeIntro}</p>
             </div>
-            <div className="grid gap-4 xl:grid-cols-3">
+            <div className="grid gap-4 2xl:grid-cols-3">
               <DataCard title={t.reuseOptions} icon="recycle" surface="soft">
                 <InfoGrid items={reuseItems} locale={locale} />
                 <a
@@ -1644,12 +1773,34 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           </div>
         </Section>}
 
-        <section className="dpp-fade mt-10 rounded-lg bg-slate-950 p-8 text-white shadow-sm">
-          <h2 className="text-2xl font-black">{t.footerTitle}</h2>
-          <p className="mt-3 max-w-3xl leading-7 text-slate-300">{t.footerText}</p>
-          <p className="mt-4 text-sm font-semibold text-slate-400">greanlean.com</p>
-        </section>
         </div>
+
+        <footer className="border-t border-slate-200 pt-8 xl:col-span-2">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div>
+              <BrandLogo href={`/?lang=${locale}`} size="md" />
+              <p className="mt-3 max-w-xl text-sm font-semibold leading-6 text-slate-500">{t.footerTagline}</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={`/?lang=${locale}#showroom`}
+                className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-black text-slate-700 transition hover:border-emerald-200 hover:text-brand-700"
+              >
+                {t.footerDemo}
+              </Link>
+              <Link
+                href={`/?lang=${locale}#contact`}
+                className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-black text-brand-700 transition hover:bg-emerald-600 hover:text-white"
+              >
+                {t.footerContact}
+              </Link>
+            </div>
+          </div>
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 py-5 text-sm font-semibold text-slate-500">
+            <span>{t.footerCopyright}</span>
+            <span>greanlean.com</span>
+          </div>
+        </footer>
       </div>
 
       {activeCertificate && (
@@ -1957,14 +2108,14 @@ function InfoGrid({ items, locale }: { items: Array<[string, any]>; locale: Loca
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       {items.map(([label, value]) => (
-        <div key={label} className="grid gap-2 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:grid-cols-[168px_1fr]">
+        <div key={label} className="grid gap-2 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:grid-cols-[minmax(96px,0.35fr)_minmax(0,1fr)]">
           <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500">
             <span className="grid h-5 w-5 shrink-0 place-items-center rounded bg-brand-50 text-brand-700">
               <Icon name="info" className="h-3.5 w-3.5" />
             </span>
             <span>{label}</span>
           </div>
-          <p className="whitespace-pre-line break-words text-sm font-semibold leading-6 text-slate-950">{valueOrDash(value, locale)}</p>
+          <p className="min-w-0 whitespace-pre-line break-words text-sm font-semibold leading-6 text-slate-950">{valueOrDash(value, locale)}</p>
         </div>
       ))}
     </div>
