@@ -259,7 +259,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const format = url.searchParams.get("format") || "json";
   const product = url.searchParams.get("product") || "demo-organic-cotton-tshirt";
-  const payload = (await databasePayload(product)) || demoPayload(product);
+  const payload = product === "demo-wpc-flooring" ? demoPayload(product) : (await databasePayload(product)) || demoPayload(product);
 
   if (format === "pdf") {
     return new Response(buildPdf(pdfLines(payload)), {

@@ -20,6 +20,16 @@ async function getData(slug: string) {
     if (slug === "demo-office-chair") return withFurnitureDppData();
     return null;
   }
+
+  if (slug === "demo-wpc-flooring") {
+    return withFlooringDppData({
+      product: {
+        id: product.id,
+        main_image: product.main_image,
+      },
+    });
+  }
+
   const [materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance] = await Promise.all([
     safeSelect(supabase, "product_materials", product.id),
     safeSelect(supabase, "product_certificates", product.id),
