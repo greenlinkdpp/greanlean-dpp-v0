@@ -54,6 +54,18 @@ create table if not exists public.product_suppliers (
   created_at timestamptz default now()
 );
 
+create table if not exists public.supplier_products (
+  id uuid primary key default gen_random_uuid(),
+  supplier_id uuid not null references public.product_suppliers(id) on delete cascade,
+  product_id uuid not null references public.products(id) on delete cascade,
+  supplier_role text,
+  relationship_status text default 'active',
+  notes text,
+  notes_zh text,
+  created_at timestamptz default now(),
+  unique (supplier_id, product_id)
+);
+
 create table if not exists public.product_materials (
   id uuid primary key default gen_random_uuid(),
   product_id uuid references public.products(id) on delete cascade,
@@ -207,6 +219,7 @@ create table if not exists public.product_data_governance (
 alter table public.leads enable row level security;
 alter table public.products enable row level security;
 alter table public.product_suppliers enable row level security;
+alter table public.supplier_products enable row level security;
 alter table public.product_materials enable row level security;
 alter table public.product_bom enable row level security;
 alter table public.product_esg_metrics enable row level security;
@@ -232,6 +245,14 @@ create policy "Public can read published products" on public.products for select
 
 drop policy if exists "Authenticated can manage suppliers" on public.product_suppliers;
 create policy "Authenticated can manage suppliers" on public.product_suppliers for all to authenticated using (true) with check (true);
+
+drop policy if exists "Authenticated can manage supplier products" on public.supplier_products;
+create policy "Authenticated can manage supplier products" on public.supplier_products for all to authenticated using (true) with check (true);
+drop policy if exists "Public can read published supplier products" on public.supplier_products;
+create policy "Public can read published supplier products"
+on public.supplier_products for select to anon using (
+  exists (select 1 from public.products p where p.id = product_id and p.status = 'published')
+);
 
 drop policy if exists "Authenticated can manage materials" on public.product_materials;
 create policy "Authenticated can manage materials" on public.product_materials for all to authenticated using (true) with check (true);

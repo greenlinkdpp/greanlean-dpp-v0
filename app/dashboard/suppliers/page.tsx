@@ -2,6 +2,7 @@
 
 import { SimpleInsertManager } from "@/components/SimpleInsertManager";
 import { useLanguage } from "@/components/LanguageProvider";
+import { SupplierProductManager } from "@/components/SupplierProductManager";
 
 export default function SuppliersPage() {
   const { locale } = useLanguage();
@@ -26,6 +27,9 @@ export default function SuppliersPage() {
             { name: "email", placeholder: "Email", placeholderZh: "邮箱", type: "email" },
           ]}
         />
+      </div>
+      <div className="mt-8">
+        <SupplierProductManager />
       </div>
     </div>
   );
