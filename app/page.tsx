@@ -19,6 +19,13 @@ export default function Home() {
   const [demoProducts, setDemoProducts] = useState<Record<string, DemoProduct>>({});
 
   useEffect(() => {
+    document.title =
+      locale === "zh"
+        ? "产品数字护照欧盟合规解决方案 | GREANLEAN DPP"
+        : "EU Digital Product Passport Compliance Solution | GREANLEAN DPP";
+  }, [locale]);
+
+  useEffect(() => {
     let active = true;
 
     async function loadDemoProducts() {

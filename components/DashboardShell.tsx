@@ -19,6 +19,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       ? {
         overview: "后台首页",
         products: "产品中心",
+        leads: "客户提交",
         suppliers: "供应商库",
         importData: "批量导入",
         materials: "材料快录",
@@ -30,6 +31,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     : {
         overview: "Dashboard",
         products: "Product Hub",
+        leads: "Customer Submissions",
         suppliers: "Supplier Library",
         importData: "Bulk Import",
         materials: "Materials Quick Entry",
@@ -42,9 +44,30 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const nav = [
     [t.overview, "/dashboard"],
     [t.products, "/dashboard/products"],
+    [t.leads, "/dashboard/leads"],
     [t.importData, "/dashboard/import"],
     [t.suppliers, "/dashboard/suppliers"],
   ];
+
+  useEffect(() => {
+    const extraTitles: Record<string, string> = {
+      "/dashboard/materials": t.materials,
+      "/dashboard/esg": t.esg,
+      "/dashboard/certificates": t.certificates,
+    };
+    const titleEntries = [
+      [t.overview, "/dashboard"],
+      [t.products, "/dashboard/products"],
+      [t.leads, "/dashboard/leads"],
+      [t.importData, "/dashboard/import"],
+      [t.suppliers, "/dashboard/suppliers"],
+    ];
+    const title =
+      extraTitles[pathname] ||
+      titleEntries.sort((a, b) => b[1].length - a[1].length).find(([, href]) => pathname === href || pathname.startsWith(`${href}/`))?.[0] ||
+      t.workspace;
+    document.title = `${title} | GREANLEAN DPP`;
+  }, [pathname, t.certificates, t.esg, t.importData, t.leads, t.materials, t.overview, t.products, t.suppliers, t.workspace]);
 
   function withLocale(href: string) {
     return `${href}?lang=${locale}`;

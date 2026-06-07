@@ -219,7 +219,11 @@ alter table public.product_documents enable row level security;
 alter table public.product_data_governance enable row level security;
 
 drop policy if exists "Anyone can create leads" on public.leads;
-create policy "Anyone can create leads" on public.leads for insert to anon with check (true);
+create policy "Anyone can create leads" on public.leads for insert to anon, authenticated with check (true);
+drop policy if exists "Authenticated can read leads" on public.leads;
+create policy "Authenticated can read leads" on public.leads for select to authenticated using (true);
+drop policy if exists "Authenticated can update leads" on public.leads;
+create policy "Authenticated can update leads" on public.leads for update to authenticated using (true) with check (true);
 
 drop policy if exists "Authenticated can manage products" on public.products;
 create policy "Authenticated can manage products" on public.products for all to authenticated using (true) with check (true);

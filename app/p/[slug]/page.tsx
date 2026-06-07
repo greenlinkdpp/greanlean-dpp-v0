@@ -1,9 +1,24 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { createSupabaseClient } from "@/lib/supabase";
 import { PublicDppClient } from "@/components/PublicDppClient";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const data = await getData(decodeURIComponent(params.slug));
+  if (!data) {
+    return { title: "DPP Not Found" };
+  }
+  const product = data.product || {};
+  const name = product.name || product.name_zh || "Digital Product Passport";
+  const identifier = product.dpp_id || product.public_slug || params.slug;
+  return {
+    title: `${name} - ${identifier}`,
+    description: product.description || product.description_zh || "GREANLEAN digital product passport.",
+  };
+}
 
 async function safeSelect(supabase: ReturnType<typeof createSupabaseClient>, table: string, productId: string, orderBy = "created_at") {
   try {
