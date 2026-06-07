@@ -2,6 +2,9 @@ import { notFound } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase";
 import { PublicDppClient } from "@/components/PublicDppClient";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function safeSelect(supabase: ReturnType<typeof createSupabaseClient>, table: string, productId: string, orderBy = "created_at") {
   try {
     const { data } = await supabase.from(table).select("*").eq("product_id", productId).order(orderBy, { ascending: orderBy.includes("date") });

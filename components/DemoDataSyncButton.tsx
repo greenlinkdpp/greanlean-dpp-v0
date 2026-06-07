@@ -102,9 +102,9 @@ const furnitureProduct: ProductPayload = {
 
 async function upsertProduct(supabase: ReturnType<typeof createSupabaseClient>, payload: ProductPayload, preferSku = false) {
   const { data: bySkuRows } = preferSku
-    ? await supabase.from("products").select("id, public_slug").eq("sku", payload.sku).limit(1)
+    ? await supabase.from("products").select("id, public_slug, main_image").eq("sku", payload.sku).limit(1)
     : { data: [] };
-  const { data: bySlugRows } = await supabase.from("products").select("id, sku").eq("public_slug", payload.public_slug).limit(1);
+  const { data: bySlugRows } = await supabase.from("products").select("id, sku, main_image").eq("public_slug", payload.public_slug).limit(1);
   const bySku = bySkuRows?.[0] || null;
   const bySlug = bySlugRows?.[0] || null;
   const target = bySku || bySlug;
@@ -112,6 +112,10 @@ async function upsertProduct(supabase: ReturnType<typeof createSupabaseClient>, 
   const updatePayload = {
     ...payload,
     public_slug: bySku && bySlug && bySku.id !== bySlug.id ? bySku.public_slug || payload.public_slug : payload.public_slug,
+    main_image:
+      target?.main_image && payload.main_image === "/images/demo-wpc-flooring.svg"
+        ? target.main_image
+        : payload.main_image,
     updated_at: new Date().toISOString(),
   };
 

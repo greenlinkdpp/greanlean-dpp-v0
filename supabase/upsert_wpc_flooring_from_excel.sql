@@ -56,7 +56,7 @@ begin
       status = 'published',
       dpp_id = 'DPP-WPC-MS140K25B',
       public_slug = 'demo-wpc-flooring',
-      main_image = '/images/demo-wpc-flooring.svg',
+      main_image = coalesce(nullif(main_image, ''), '/images/demo-wpc-flooring.svg'),
       care_instructions = 'Outdoor decking use. Clean with neutral detergent and water; avoid strong solvents and prolonged high-temperature exposure.',
       care_instructions_zh = '用于户外 decking。建议使用中性清洁剂和清水清洁，避免强溶剂和长期高温暴晒。',
       repair_instructions = 'Replaceable decking panels. Use screw-and-clip disassembly and keep batch W2605-05 spare planks for colour matching.',
