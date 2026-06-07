@@ -212,7 +212,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           azoLimit: "禁用芳香胺 < 30 mg/kg",
           msdsLimit: "染整助剂和相关化学品文件",
           downloadReport: "下载报告",
-          performanceTitle: "纺织品技术性能指标",
+          performanceTitle: "产品性能摘要",
           washDurability: "面料耐洗性",
           tensileStrength: "拉伸强度（经向）",
           colorFastness: "颜色牢度",
@@ -439,7 +439,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           azoLimit: "Restricted aromatic amines < 30 mg/kg",
           msdsLimit: "Dyeing auxiliaries and related chemical files",
           downloadReport: "Download report",
-          performanceTitle: "Textile technical performance",
+          performanceTitle: "Product performance summary",
           washDurability: "Wash durability",
           tensileStrength: "Tensile strength (warp)",
           colorFastness: "Colour fastness",
@@ -748,6 +748,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.minimumLifetime, locale === "zh" ? "2-3 年" : "2-3 years"],
         [t.testBasis, t.performanceBasis],
       ];
+  const performanceMetrics = performanceItems.filter(([label]) => label !== t.testBasis).slice(0, 5);
+  const performanceBasis = performanceItems.find(([label]) => label === t.testBasis);
   const chemicalRows = isElectronics
     ? [
         {
@@ -1502,15 +1504,19 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </Section>}
 
         {viewMode === "detail" && <Section id="performance" title={t.productPerformance} icon="shield">
-          <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-            <DataCard title={t.performanceTitle} icon="shield" surface="soft">
-              <InfoGrid items={performanceItems} locale={locale} />
-            </DataCard>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {performanceItems.slice(0, 5).map(([label, value]) => (
+          <div className="space-y-4">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {performanceMetrics.map(([label, value]) => (
                 <PerformanceSummaryCard key={label} label={label} value={value} locale={locale} icon="check" />
               ))}
             </div>
+            {performanceBasis ? (
+              <DataCard title={t.testBasis} icon="file" surface="soft">
+                <p className="text-sm font-semibold leading-7 text-slate-700">
+                  {valueOrDash(performanceBasis[1], locale)}
+                </p>
+              </DataCard>
+            ) : null}
           </div>
         </Section>}
 
