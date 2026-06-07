@@ -77,7 +77,7 @@ export default function DashboardPage() {
     { title: t.certificates, desc: t.certificatesDesc, href: "/dashboard/products", action: t.editInProduct },
     { title: t.consumer, desc: t.consumerDesc, href: "/dashboard/products", action: t.editInProduct },
     { title: t.governance, desc: t.governanceDesc, href: "/dashboard/import", action: t.secondary },
-    { title: t.publish, desc: t.publishDesc, href: "/p/demo-organic-cotton-tshirt?lang=zh", action: t.open },
+    { title: t.publish, desc: t.publishDesc, href: "/p/DPP-DEMO-001?lang=zh", action: t.open },
   ];
 
   return (

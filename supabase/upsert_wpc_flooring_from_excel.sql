@@ -141,7 +141,7 @@ begin
   values (
     flooring_id, 12, 120, 15, 0.7, 30,
     'No SVHC declared. REACH, VOC and ISO9001 evidence are represented from the Excel document list; carbon, electricity, water, VOC and ISO14001 fields are estimated demo assumptions.',
-    '/api/dpp-export?format=pdf&product=demo-wpc-flooring',
+    '/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B',
     'Estimated screening profile: 12 kg CO2e/m2, 15 kWh electricity, 120 L water, 30% renewable-energy ratio and 70% waste recycling rate; based on WPC decking industry assumptions and supplied product data.',
     'Greanlean demo data review'
   );
@@ -165,11 +165,11 @@ begin
     certificate_number, issuer, issue_date, expiry_date, certificate_url, verification_status
   )
   values
-    (flooring_id, 'EU Declaration of Performance', '欧盟性能声明 DoP', 'Construction products', '建筑产品', 'DOP-MS140K25B-W2605-05', 'HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD', '2026-05-20'::date, '2027-05-19'::date, '/api/declaration?product=demo-wpc-flooring', 'verified'),
-    (flooring_id, 'FSC Certificate', 'FSC 证书', 'Chain of custody', '产销监管链', 'BV-COC-154663', 'Bureau Veritas Certification (Demo)', '2026-05-20'::date, '2027-05-19'::date, '/api/dpp-export?format=pdf&product=demo-wpc-flooring', 'verified'),
-    (flooring_id, 'VOC Test Report', 'VOC 检测报告', 'Emission test', '排放检测', 'VOC-WPC-2026-018', 'Demo Building Materials Testing Institute', '2026-05-20'::date, '2027-05-19'::date, '/api/chemical-document?type=heavy-metals&product=demo-wpc-flooring', 'verified'),
-    (flooring_id, 'REACH Declaration', 'REACH 声明', 'Chemical compliance', '化学合规', 'REACH-WPC-2026-026', 'Demo Chemical Testing Institute', '2026-05-20'::date, '2027-05-19'::date, '/api/chemical-document?type=svhc&product=demo-wpc-flooring', 'verified'),
-    (flooring_id, 'ISO9001 Certificate', 'ISO9001 证书', 'Quality management', '质量管理', 'ISO9001-MS140K25B-DEMO', 'Demo QMS Certification Body', '2026-05-20'::date, '2027-05-19'::date, '/api/dpp-export?format=pdf&product=demo-wpc-flooring', 'verified');
+    (flooring_id, 'EU Declaration of Performance', '欧盟性能声明 DoP', 'Construction products', '建筑产品', 'DOP-MS140K25B-W2605-05', 'HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD', '2026-05-20'::date, '2027-05-19'::date, '/api/declaration?product=DPP-WPC-MS140K25B', 'verified'),
+    (flooring_id, 'FSC Certificate', 'FSC 证书', 'Chain of custody', '产销监管链', 'BV-COC-154663', 'Bureau Veritas Certification (Demo)', '2026-05-20'::date, '2027-05-19'::date, '/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B', 'verified'),
+    (flooring_id, 'VOC Test Report', 'VOC 检测报告', 'Emission test', '排放检测', 'VOC-WPC-2026-018', 'Demo Building Materials Testing Institute', '2026-05-20'::date, '2027-05-19'::date, '/api/chemical-document?type=heavy-metals&product=DPP-WPC-MS140K25B', 'verified'),
+    (flooring_id, 'REACH Declaration', 'REACH 声明', 'Chemical compliance', '化学合规', 'REACH-WPC-2026-026', 'Demo Chemical Testing Institute', '2026-05-20'::date, '2027-05-19'::date, '/api/chemical-document?type=svhc&product=DPP-WPC-MS140K25B', 'verified'),
+    (flooring_id, 'ISO9001 Certificate', 'ISO9001 证书', 'Quality management', '质量管理', 'ISO9001-MS140K25B-DEMO', 'Demo QMS Certification Body', '2026-05-20'::date, '2027-05-19'::date, '/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B', 'verified');
 
   insert into public.product_consumer_transparency (
     product_id, brand_story, brand_story_zh, sustainability_story, sustainability_story_zh,
@@ -193,20 +193,20 @@ begin
   values (
     flooring_id, '51e0f9f3-3c7b-45c0-9b8f-demofloor01', '06900000000203',
     'STYLE-WPC-MS140K25B', 'W2605-05', 'TRACE-W2605-05',
-    'https://www.greanlean.com/p/demo-wpc-flooring', 'QR-DPP-WPC-001', 'NFC-RESERVED', 'RFID-PALLET-RESERVED'
+    'https://www.greanlean.com/p/DPP-WPC-MS140K25B', 'QR-DPP-WPC-001', 'NFC-RESERVED', 'RFID-PALLET-RESERVED'
   );
 
   insert into public.product_documents (
     product_id, document_name, document_type, file_url, file_size, language, uploaded_by, version
   )
   values
-    (flooring_id, 'EU Declaration of Performance', 'DoP', '/api/declaration?product=demo-wpc-flooring', '390 KB', 'EN / ZH', 'greanlean admin', 'v1.0'),
-    (flooring_id, 'FSC Certificate', 'FSC', '/api/dpp-export?format=pdf&product=demo-wpc-flooring', '460 KB', 'EN', 'greanlean admin', 'v1.0'),
-    (flooring_id, 'REACH Declaration', 'REACH', '/api/chemical-document?type=svhc&product=demo-wpc-flooring', '410 KB', 'EN', 'greanlean admin', 'v1.0'),
-    (flooring_id, 'VOC Test Report', 'VOC', '/api/chemical-document?type=heavy-metals&product=demo-wpc-flooring', '520 KB', 'EN', 'greanlean admin', 'v1.0'),
-    (flooring_id, 'ISO9001 Certificate', 'ISO9001', '/api/dpp-export?format=pdf&product=demo-wpc-flooring', '440 KB', 'EN', 'greanlean admin', 'v1.0'),
-    (flooring_id, 'Installation Guide', 'Installation', '/api/dpp-export?format=pdf&product=demo-wpc-flooring', '680 KB', 'EN / ZH', 'greanlean admin', 'v1.0'),
-    (flooring_id, 'Warranty Document', 'Warranty', '/api/dpp-export?format=pdf&product=demo-wpc-flooring', '360 KB', 'EN / ZH', 'greanlean admin', 'v1.0');
+    (flooring_id, 'EU Declaration of Performance', 'DoP', '/api/declaration?product=DPP-WPC-MS140K25B', '390 KB', 'EN / ZH', 'greanlean admin', 'v1.0'),
+    (flooring_id, 'FSC Certificate', 'FSC', '/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B', '460 KB', 'EN', 'greanlean admin', 'v1.0'),
+    (flooring_id, 'REACH Declaration', 'REACH', '/api/chemical-document?type=svhc&product=DPP-WPC-MS140K25B', '410 KB', 'EN', 'greanlean admin', 'v1.0'),
+    (flooring_id, 'VOC Test Report', 'VOC', '/api/chemical-document?type=heavy-metals&product=DPP-WPC-MS140K25B', '520 KB', 'EN', 'greanlean admin', 'v1.0'),
+    (flooring_id, 'ISO9001 Certificate', 'ISO9001', '/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B', '440 KB', 'EN', 'greanlean admin', 'v1.0'),
+    (flooring_id, 'Installation Guide', 'Installation', '/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B', '680 KB', 'EN / ZH', 'greanlean admin', 'v1.0'),
+    (flooring_id, 'Warranty Document', 'Warranty', '/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B', '360 KB', 'EN / ZH', 'greanlean admin', 'v1.0');
 
   insert into public.product_data_governance (
     product_id, data_source, data_owner, audit_status, data_quality_score

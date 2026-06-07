@@ -453,7 +453,7 @@ begin
     0.38,
     4,
     'Restricted substance list and supplier declarations reviewed.',
-    '/api/dpp-export?format=pdf&product=demo-organic-cotton-tshirt',
+    '/api/dpp-export?format=pdf&product=DPP-DEMO-001',
     'Internal screening LCA based on factory energy, material composition and logistics assumptions.',
     'greanlean review'
   );
@@ -490,7 +490,7 @@ begin
       'Demo Certification Body',
       '2026-01-15'::date,
       '2027-01-14'::date,
-      '/api/chemical-document?type=svhc&product=demo-organic-cotton-tshirt',
+      '/api/chemical-document?type=svhc&product=DPP-DEMO-001',
       'verified'
     ),
     (
@@ -503,7 +503,7 @@ begin
       'Demo Textile Testing Institute',
       '2026-02-01'::date,
       '2027-01-31'::date,
-      '/api/chemical-document?type=heavy-metals&product=demo-organic-cotton-tshirt',
+      '/api/chemical-document?type=heavy-metals&product=DPP-DEMO-001',
       'verified'
     );
 
@@ -533,7 +533,7 @@ begin
     'STYLE-TEE-ORG-001',
     'BATCH-2026-001',
     'DEMO-TEE-0001',
-    'https://www.greanlean.com/p/demo-organic-cotton-tshirt',
+    'https://www.greanlean.com/p/DPP-DEMO-001',
     'QR-DPP-DEMO-001',
     'NFC-RESERVED',
     'RFID-RESERVED'
@@ -546,7 +546,7 @@ begin
     demo_product_id,
     'Demo LCA Summary',
     'LCA',
-    '/api/dpp-export?format=pdf&product=demo-organic-cotton-tshirt',
+    '/api/dpp-export?format=pdf&product=DPP-DEMO-001',
     '420 KB',
     'EN / ZH',
     'greanlean admin',

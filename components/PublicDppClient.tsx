@@ -575,6 +575,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       : isFurniture
         ? "https://environment.ec.europa.eu/topics/waste-and-recycling/waste-framework-directive_en"
         : "https://www.recyclenow.com/recycle-an-item/clothing-textiles";
+  const dppProductRef = product.dpp_id || product.public_slug || "DPP-DEMO-001";
   const qrUrl = `/api/qr?url=${encodeURIComponent(dppUrl)}`;
 
   const compositionMaterials = useMemo(() => {
@@ -660,7 +661,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.sgtin, sgtin],
     [t.batch, firstIdentity?.batch_id],
     [t.serial, firstIdentity?.serial_id],
-    [t.digitalLink, firstIdentity?.digital_link_url],
+    [t.digitalLink, dppUrl],
   ];
   const heroDetails: Array<[string, any]> = [
     [t.sku, product.sku],
@@ -670,64 +671,33 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`],
     [t.lastUpdatedLabel, t.dataLastUpdatedValue],
   ];
-  const heroSummary: Array<[string, any]> = [
-    [
-      t.complianceScope,
-      isElectronics
-        ? locale === "zh"
-          ? "ESPR / CE / RoHS / REACH / WEEE / 电池与电子废弃物要求"
-          : "ESPR / CE / RoHS / REACH / WEEE / battery and e-waste requirements"
-        : isFlooring
-          ? locale === "zh"
-            ? "ESPR / REACH / VOC / 建筑产品性能声明 / 建筑废弃物回收"
-            : "ESPR / REACH / VOC / construction-product performance declaration / construction-waste recovery"
-          : isFurniture
-            ? locale === "zh"
-              ? "ESPR / REACH / 耐久性测试 / 可维修性 / 家具再使用与回收"
-              : "ESPR / REACH / durability testing / repairability / furniture reuse and recovery"
-        : t.complianceScopeValue,
-    ],
-    [
-      t.materialProfile,
-      isElectronics
-        ? locale === "zh"
-          ? "再生 ABS/PC 外壳、锂电池、PCB、硅胶耳塞与铜磁件"
-          : "Recycled ABS/PC housing, lithium-ion battery, PCB, silicone ear tips, copper and magnets"
-        : isFlooring
-          ? locale === "zh"
-            ? "60% 木纤维 + 30% 再生 HDPE + 7% 稳定剂助剂 + 3% 棕色母粒"
-            : "60% wood fiber + 30% recycled HDPE + 7% stabilizer additives + 3% brown masterbatch"
-          : isFurniture
-            ? locale === "zh"
-              ? "42% 钢制框架 + 28% 再生 PP/PA 塑料件 + 30% 网布与海绵"
-              : "42% steel frame + 28% recycled PP/PA plastic parts + 30% mesh and foam"
-        : t.materialProfileValue,
-    ],
-    [
-      t.performanceSnapshot,
-      isElectronics
-        ? locale === "zh"
-          ? "续航 8 小时；充电循环 ≥500 次；IPX4 防泼溅"
-          : "8h battery life; >=500 charge cycles; IPX4 splash resistance"
-        : isFlooring
-          ? locale === "zh"
-            ? "140x25mm；2.55kg/m；SANDING 表面；户外 decking 使用"
-            : "140x25mm; 2.55kg/m; SANDING finish; outdoor decking use"
-          : isFurniture
-            ? locale === "zh"
-              ? "耐久性测试通过；可更换坐垫/脚轮/气压杆；使用寿命 7-10 年"
-              : "Durability test passed; replaceable cushion/castors/gas lift; 7-10 year service life"
-        : t.performanceSnapshotValue,
-    ],
-    [
-      t.nextAction,
-      isFurniture
-        ? locale === "zh"
-          ? "查看耐久性报告、维修备件、拆解回收指南和 DPP 数据下载"
-          : "View durability report, spare parts, disassembly guidance and DPP downloads"
-        : t.nextActionValue,
-    ],
-  ];
+  const heroFocusCards: Array<[string, any, IconName]> = isElectronics
+    ? [
+        [t.complianceScope, locale === "zh" ? "CE / RoHS / REACH / WEEE" : "CE / RoHS / REACH / WEEE", "shield"],
+        [locale === "zh" ? "电池与回收" : "Battery and WEEE", locale === "zh" ? "UN38.3 / 电池 MSDS" : "UN38.3 / battery MSDS", "file"],
+        [t.performanceSnapshot, locale === "zh" ? "8 小时 / ≥500 次" : "8h / >=500 cycles", "check"],
+        [t.nextAction, locale === "zh" ? "维修 / WEEE 回收" : "Repair / WEEE collection", "recycle"],
+      ]
+    : isFlooring
+      ? [
+          [locale === "zh" ? "规格尺寸" : "Dimensions", "140x25mm / 2.55kg/m", "box"],
+          [locale === "zh" ? "材料配方" : "Material formula", locale === "zh" ? "60% 木纤维 / 30% 再生 HDPE" : "60% wood fiber / 30% recycled HDPE", "layers"],
+          [locale === "zh" ? "合规证据" : "Compliance evidence", locale === "zh" ? "REACH / VOC / FSC / ISO9001" : "REACH / VOC / FSC / ISO9001", "shield"],
+          [locale === "zh" ? "回收路径" : "Recovery route", locale === "zh" ? "机械回收 / 移除金属件" : "Mechanical recycling / remove metal", "recycle"],
+        ]
+      : isFurniture
+        ? [
+            [t.performanceSnapshot, locale === "zh" ? "耐久性测试 / 7-10 年" : "Durability tested / 7-10 years", "check"],
+            [locale === "zh" ? "可维修部件" : "Repairable modules", locale === "zh" ? "坐垫 / 扶手 / 脚轮 / 气压杆" : "Cushion / armrests / castors / gas lift", "tag"],
+            [t.materialProfile, locale === "zh" ? "钢材 / 再生塑料 / 网布" : "Steel / recycled plastic / mesh", "layers"],
+            [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
+          ]
+        : [
+            [t.materialProfile, locale === "zh" ? "95% 有机棉 / 5% 再生涤纶" : "95% organic cotton / 5% recycled polyester", "layers"],
+            [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
+            [t.carbon, `${carbonCurrent} kg CO2e`, "carbon"],
+            [t.nextAction, locale === "zh" ? "护理 / 维修 / 纺织回收" : "Care / repair / textile recycling", "recycle"],
+          ];
   const performanceItems: Array<[string, any]> = isElectronics
     ? [
         [locale === "zh" ? "单次续航" : "Battery life", locale === "zh" ? "8 小时" : "8 hours"],
@@ -1245,28 +1215,16 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               {pick(product, locale, "name", "name_zh")}
             </h1>
 
-            <p className="mt-6 max-w-3xl text-base leading-8 text-slate-200 md:text-lg">
-              {pick(product, locale, "description", "description_zh")}
-            </p>
-
             <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {heroDetails.map(([label, value]) => (
                 <Info key={label} label={label} value={value} locale={locale} variant="dark" />
               ))}
             </div>
 
-            <div className="mt-5 overflow-hidden rounded-lg border border-white/10 bg-white/10 backdrop-blur">
-              <div className="border-b border-white/10 px-4 py-3">
-                <p className="text-sm font-black text-brand-100">{t.passportSummary}</p>
-              </div>
-              <div className="grid gap-0 md:grid-cols-2">
-                {heroSummary.map(([label, value]) => (
-                  <div key={label} className="border-b border-white/10 px-4 py-3 last:border-b-0 md:border-r md:even:border-r-0">
-                    <p className="text-xs font-bold uppercase text-slate-400">{label}</p>
-                    <p className="mt-1 text-sm font-semibold leading-6 text-white">{valueOrDash(value, locale)}</p>
-                  </div>
-                ))}
-              </div>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {heroFocusCards.map(([label, value, icon]) => (
+                <HeroFocusCard key={label} label={label} value={value} locale={locale} icon={icon} />
+              ))}
             </div>
           </div>
 
@@ -1302,10 +1260,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 alt="DPP QR Code"
                 src={qrUrl}
               />
-              <p className="mt-3 break-all text-xs leading-5 text-slate-500">{dppUrl}</p>
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
                 <a
-                  href={`/api/dpp-export?format=pdf&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`}
+                  href={`/api/dpp-export?format=pdf&lang=${locale}&product=${encodeURIComponent(dppProductRef)}`}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center justify-center rounded-lg border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm font-black text-blue-700 transition hover:bg-blue-600 hover:text-white"
@@ -1313,7 +1270,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                   {t.downloadPdf}
                 </a>
                 <a
-                  href={`/api/dpp-export?format=json&lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`}
+                  href={`/api/dpp-export?format=json&lang=${locale}&product=${encodeURIComponent(dppProductRef)}`}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm font-black text-emerald-700 transition hover:bg-emerald-600 hover:text-white"
@@ -2038,6 +1995,22 @@ function Badge({ children, tone = "light" }: { children: ReactNode; tone?: "ligh
       ? "rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm font-semibold text-slate-100 backdrop-blur"
       : "rounded-full bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700";
   return <span className={className}>{children}</span>;
+}
+
+function HeroFocusCard({ label, value, locale, icon }: { label: string; value: any; locale: Locale; icon: IconName }) {
+  return (
+    <div className="rounded-lg border border-white/10 bg-white/10 p-4 shadow-sm backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-brand-300/50 hover:bg-white/15">
+      <div className="flex items-start gap-3">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-400/15 text-brand-100 ring-1 ring-brand-300/25">
+          <Icon name={icon} className="h-5 w-5" />
+        </span>
+        <div className="min-w-0">
+          <p className="text-xs font-black uppercase text-slate-400">{label}</p>
+          <p className="mt-2 text-sm font-black leading-6 text-white">{valueOrDash(value, locale)}</p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function Metric({ label, value, locale, icon }: { label: string; value: any; locale: Locale; icon: IconName }) {

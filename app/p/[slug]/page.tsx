@@ -11,17 +11,34 @@ async function safeSelect(supabase: ReturnType<typeof createSupabaseClient>, tab
   }
 }
 
-async function getData(slug: string) {
+const demoByIdentifier: Record<string, "tshirt" | "electronics" | "flooring" | "furniture"> = {
+  "demo-organic-cotton-tshirt": "tshirt",
+  "DPP-DEMO-001": "tshirt",
+  "demo-wireless-earbuds": "electronics",
+  "DPP-AUDIO-DEMO-001": "electronics",
+  "demo-wpc-flooring": "flooring",
+  "DPP-WPC-MS140K25B": "flooring",
+  "demo-office-chair": "furniture",
+  "DPP-FURN-DEMO-001": "furniture",
+};
+
+async function getData(identifier: string) {
   const supabase = createSupabaseClient();
-  const { data: product } = await supabase.from("products").select("*").eq("public_slug", slug).eq("status", "published").single();
+  const { data: productByDpp } = await supabase.from("products").select("*").eq("dpp_id", identifier).eq("status", "published").maybeSingle();
+  const { data: productBySlug } = productByDpp
+    ? { data: null }
+    : await supabase.from("products").select("*").eq("public_slug", identifier).eq("status", "published").maybeSingle();
+  const product = productByDpp || productBySlug;
   if (!product) {
-    if (slug === "demo-wireless-earbuds") return withElectronicsDppData();
-    if (slug === "demo-wpc-flooring") return withFlooringDppData();
-    if (slug === "demo-office-chair") return withFurnitureDppData();
+    const demo = demoByIdentifier[identifier];
+    if (demo === "electronics") return withElectronicsDppData();
+    if (demo === "flooring") return withFlooringDppData();
+    if (demo === "furniture") return withFurnitureDppData();
+    if (demo === "tshirt") return withDemoDppData({ product: { id: "demo-product" }, materials: [], certificates: [], esg: [], bom: [], traceability: [], circularity: [], consumerTransparency: [], digitalIdentity: [], documents: [], governance: [] });
     return null;
   }
 
-  if (slug === "demo-wpc-flooring") {
+  if (product.public_slug === "demo-wpc-flooring" || product.dpp_id === "DPP-WPC-MS140K25B") {
     return withFlooringDppData({
       product: {
         id: product.id,
@@ -44,19 +61,19 @@ async function getData(slug: string) {
   ]);
   const data = { product, materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance };
 
-  if (slug === "demo-organic-cotton-tshirt") {
+  if (product.public_slug === "demo-organic-cotton-tshirt" || product.dpp_id === "DPP-DEMO-001") {
     return withDemoDppData(data);
   }
 
-  if (slug === "demo-wireless-earbuds") {
+  if (product.public_slug === "demo-wireless-earbuds" || product.dpp_id === "DPP-AUDIO-DEMO-001") {
     return withElectronicsDppData(data);
   }
 
-  if (slug === "demo-wpc-flooring") {
+  if (product.public_slug === "demo-wpc-flooring" || product.dpp_id === "DPP-WPC-MS140K25B") {
     return withFlooringDppData(data);
   }
 
-  if (slug === "demo-office-chair") {
+  if (product.public_slug === "demo-office-chair" || product.dpp_id === "DPP-FURN-DEMO-001") {
     return withFurnitureDppData(data);
   }
 
@@ -153,7 +170,7 @@ function withDemoDppData(data: any) {
             issuer: "Demo Certification Body",
             issue_date: "2026-01-15",
             expiry_date: "2027-01-14",
-            certificate_url: "/api/chemical-document?type=svhc&product=demo-organic-cotton-tshirt",
+            certificate_url: "/api/chemical-document?type=svhc&product=DPP-DEMO-001",
             verification_status: "verified",
           },
           {
@@ -167,7 +184,7 @@ function withDemoDppData(data: any) {
             issuer: "Demo Textile Testing Institute",
             issue_date: "2026-02-01",
             expiry_date: "2027-01-31",
-            certificate_url: "/api/chemical-document?type=heavy-metals&product=demo-organic-cotton-tshirt",
+            certificate_url: "/api/chemical-document?type=heavy-metals&product=DPP-DEMO-001",
             verification_status: "verified",
           },
         ],
@@ -183,7 +200,7 @@ function withDemoDppData(data: any) {
             waste_generation: 0.38,
             recycled_content: 4,
             chemical_management: "Restricted substance list and supplier declarations reviewed.",
-            lca_report_url: "/api/dpp-export?format=pdf&product=demo-organic-cotton-tshirt",
+            lca_report_url: "/api/dpp-export?format=pdf&product=DPP-DEMO-001",
             methodology: "Internal screening LCA based on factory energy, material composition and logistics assumptions.",
             verified_by: "greanlean review",
           },
@@ -308,7 +325,7 @@ function withDemoDppData(data: any) {
             style_id: "STYLE-TEE-ORG-001",
             batch_id: "BATCH-2026-001",
             serial_id: "DEMO-TEE-0001",
-            digital_link_url: "https://www.greanlean.com/p/demo-organic-cotton-tshirt",
+            digital_link_url: "https://www.greanlean.com/p/DPP-DEMO-001",
             qr_code_id: "QR-DPP-DEMO-001",
             nfc_id: "NFC-RESERVED",
             rfid_epc: "RFID-RESERVED",
@@ -322,7 +339,7 @@ function withDemoDppData(data: any) {
             product_id: productId,
             document_name: "Demo LCA Summary",
             document_type: "LCA",
-            file_url: "/api/dpp-export?format=pdf&product=demo-organic-cotton-tshirt",
+            file_url: "/api/dpp-export?format=pdf&product=DPP-DEMO-001",
             file_size: "420 KB",
             language: "EN / ZH",
             uploaded_by: "greanlean admin",
@@ -473,7 +490,7 @@ function withElectronicsDppData(data?: any) {
             issuer: "Greanlean Electronics Demo Manufacturer",
             issue_date: "2026-05-20",
             expiry_date: "2027-05-19",
-            certificate_url: "/api/declaration?product=demo-wireless-earbuds",
+            certificate_url: "/api/declaration?product=DPP-AUDIO-DEMO-001",
             verification_status: "verified",
           },
           {
@@ -487,7 +504,7 @@ function withElectronicsDppData(data?: any) {
             issuer: "SGS-CSTC Standards Technical Services Co., Ltd. (Demo)",
             issue_date: "2026-05-18",
             expiry_date: "2027-05-17",
-            certificate_url: "/api/chemical-document?type=heavy-metals&product=demo-wireless-earbuds",
+            certificate_url: "/api/chemical-document?type=heavy-metals&product=DPP-AUDIO-DEMO-001",
             verification_status: "verified",
           },
           {
@@ -501,7 +518,7 @@ function withElectronicsDppData(data?: any) {
             issuer: "Demo Chemical Testing Institute",
             issue_date: "2026-05-20",
             expiry_date: "2027-05-19",
-            certificate_url: "/api/chemical-document?type=svhc&product=demo-wireless-earbuds",
+            certificate_url: "/api/chemical-document?type=svhc&product=DPP-AUDIO-DEMO-001",
             verification_status: "verified",
           },
         ],
@@ -517,7 +534,7 @@ function withElectronicsDppData(data?: any) {
             waste_generation: 0.22,
             recycled_content: 18,
             chemical_management: "RoHS, REACH SVHC, battery MSDS and supplier declarations reviewed.",
-            lca_report_url: "/api/dpp-export?format=pdf&product=demo-wireless-earbuds",
+            lca_report_url: "/api/dpp-export?format=pdf&product=DPP-AUDIO-DEMO-001",
             methodology: "Screening LCA based on component BOM, battery data, assembly energy and export logistics assumptions.",
             verified_by: "SGS-CSTC Standards Technical Services Co., Ltd. (Demo)",
           },
@@ -653,7 +670,7 @@ function withElectronicsDppData(data?: any) {
             style_id: "STYLE-AUDIO-001",
             batch_id: "BATCH-AUDIO-2026-001",
             serial_id: "EARBUDS-DEMO-0001",
-            digital_link_url: "https://www.greanlean.com/p/demo-wireless-earbuds",
+            digital_link_url: "https://www.greanlean.com/p/DPP-AUDIO-DEMO-001",
             qr_code_id: "QR-DPP-EARBUDS-001",
             nfc_id: "NFC-EARBUDS-001",
             rfid_epc: "RFID-RESERVED",
@@ -667,7 +684,7 @@ function withElectronicsDppData(data?: any) {
             product_id: productId,
             document_name: "EU Declaration of Conformity",
             document_type: "DoC",
-            file_url: "/api/declaration?product=demo-wireless-earbuds",
+            file_url: "/api/declaration?product=DPP-AUDIO-DEMO-001",
             file_size: "360 KB",
             language: "EN / ZH",
             uploaded_by: "greanlean admin",
@@ -678,7 +695,7 @@ function withElectronicsDppData(data?: any) {
             product_id: productId,
             document_name: "Battery MSDS",
             document_type: "MSDS",
-            file_url: "/api/chemical-document?type=msds&product=demo-wireless-earbuds",
+            file_url: "/api/chemical-document?type=msds&product=DPP-AUDIO-DEMO-001",
             file_size: "480 KB",
             language: "EN",
             uploaded_by: "greanlean admin",
@@ -858,7 +875,7 @@ function withFlooringDppData(data?: any) {
             issuer: "HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD",
             issue_date: "2026-06-04",
             expiry_date: "2027-06-03",
-            certificate_url: "/api/declaration?product=demo-wpc-flooring",
+            certificate_url: "/api/declaration?product=DPP-WPC-MS140K25B",
             verification_status: "verified",
           },
           {
@@ -872,7 +889,7 @@ function withFlooringDppData(data?: any) {
             issuer: "Demo Building Materials Testing Institute",
             issue_date: "2026-05-20",
             expiry_date: "2027-05-19",
-            certificate_url: "/api/chemical-document?type=heavy-metals&product=demo-wpc-flooring",
+            certificate_url: "/api/chemical-document?type=heavy-metals&product=DPP-WPC-MS140K25B",
             verification_status: "verified",
           },
           {
@@ -886,7 +903,7 @@ function withFlooringDppData(data?: any) {
             issuer: "Demo Chemical Testing Institute",
             issue_date: "2026-05-20",
             expiry_date: "2027-05-19",
-            certificate_url: "/api/chemical-document?type=svhc&product=demo-wpc-flooring",
+            certificate_url: "/api/chemical-document?type=svhc&product=DPP-WPC-MS140K25B",
             verification_status: "verified",
           },
           {
@@ -900,7 +917,7 @@ function withFlooringDppData(data?: any) {
             issuer: "Bureau Veritas Certification (Demo)",
             issue_date: "2026-05-20",
             expiry_date: "2027-05-19",
-            certificate_url: "/api/dpp-export?format=pdf&product=demo-wpc-flooring",
+            certificate_url: "/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B",
             verification_status: "verified",
           },
           {
@@ -914,7 +931,7 @@ function withFlooringDppData(data?: any) {
             issuer: "Demo Quality Certification Body",
             issue_date: "2026-05-20",
             expiry_date: "2027-05-19",
-            certificate_url: "/api/dpp-export?format=pdf&product=demo-wpc-flooring",
+            certificate_url: "/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B",
             verification_status: "verified",
           },
         ],
@@ -930,7 +947,7 @@ function withFlooringDppData(data?: any) {
             waste_generation: 0.7,
             recycled_content: 30,
             chemical_management: "No SVHC declared; REACH declaration, VOC test and ISO14001/ISO9001 readiness captured. Carbon, electricity and water values use demo assumptions where Excel fields were blank.",
-            lca_report_url: "/api/dpp-export?format=pdf&product=demo-wpc-flooring",
+            lca_report_url: "/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B",
             methodology: "Estimated screening profile: 12 kg CO2e/m2, 15 kWh electricity, 120 L water, 30% renewable-energy ratio and 70% waste recycling rate; based on WPC decking industry assumptions and supplied product data.",
             verified_by: "Greanlean demo data review",
           },
@@ -1082,7 +1099,7 @@ function withFlooringDppData(data?: any) {
             style_id: "STYLE-WPC-MS140K25B",
             batch_id: "W2605-05",
             serial_id: "TRACE-W2605-05",
-            digital_link_url: "https://www.greanlean.com/p/demo-wpc-flooring",
+            digital_link_url: "https://www.greanlean.com/p/DPP-WPC-MS140K25B",
             qr_code_id: "QR-DPP-WPC-001",
             nfc_id: "NFC-RESERVED",
             rfid_epc: "RFID-PALLET-RESERVED",
@@ -1096,7 +1113,7 @@ function withFlooringDppData(data?: any) {
             product_id: productId,
             document_name: "EU Declaration of Performance",
             document_type: "DoP",
-            file_url: "/api/declaration?product=demo-wpc-flooring",
+            file_url: "/api/declaration?product=DPP-WPC-MS140K25B",
             file_size: "390 KB",
             language: "EN / ZH",
             uploaded_by: "greanlean admin",
@@ -1107,7 +1124,7 @@ function withFlooringDppData(data?: any) {
             product_id: productId,
             document_name: "VOC Test Report",
             document_type: "VOC",
-            file_url: "/api/chemical-document?type=heavy-metals&product=demo-wpc-flooring",
+            file_url: "/api/chemical-document?type=heavy-metals&product=DPP-WPC-MS140K25B",
             file_size: "520 KB",
             language: "EN",
             uploaded_by: "greanlean admin",
@@ -1118,7 +1135,7 @@ function withFlooringDppData(data?: any) {
             product_id: productId,
             document_name: "FSC Certificate",
             document_type: "FSC",
-            file_url: "/api/dpp-export?format=pdf&product=demo-wpc-flooring",
+            file_url: "/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B",
             file_size: "420 KB",
             language: "EN",
             uploaded_by: "greanlean admin",
@@ -1129,7 +1146,7 @@ function withFlooringDppData(data?: any) {
             product_id: productId,
             document_name: "REACH Declaration",
             document_type: "REACH",
-            file_url: "/api/chemical-document?type=svhc&product=demo-wpc-flooring",
+            file_url: "/api/chemical-document?type=svhc&product=DPP-WPC-MS140K25B",
             file_size: "410 KB",
             language: "EN",
             uploaded_by: "greanlean admin",
@@ -1140,7 +1157,7 @@ function withFlooringDppData(data?: any) {
             product_id: productId,
             document_name: "ISO9001 Certificate",
             document_type: "ISO9001",
-            file_url: "/api/dpp-export?format=pdf&product=demo-wpc-flooring",
+            file_url: "/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B",
             file_size: "440 KB",
             language: "EN",
             uploaded_by: "greanlean admin",
@@ -1151,7 +1168,7 @@ function withFlooringDppData(data?: any) {
             product_id: productId,
             document_name: "Installation Guide",
             document_type: "Installation",
-            file_url: "/api/dpp-export?format=pdf&product=demo-wpc-flooring",
+            file_url: "/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B",
             file_size: "310 KB",
             language: "EN / ZH",
             uploaded_by: "greanlean admin",
@@ -1162,7 +1179,7 @@ function withFlooringDppData(data?: any) {
             product_id: productId,
             document_name: "Warranty Document",
             document_type: "Warranty",
-            file_url: "/api/dpp-export?format=pdf&product=demo-wpc-flooring",
+            file_url: "/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B",
             file_size: "260 KB",
             language: "EN / ZH",
             uploaded_by: "greanlean admin",
@@ -1294,7 +1311,7 @@ function withFurnitureDppData(data?: any) {
             issuer: "Demo Furniture Testing Institute",
             issue_date: "2026-05-16",
             expiry_date: "2027-05-15",
-            certificate_url: "/api/dpp-export?format=pdf&product=demo-office-chair",
+            certificate_url: "/api/dpp-export?format=pdf&product=DPP-FURN-DEMO-001",
             verification_status: "verified",
           },
           {
@@ -1308,7 +1325,7 @@ function withFurnitureDppData(data?: any) {
             issuer: "Demo Chemical Testing Institute",
             issue_date: "2026-05-20",
             expiry_date: "2027-05-19",
-            certificate_url: "/api/chemical-document?type=svhc&product=demo-office-chair",
+            certificate_url: "/api/chemical-document?type=svhc&product=DPP-FURN-DEMO-001",
             verification_status: "verified",
           },
         ],
@@ -1324,7 +1341,7 @@ function withFurnitureDppData(data?: any) {
             waste_generation: 1.4,
             recycled_content: 34,
             chemical_management: "REACH SVHC, coating heavy metals, textile contact materials and foam additives reviewed.",
-            lca_report_url: "/api/dpp-export?format=pdf&product=demo-office-chair",
+            lca_report_url: "/api/dpp-export?format=pdf&product=DPP-FURN-DEMO-001",
             methodology: "Screening LCA based on steel frame, polymer content, upholstery, assembly energy and sea freight to the EU.",
             verified_by: "Demo Furniture Testing Institute",
           },
@@ -1430,7 +1447,7 @@ function withFurnitureDppData(data?: any) {
             style_id: "STYLE-FURN-CHAIR-001",
             batch_id: "BATCH-FURN-2026-001",
             serial_id: "CHAIR-DEMO-0001",
-            digital_link_url: "https://www.greanlean.com/p/demo-office-chair",
+            digital_link_url: "https://www.greanlean.com/p/DPP-FURN-DEMO-001",
             qr_code_id: "QR-DPP-CHAIR-001",
             nfc_id: "NFC-CHAIR-RESERVED",
             rfid_epc: "RFID-CARTON-RESERVED",
@@ -1444,7 +1461,7 @@ function withFurnitureDppData(data?: any) {
             product_id: productId,
             document_name: "Furniture Durability Test Report",
             document_type: "Performance",
-            file_url: "/api/dpp-export?format=pdf&product=demo-office-chair",
+            file_url: "/api/dpp-export?format=pdf&product=DPP-FURN-DEMO-001",
             file_size: "510 KB",
             language: "EN / ZH",
             uploaded_by: "greanlean admin",
@@ -1455,7 +1472,7 @@ function withFurnitureDppData(data?: any) {
             product_id: productId,
             document_name: "REACH SVHC Screening Report",
             document_type: "Chemical",
-            file_url: "/api/chemical-document?type=svhc&product=demo-office-chair",
+            file_url: "/api/chemical-document?type=svhc&product=DPP-FURN-DEMO-001",
             file_size: "460 KB",
             language: "EN",
             uploaded_by: "greanlean admin",
@@ -1485,6 +1502,7 @@ export default async function PublicDppPage({ params, searchParams }: { params: 
   const query = new URLSearchParams();
   if (searchParams?.view === "simple" || searchParams?.view === "detail") query.set("view", searchParams.view);
   if (searchParams?.lang === "zh" || searchParams?.lang === "en") query.set("lang", searchParams.lang);
-  const dppUrl = `${site}/p/${data.product.public_slug}${query.toString() ? `?${query.toString()}` : ""}`;
+  const publicId = encodeURIComponent(data.product.dpp_id || data.product.public_slug);
+  const dppUrl = `${site}/p/${publicId}${query.toString() ? `?${query.toString()}` : ""}`;
   return <PublicDppClient data={data} dppUrl={dppUrl} />;
 }

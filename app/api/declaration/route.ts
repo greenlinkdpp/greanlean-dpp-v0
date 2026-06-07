@@ -47,10 +47,16 @@ ET`;
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const locale = url.searchParams.get("lang") === "zh" ? "zh" : "en";
-  const product = url.searchParams.get("product") || "demo-organic-cotton-tshirt";
+  const product = url.searchParams.get("product") || "DPP-DEMO-001";
+  const productKey =
+    product === "DPP-AUDIO-DEMO-001" || product === "demo-wireless-earbuds"
+      ? "demo-wireless-earbuds"
+      : product === "DPP-WPC-MS140K25B" || product === "demo-wpc-flooring"
+        ? "demo-wpc-flooring"
+        : "demo-organic-cotton-tshirt";
   const isZh = locale === "zh";
-  const isElectronics = product === "demo-wireless-earbuds";
-  const isFlooring = product === "demo-wpc-flooring";
+  const isElectronics = productKey === "demo-wireless-earbuds";
+  const isFlooring = productKey === "demo-wpc-flooring";
 
   const lines = [
     isFlooring ? "EU Declaration of Performance" : "EU Declaration of Conformity",

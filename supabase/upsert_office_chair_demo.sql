@@ -117,7 +117,7 @@ begin
   values (
     chair_id, 28.6, 76, 58, 1.4, 34,
     'REACH SVHC, coating heavy metals, textile contact materials and foam additives reviewed.',
-    '/api/dpp-export?format=pdf&product=demo-office-chair',
+    '/api/dpp-export?format=pdf&product=DPP-FURN-DEMO-001',
     'Screening LCA based on steel frame, polymer content, upholstery, assembly energy and sea freight to the EU.',
     'Demo Furniture Testing Institute'
   );
@@ -141,10 +141,10 @@ begin
   values
     (chair_id, 'Furniture Durability Test Report', '家具耐久性测试报告', 'Performance', '性能测试',
       'EN1335-CHAIR-2026-011', 'Demo Furniture Testing Institute', '2026-05-16'::date, '2027-05-15'::date,
-      '/api/dpp-export?format=pdf&product=demo-office-chair', 'verified'),
+      '/api/dpp-export?format=pdf&product=DPP-FURN-DEMO-001', 'verified'),
     (chair_id, 'REACH SVHC and Heavy Metal Screening', 'REACH SVHC 与重金属筛查', 'Chemical compliance', '化学合规',
       'REACH-FURN-2026-024', 'Demo Chemical Testing Institute', '2026-05-20'::date, '2027-05-19'::date,
-      '/api/chemical-document?type=svhc&product=demo-office-chair', 'verified');
+      '/api/chemical-document?type=svhc&product=DPP-FURN-DEMO-001', 'verified');
 
   insert into public.product_consumer_transparency (
     product_id, brand_story, brand_story_zh, sustainability_story, sustainability_story_zh,
@@ -167,7 +167,7 @@ begin
   )
   values (
     chair_id, 'e01b59d5-0f1f-4a7d-a25d-demochair01', '06900000000302', 'STYLE-FURN-CHAIR-001',
-    'BATCH-FURN-2026-001', 'CHAIR-DEMO-0001', 'https://www.greanlean.com/p/demo-office-chair',
+    'BATCH-FURN-2026-001', 'CHAIR-DEMO-0001', 'https://www.greanlean.com/p/DPP-FURN-DEMO-001',
     'QR-DPP-CHAIR-001', 'NFC-CHAIR-RESERVED', 'RFID-CARTON-RESERVED'
   );
 
@@ -175,8 +175,8 @@ begin
     product_id, document_name, document_type, file_url, file_size, language, uploaded_by, version
   )
   values
-    (chair_id, 'Furniture Durability Test Report', 'Performance', '/api/dpp-export?format=pdf&product=demo-office-chair', '510 KB', 'EN / ZH', 'greanlean admin', 'v1.0'),
-    (chair_id, 'REACH SVHC Screening Report', 'Chemical', '/api/chemical-document?type=svhc&product=demo-office-chair', '460 KB', 'EN', 'greanlean admin', 'v1.0');
+    (chair_id, 'Furniture Durability Test Report', 'Performance', '/api/dpp-export?format=pdf&product=DPP-FURN-DEMO-001', '510 KB', 'EN / ZH', 'greanlean admin', 'v1.0'),
+    (chair_id, 'REACH SVHC Screening Report', 'Chemical', '/api/chemical-document?type=svhc&product=DPP-FURN-DEMO-001', '460 KB', 'EN', 'greanlean admin', 'v1.0');
 
   insert into public.product_data_governance (
     product_id, data_source, data_owner, audit_status, data_quality_score

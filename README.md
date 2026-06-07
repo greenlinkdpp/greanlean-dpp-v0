@@ -10,10 +10,10 @@ Next.js + Supabase based Digital Product Passport demo and admin workspace for E
 - `/dashboard/products` product center
 - `/dashboard/import` CSV / XLSX import center
 - `/dashboard/suppliers` supplier library
-- `/p/demo-organic-cotton-tshirt` textile DPP demo
-- `/p/demo-wireless-earbuds` consumer electronics DPP demo
-- `/p/demo-wpc-flooring` WPC flooring DPP demo
-- `/p/demo-office-chair` furniture DPP demo
+- `/p/DPP-DEMO-001` textile DPP demo
+- `/p/DPP-AUDIO-DEMO-001` consumer electronics DPP demo
+- `/p/DPP-WPC-MS140K25B` WPC flooring DPP demo
+- `/p/DPP-FURN-DEMO-001` furniture DPP demo
 
 Each public DPP page supports:
 
@@ -35,7 +35,7 @@ Open:
 ```text
 http://localhost:3000
 http://localhost:3000/dashboard
-http://localhost:3000/p/demo-wireless-earbuds?view=detail&lang=zh
+http://localhost:3000/p/DPP-AUDIO-DEMO-001?view=detail&lang=zh
 ```
 
 Run a production check before deployment:

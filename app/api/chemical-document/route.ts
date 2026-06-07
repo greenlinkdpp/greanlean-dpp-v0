@@ -87,9 +87,15 @@ const documents: Record<string, { title: string; lines: string[] }> = {
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const type = url.searchParams.get("type") || "svhc";
-  const product = url.searchParams.get("product") || "demo-organic-cotton-tshirt";
-  const isElectronics = product === "demo-wireless-earbuds";
-  const isFlooring = product === "demo-wpc-flooring";
+  const product = url.searchParams.get("product") || "DPP-DEMO-001";
+  const productKey =
+    product === "DPP-AUDIO-DEMO-001" || product === "demo-wireless-earbuds"
+      ? "demo-wireless-earbuds"
+      : product === "DPP-WPC-MS140K25B" || product === "demo-wpc-flooring"
+        ? "demo-wpc-flooring"
+        : "demo-organic-cotton-tshirt";
+  const isElectronics = productKey === "demo-wireless-earbuds";
+  const isFlooring = productKey === "demo-wpc-flooring";
   const doc = documents[type] || documents.svhc;
   const lines = [
     doc.title,

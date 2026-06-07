@@ -10,6 +10,7 @@ import { createSupabaseClient } from "@/lib/supabase";
 
 type DemoProduct = {
   public_slug: string;
+  dpp_id: string | null;
   main_image: string | null;
 };
 
@@ -23,7 +24,7 @@ export default function Home() {
     async function loadDemoProducts() {
       const { data } = await createSupabaseClient()
         .from("products")
-        .select("public_slug, main_image")
+        .select("public_slug, dpp_id, main_image")
         .in("public_slug", ["demo-organic-cotton-tshirt", "demo-wireless-earbuds", "demo-wpc-flooring", "demo-office-chair"]);
 
       if (!active) return;
@@ -202,7 +203,7 @@ export default function Home() {
         title: t.case1,
         desc: t.case1Desc,
         image: demoProducts["demo-organic-cotton-tshirt"]?.main_image || "/images/demo-organic-cotton-tshirt.png",
-        href: "/p/demo-organic-cotton-tshirt?lang=zh",
+        href: `/p/${encodeURIComponent(demoProducts["demo-organic-cotton-tshirt"]?.dpp_id || "DPP-DEMO-001")}?lang=zh`,
         ready: true,
       },
       {
@@ -212,21 +213,21 @@ export default function Home() {
           demoProducts["demo-wireless-earbuds"]?.main_image && !demoProducts["demo-wireless-earbuds"]?.main_image?.endsWith(".svg")
             ? demoProducts["demo-wireless-earbuds"]?.main_image
             : "/images/demo-wireless-earbuds.png",
-        href: "/p/demo-wireless-earbuds?lang=zh",
+        href: `/p/${encodeURIComponent(demoProducts["demo-wireless-earbuds"]?.dpp_id || "DPP-AUDIO-DEMO-001")}?lang=zh`,
         ready: true,
       },
       {
         title: t.case3,
         desc: t.case3Desc,
         image: demoProducts["demo-wpc-flooring"]?.main_image || "/images/demo-wpc-flooring.svg",
-        href: "/p/demo-wpc-flooring?lang=zh",
+        href: `/p/${encodeURIComponent(demoProducts["demo-wpc-flooring"]?.dpp_id || "DPP-WPC-MS140K25B")}?lang=zh`,
         ready: true,
       },
       {
         title: t.case4,
         desc: t.case4Desc,
         image: demoProducts["demo-office-chair"]?.main_image || "/images/demo-office-chair.svg",
-        href: "/p/demo-office-chair?lang=zh",
+        href: `/p/${encodeURIComponent(demoProducts["demo-office-chair"]?.dpp_id || "DPP-FURN-DEMO-001")}?lang=zh`,
         ready: true,
       },
     ],
@@ -276,7 +277,7 @@ export default function Home() {
               </div>
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link href="/p/demo-organic-cotton-tshirt?lang=zh" className="btn-primary">
+                <Link href="/p/DPP-DEMO-001?lang=zh" className="btn-primary">
                   {t.primaryCta}
                 </Link>
 
@@ -402,7 +403,7 @@ export default function Home() {
 
 function HomeFooter({ t, locale }: { t: any; locale: "zh" | "en" }) {
   const links = [
-    [t.footerDemo, `/p/demo-organic-cotton-tshirt?lang=${locale}`],
+    [t.footerDemo, `/p/DPP-DEMO-001?lang=${locale}`],
     [t.footerSolutions, `/?lang=${locale}#solutions`],
     [t.footerContact, `/?lang=${locale}#contact`],
     [t.footerDashboard, `/login?lang=${locale}`],

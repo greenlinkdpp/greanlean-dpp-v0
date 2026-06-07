@@ -54,6 +54,21 @@ function compact(values: Array<string | number | null | undefined>) {
   return values.filter((value) => value !== null && value !== undefined && value !== "").join(" ");
 }
 
+const demoIdentifierMap: Record<string, string> = {
+  "demo-organic-cotton-tshirt": "demo-organic-cotton-tshirt",
+  "DPP-DEMO-001": "demo-organic-cotton-tshirt",
+  "demo-wireless-earbuds": "demo-wireless-earbuds",
+  "DPP-AUDIO-DEMO-001": "demo-wireless-earbuds",
+  "demo-wpc-flooring": "demo-wpc-flooring",
+  "DPP-WPC-MS140K25B": "demo-wpc-flooring",
+  "demo-office-chair": "demo-office-chair",
+  "DPP-FURN-DEMO-001": "demo-office-chair",
+};
+
+function demoKey(identifier: string) {
+  return demoIdentifierMap[identifier] || "";
+}
+
 async function safeSelect(supabase: ReturnType<typeof createSupabaseClient>, table: string, productId: string, orderBy = "created_at") {
   const { data } = await supabase.from(table).select("*").eq("product_id", productId).order(orderBy, { ascending: orderBy.includes("date") });
   return data || [];
@@ -118,14 +133,23 @@ function demoPayload(product: string) {
   };
 }
 
-async function databasePayload(productSlug: string) {
+async function databasePayload(productIdentifier: string) {
   const supabase = createSupabaseClient();
-  const { data: product } = await supabase
+  const { data: productByDpp } = await supabase
     .from("products")
     .select("*")
-    .eq("public_slug", productSlug)
+    .eq("dpp_id", productIdentifier)
     .eq("status", "published")
     .maybeSingle();
+  const { data: productBySlug } = productByDpp
+    ? { data: null }
+    : await supabase
+        .from("products")
+        .select("*")
+        .eq("public_slug", productIdentifier)
+        .eq("status", "published")
+        .maybeSingle();
+  const product = productByDpp || productBySlug;
 
   if (!product?.id) return null;
 
@@ -260,7 +284,11 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const format = url.searchParams.get("format") || "json";
   const product = url.searchParams.get("product") || "demo-organic-cotton-tshirt";
-  const payload = product === "demo-wpc-flooring" ? demoPayload(product) : (await databasePayload(product)) || demoPayload(product);
+  const mappedDemoKey = demoKey(product);
+  const payload =
+    mappedDemoKey === "demo-wpc-flooring"
+      ? demoPayload(mappedDemoKey)
+      : (await databasePayload(product)) || demoPayload(mappedDemoKey || product);
 
   if (format === "pdf") {
     return new Response(buildPdf(pdfLines(payload)), {
