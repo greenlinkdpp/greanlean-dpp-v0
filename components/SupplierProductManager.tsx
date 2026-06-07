@@ -53,6 +53,8 @@ export function SupplierProductManager() {
           bind: "绑定产品",
           binding: "绑定中...",
           linked: "已绑定产品",
+          allSuppliers: "全部供应商",
+          filterBySupplier: "按供应商筛选",
           refresh: "刷新",
           remove: "移除",
           empty: "暂无供应商产品关联。",
@@ -76,6 +78,8 @@ export function SupplierProductManager() {
           bind: "Link Product",
           binding: "Linking...",
           linked: "Linked products",
+          allSuppliers: "All suppliers",
+          filterBySupplier: "Filter by supplier",
           refresh: "Refresh",
           remove: "Remove",
           empty: "No supplier-product links yet.",
@@ -91,10 +95,15 @@ export function SupplierProductManager() {
   const [links, setLinks] = useState<LinkRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [selectedSupplierId, setSelectedSupplierId] = useState("all");
   const [message, setMessage] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
   const supplierById = useMemo(() => new Map(suppliers.map((supplier) => [supplier.id, supplier])), [suppliers]);
   const productById = useMemo(() => new Map(products.map((product) => [product.id, product])), [products]);
+  const filteredLinks = useMemo(
+    () => (selectedSupplierId === "all" ? links : links.filter((link) => link.supplier_id === selectedSupplierId)),
+    [links, selectedSupplierId]
+  );
 
   async function load() {
     setLoading(true);
@@ -166,6 +175,7 @@ export function SupplierProductManager() {
       setMessage({ type: "err", text: t.errorPrefix + error.message });
     } else {
       setMessage({ type: "ok", text: t.saved });
+      setSelectedSupplierId(supplierId);
       e.currentTarget.reset();
       await load();
     }
@@ -231,16 +241,32 @@ export function SupplierProductManager() {
       )}
 
       <div className="mt-7">
-        <h3 className="text-base font-bold">{t.linked}</h3>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h3 className="text-base font-bold">{t.linked}</h3>
+            <p className="mt-1 text-sm text-slate-500">{filteredLinks.length} / {links.length}</p>
+          </div>
+          <label className="min-w-[260px]">
+            <span className="label">{t.filterBySupplier}</span>
+            <select className="input mt-1" value={selectedSupplierId} onChange={(event) => setSelectedSupplierId(event.target.value)}>
+              <option value="all">{t.allSuppliers}</option>
+              {suppliers.map((supplier) => (
+                <option key={supplier.id} value={supplier.id}>
+                  {supplier.supplier_name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
         {loading ? (
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             {Array.from({ length: 4 }).map((_, index) => (
               <div key={index} className="h-28 animate-pulse rounded-2xl bg-slate-100" />
             ))}
           </div>
-        ) : links.length ? (
+        ) : filteredLinks.length ? (
           <div className="mt-4 grid gap-4 xl:grid-cols-2">
-            {links.map((link) => {
+            {filteredLinks.map((link) => {
               const supplier = supplierById.get(link.supplier_id);
               const product = productById.get(link.product_id);
               const productName = product ? (locale === "zh" && product.name_zh ? product.name_zh : product.name) : link.product_id;
