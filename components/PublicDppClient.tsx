@@ -1508,7 +1508,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             </DataCard>
             <div className="grid gap-3 sm:grid-cols-2">
               {performanceItems.slice(0, 5).map(([label, value]) => (
-                <Metric key={label} label={label} value={value} locale={locale} icon="check" />
+                <PerformanceSummaryCard key={label} label={label} value={value} locale={locale} icon="check" />
               ))}
             </div>
           </div>
@@ -2026,6 +2026,35 @@ function Metric({ label, value, locale, icon }: { label: string; value: any; loc
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
             <Icon name={icon} className="h-5 w-5" />
           </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PerformanceSummaryCard({
+  label,
+  value,
+  locale,
+  icon,
+}: {
+  label: string;
+  value: any;
+  locale: Locale;
+  icon: IconName;
+}) {
+  return (
+    <div className="dpp-fade overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md">
+      <div className="h-1 bg-[linear-gradient(90deg,#16a34a,#0f766e)]" />
+      <div className="flex min-h-[132px] items-start gap-4 p-5">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
+          <Icon name={icon} className="h-5 w-5" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold leading-5 text-slate-500">{label}</p>
+          <p className="mt-3 break-words text-lg font-black leading-7 text-slate-950 md:text-xl">
+            {valueOrDash(value, locale)}
+          </p>
         </div>
       </div>
     </div>
