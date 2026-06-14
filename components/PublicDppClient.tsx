@@ -317,6 +317,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           verificationExpiry: "验证有效期",
           verificationExpiryValue: "2026-06-04 至 2027-06-03",
           dataLastUpdatedValue: "2026-06-04",
+          dataVersionLabel: "数据版本",
           downloadPdf: "下载 DPP PDF",
           downloadJson: "下载 JSON",
           benchmarkTitle: "该产品的碳足迹",
@@ -559,6 +560,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           verificationExpiry: "Verification validity",
           verificationExpiryValue: "2026-06-04 to 2027-06-03",
           dataLastUpdatedValue: "2026-06-04",
+          dataVersionLabel: "Data version",
           downloadPdf: "Download DPP PDF",
           downloadJson: "Download JSON",
           benchmarkTitle: "Carbon footprint of this product",
@@ -719,6 +721,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       })
       .join(locale === "zh" ? " / " : " / ");
   }, [compositionMaterials, locale, t.noData]);
+  const dataLastUpdatedValue =
+    formatDate(product.updated_at || product.created_at, locale) !== "-"
+      ? formatDate(product.updated_at || product.created_at, locale)
+      : t.dataLastUpdatedValue;
 
   const nextActionFromData = compact([
     pick(product, locale, "care_instructions", "care_instructions_zh") !== "-" ? t.care : null,
@@ -774,7 +780,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.sgtin, sgtin],
     [t.batch, firstIdentity?.batch_id],
     [t.certificatesVerified, certificates.length ? `${verifiedCertificates} / ${certificates.length}` : t.pendingData],
-    [t.lastUpdatedLabel, t.dataLastUpdatedValue],
+    [t.dataVersionLabel, product.current_version || t.pendingData],
   ];
   const heroFocusCards: Array<[string, any, IconName]> = (isDemoProduct
     ? isElectronics
@@ -1219,28 +1225,28 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ? locale === "zh" ? "LCA Database + WPC 配方 / 挤出能耗模型" : "LCA Database + WPC formulation / extrusion-energy model"
         : t.carbonSource,
       verification: t.independentVerified,
-      updated: t.dataLastUpdatedValue,
+      updated: dataLastUpdatedValue,
     },
     {
       point: t.water,
       value: hasWaterData ? `${waterCurrent} L` : t.noData,
       source: t.waterSource,
       verification: t.supplierDeclared,
-      updated: t.dataLastUpdatedValue,
+      updated: dataLastUpdatedValue,
     },
     {
       point: t.waste,
       value: hasWasteData ? `${latestEsg.waste_generation} kg` : t.noData,
       source: t.wasteSource,
       verification: t.auditVerified,
-      updated: t.dataLastUpdatedValue,
+      updated: dataLastUpdatedValue,
     },
     {
       point: t.recycled,
       value: totalRecycled !== null ? `${totalRecycled}%` : hasEsgRecycledData ? `${latestEsg.recycled_content}%` : t.noData,
       source: t.recycledSource,
       verification: t.independentVerified,
-      updated: t.dataLastUpdatedValue,
+      updated: dataLastUpdatedValue,
     },
   ].filter((row) => row.value !== t.noData || isDemoProduct);
   const verificationItems: Array<[string, any]> = isDemoProduct
@@ -1264,12 +1270,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     ],
     [t.verificationCertificate, isElectronics ? "SGS-DPP-AUDIO-2026-018" : isFlooring ? "DPP-WPC-2026-009" : isFurniture ? "DPP-FURN-2026-021" : t.verificationCertificateValue],
     [t.verificationExpiry, t.verificationExpiryValue],
-    [t.lastUpdated, t.dataLastUpdatedValue],
+    [t.lastUpdated, dataLastUpdatedValue],
       ] as Array<[string, any]>)
     : ([
         [t.verificationAgency, latestEsg?.verified_by || firstGovernance?.data_owner],
         [t.verificationScope, firstGovernance?.audit_status],
-        [t.lastUpdated, product.updated_at],
+        [t.lastUpdated, dataLastUpdatedValue],
       ] as Array<[string, any]>).filter(([, value]) => value !== null && value !== undefined && value !== "" && value !== "-");
   const simpleMetrics: Array<[string, any, IconName]> = ([
     [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : t.noData, "carbon"],
@@ -2025,7 +2031,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               <div className="rounded-lg border border-blue-200 bg-blue-50 p-5">
                 <h3 className="text-2xl font-black text-slate-950">{t.textileReserve}</h3>
                 <p className="mt-3 leading-7 text-slate-700">{reserveIntro}</p>
-                <p className="mt-4 text-sm font-bold text-blue-700">{t.lastUpdatedLabel}: {t.dataLastUpdatedValue}</p>
+                <p className="mt-4 text-sm font-bold text-blue-700">{t.lastUpdatedLabel}: {dataLastUpdatedValue}</p>
               </div>
               <InfoGrid items={textileReserveItems} locale={locale} />
             </div>
@@ -2055,7 +2061,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                   currentValue={carbonCurrent}
                   averageValue={carbonAverage}
                   unit="kg CO2e"
-                  note={`${t.lastUpdatedLabel}: ${t.dataLastUpdatedValue}`}
+                  note={`${t.lastUpdatedLabel}: ${dataLastUpdatedValue}`}
                 />
               ) : (
                 <Empty text={t.pendingData} />
