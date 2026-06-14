@@ -57,6 +57,14 @@ function compact(values: any[]) {
   return values.filter((value) => value !== null && value !== undefined && value !== "").join(", ");
 }
 
+function hasNumber(value: any) {
+  return value !== null && value !== undefined && value !== "" && !Number.isNaN(Number(value));
+}
+
+function hasDisplayValue(value: any) {
+  return value !== null && value !== undefined && String(value).trim() !== "" && String(value).trim() !== "-";
+}
+
 function groupRows<T>(rows: T[], getGroup: (row: T) => string) {
   const groups = new Map<string, T[]>();
   rows.forEach((row) => {
@@ -613,9 +621,23 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   const isElectronics = /electronics|earbud|headphone|audio|蓝牙|耳机|电子/.test(categoryText);
   const isFlooring = /floor|flooring|wpc|building|construction|地板|木塑|建材/.test(categoryText);
   const isFurniture = /furniture|chair|office chair|办公椅|家具/.test(categoryText);
-  const carbonCurrent = latestEsg?.carbon_footprint ? Number(latestEsg.carbon_footprint) : isElectronics ? 6.8 : isFlooring ? 12.4 : isFurniture ? 28.6 : 3.2;
+  const isDemoProduct = new Set([
+    "demo-organic-cotton-tshirt",
+    "demo-wireless-earbuds",
+    "demo-wpc-flooring",
+    "demo-office-chair",
+    "DPP-DEMO-001",
+    "DPP-AUDIO-DEMO-001",
+    "DPP-WPC-MS140K25B",
+    "DPP-FURN-DEMO-001",
+  ]).has(String(product.public_slug || product.dpp_id || ""));
+  const hasCarbonData = hasNumber(latestEsg?.carbon_footprint);
+  const hasWaterData = hasNumber(latestEsg?.water_usage);
+  const hasWasteData = hasNumber(latestEsg?.waste_generation);
+  const hasEsgRecycledData = hasNumber(latestEsg?.recycled_content);
+  const carbonCurrent = hasCarbonData ? Number(latestEsg.carbon_footprint) : 0;
   const carbonAverage = isElectronics ? 8.9 : isFlooring ? 16.8 : isFurniture ? 36.5 : 4.5;
-  const waterCurrent = latestEsg?.water_usage ? Number(latestEsg.water_usage) : isElectronics ? 42 : isFlooring ? 18 : isFurniture ? 76 : 118;
+  const waterCurrent = hasWaterData ? Number(latestEsg.water_usage) : 0;
   const waterAverage = isElectronics ? 65 : isFlooring ? 28 : isFurniture ? 110 : 160;
   const recycleLink = isElectronics
     ? "https://environment.ec.europa.eu/topics/waste-and-recycling/waste-electrical-and-electronic-equipment-weee_en"
@@ -686,6 +708,24 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     return Math.round(weighted);
   }, [compositionMaterials]);
 
+  const materialProfileFromData = useMemo(() => {
+    if (!compositionMaterials.length) return t.noData;
+    return compositionMaterials
+      .slice(0, 3)
+      .map((material: any) => {
+        const name = pick(material, locale, "material_name", "material_name_zh");
+        const percentage = hasNumber(material.percentage) ? `${Number(material.percentage)}% ` : "";
+        return `${percentage}${name}`;
+      })
+      .join(locale === "zh" ? " / " : " / ");
+  }, [compositionMaterials, locale, t.noData]);
+
+  const nextActionFromData = compact([
+    pick(product, locale, "care_instructions", "care_instructions_zh") !== "-" ? t.care : null,
+    pick(product, locale, "repair_instructions", "repair_instructions_zh") !== "-" ? t.repair : null,
+    pick(product, locale, "end_of_life_instructions", "end_of_life_instructions_zh") !== "-" ? t.endOfLife : null,
+  ]) || t.noData;
+
   const verifiedCertificates = certificates.filter((certificate: any) => {
     return String(certificate.verification_status || "").toLowerCase() === "verified";
   }).length;
@@ -694,19 +734,21 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       ? `${firstIdentity.gtin}.${firstIdentity.serial_id}`
       : null;
   const hasConsumerData = Boolean(
-    firstTransparency?.brand_story ||
-      firstTransparency?.brand_story_zh ||
-      firstTransparency?.sustainability_story ||
-      firstTransparency?.sustainability_story_zh ||
-      firstTransparency?.consumer_notice ||
-      firstTransparency?.consumer_notice_zh ||
-      firstTransparency?.packaging_info ||
-      product.care_instructions ||
-      product.care_instructions_zh ||
-      product.repair_instructions ||
-      product.repair_instructions_zh ||
-      product.end_of_life_instructions ||
-      product.end_of_life_instructions_zh
+    [
+      firstTransparency?.brand_story,
+      firstTransparency?.brand_story_zh,
+      firstTransparency?.sustainability_story,
+      firstTransparency?.sustainability_story_zh,
+      firstTransparency?.consumer_notice,
+      firstTransparency?.consumer_notice_zh,
+      firstTransparency?.packaging_info,
+      product.care_instructions,
+      product.care_instructions_zh,
+      product.repair_instructions,
+      product.repair_instructions_zh,
+      product.end_of_life_instructions,
+      product.end_of_life_instructions_zh,
+    ].some(hasDisplayValue)
   );
 
   const productDetails: Array<[string, any]> = [
@@ -726,47 +768,55 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.serial, firstIdentity?.serial_id],
     [t.digitalLink, dppUrl],
   ];
-  const heroDetails: Array<[string, any]> = [
+  const heroDetails: Array<[string, any]> = ([
     [t.sku, product.sku],
     [t.gtin, firstIdentity?.gtin],
     [t.sgtin, sgtin],
     [t.batch, firstIdentity?.batch_id],
-    [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`],
+    [t.certificatesVerified, certificates.length ? `${verifiedCertificates} / ${certificates.length}` : null],
     [t.lastUpdatedLabel, t.dataLastUpdatedValue],
-  ];
-  const heroFocusCards: Array<[string, any, IconName]> = isElectronics
-    ? [
+  ] as Array<[string, any]>).filter(([, value]) => hasDisplayValue(value));
+  const heroFocusCards: Array<[string, any, IconName]> = (isDemoProduct
+    ? isElectronics
+      ? [
         [t.complianceScope, locale === "zh" ? "CE / RoHS / REACH / WEEE" : "CE / RoHS / REACH / WEEE", "shield"],
         [locale === "zh" ? "电池与回收" : "Battery and WEEE", locale === "zh" ? "UN38.3 / 电池 MSDS" : "UN38.3 / battery MSDS", "file"],
         [t.performanceSnapshot, locale === "zh" ? "8 小时 / ≥500 次" : "8h / >=500 cycles", "check"],
         [t.nextAction, locale === "zh" ? "维修 / WEEE 回收" : "Repair / WEEE collection", "recycle"],
       ]
-    : isFlooring
-      ? [
+      : isFlooring
+        ? [
           [locale === "zh" ? "规格尺寸" : "Dimensions", "140x25mm / 2.55kg/m", "box"],
-          [locale === "zh" ? "材料配方" : "Material formula", locale === "zh" ? "60% 木纤维 / 30% 再生 HDPE" : "60% wood fiber / 30% recycled HDPE", "layers"],
+          [locale === "zh" ? "材料配方" : "Material formula", materialProfileFromData, "layers"],
           [locale === "zh" ? "合规证据" : "Compliance evidence", locale === "zh" ? "REACH / VOC / FSC / ISO9001" : "REACH / VOC / FSC / ISO9001", "shield"],
           [locale === "zh" ? "回收路径" : "Recovery route", locale === "zh" ? "机械回收 / 移除金属件" : "Mechanical recycling / remove metal", "recycle"],
         ]
-      : isFurniture
-        ? [
+        : isFurniture
+          ? [
             [t.performanceSnapshot, locale === "zh" ? "耐久性测试 / 7-10 年" : "Durability tested / 7-10 years", "check"],
             [locale === "zh" ? "可维修部件" : "Repairable modules", locale === "zh" ? "坐垫 / 扶手 / 脚轮 / 气压杆" : "Cushion / armrests / castors / gas lift", "tag"],
-            [t.materialProfile, locale === "zh" ? "钢材 / 再生塑料 / 网布" : "Steel / recycled plastic / mesh", "layers"],
+            [t.materialProfile, materialProfileFromData, "layers"],
             [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
           ]
-        : [
-            [t.materialProfile, locale === "zh" ? "95% 有机棉 / 5% 再生涤纶" : "95% organic cotton / 5% recycled polyester", "layers"],
-            [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
-            [t.carbon, `${carbonCurrent} kg CO2e`, "carbon"],
-            [t.nextAction, locale === "zh" ? "护理 / 维修 / 纺织回收" : "Care / repair / textile recycling", "recycle"],
-          ];
+          : [
+              [t.materialProfile, materialProfileFromData, "layers"],
+              [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
+              [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : t.noData, "carbon"],
+              [t.nextAction, nextActionFromData, "recycle"],
+            ]
+    : [
+        [t.materialProfile, materialProfileFromData, "layers"],
+        [t.certificatesVerified, certificates.length ? `${verifiedCertificates} / ${certificates.length}` : null, "shield"],
+        [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : null, "carbon"],
+        [t.nextAction, nextActionFromData, "recycle"],
+      ]
+  ).filter(([, value]) => hasDisplayValue(value) && value !== t.noData) as Array<[string, any, IconName]>;
   const overviewStatusCards: Array<[string, string, IconName]> = [
     [t.overviewStatus1, t.overviewStatus1Desc, "qr"],
     [t.overviewStatus2, t.overviewStatus2Desc, "file"],
     [t.overviewStatus3, t.overviewStatus3Desc, "route"],
   ];
-  const performanceItems: Array<[string, any]> = isElectronics
+  const performanceItems: Array<[string, any]> = isDemoProduct ? (isElectronics
     ? [
         [locale === "zh" ? "单次续航" : "Battery life", locale === "zh" ? "8 小时" : "8 hours"],
         [locale === "zh" ? "充电循环寿命" : "Charge-cycle life", "≥ 500"],
@@ -815,10 +865,11 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.shrinkage, "≤ 3%"],
         [t.minimumLifetime, locale === "zh" ? "2-3 年" : "2-3 years"],
         [t.testBasis, t.performanceBasis],
-      ];
+      ]
+  ) : [];
   const performanceMetrics = performanceItems.filter(([label]) => label !== t.testBasis).slice(0, 5);
   const performanceBasis = performanceItems.find(([label]) => label === t.testBasis);
-  const chemicalRows = isElectronics
+  const chemicalRows = isDemoProduct ? (isElectronics
     ? [
         {
           item: locale === "zh" ? "RoHS 受限物质" : "RoHS restricted substances",
@@ -936,8 +987,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       limit: t.msdsLimit,
       type: "msds",
     },
-  ];
-  const declarationItems: Array<[string, any]> = [
+      ]
+  ) : [];
+  const declarationItems: Array<[string, any]> = isDemoProduct ? [
     [
       t.applicableEuRules,
       isElectronics
@@ -979,8 +1031,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.importerInfo, t.importerValue],
     [t.declarationDate, t.declarationDateValue],
     [t.declarationValidity, t.declarationValidityValue],
-  ];
-  const reuseItems: Array<[string, any]> = isElectronics
+  ] : [];
+  const reuseItems: Array<[string, any]> = isDemoProduct ? (isElectronics
     ? [
         [t.takeBackPlanDetails, locale === "zh" ? "通过授权 WEEE 回收点或品牌回收计划提交旧耳机和充电盒。" : "Return used earbuds and charging case through authorized WEEE collection points or brand take-back."],
         [t.expectedResaleCycles, locale === "zh" ? "1 次，需通过电池健康检测" : "1 cycle, subject to battery-health screening"],
@@ -1002,8 +1054,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.takeBackPlanDetails, t.takeBackPlanValue],
         [t.expectedResaleCycles, locale === "zh" ? "1-2 次" : "1-2 cycles"],
         [t.resalePriceRange, locale === "zh" ? "原零售价的 20%-40%" : "20%-40% of original retail price"],
-      ];
-  const repairItems: Array<[string, any]> = isElectronics
+      ]
+  ) : [];
+  const repairItems: Array<[string, any]> = isDemoProduct ? (isElectronics
     ? [
         [t.commonRepairTypes, locale === "zh" ? "耳塞更换、充电盒检测、电池健康评估、固件重置、清洁维护" : "Ear-tip replacement, charging-case diagnostics, battery-health check, firmware reset and cleaning"],
         [t.repairProviders, locale === "zh" ? "Demo EU Electronics Service Network；授权电池维修服务商" : "Demo EU Electronics Service Network; authorized battery repair providers"],
@@ -1025,8 +1078,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.commonRepairTypes, t.commonRepairTypesValue],
         [t.repairProviders, t.repairProvidersValue],
         [t.sparePartsGuide, t.sparePartsGuideValue],
-      ];
-  const recyclingItems: Array<[string, any]> = isElectronics
+      ]
+  ) : [];
+  const recyclingItems: Array<[string, any]> = isDemoProduct ? (isElectronics
     ? [
         [t.recyclableParts, locale === "zh" ? "ABS/PC 外壳、PCB 金属、铜件和电池材料，需按 WEEE 流程拆解。" : "ABS/PC housing, PCB metals, copper parts and battery materials after WEEE disassembly."],
         [t.removeBeforeRecycle, locale === "zh" ? "硅胶耳塞、包装附件和可拆卸线缆；含电池部件单独处理。" : "Silicone ear tips, packaging accessories and removable cable; battery-containing parts handled separately."],
@@ -1048,11 +1102,18 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.recyclableParts, t.recyclablePartsValue],
         [t.removeBeforeRecycle, t.removeBeforeRecycleValue],
         [t.recyclingFacilityLink, locale === "zh" ? "Recycle Now / 当地纺织品回收设施查询" : "Recycle Now / local textile recycling locator"],
-      ];
+      ]
+  ) : [];
+  const actualEndOfLifeItems: Array<[string, any]> = ([
+    [t.takeBack, firstCircularity?.take_back_program],
+    [t.repair, pick(product, locale, "repair_instructions", "repair_instructions_zh")],
+    [t.recyclability, hasNumber(firstCircularity?.recyclability_score) ? `${firstCircularity.recyclability_score} / 100` : null],
+    [t.endOfLife, firstCircularity?.end_of_life_info || pick(product, locale, "end_of_life_instructions", "end_of_life_instructions_zh")],
+  ] as Array<[string, any]>).filter(([, value]) => hasDisplayValue(value));
   const dataSourceRows = [
     {
       point: t.carbon,
-      value: `${carbonCurrent} kg CO2e`,
+      value: hasCarbonData ? `${carbonCurrent} kg CO2e` : t.noData,
       source: isElectronics
         ? locale === "zh" ? "LCA Database + 电子 BOM / 电池模型" : "LCA Database + electronics BOM / battery model"
         : isFlooring
@@ -1063,27 +1124,28 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     },
     {
       point: t.water,
-      value: `${waterCurrent} L`,
+      value: hasWaterData ? `${waterCurrent} L` : t.noData,
       source: t.waterSource,
       verification: t.supplierDeclared,
       updated: t.dataLastUpdatedValue,
     },
     {
       point: t.waste,
-      value: latestEsg?.waste_generation ? `${latestEsg.waste_generation} kg` : isElectronics ? "0.22 kg" : isFlooring ? "0.85 kg" : "0.38 kg",
+      value: hasWasteData ? `${latestEsg.waste_generation} kg` : t.noData,
       source: t.wasteSource,
       verification: t.auditVerified,
       updated: t.dataLastUpdatedValue,
     },
     {
       point: t.recycled,
-      value: latestEsg?.recycled_content ? `${latestEsg.recycled_content}%` : isElectronics ? "18%" : isFlooring ? "65%" : "4%",
+      value: totalRecycled !== null ? `${totalRecycled}%` : hasEsgRecycledData ? `${latestEsg.recycled_content}%` : t.noData,
       source: t.recycledSource,
       verification: t.independentVerified,
       updated: t.dataLastUpdatedValue,
     },
-  ];
-  const verificationItems: Array<[string, any]> = [
+  ].filter((row) => row.value !== t.noData || isDemoProduct);
+  const verificationItems: Array<[string, any]> = isDemoProduct
+    ? ([
     [t.verificationAgency, t.verificationAgencyValue],
     [
       t.verificationScope,
@@ -1104,14 +1166,19 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.verificationCertificate, isElectronics ? "SGS-DPP-AUDIO-2026-018" : isFlooring ? "DPP-WPC-2026-009" : isFurniture ? "DPP-FURN-2026-021" : t.verificationCertificateValue],
     [t.verificationExpiry, t.verificationExpiryValue],
     [t.lastUpdated, t.dataLastUpdatedValue],
-  ];
-  const simpleMetrics: Array<[string, any, IconName]> = [
-    [t.carbon, `${carbonCurrent} kg CO2e`, "carbon"],
-    [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
-    [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100` : isElectronics ? "58 / 100" : isFlooring ? "74 / 100" : "81 / 100", "recycle"],
-    [t.minimumLifetime, isElectronics ? (locale === "zh" ? "2 年" : "2 years") : isFlooring ? (locale === "zh" ? "10-15 年" : "10-15 years") : isFurniture ? (locale === "zh" ? "7-10 年" : "7-10 years") : locale === "zh" ? "2-3 年" : "2-3 years", "check"],
-  ];
-  const textileReserveItems: Array<[string, any]> = isElectronics
+      ] as Array<[string, any]>)
+    : ([
+        [t.verificationAgency, latestEsg?.verified_by || firstGovernance?.data_owner],
+        [t.verificationScope, firstGovernance?.audit_status],
+        [t.lastUpdated, product.updated_at],
+      ] as Array<[string, any]>).filter(([, value]) => value !== null && value !== undefined && value !== "" && value !== "-");
+  const simpleMetrics: Array<[string, any, IconName]> = ([
+    [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : t.noData, "carbon"],
+    [t.certificatesVerified, certificates.length ? `${verifiedCertificates} / ${certificates.length}` : t.noData, "shield"],
+    [t.recyclability, hasNumber(firstCircularity?.recyclability_score) ? `${firstCircularity.recyclability_score} / 100` : t.noData, "recycle"],
+    [t.minimumLifetime, t.noData, "check"],
+  ] as Array<[string, any, IconName]>).filter(([, value]) => hasDisplayValue(value) && value !== t.noData);
+  const textileReserveItems: Array<[string, any]> = isDemoProduct ? (isElectronics
     ? [
         [locale === "zh" ? "电池拆解与回收准备" : "Battery removal and recycling readiness", locale === "zh" ? "预留电池护照字段；当前披露 MSDS、UN38.3 和 WEEE 回收路径。" : "Battery-passport fields reserved; MSDS, UN38.3 and WEEE path disclosed now."],
         [locale === "zh" ? "RoHS / CE 证据链" : "RoHS / CE evidence chain", locale === "zh" ? "预留后续与欧盟系统对接的合规文件索引和验证状态。" : "Evidence-file index and verification status reserved for future EU-system connection."],
@@ -1137,8 +1204,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.fullOriginTrace, t.fullOriginValue],
         [t.animalWelfare, t.animalWelfareValue],
         [t.laborCertification, t.laborCertificationValue],
-      ];
-  const batchHistory = isElectronics
+      ]) : [];
+  const batchHistory = isDemoProduct ? (isElectronics
     ? [
         locale === "zh" ? "2026-04-16 电池、PCB 和外壳材料批次创建并绑定 RoHS / REACH 声明" : "2026-04-16 Battery, PCB and housing material batches created and linked to RoHS / REACH declarations",
         locale === "zh" ? "2026-05-30 总装与声学质检完成，SKU 与 SGTIN 生成" : "2026-05-30 Final assembly and acoustic QA completed; SKU and SGTIN generated",
@@ -1159,8 +1226,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             locale === "zh" ? "2026-06-03 出口运输记录写入，鹿特丹家具经销仓接收待确认" : "2026-06-03 Export shipment record added; Rotterdam furniture distributor receipt pending",
             locale === "zh" ? "2026-06-06 家具 DPP 数据审核并更新公开页面" : "2026-06-06 Furniture DPP data reviewed and public page updated",
           ]
-    : [t.batchRecord1, t.batchRecord2, t.batchRecord3, t.batchRecord4];
-  const benchmarkNote = isElectronics
+    : [t.batchRecord1, t.batchRecord2, t.batchRecord3, t.batchRecord4]) : [];
+  const benchmarkNote = isDemoProduct ? (isElectronics
     ? locale === "zh"
       ? "低于示例消费电子同类平均值约 24%，主要来自再生塑料外壳、轻量化包装和较小物流体积假设。"
       : "About 24% below the demo consumer-electronics average, mainly from recycled plastic housing, lightweight packaging and lower shipping-volume assumptions."
@@ -1172,8 +1239,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? locale === "zh"
           ? "低于示例办公家具同类平均值约 22%，主要来自再生钢材、再生塑料部件、模块化维修和扁平化包装假设。"
           : "About 22% below the demo office-furniture average, mainly from recycled steel, recycled plastic parts, modular repair and flat-pack packaging assumptions."
-    : t.benchmarkAdvantage;
-  const reserveIntro = isElectronics
+    : t.benchmarkAdvantage) : "";
+  const reserveIntro = isDemoProduct ? (isElectronics
     ? locale === "zh"
       ? "以下字段用于提前适配消费电子和电池相关 DPP 细化要求；当前作为预留和数据准备项展示。"
       : "These fields are reserved for consumer-electronics and battery-related DPP extensions; currently shown as data-readiness items."
@@ -1185,8 +1252,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? locale === "zh"
           ? "以下字段用于提前适配家具耐久性、维修、拆解、再使用和材料循环相关 DPP 要求；当前作为预留和数据准备项展示。"
           : "These fields are reserved for furniture durability, repair, disassembly, reuse and material-circularity DPP requirements; currently shown as data-readiness items."
-    : t.textileReserveIntro;
-  const householdWasteText = isElectronics
+    : t.textileReserveIntro) : "";
+  const householdWasteText = isDemoProduct ? (isElectronics
     ? locale === "zh"
       ? "请勿将耳机、充电盒或含电池部件作为生活垃圾丢弃，应进入 WEEE 或电池回收渠道。"
       : "Do not discard earbuds, charging case or battery-containing parts with household waste; use WEEE or battery collection streams."
@@ -1198,8 +1265,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? locale === "zh"
           ? "可再使用或可维修时请勿作为混合垃圾丢弃；优先进入家具翻新、大件回收或授权回收渠道。"
           : "Do not discard as mixed waste when reuse or repair is possible; prioritize furniture refurbishment, bulky-waste recovery or authorized collection."
-    : t.noHouseholdWasteDesc;
-  const removePartsText = isElectronics
+    : t.noHouseholdWasteDesc) : "";
+  const removePartsText = isDemoProduct ? (isElectronics
     ? locale === "zh"
       ? "回收前尽量分离硅胶耳塞、包装配件和可拆卸线缆；电池部件由授权机构处理。"
       : "Where possible, separate silicone ear tips, packaging accessories and removable cables before recycling; battery parts should be handled by authorized facilities."
@@ -1211,8 +1278,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? locale === "zh"
           ? "回收前分离脚轮、扶手、气压杆、坐垫、网布和紧固件，按金属、塑料和纺织/海绵流处理。"
           : "Separate castors, armrests, gas lift, cushion, mesh and fasteners before sorting into metal, plastic and textile/foam streams."
-    : t.removeTrimsDesc;
-  const collectionText = isElectronics
+    : t.removeTrimsDesc) : "";
+  const collectionText = isDemoProduct ? (isElectronics
     ? locale === "zh"
       ? "可维修或转售时优先延长使用寿命；无法继续使用时送至当地电子电气回收点。"
       : "Extend product life through repair or resale where possible; send unusable units to local electronics collection points."
@@ -1224,28 +1291,53 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? locale === "zh"
           ? "完好部件优先维修、翻新或转售；无法继续使用时按材料拆解进入当地回收渠道。"
           : "Repair, refurbish or resell intact components first; disassemble unusable parts into local material recovery channels."
-    : t.textileCollectionDesc;
+    : t.textileCollectionDesc) : "";
+  const hasMaterialsSection = compositionMaterials.length > 0 || supplementalComponents.length > 0;
+  const hasTraceabilitySection = traceability.length > 0;
+  const hasEsgSection =
+    hasCarbonData ||
+    hasWaterData ||
+    hasWasteData ||
+    hasNumber(latestEsg?.energy_consumption) ||
+    hasEsgRecycledData ||
+    hasDisplayValue(latestEsg?.methodology) ||
+    hasDisplayValue(latestEsg?.verified_by) ||
+    hasNumber(firstCircularity?.repairability_score) ||
+    hasNumber(firstCircularity?.recyclability_score) ||
+    hasDisplayValue(firstCircularity?.take_back_program) ||
+    hasDisplayValue(firstCircularity?.end_of_life_info);
+  const hasCertificateSection = certificates.length > 0 || declarationItems.length > 0;
+  const hasEndOfLifeSection =
+    reuseItems.length > 0 ||
+    repairItems.length > 0 ||
+    recyclingItems.length > 0 ||
+    actualEndOfLifeItems.length > 0;
+  const hasTextileReserveSection = textileReserveItems.length > 0;
+  const hasBatchSection = batchHistory.length > 0;
+  const hasEvidenceSection = dataSourceRows.length > 0 || verificationItems.length > 0 || documents.length > 0 || governance.length > 0;
+
   const navItems: Array<[string, string, IconName]> = [
     ["#identity", t.productIdentity, "box"],
-    ["#materials", t.materialSource, "layers"],
-    ["#chemicals", t.chemicalRestricted, "file"],
-    ["#performance", t.productPerformance, "shield"],
-    ["#traceability", t.traceability, "route"],
-    ["#esg", t.esg, "leaf"],
-    ["#certificates", t.certificates, "certificate"],
-    ["#consumer", t.consumer, "eye"],
-    ["#end-of-life", t.endOfLifeGuide, "recycle"],
-    ["#textile-reserve", t.textileReserve, "layers"],
-    ["#batch-tracking", t.batchTracking, "route"],
-  ];
+    hasMaterialsSection ? ["#materials", t.materialSource, "layers"] : null,
+    chemicalRows.length ? ["#chemicals", t.chemicalRestricted, "file"] : null,
+    performanceItems.length ? ["#performance", t.productPerformance, "shield"] : null,
+    hasTraceabilitySection ? ["#traceability", t.traceability, "route"] : null,
+    hasEsgSection ? ["#esg", t.esg, "leaf"] : null,
+    hasCertificateSection ? ["#certificates", t.certificates, "certificate"] : null,
+    hasConsumerData ? ["#consumer", t.consumer, "eye"] : null,
+    hasEndOfLifeSection ? ["#end-of-life", t.endOfLifeGuide, "recycle"] : null,
+    hasTextileReserveSection ? ["#textile-reserve", t.textileReserve, "layers"] : null,
+    hasBatchSection ? ["#batch-tracking", t.batchTracking, "route"] : null,
+    hasEvidenceSection ? ["#evidence", t.evidence, "file"] : null,
+  ].filter(Boolean) as Array<[string, string, IconName]>;
   const simpleNavItems: Array<[string, string, IconName]> = [
     ["#identity", t.productIdentity, "box"],
-    ["#materials", t.materialSource, "layers"],
-    ["#traceability", t.traceability, "route"],
-    ["#esg", t.esg, "leaf"],
-    ["#certificates", t.certificates, "certificate"],
-    ["#consumer", t.consumer, "eye"],
-  ];
+    hasMaterialsSection ? ["#materials", t.materialSource, "layers"] : null,
+    hasTraceabilitySection ? ["#traceability", t.traceability, "route"] : null,
+    hasEsgSection ? ["#esg", t.esg, "leaf"] : null,
+    hasCertificateSection ? ["#certificates", t.certificates, "certificate"] : null,
+    hasConsumerData ? ["#consumer", t.consumer, "eye"] : null,
+  ].filter(Boolean) as Array<[string, string, IconName]>;
   const currentNavItems = viewMode === "simple" ? simpleNavItems : navItems;
 
   return (
@@ -1413,16 +1505,21 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               </DataCard>
             </Section>
 
-            <Section id="materials" title={t.materialSource} icon="layers">
-              {compositionMaterials.length ? (
-                <GroupedMaterialList groups={materialGroups} locale={locale} t={t} />
-              ) : (
-                <Empty text={t.pendingData} />
-              )}
-            </Section>
+            {hasMaterialsSection && (
+              <Section id="materials" title={t.materialSource} icon="layers">
+                <div className="space-y-5">
+                  {compositionMaterials.length ? <GroupedMaterialList groups={materialGroups} locale={locale} t={t} /> : null}
+                  {supplementalComponents.length ? (
+                    <DataCard title={t.componentSupplement} icon="tag" surface="soft">
+                      <GroupedComponentSupplementList groups={supplementalComponentGroups} locale={locale} t={t} />
+                    </DataCard>
+                  ) : null}
+                </div>
+              </Section>
+            )}
 
-            <Section id="traceability" title={t.traceability} icon="route">
-              {traceability.length ? (
+            {hasTraceabilitySection && (
+              <Section id="traceability" title={t.traceability} icon="route">
                 <div className="space-y-4">
                   {traceability.slice(0, 4).map((event: any, index: number) => (
                     <TimelineItem
@@ -1439,17 +1536,16 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                     />
                   ))}
                 </div>
-              ) : (
-                <Empty text={t.pendingData} />
-              )}
-            </Section>
+              </Section>
+            )}
 
-            <Section id="esg" title={t.esg} icon="leaf">
+            {hasEsgSection && (
+              <Section id="esg" title={t.esg} icon="leaf">
               <div className="grid gap-4 lg:grid-cols-2">
                 <InfoGrid
                   items={[
-                    [t.carbon, `${carbonCurrent} kg CO2e`],
-                    [t.water, `${waterCurrent} L`],
+                    [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : null],
+                    [t.water, hasWaterData ? `${waterCurrent} L` : null],
                     [t.energy, latestEsg?.energy_consumption ? `${latestEsg.energy_consumption} kWh` : null],
                     [t.recycled, totalRecycled === null ? latestEsg?.recycled_content ? `${latestEsg.recycled_content}%` : null : `${totalRecycled}%`],
                     [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100` : null],
@@ -1458,20 +1554,26 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                   locale={locale}
                 />
                 <DataCard title={t.visualizationTitle} icon="leaf" surface="soft">
-                  <ComparisonBars
-                    currentLabel={t.thisProduct}
-                    averageLabel={t.industryAverage}
-                    currentValue={waterCurrent}
-                    averageValue={waterAverage}
-                    unit="L"
-                    note={t.waterBenchmark}
-                  />
+                  {hasWaterData ? (
+                    <ComparisonBars
+                      currentLabel={t.thisProduct}
+                      averageLabel={t.industryAverage}
+                      currentValue={waterCurrent}
+                      averageValue={waterAverage}
+                      unit="L"
+                      note={t.waterBenchmark}
+                    />
+                  ) : (
+                    <Empty text={t.pendingData} />
+                  )}
                 </DataCard>
               </div>
-            </Section>
+              </Section>
+            )}
 
-            <Section id="certificates" title={t.certificates} icon="certificate">
-              {certificates.length ? (
+            {hasCertificateSection && (
+              <Section id="certificates" title={t.certificates} icon="certificate">
+              {certificates.length && (
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                   {certificates.slice(0, 4).map((certificate: any) => (
                     <DataCard key={certificate.id} title={pick(certificate, locale, "certificate_name", "certificate_name_zh")} icon="certificate">
@@ -1489,13 +1591,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                     </DataCard>
                   ))}
                 </div>
-              ) : (
-                <Empty text={t.pendingData} />
               )}
-            </Section>
+              </Section>
+            )}
 
-            <Section id="consumer" title={t.consumer} icon="eye">
-              {hasConsumerData ? (
+            {hasConsumerData && (
+              <Section id="consumer" title={t.consumer} icon="eye">
                 <div className="grid gap-4 lg:grid-cols-2">
                   <InfoGrid
                     items={[
@@ -1513,10 +1614,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                     locale={locale}
                   />
                 </div>
-              ) : (
-                <Empty text={t.pendingData} />
-              )}
-            </Section>
+              </Section>
+            )}
           </div>
         )}
 
@@ -1538,8 +1637,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           </>
         )}
 
-        {viewMode === "detail" && <Section id="materials" title={t.materialSource} icon="layers">
-          {compositionMaterials.length || supplementalComponents.length ? (
+        {viewMode === "detail" && hasMaterialsSection && <Section id="materials" title={t.materialSource} icon="layers">
             <div className="space-y-5">
               {compositionMaterials.length ? (
                 <div>
@@ -1555,19 +1653,16 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 </DataCard>
               ) : null}
             </div>
-          ) : (
-            <Empty text={t.pendingData} />
-          )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="chemicals" title={t.chemicalRestricted} icon="file">
+        {viewMode === "detail" && chemicalRows.length > 0 && <Section id="chemicals" title={t.chemicalRestricted} icon="file">
           <DataCard title={t.chemicalTitle} icon="file" surface="soft">
             <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.chemicalIntro}</p>
             <ChemicalTable rows={chemicalRows} locale={locale} t={t} productSlug={product.public_slug || "demo-organic-cotton-tshirt"} />
           </DataCard>
         </Section>}
 
-        {viewMode === "detail" && <Section id="performance" title={t.productPerformance} icon="shield">
+        {viewMode === "detail" && performanceItems.length > 0 && <Section id="performance" title={t.productPerformance} icon="shield">
           <div className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {performanceMetrics.map(([label, value]) => (
@@ -1584,8 +1679,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           </div>
         </Section>}
 
-        {viewMode === "detail" && <Section id="traceability" title={t.traceability} icon="route">
-          {traceability.length ? (
+        {viewMode === "detail" && hasTraceabilitySection && <Section id="traceability" title={t.traceability} icon="route">
             <div className="space-y-4">
               {traceability.map((event: any, index: number) => (
                 <TimelineItem
@@ -1604,13 +1698,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 />
               ))}
             </div>
-          ) : (
-            <Empty text={t.pendingData} />
-          )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="esg" title={t.esg} icon="leaf">
-          {latestEsg || firstCircularity ? (
+        {viewMode === "detail" && hasEsgSection && <Section id="esg" title={t.esg} icon="leaf">
             <div className="grid gap-4 md:grid-cols-2">
               <InfoGrid
                 items={[
@@ -1636,63 +1726,59 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 locale={locale}
               />
             </div>
-          ) : (
-            <Empty text={t.pendingData} />
-          )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="certificates" title={t.certificates} icon="certificate">
-          {certificates.length ? (
+        {viewMode === "detail" && hasCertificateSection && <Section id="certificates" title={t.certificates} icon="certificate">
             <div className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {certificates.map((certificate: any) => (
-                  <DataCard key={certificate.id} title={pick(certificate, locale, "certificate_name", "certificate_name_zh")} icon="certificate">
-                    <div className="mb-4">
-                      <StatusBadge value={certificate.verification_status} locale={locale} verified={t.verified} pending={t.pending} />
-                    </div>
-                    <InfoGrid
-                      items={[
-                        [t.number, certificate.certificate_number],
-                        [t.issuer, certificate.issuer],
-                        [t.issueDate, formatDate(certificate.issue_date, locale)],
-                        [t.expiryDate, formatDate(certificate.expiry_date, locale)],
-                      ]}
-                      locale={locale}
-                    />
-                    {certificate.certificate_url && (
-                      <button
-                        type="button"
-                        onClick={() => setActiveCertificate(certificate)}
-                        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
-                      >
-                        <Icon name="pdf" className="h-5 w-5" />
-                        {t.viewPdfCertificate}
-                      </button>
-                    )}
-                  </DataCard>
-                ))}
-              </div>
-              <DataCard title={t.declarationTitle} icon="file" surface="soft">
-                <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.declarationIntro}</p>
-                <InfoGrid items={declarationItems} locale={locale} />
-                <a
-                  href={`/api/declaration?lang=${locale}&product=${encodeURIComponent(product.public_slug || "demo-organic-cotton-tshirt")}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg sm:w-auto"
-                >
-                  <Icon name="pdf" className="h-5 w-5" />
-                  {t.declarationDownload}
-                </a>
-              </DataCard>
+              {certificates.length > 0 && (
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {certificates.map((certificate: any) => (
+                    <DataCard key={certificate.id} title={pick(certificate, locale, "certificate_name", "certificate_name_zh")} icon="certificate">
+                      <div className="mb-4">
+                        <StatusBadge value={certificate.verification_status} locale={locale} verified={t.verified} pending={t.pending} />
+                      </div>
+                      <InfoGrid
+                        items={[
+                          [t.number, certificate.certificate_number],
+                          [t.issuer, certificate.issuer],
+                          [t.issueDate, formatDate(certificate.issue_date, locale)],
+                          [t.expiryDate, formatDate(certificate.expiry_date, locale)],
+                        ]}
+                        locale={locale}
+                      />
+                      {certificate.certificate_url && (
+                        <button
+                          type="button"
+                          onClick={() => setActiveCertificate(certificate)}
+                          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
+                        >
+                          <Icon name="pdf" className="h-5 w-5" />
+                          {t.viewPdfCertificate}
+                        </button>
+                      )}
+                    </DataCard>
+                  ))}
+                </div>
+              )}
+              {declarationItems.length > 0 && (
+                <DataCard title={t.declarationTitle} icon="file" surface="soft">
+                  <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.declarationIntro}</p>
+                  <InfoGrid items={declarationItems} locale={locale} />
+                  <a
+                    href={`/api/declaration?lang=${locale}&product=${encodeURIComponent(dppProductRef)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg sm:w-auto"
+                  >
+                    <Icon name="pdf" className="h-5 w-5" />
+                    {t.declarationDownload}
+                  </a>
+                </DataCard>
+              )}
             </div>
-          ) : (
-            <Empty text={t.pendingData} />
-          )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="consumer" title={t.consumer} icon="eye">
-          {hasConsumerData ? (
+        {viewMode === "detail" && hasConsumerData && <Section id="consumer" title={t.consumer} icon="eye">
             <div className="grid gap-4 lg:grid-cols-2">
               <InfoGrid
                 items={[
@@ -1712,70 +1798,73 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 locale={locale}
               />
             </div>
+        </Section>}
+
+        {viewMode === "detail" && hasEndOfLifeSection && <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
+          {isDemoProduct ? (
+            <div className="space-y-4">
+              <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-5">
+                <p className="text-sm font-bold uppercase text-emerald-700">{t.consumer}</p>
+                <h3 className="mt-2 text-2xl font-black text-slate-950">{t.endOfLife}</h3>
+                <p className="mt-3 leading-7 text-slate-700">{t.endOfLifeIntro}</p>
+              </div>
+              <div className="grid gap-4 2xl:grid-cols-3">
+                <DataCard title={t.reuseOptions} icon="recycle" surface="soft">
+                  <InfoGrid items={reuseItems} locale={locale} />
+                  <a
+                    href={recycleLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-200 bg-emerald-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-lg"
+                  >
+                    <Icon name="recycle" className="h-5 w-5" />
+                    {t.takeBackPlanLink}
+                  </a>
+                </DataCard>
+                <DataCard title={t.repairAndUpcycle} icon="scissors" surface="soft">
+                  <InfoGrid items={repairItems} locale={locale} />
+                </DataCard>
+                <DataCard
+                  title={
+                    isElectronics
+                      ? locale === "zh"
+                        ? "WEEE / 电子电气回收"
+                        : "WEEE / E-waste recycling"
+                      : isFlooring
+                        ? locale === "zh"
+                          ? "建筑废弃物 / WPC 回收"
+                          : "Construction-waste / WPC recovery"
+                        : t.textileRecycling
+                  }
+                  icon="trash"
+                  surface="soft"
+                >
+                  <InfoGrid items={recyclingItems} locale={locale} />
+                  <a
+                    href={recycleLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
+                  >
+                    <Icon name="recycle" className="h-5 w-5" />
+                    {t.recyclingFacilityLink}
+                  </a>
+                </DataCard>
+              </div>
+              <div className="grid gap-3 md:grid-cols-3">
+                <GuideCard icon="trash" title={t.noHouseholdWaste} text={householdWasteText} />
+                <GuideCard icon="scissors" title={isElectronics || isFlooring ? (locale === "zh" ? "回收前分离可拆部件" : "Separate removable parts before recycling") : t.removeTrims} text={removePartsText} />
+                <GuideCard icon="recycle" title={isElectronics ? (locale === "zh" ? "优先维修，再进入电子回收" : "Repair first, then e-waste recycling") : isFlooring ? (locale === "zh" ? "优先再使用，再进入建材回收" : "Reuse first, then building-material recovery") : t.textileCollection} text={collectionText} />
+              </div>
+            </div>
           ) : (
-            <Empty text={t.pendingData} />
+            <DataCard title={t.endOfLife} icon="recycle" surface="soft">
+              <InfoGrid items={actualEndOfLifeItems} locale={locale} />
+            </DataCard>
           )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
-          <div className="space-y-4">
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-5">
-              <p className="text-sm font-bold uppercase text-emerald-700">{t.consumer}</p>
-              <h3 className="mt-2 text-2xl font-black text-slate-950">{t.endOfLife}</h3>
-              <p className="mt-3 leading-7 text-slate-700">{t.endOfLifeIntro}</p>
-            </div>
-            <div className="grid gap-4 2xl:grid-cols-3">
-              <DataCard title={t.reuseOptions} icon="recycle" surface="soft">
-                <InfoGrid items={reuseItems} locale={locale} />
-                <a
-                  href={recycleLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-200 bg-emerald-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-lg"
-                >
-                  <Icon name="recycle" className="h-5 w-5" />
-                  {t.takeBackPlanLink}
-                </a>
-              </DataCard>
-              <DataCard title={t.repairAndUpcycle} icon="scissors" surface="soft">
-                <InfoGrid items={repairItems} locale={locale} />
-              </DataCard>
-              <DataCard
-                title={
-                  isElectronics
-                    ? locale === "zh"
-                      ? "WEEE / 电子电气回收"
-                      : "WEEE / E-waste recycling"
-                    : isFlooring
-                      ? locale === "zh"
-                        ? "建筑废弃物 / WPC 回收"
-                        : "Construction-waste / WPC recovery"
-                      : t.textileRecycling
-                }
-                icon="trash"
-                surface="soft"
-              >
-                <InfoGrid items={recyclingItems} locale={locale} />
-                <a
-                  href={recycleLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
-                >
-                  <Icon name="recycle" className="h-5 w-5" />
-                  {t.recyclingFacilityLink}
-                </a>
-              </DataCard>
-            </div>
-            <div className="grid gap-3 md:grid-cols-3">
-              <GuideCard icon="trash" title={t.noHouseholdWaste} text={householdWasteText} />
-              <GuideCard icon="scissors" title={isElectronics || isFlooring ? (locale === "zh" ? "回收前分离可拆部件" : "Separate removable parts before recycling") : t.removeTrims} text={removePartsText} />
-              <GuideCard icon="recycle" title={isElectronics ? (locale === "zh" ? "优先维修，再进入电子回收" : "Repair first, then e-waste recycling") : isFlooring ? (locale === "zh" ? "优先再使用，再进入建材回收" : "Reuse first, then building-material recovery") : t.textileCollection} text={collectionText} />
-            </div>
-          </div>
-        </Section>}
-
-        {viewMode === "detail" && <Section id="textile-reserve" title={t.textileReserve} icon="layers">
+        {viewMode === "detail" && hasTextileReserveSection && <Section id="textile-reserve" title={t.textileReserve} icon="layers">
           <div className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="rounded-lg border border-blue-200 bg-blue-50 p-5">
               <h3 className="text-2xl font-black text-slate-950">{t.textileReserve}</h3>
@@ -1786,7 +1875,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           </div>
         </Section>}
 
-        {viewMode === "detail" && <Section id="batch-tracking" title={t.batchTracking} icon="route">
+        {viewMode === "detail" && hasBatchSection && <Section id="batch-tracking" title={t.batchTracking} icon="route">
           <div className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
             <DataCard title={t.batchHistoryTitle} icon="route" surface="soft">
               <div className="space-y-3">
@@ -1799,30 +1888,38 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               </div>
             </DataCard>
             <DataCard title={t.visualizationTitle} icon="carbon" surface="soft">
-              <ComparisonBars
-                currentLabel={t.thisProduct}
-                averageLabel={t.industryAverage}
-                currentValue={carbonCurrent}
-                averageValue={carbonAverage}
-                unit="kg CO2e"
-                note={`${t.lastUpdatedLabel}: ${t.dataLastUpdatedValue}`}
-              />
+              {hasCarbonData ? (
+                <ComparisonBars
+                  currentLabel={t.thisProduct}
+                  averageLabel={t.industryAverage}
+                  currentValue={carbonCurrent}
+                  averageValue={carbonAverage}
+                  unit="kg CO2e"
+                  note={`${t.lastUpdatedLabel}: ${t.dataLastUpdatedValue}`}
+                />
+              ) : (
+                <Empty text={t.pendingData} />
+              )}
             </DataCard>
           </div>
         </Section>}
 
-        {viewMode === "detail" && <Section id="evidence" title={t.evidence} icon="file">
+        {viewMode === "detail" && hasEvidenceSection && <Section id="evidence" title={t.evidence} icon="file">
           <div className="space-y-4">
-            <DataCard title={t.dataTransparencyTitle} icon="file" surface="soft">
-              <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.dataTransparencyIntro}</p>
-              <DataSourceTable rows={dataSourceRows} t={t} />
-            </DataCard>
-            <div className="grid gap-4 lg:grid-cols-2">
-              <DataCard title={t.verificationAgency} icon="shield" surface="soft">
-                <InfoGrid items={verificationItems} locale={locale} />
+            {dataSourceRows.length > 0 && (
+              <DataCard title={t.dataTransparencyTitle} icon="file" surface="soft">
+                <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.dataTransparencyIntro}</p>
+                <DataSourceTable rows={dataSourceRows} t={t} />
               </DataCard>
-              <DataCard title={t.evidence} icon="file" surface="soft">
-                {documents.length ? (
+            )}
+            <div className="grid gap-4 lg:grid-cols-2">
+              {verificationItems.length > 0 && (
+                <DataCard title={t.verificationAgency} icon="shield" surface="soft">
+                  <InfoGrid items={verificationItems} locale={locale} />
+                </DataCard>
+              )}
+              {documents.length > 0 && (
+                <DataCard title={t.evidence} icon="file" surface="soft">
                   <div className="space-y-3">
                     {documents.map((document: any) => (
                       <InfoGrid
@@ -1838,10 +1935,26 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                       />
                     ))}
                   </div>
-                ) : (
-                  <Empty text={t.noData} />
-                )}
-              </DataCard>
+                </DataCard>
+              )}
+              {governance.length > 0 && (
+                <DataCard title={t.dataTransparencyTitle} icon="file" surface="soft">
+                  <div className="space-y-3">
+                    {governance.map((item: any) => (
+                      <InfoGrid
+                        key={item.id}
+                        items={[
+                          [t.dataSource, item.data_source],
+                          [t.dataOwner, item.data_owner],
+                          [t.verificationScope, item.audit_status],
+                          [locale === "zh" ? "数据质量分" : "Data quality score", hasNumber(item.data_quality_score) ? `${item.data_quality_score}` : null],
+                        ]}
+                        locale={locale}
+                      />
+                    ))}
+                  </div>
+                </DataCard>
+              )}
             </div>
           </div>
         </Section>}
@@ -2223,9 +2336,12 @@ function Info({
 }
 
 function InfoGrid({ items, locale }: { items: Array<[string, any]>; locale: Locale }) {
+  const visibleItems = items.filter(([, value]) => hasDisplayValue(value));
+  if (!visibleItems.length) return null;
+
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      {items.map(([label, value]) => (
+      {visibleItems.map(([label, value]) => (
         <div key={label} className="grid gap-2 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:grid-cols-[minmax(96px,0.35fr)_minmax(0,1fr)]">
           <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500">
             <span className="grid h-5 w-5 shrink-0 place-items-center rounded bg-brand-50 text-brand-700">
