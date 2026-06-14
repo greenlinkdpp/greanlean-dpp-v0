@@ -657,17 +657,17 @@ export function PublicDppClient({ data, dppUrl }: Props) {
 
   const supplementalComponents = useMemo(() => {
     const rows = new Map<string, any>();
-    const addRow = (row: any) => {
+    const addRow = (row: any, fallbackPrefix: string) => {
       const name = String(row.component_name || row.material_name || "").trim();
       if (!name) return;
-      const key = name.toLowerCase();
+      const key = row.id ? `${fallbackPrefix}-${row.id}` : `${fallbackPrefix}-${name.toLowerCase()}`;
       if (!rows.has(key)) rows.set(key, row);
     };
 
     bom.forEach((component: any) => {
       const name = String(component.component_name || "").toLowerCase();
       if (isFlooring && (name.includes("wpc plank") || name.includes(String(product?.sku || "").toLowerCase()))) return;
-      addRow(component);
+      addRow(component, "bom");
     });
 
     materials
@@ -682,7 +682,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           quantity: null,
           unit: null,
           position: material.certification || material.recyclability,
-        });
+        }, "material");
       });
 
     return Array.from(rows.values()).sort((a: any, b: any) => {
