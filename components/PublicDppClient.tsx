@@ -1292,52 +1292,28 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ? "完好部件优先维修、翻新或转售；无法继续使用时按材料拆解进入当地回收渠道。"
           : "Repair, refurbish or resell intact components first; disassemble unusable parts into local material recovery channels."
     : t.textileCollectionDesc) : "";
-  const hasMaterialsSection = compositionMaterials.length > 0 || supplementalComponents.length > 0;
-  const hasTraceabilitySection = traceability.length > 0;
-  const hasEsgSection =
-    hasCarbonData ||
-    hasWaterData ||
-    hasWasteData ||
-    hasNumber(latestEsg?.energy_consumption) ||
-    hasEsgRecycledData ||
-    hasDisplayValue(latestEsg?.methodology) ||
-    hasDisplayValue(latestEsg?.verified_by) ||
-    hasNumber(firstCircularity?.repairability_score) ||
-    hasNumber(firstCircularity?.recyclability_score) ||
-    hasDisplayValue(firstCircularity?.take_back_program) ||
-    hasDisplayValue(firstCircularity?.end_of_life_info);
-  const hasCertificateSection = certificates.length > 0 || declarationItems.length > 0;
-  const hasEndOfLifeSection =
-    reuseItems.length > 0 ||
-    repairItems.length > 0 ||
-    recyclingItems.length > 0 ||
-    actualEndOfLifeItems.length > 0;
-  const hasTextileReserveSection = textileReserveItems.length > 0;
-  const hasBatchSection = batchHistory.length > 0;
-  const hasEvidenceSection = dataSourceRows.length > 0 || verificationItems.length > 0 || documents.length > 0 || governance.length > 0;
-
   const navItems: Array<[string, string, IconName]> = [
     ["#identity", t.productIdentity, "box"],
-    hasMaterialsSection ? ["#materials", t.materialSource, "layers"] : null,
-    chemicalRows.length ? ["#chemicals", t.chemicalRestricted, "file"] : null,
-    performanceItems.length ? ["#performance", t.productPerformance, "shield"] : null,
-    hasTraceabilitySection ? ["#traceability", t.traceability, "route"] : null,
-    hasEsgSection ? ["#esg", t.esg, "leaf"] : null,
-    hasCertificateSection ? ["#certificates", t.certificates, "certificate"] : null,
-    hasConsumerData ? ["#consumer", t.consumer, "eye"] : null,
-    hasEndOfLifeSection ? ["#end-of-life", t.endOfLifeGuide, "recycle"] : null,
-    hasTextileReserveSection ? ["#textile-reserve", t.textileReserve, "layers"] : null,
-    hasBatchSection ? ["#batch-tracking", t.batchTracking, "route"] : null,
-    hasEvidenceSection ? ["#evidence", t.evidence, "file"] : null,
-  ].filter(Boolean) as Array<[string, string, IconName]>;
+    ["#materials", t.materialSource, "layers"],
+    ["#chemicals", t.chemicalRestricted, "file"],
+    ["#performance", t.productPerformance, "shield"],
+    ["#traceability", t.traceability, "route"],
+    ["#esg", t.esg, "leaf"],
+    ["#certificates", t.certificates, "certificate"],
+    ["#consumer", t.consumer, "eye"],
+    ["#end-of-life", t.endOfLifeGuide, "recycle"],
+    ["#textile-reserve", t.textileReserve, "layers"],
+    ["#batch-tracking", t.batchTracking, "route"],
+    ["#evidence", t.evidence, "file"],
+  ];
   const simpleNavItems: Array<[string, string, IconName]> = [
     ["#identity", t.productIdentity, "box"],
-    hasMaterialsSection ? ["#materials", t.materialSource, "layers"] : null,
-    hasTraceabilitySection ? ["#traceability", t.traceability, "route"] : null,
-    hasEsgSection ? ["#esg", t.esg, "leaf"] : null,
-    hasCertificateSection ? ["#certificates", t.certificates, "certificate"] : null,
-    hasConsumerData ? ["#consumer", t.consumer, "eye"] : null,
-  ].filter(Boolean) as Array<[string, string, IconName]>;
+    ["#materials", t.materialSource, "layers"],
+    ["#traceability", t.traceability, "route"],
+    ["#esg", t.esg, "leaf"],
+    ["#certificates", t.certificates, "certificate"],
+    ["#consumer", t.consumer, "eye"],
+  ];
   const currentNavItems = viewMode === "simple" ? simpleNavItems : navItems;
 
   return (
@@ -1505,8 +1481,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               </DataCard>
             </Section>
 
-            {hasMaterialsSection && (
-              <Section id="materials" title={t.materialSource} icon="layers">
+            <Section id="materials" title={t.materialSource} icon="layers">
+              {compositionMaterials.length || supplementalComponents.length ? (
                 <div className="space-y-5">
                   {compositionMaterials.length ? <GroupedMaterialList groups={materialGroups} locale={locale} t={t} /> : null}
                   {supplementalComponents.length ? (
@@ -1515,11 +1491,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                     </DataCard>
                   ) : null}
                 </div>
-              </Section>
-            )}
+              ) : (
+                <Empty text={t.pendingData} />
+              )}
+            </Section>
 
-            {hasTraceabilitySection && (
-              <Section id="traceability" title={t.traceability} icon="route">
+            <Section id="traceability" title={t.traceability} icon="route">
+              {traceability.length ? (
                 <div className="space-y-4">
                   {traceability.slice(0, 4).map((event: any, index: number) => (
                     <TimelineItem
@@ -1536,11 +1514,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                     />
                   ))}
                 </div>
-              </Section>
-            )}
+              ) : (
+                <Empty text={t.pendingData} />
+              )}
+            </Section>
 
-            {hasEsgSection && (
-              <Section id="esg" title={t.esg} icon="leaf">
+            <Section id="esg" title={t.esg} icon="leaf">
               <div className="grid gap-4 lg:grid-cols-2">
                 <InfoGrid
                   items={[
@@ -1568,12 +1547,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                   )}
                 </DataCard>
               </div>
-              </Section>
-            )}
+            </Section>
 
-            {hasCertificateSection && (
-              <Section id="certificates" title={t.certificates} icon="certificate">
-              {certificates.length && (
+            <Section id="certificates" title={t.certificates} icon="certificate">
+              {certificates.length ? (
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                   {certificates.slice(0, 4).map((certificate: any) => (
                     <DataCard key={certificate.id} title={pick(certificate, locale, "certificate_name", "certificate_name_zh")} icon="certificate">
@@ -1591,12 +1568,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                     </DataCard>
                   ))}
                 </div>
+              ) : (
+                <Empty text={t.pendingData} />
               )}
-              </Section>
-            )}
+            </Section>
 
-            {hasConsumerData && (
-              <Section id="consumer" title={t.consumer} icon="eye">
+            <Section id="consumer" title={t.consumer} icon="eye">
+              {hasConsumerData ? (
                 <div className="grid gap-4 lg:grid-cols-2">
                   <InfoGrid
                     items={[
@@ -1614,8 +1592,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                     locale={locale}
                   />
                 </div>
-              </Section>
-            )}
+              ) : (
+                <Empty text={t.pendingData} />
+              )}
+            </Section>
           </div>
         )}
 
@@ -1637,7 +1617,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           </>
         )}
 
-        {viewMode === "detail" && hasMaterialsSection && <Section id="materials" title={t.materialSource} icon="layers">
+        {viewMode === "detail" && <Section id="materials" title={t.materialSource} icon="layers">
+          {compositionMaterials.length || supplementalComponents.length ? (
             <div className="space-y-5">
               {compositionMaterials.length ? (
                 <div>
@@ -1653,16 +1634,24 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 </DataCard>
               ) : null}
             </div>
+          ) : (
+            <Empty text={t.pendingData} />
+          )}
         </Section>}
 
-        {viewMode === "detail" && chemicalRows.length > 0 && <Section id="chemicals" title={t.chemicalRestricted} icon="file">
+        {viewMode === "detail" && <Section id="chemicals" title={t.chemicalRestricted} icon="file">
           <DataCard title={t.chemicalTitle} icon="file" surface="soft">
             <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.chemicalIntro}</p>
-            <ChemicalTable rows={chemicalRows} locale={locale} t={t} productSlug={product.public_slug || "demo-organic-cotton-tshirt"} />
+            {chemicalRows.length ? (
+              <ChemicalTable rows={chemicalRows} locale={locale} t={t} productSlug={product.public_slug || "demo-organic-cotton-tshirt"} />
+            ) : (
+              <Empty text={t.pendingData} />
+            )}
           </DataCard>
         </Section>}
 
-        {viewMode === "detail" && performanceItems.length > 0 && <Section id="performance" title={t.productPerformance} icon="shield">
+        {viewMode === "detail" && <Section id="performance" title={t.productPerformance} icon="shield">
+          {performanceItems.length ? (
           <div className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {performanceMetrics.map(([label, value]) => (
@@ -1677,9 +1666,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               </DataCard>
             ) : null}
           </div>
+          ) : (
+            <Empty text={t.pendingData} />
+          )}
         </Section>}
 
-        {viewMode === "detail" && hasTraceabilitySection && <Section id="traceability" title={t.traceability} icon="route">
+        {viewMode === "detail" && <Section id="traceability" title={t.traceability} icon="route">
+          {traceability.length ? (
             <div className="space-y-4">
               {traceability.map((event: any, index: number) => (
                 <TimelineItem
@@ -1698,9 +1691,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 />
               ))}
             </div>
+          ) : (
+            <Empty text={t.pendingData} />
+          )}
         </Section>}
 
-        {viewMode === "detail" && hasEsgSection && <Section id="esg" title={t.esg} icon="leaf">
+        {viewMode === "detail" && <Section id="esg" title={t.esg} icon="leaf">
+          {latestEsg || firstCircularity ? (
             <div className="grid gap-4 md:grid-cols-2">
               <InfoGrid
                 items={[
@@ -1726,9 +1723,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 locale={locale}
               />
             </div>
+          ) : (
+            <Empty text={t.pendingData} />
+          )}
         </Section>}
 
-        {viewMode === "detail" && hasCertificateSection && <Section id="certificates" title={t.certificates} icon="certificate">
+        {viewMode === "detail" && <Section id="certificates" title={t.certificates} icon="certificate">
+          {certificates.length || declarationItems.length ? (
             <div className="space-y-4">
               {certificates.length > 0 && (
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -1776,9 +1777,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 </DataCard>
               )}
             </div>
+          ) : (
+            <Empty text={t.pendingData} />
+          )}
         </Section>}
 
-        {viewMode === "detail" && hasConsumerData && <Section id="consumer" title={t.consumer} icon="eye">
+        {viewMode === "detail" && <Section id="consumer" title={t.consumer} icon="eye">
+          {hasConsumerData ? (
             <div className="grid gap-4 lg:grid-cols-2">
               <InfoGrid
                 items={[
@@ -1798,9 +1803,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 locale={locale}
               />
             </div>
+          ) : (
+            <Empty text={t.pendingData} />
+          )}
         </Section>}
 
-        {viewMode === "detail" && hasEndOfLifeSection && <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
+        {viewMode === "detail" && <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
           {isDemoProduct ? (
             <div className="space-y-4">
               <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-5">
@@ -1858,24 +1866,33 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               </div>
             </div>
           ) : (
-            <DataCard title={t.endOfLife} icon="recycle" surface="soft">
-              <InfoGrid items={actualEndOfLifeItems} locale={locale} />
-            </DataCard>
+            actualEndOfLifeItems.length ? (
+              <DataCard title={t.endOfLife} icon="recycle" surface="soft">
+                <InfoGrid items={actualEndOfLifeItems} locale={locale} />
+              </DataCard>
+            ) : (
+              <Empty text={t.pendingData} />
+            )
           )}
         </Section>}
 
-        {viewMode === "detail" && hasTextileReserveSection && <Section id="textile-reserve" title={t.textileReserve} icon="layers">
-          <div className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
-            <div className="rounded-lg border border-blue-200 bg-blue-50 p-5">
-              <h3 className="text-2xl font-black text-slate-950">{t.textileReserve}</h3>
-              <p className="mt-3 leading-7 text-slate-700">{reserveIntro}</p>
-              <p className="mt-4 text-sm font-bold text-blue-700">{t.lastUpdatedLabel}: {t.dataLastUpdatedValue}</p>
+        {viewMode === "detail" && <Section id="textile-reserve" title={t.textileReserve} icon="layers">
+          {textileReserveItems.length ? (
+            <div className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
+              <div className="rounded-lg border border-blue-200 bg-blue-50 p-5">
+                <h3 className="text-2xl font-black text-slate-950">{t.textileReserve}</h3>
+                <p className="mt-3 leading-7 text-slate-700">{reserveIntro}</p>
+                <p className="mt-4 text-sm font-bold text-blue-700">{t.lastUpdatedLabel}: {t.dataLastUpdatedValue}</p>
+              </div>
+              <InfoGrid items={textileReserveItems} locale={locale} />
             </div>
-            <InfoGrid items={textileReserveItems} locale={locale} />
-          </div>
+          ) : (
+            <Empty text={t.pendingData} />
+          )}
         </Section>}
 
-        {viewMode === "detail" && hasBatchSection && <Section id="batch-tracking" title={t.batchTracking} icon="route">
+        {viewMode === "detail" && <Section id="batch-tracking" title={t.batchTracking} icon="route">
+          {batchHistory.length ? (
           <div className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
             <DataCard title={t.batchHistoryTitle} icon="route" surface="soft">
               <div className="space-y-3">
@@ -1902,9 +1919,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               )}
             </DataCard>
           </div>
+          ) : (
+            <Empty text={t.pendingData} />
+          )}
         </Section>}
 
-        {viewMode === "detail" && hasEvidenceSection && <Section id="evidence" title={t.evidence} icon="file">
+        {viewMode === "detail" && <Section id="evidence" title={t.evidence} icon="file">
+          {dataSourceRows.length || verificationItems.length || documents.length || governance.length ? (
           <div className="space-y-4">
             {dataSourceRows.length > 0 && (
               <DataCard title={t.dataTransparencyTitle} icon="file" surface="soft">
@@ -1957,6 +1978,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               )}
             </div>
           </div>
+          ) : (
+            <Empty text={t.pendingData} />
+          )}
         </Section>}
 
         </div>
@@ -2336,12 +2360,9 @@ function Info({
 }
 
 function InfoGrid({ items, locale }: { items: Array<[string, any]>; locale: Locale }) {
-  const visibleItems = items.filter(([, value]) => hasDisplayValue(value));
-  if (!visibleItems.length) return null;
-
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      {visibleItems.map(([label, value]) => (
+      {items.map(([label, value]) => (
         <div key={label} className="grid gap-2 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:grid-cols-[minmax(96px,0.35fr)_minmax(0,1fr)]">
           <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500">
             <span className="grid h-5 w-5 shrink-0 place-items-center rounded bg-brand-50 text-brand-700">
