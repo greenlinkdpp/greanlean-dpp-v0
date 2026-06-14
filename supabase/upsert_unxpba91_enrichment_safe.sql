@@ -186,10 +186,10 @@ where not exists (
 
 insert into public.product_traceability (
   product_id, event_type, event_name, event_name_zh, event_date, country, city,
-  facility_name, facility_name_zh, supplier_name, transport_method, verification_status, notes, notes_zh
+  facility_name, facility_name_zh, transport_method, verification_status, notes, notes_zh
 )
 select t.product_id, x.event_type, x.event_name, x.event_name_zh, x.event_date::timestamptz, x.country, x.city,
-       x.facility_name, x.facility_name_zh, x.supplier_name, x.transport_method, 'pending', x.notes, x.notes_zh
+       x.facility_name, x.facility_name_zh, x.transport_method, 'pending', x.notes, x.notes_zh
 from _dpp_unxpba91_target t
 cross join (
   values
