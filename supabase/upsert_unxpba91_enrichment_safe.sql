@@ -51,6 +51,10 @@ where p.id = t.product_id;
 update public.product_digital_identity di
 set
   product_uuid = coalesce(di.product_uuid, 'DPP-UNXPBA91'),
+  gtin = case
+    when di.gtin is null or btrim(di.gtin) in ('', '-', '123') then '06900000000427'
+    else di.gtin
+  end,
   style_id = coalesce(di.style_id, 'TEXTILE-VEST-002'),
   batch_id = coalesce(di.batch_id, 'TEXTILE-BATCH-2026-002'),
   serial_id = coalesce(di.serial_id, 'UNXPBA91'),
@@ -65,7 +69,7 @@ insert into public.product_digital_identity (
 select
   t.product_id,
   'DPP-UNXPBA91',
-  null,
+  '06900000000427',
   'TEXTILE-VEST-002',
   'TEXTILE-BATCH-2026-002',
   'UNXPBA91',
