@@ -768,14 +768,14 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.serial, firstIdentity?.serial_id],
     [t.digitalLink, dppUrl],
   ];
-  const heroDetails: Array<[string, any]> = ([
+  const heroDetails: Array<[string, any]> = [
     [t.sku, product.sku],
     [t.gtin, firstIdentity?.gtin],
     [t.sgtin, sgtin],
     [t.batch, firstIdentity?.batch_id],
-    [t.certificatesVerified, certificates.length ? `${verifiedCertificates} / ${certificates.length}` : null],
+    [t.certificatesVerified, certificates.length ? `${verifiedCertificates} / ${certificates.length}` : t.pendingData],
     [t.lastUpdatedLabel, t.dataLastUpdatedValue],
-  ] as Array<[string, any]>).filter(([, value]) => hasDisplayValue(value));
+  ];
   const heroFocusCards: Array<[string, any, IconName]> = (isDemoProduct
     ? isElectronics
       ? [
@@ -806,11 +806,11 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             ]
     : [
         [t.materialProfile, materialProfileFromData, "layers"],
-        [t.certificatesVerified, certificates.length ? `${verifiedCertificates} / ${certificates.length}` : null, "shield"],
-        [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : null, "carbon"],
+        [t.certificatesVerified, certificates.length ? `${verifiedCertificates} / ${certificates.length}` : t.pendingData, "shield"],
+        [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : t.pendingData, "carbon"],
         [t.nextAction, nextActionFromData, "recycle"],
       ]
-  ).filter(([, value]) => hasDisplayValue(value) && value !== t.noData) as Array<[string, any, IconName]>;
+  ).map(([label, value, icon]) => [label, value === t.noData ? t.pendingData : value, icon]) as Array<[string, any, IconName]>;
   const overviewStatusCards: Array<[string, string, IconName]> = [
     [t.overviewStatus1, t.overviewStatus1Desc, "qr"],
     [t.overviewStatus2, t.overviewStatus2Desc, "file"],
