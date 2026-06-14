@@ -4,6 +4,10 @@ function escapePdfText(value: string) {
   return value.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
 }
 
+function isPdfSafeText(value: string) {
+  return /^[\x09\x0A\x0D\x20-\x7E]*$/.test(value);
+}
+
 function buildPdf(lines: string[]) {
   const contentLines = lines
     .flatMap((line) => {
@@ -276,11 +280,13 @@ async function databasePayload(productIdentifier: string) {
 }
 
 function pdfLines(payload: any) {
+  const productName = payload.product.name || payload.product.slug || "-";
+  const chineseName = payload.product.name_zh || "";
   return [
     "Digital Product Passport Export",
     "",
-    `Product: ${payload.product.name || payload.product.slug}`,
-    `Chinese name: ${payload.product.name_zh || "-"}`,
+    `Product: ${productName}`,
+    isPdfSafeText(chineseName) ? `Chinese name: ${chineseName}` : `Chinese name: see online DPP page (${payload.product.dpp_id || productName})`,
     `DPP ID: ${payload.product.dpp_id || "-"}`,
     `Version: ${payload.product.current_version || "-"}`,
     `Status: ${payload.product.status || "-"}`,
