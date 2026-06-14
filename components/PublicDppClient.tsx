@@ -816,6 +816,43 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.overviewStatus2, t.overviewStatus2Desc, "file"],
     [t.overviewStatus3, t.overviewStatus3Desc, "route"],
   ];
+  const displayOrPending = (value: any) => (hasDisplayValue(value) ? value : t.pendingData);
+  const bomWeightGrams = (rows: any[]) =>
+    rows.reduce((sum, row) => {
+      const unit = String(row.unit || "").toLowerCase();
+      if (unit && unit !== "g" && unit !== "gram" && unit !== "grams") return sum;
+      const quantity = Number(row.quantity);
+      return Number.isFinite(quantity) ? sum + quantity : sum;
+    }, 0);
+  const totalBomWeightGrams = bomWeightGrams(bom);
+  const mainFabricWeightGrams = bomWeightGrams(
+    bom.filter((row: any) => {
+      const type = String(row.component_type || row.component_type_zh || "").toLowerCase();
+      return type.includes("fabric") || type.includes("面料");
+    })
+  );
+  const repairableComponentNames = compact(
+    bom
+      .filter((row: any) => {
+        const type = String(row.component_type || row.component_type_zh || "").toLowerCase();
+        return type.includes("trim") || type.includes("label") || type.includes("zipper") || type.includes("辅料") || type.includes("标签");
+      })
+      .slice(0, 6)
+      .map((row: any) => pick(row, locale, "component_name", "component_name_zh"))
+      .filter(hasDisplayValue)
+  );
+  const materialChemicalInfo = compact(
+    materials
+      .map((row: any) => pick(row, locale, "chemical_info", "chemical_info_zh"))
+      .filter(hasDisplayValue)
+      .slice(0, 4)
+  );
+  const materialCertificationList = compact(
+    materials
+      .map((row: any) => row.certification)
+      .filter(hasDisplayValue)
+      .slice(0, 6)
+  );
   const performanceItems: Array<[string, any]> = isDemoProduct ? (isElectronics
     ? [
         [locale === "zh" ? "单次续航" : "Battery life", locale === "zh" ? "8 小时" : "8 hours"],
@@ -866,7 +903,38 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.minimumLifetime, locale === "zh" ? "2-3 年" : "2-3 years"],
         [t.testBasis, t.performanceBasis],
       ]
-  ) : [];
+  ) : [
+    [
+      locale === "zh" ? "产品类型" : "Product type",
+      displayOrPending(product.subcategory || product.category),
+    ],
+    [
+      locale === "zh" ? "BOM 记录重量" : "BOM recorded weight",
+      totalBomWeightGrams ? `${totalBomWeightGrams} g` : t.pendingData,
+    ],
+    [
+      locale === "zh" ? "主面料记录重量" : "Main fabric recorded weight",
+      mainFabricWeightGrams ? `${mainFabricWeightGrams} g` : t.pendingData,
+    ],
+    [
+      locale === "zh" ? "可维修 / 可替换组件" : "Repairable / replaceable parts",
+      displayOrPending(repairableComponentNames),
+    ],
+    [
+      t.minimumLifetime,
+      pick(product, locale, "estimated_lifetime", "estimated_lifetime_zh") !== "-"
+        ? pick(product, locale, "estimated_lifetime", "estimated_lifetime_zh")
+        : locale === "zh"
+          ? "2-4 年（待客户确认）"
+          : "2-4 years (pending customer confirmation)",
+    ],
+    [
+      t.testBasis,
+      locale === "zh"
+        ? "基于客户已提供的产品、材料与 BOM 数据预填；耐洗、色牢度、拉伸强度等正式检测报告待客户上传后更新。"
+        : "Pre-filled from customer-provided product, material and BOM data; wash durability, colour fastness and tensile-strength reports will be updated once uploaded.",
+    ],
+  ];
   const performanceMetrics = performanceItems.filter(([label]) => label !== t.testBasis).slice(0, 5);
   const performanceBasis = performanceItems.find(([label]) => label === t.testBasis);
   const chemicalRows = isDemoProduct ? (isElectronics
@@ -988,7 +1056,38 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       type: "msds",
     },
       ]
-  ) : [];
+  ) : [
+    {
+      item: t.svhcCandidate,
+      result: locale === "zh" ? "待客户确认" : "Pending customer confirmation",
+      limit: materialChemicalInfo || (locale === "zh" ? "未有意添加受限物质；正式 SVHC / REACH 文件待上传。" : "No intentionally added restricted substances declared; formal SVHC / REACH files pending upload."),
+      type: "svhc",
+    },
+    {
+      item: locale === "zh" ? "REACH / RSL 筛查" : "REACH / RSL screening",
+      result: materialCertificationList || (locale === "zh" ? "待客户确认" : "Pending customer confirmation"),
+      limit: locale === "zh" ? "按纺织品 REACH 与品牌 RSL 证据链预留。" : "Reserved for textile REACH and brand RSL evidence chain.",
+      type: "svhc",
+    },
+    {
+      item: locale === "zh" ? "重金属 - 铅 / 镉 / 六价铬" : "Heavy metals - Pb / Cd / Cr(VI)",
+      result: locale === "zh" ? "待检测报告" : "Test report pending",
+      limit: locale === "zh" ? "第三方重金属检测报告待客户上传。" : "Third-party heavy-metal test report pending customer upload.",
+      type: "heavy-metals",
+    },
+    {
+      item: t.azoDyes,
+      result: locale === "zh" ? "待检测报告" : "Test report pending",
+      limit: locale === "zh" ? "偶氮染料检测报告待客户上传。" : "Azo-dye test report pending customer upload.",
+      type: "azo",
+    },
+    {
+      item: t.msdsFile,
+      result: documents.length ? t.available : locale === "zh" ? "待客户上传" : "Pending customer upload",
+      limit: locale === "zh" ? "材料 MSDS / 化学品声明文件。" : "Material MSDS / chemical declaration files.",
+      type: "msds",
+    },
+  ];
   const declarationItems: Array<[string, any]> = isDemoProduct ? [
     [
       t.applicableEuRules,
@@ -1204,8 +1303,40 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.fullOriginTrace, t.fullOriginValue],
         [t.animalWelfare, t.animalWelfareValue],
         [t.laborCertification, t.laborCertificationValue],
-      ]) : [];
-  const batchHistory = isDemoProduct ? (isElectronics
+      ]) : [
+        [
+          t.microfiberPotential,
+          locale === "zh"
+            ? "含再生涤纶 / 摇粒绒材料，微纤维释放潜力评估字段已预留，待客户上传洗涤或实验室测试数据。"
+            : "Recycled polyester / fleece materials present; microfiber-release assessment is reserved pending wash or lab test data.",
+        ],
+        [
+          t.fullOriginTrace,
+          traceability.length
+            ? compact(
+                traceability
+                  .map((event: any) => pick(event, locale, "facility_name", "facility_name_zh"))
+                  .filter(hasDisplayValue)
+                  .slice(0, 4)
+              )
+            : locale === "zh"
+              ? "已预留原料、裁剪、缝制、包装和出口节点字段，待供应链资料补齐。"
+              : "Material, cutting, sewing, packing and export nodes are reserved pending supplier data.",
+        ],
+        [
+          t.animalWelfare,
+          locale === "zh"
+            ? "当前材料以涤纶、仿皮、口袋布和辅料为主，未识别动物源材料；如后续加入羽绒、羊毛或皮革需补充声明。"
+            : "Current materials are mainly polyester, faux leather, pocket cloth and trims; no animal-origin material identified. Add declaration if down, wool or leather is later used.",
+        ],
+        [
+          t.laborCertification,
+          locale === "zh"
+            ? "待客户补充 BSCI、WRAP、SA8000 或工厂社会责任审核文件。"
+            : "BSCI, WRAP, SA8000 or factory social-compliance audit files pending customer upload.",
+        ],
+      ];
+  const batchHistory: string[] = isDemoProduct ? (isElectronics
     ? [
         locale === "zh" ? "2026-04-16 电池、PCB 和外壳材料批次创建并绑定 RoHS / REACH 声明" : "2026-04-16 Battery, PCB and housing material batches created and linked to RoHS / REACH declarations",
         locale === "zh" ? "2026-05-30 总装与声学质检完成，SKU 与 SGTIN 生成" : "2026-05-30 Final assembly and acoustic QA completed; SKU and SGTIN generated",
@@ -1226,7 +1357,17 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             locale === "zh" ? "2026-06-03 出口运输记录写入，鹿特丹家具经销仓接收待确认" : "2026-06-03 Export shipment record added; Rotterdam furniture distributor receipt pending",
             locale === "zh" ? "2026-06-06 家具 DPP 数据审核并更新公开页面" : "2026-06-06 Furniture DPP data reviewed and public page updated",
           ]
-    : [t.batchRecord1, t.batchRecord2, t.batchRecord3, t.batchRecord4]) : [];
+    : [t.batchRecord1, t.batchRecord2, t.batchRecord3, t.batchRecord4]) : traceability.length
+      ? traceability.map((event: any) =>
+          compact([
+            formatDate(event.event_date || event.created_at, locale),
+            pick(event, locale, "event_type", "event_type_zh"),
+            pick(event, locale, "facility_name", "facility_name_zh"),
+            compact([event.city, event.country].filter(hasDisplayValue)),
+            pick(event, locale, "notes", "notes_zh"),
+          ].filter(hasDisplayValue))
+        )
+      : [];
   const benchmarkNote = isDemoProduct ? (isElectronics
     ? locale === "zh"
       ? "低于示例消费电子同类平均值约 24%，主要来自再生塑料外壳、轻量化包装和较小物流体积假设。"
@@ -1252,7 +1393,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? locale === "zh"
           ? "以下字段用于提前适配家具耐久性、维修、拆解、再使用和材料循环相关 DPP 要求；当前作为预留和数据准备项展示。"
           : "These fields are reserved for furniture durability, repair, disassembly, reuse and material-circularity DPP requirements; currently shown as data-readiness items."
-    : t.textileReserveIntro) : "";
+    : t.textileReserveIntro) : locale === "zh"
+      ? "以下字段根据当前产品、材料、BOM 与供应链记录预填；客户补充正式文件后可继续更新。"
+      : "The fields below are pre-filled from current product, material, BOM and supply-chain records; they can be updated once formal customer files are provided.";
   const householdWasteText = isDemoProduct ? (isElectronics
     ? locale === "zh"
       ? "请勿将耳机、充电盒或含电池部件作为生活垃圾丢弃，应进入 WEEE 或电池回收渠道。"
