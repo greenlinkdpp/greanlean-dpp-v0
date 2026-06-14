@@ -1,0 +1,421 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.greanlean.com/schemas/greanlean-dpp.schema.json",
+  "title": "GreanLean Digital Product Passport",
+  "description": "Canonical JSON Schema for GreanLean DPP exports and API responses.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "passport_type",
+    "locale",
+    "product",
+    "identity",
+    "suppliers",
+    "supplier_product_links",
+    "materials",
+    "bom",
+    "chemical_compliance",
+    "performance",
+    "traceability",
+    "esg",
+    "circularity",
+    "certificates",
+    "documents",
+    "governance",
+    "version_history",
+    "last_updated"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "passport_type": {
+      "type": "string",
+      "default": "Digital Product Passport"
+    },
+    "locale": {
+      "type": "string",
+      "enum": ["en", "zh", "en-ZH", "multi"]
+    },
+    "product": {
+      "$ref": "#/$defs/product"
+    },
+    "identity": {
+      "$ref": "#/$defs/identity"
+    },
+    "suppliers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/supplier"
+      },
+      "default": []
+    },
+    "supplier_product_links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/supplierProductLink"
+      },
+      "default": []
+    },
+    "materials": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/material"
+      },
+      "default": []
+    },
+    "bom": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/bomItem"
+      },
+      "default": []
+    },
+    "chemical_compliance": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/chemicalCompliance"
+      },
+      "default": []
+    },
+    "performance": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/performanceMetric"
+      },
+      "default": []
+    },
+    "traceability": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/traceabilityEvent"
+      },
+      "default": []
+    },
+    "esg": {
+      "$ref": "#/$defs/esg"
+    },
+    "circularity": {
+      "$ref": "#/$defs/circularity"
+    },
+    "certificates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/certificate"
+      },
+      "default": []
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/document"
+      },
+      "default": []
+    },
+    "governance": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/governance"
+      },
+      "default": []
+    },
+    "version_history": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/versionRecord"
+      },
+      "default": []
+    },
+    "last_updated": {
+      "$ref": "#/$defs/dateTime"
+    }
+  },
+  "$defs": {
+    "nullableString": {
+      "type": ["string", "null"]
+    },
+    "nullableNumber": {
+      "type": ["number", "null"]
+    },
+    "date": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "dateTime": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "uri": {
+      "type": ["string", "null"],
+      "format": "uri-reference"
+    },
+    "verificationStatus": {
+      "type": ["string", "null"],
+      "enum": ["verified", "pending", "declared", "estimated", "expired", "not_applicable", null]
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dpp_id", "sku", "name", "category", "status"],
+      "properties": {
+        "dpp_id": { "type": "string", "minLength": 1 },
+        "slug": { "$ref": "#/$defs/nullableString" },
+        "sku": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "name_zh": { "$ref": "#/$defs/nullableString" },
+        "brand": { "$ref": "#/$defs/nullableString" },
+        "category": { "type": "string", "minLength": 1 },
+        "subcategory": { "$ref": "#/$defs/nullableString" },
+        "season": { "$ref": "#/$defs/nullableString" },
+        "description": { "$ref": "#/$defs/nullableString" },
+        "description_zh": { "$ref": "#/$defs/nullableString" },
+        "main_image": { "$ref": "#/$defs/uri" },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "review", "published", "updated", "archived", "expired"]
+        },
+        "current_version": { "$ref": "#/$defs/nullableString" },
+        "care_instructions": { "$ref": "#/$defs/nullableString" },
+        "care_instructions_zh": { "$ref": "#/$defs/nullableString" },
+        "repair_instructions": { "$ref": "#/$defs/nullableString" },
+        "repair_instructions_zh": { "$ref": "#/$defs/nullableString" },
+        "end_of_life_instructions": { "$ref": "#/$defs/nullableString" },
+        "end_of_life_instructions_zh": { "$ref": "#/$defs/nullableString" },
+        "updated_at": { "$ref": "#/$defs/dateTime" }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "product_uuid": { "$ref": "#/$defs/nullableString" },
+        "gtin": { "$ref": "#/$defs/nullableString" },
+        "sgtin": { "$ref": "#/$defs/nullableString" },
+        "style_id": { "$ref": "#/$defs/nullableString" },
+        "batch_id": { "$ref": "#/$defs/nullableString" },
+        "serial_id": { "$ref": "#/$defs/nullableString" },
+        "digital_link_url": { "$ref": "#/$defs/uri" },
+        "qr_code_id": { "$ref": "#/$defs/nullableString" },
+        "nfc_id": { "$ref": "#/$defs/nullableString" },
+        "rfid_epc": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "supplier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "type": { "$ref": "#/$defs/nullableString" },
+        "country": { "$ref": "#/$defs/nullableString" },
+        "city": { "$ref": "#/$defs/nullableString" },
+        "contact_person": { "$ref": "#/$defs/nullableString" },
+        "email": { "type": ["string", "null"], "format": "email" },
+        "certifications": { "$ref": "#/$defs/nullableString" },
+        "esg_score": { "$ref": "#/$defs/nullableNumber" },
+        "facility_name": { "$ref": "#/$defs/nullableString" },
+        "facility_name_zh": { "$ref": "#/$defs/nullableString" },
+        "location": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "latitude": { "$ref": "#/$defs/nullableNumber" },
+            "longitude": { "$ref": "#/$defs/nullableNumber" }
+          }
+        }
+      }
+    },
+    "supplierProductLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supplier_name", "product_dpp_id"],
+      "properties": {
+        "supplier_name": { "type": "string" },
+        "product_dpp_id": { "type": "string" },
+        "product_sku": { "$ref": "#/$defs/nullableString" },
+        "role": { "$ref": "#/$defs/nullableString" },
+        "status": { "$ref": "#/$defs/nullableString" },
+        "notes": { "$ref": "#/$defs/nullableString" },
+        "notes_zh": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "material": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "name_zh": { "$ref": "#/$defs/nullableString" },
+        "type": { "$ref": "#/$defs/nullableString" },
+        "type_zh": { "$ref": "#/$defs/nullableString" },
+        "percentage": { "$ref": "#/$defs/nullableNumber" },
+        "recycled_content": { "$ref": "#/$defs/nullableNumber" },
+        "origin_country": { "$ref": "#/$defs/nullableString" },
+        "supplier": { "$ref": "#/$defs/nullableString" },
+        "chemical_info": { "$ref": "#/$defs/nullableString" },
+        "chemical_info_zh": { "$ref": "#/$defs/nullableString" },
+        "recyclability": { "$ref": "#/$defs/nullableString" },
+        "recyclability_zh": { "$ref": "#/$defs/nullableString" },
+        "certification": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "bomItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component"],
+      "properties": {
+        "component": { "type": "string", "minLength": 1 },
+        "component_zh": { "$ref": "#/$defs/nullableString" },
+        "type": { "$ref": "#/$defs/nullableString" },
+        "type_zh": { "$ref": "#/$defs/nullableString" },
+        "quantity": { "$ref": "#/$defs/nullableString" },
+        "quantity_value": { "$ref": "#/$defs/nullableNumber" },
+        "unit": { "$ref": "#/$defs/nullableString" },
+        "position": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "chemicalCompliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["test_item"],
+      "properties": {
+        "test_item": { "type": "string" },
+        "result": { "$ref": "#/$defs/nullableString" },
+        "limit": { "$ref": "#/$defs/nullableString" },
+        "regulation": { "$ref": "#/$defs/nullableString" },
+        "report_url": { "$ref": "#/$defs/uri" },
+        "verification_status": { "$ref": "#/$defs/verificationStatus" },
+        "last_updated": { "$ref": "#/$defs/dateTime" }
+      }
+    },
+    "performanceMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric_name"],
+      "properties": {
+        "metric_name": { "type": "string" },
+        "metric_value": { "type": ["string", "number", "null"] },
+        "unit": { "$ref": "#/$defs/nullableString" },
+        "test_method": { "$ref": "#/$defs/nullableString" },
+        "report_url": { "$ref": "#/$defs/uri" },
+        "verification_status": { "$ref": "#/$defs/verificationStatus" },
+        "last_updated": { "$ref": "#/$defs/dateTime" }
+      }
+    },
+    "traceabilityEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event"],
+      "properties": {
+        "event": { "type": "string" },
+        "event_zh": { "$ref": "#/$defs/nullableString" },
+        "type": { "$ref": "#/$defs/nullableString" },
+        "date": { "$ref": "#/$defs/dateTime" },
+        "country": { "$ref": "#/$defs/nullableString" },
+        "city": { "$ref": "#/$defs/nullableString" },
+        "facility": { "$ref": "#/$defs/nullableString" },
+        "facility_zh": { "$ref": "#/$defs/nullableString" },
+        "supplier_name": { "$ref": "#/$defs/nullableString" },
+        "location": { "$ref": "#/$defs/nullableString" },
+        "transport_method": { "$ref": "#/$defs/nullableString" },
+        "verification_status": { "$ref": "#/$defs/verificationStatus" },
+        "notes": { "$ref": "#/$defs/nullableString" },
+        "notes_zh": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "esg": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "carbon_footprint": { "$ref": "#/$defs/nullableNumber" },
+        "carbon_unit": { "type": ["string", "null"], "default": "kg CO2e" },
+        "water_usage": { "$ref": "#/$defs/nullableNumber" },
+        "water_unit": { "type": ["string", "null"], "default": "L" },
+        "energy_consumption": { "$ref": "#/$defs/nullableNumber" },
+        "energy_unit": { "type": ["string", "null"], "default": "kWh" },
+        "waste_generation": { "$ref": "#/$defs/nullableNumber" },
+        "waste_unit": { "type": ["string", "null"], "default": "kg" },
+        "recycled_content": { "$ref": "#/$defs/nullableNumber" },
+        "chemical_management": { "$ref": "#/$defs/nullableString" },
+        "lca_report_url": { "$ref": "#/$defs/uri" },
+        "methodology": { "$ref": "#/$defs/nullableString" },
+        "verified_by": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "circularity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repairability_score": { "$ref": "#/$defs/nullableNumber" },
+        "recyclability_score": { "$ref": "#/$defs/nullableNumber" },
+        "take_back_program": { "$ref": "#/$defs/nullableString" },
+        "resale_supported": { "type": ["boolean", "null"] },
+        "remanufacturing_supported": { "type": ["boolean", "null"] },
+        "disassembly_guide": { "$ref": "#/$defs/nullableString" },
+        "recycling_instructions": { "$ref": "#/$defs/nullableString" },
+        "end_of_life_info": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "certificate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "name_zh": { "$ref": "#/$defs/nullableString" },
+        "type": { "$ref": "#/$defs/nullableString" },
+        "type_zh": { "$ref": "#/$defs/nullableString" },
+        "number": { "$ref": "#/$defs/nullableString" },
+        "issuer": { "$ref": "#/$defs/nullableString" },
+        "issue_date": { "$ref": "#/$defs/date" },
+        "expiry_date": { "$ref": "#/$defs/date" },
+        "url": { "$ref": "#/$defs/uri" },
+        "verification_status": { "$ref": "#/$defs/verificationStatus" }
+      }
+    },
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "$ref": "#/$defs/nullableString" },
+        "url": { "$ref": "#/$defs/uri" },
+        "file_size": { "$ref": "#/$defs/nullableString" },
+        "language": { "$ref": "#/$defs/nullableString" },
+        "uploaded_by": { "$ref": "#/$defs/nullableString" },
+        "version": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "data_source": { "$ref": "#/$defs/nullableString" },
+        "data_owner": { "$ref": "#/$defs/nullableString" },
+        "audit_status": { "$ref": "#/$defs/nullableString" },
+        "data_quality_score": { "$ref": "#/$defs/nullableNumber" },
+        "verification_scope": { "$ref": "#/$defs/nullableString" },
+        "last_updated": { "$ref": "#/$defs/dateTime" }
+      }
+    },
+    "versionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "lifecycle_status"],
+      "properties": {
+        "version": { "type": "string", "pattern": "^v[0-9]+\\.[0-9]+$" },
+        "lifecycle_status": {
+          "type": "string",
+          "enum": ["draft", "review", "published", "updated", "archived", "expired"]
+        },
+        "change_type": { "$ref": "#/$defs/nullableString" },
+        "change_summary": { "$ref": "#/$defs/nullableString" },
+        "changed_by": { "$ref": "#/$defs/nullableString" },
+        "created_at": { "$ref": "#/$defs/dateTime" }
+      }
+    }
+  }
+}

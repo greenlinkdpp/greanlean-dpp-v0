@@ -77,12 +77,13 @@ async function safeSelect(supabase: ReturnType<typeof createSupabaseClient>, tab
 function demoPayload(product: string) {
   const demos: Record<string, any> = {
     "demo-wireless-earbuds": {
-      product: { slug: product, name: "Wireless Bluetooth Earbuds", name_zh: "无线蓝牙耳机", sku: "GL-EARBUDS-001", dpp_id: "DPP-AUDIO-DEMO-001", category: "Consumer Electronics" },
+      product: { slug: product, name: "Wireless Bluetooth Earbuds", name_zh: "无线蓝牙耳机", sku: "GL-EARBUDS-001", dpp_id: "DPP-AUDIO-DEMO-001", category: "Consumer Electronics", status: "published", current_version: "v1.0" },
       identity: { gtin: "06900000000128", sgtin: "06900000000128.EARBUDS-DEMO-0001", batch_id: "BATCH-AUDIO-2026-001" },
       esg: { carbon_footprint: 6.8, water_usage: 42, recycled_content: 18 },
       certificates: ["EU Declaration of Conformity", "RoHS Restricted Substance Test Report", "REACH SVHC Screening"],
       materials: ["Recycled ABS / PC plastic", "Lithium-ion battery", "PCB and electronic components"],
       last_updated: "2026-06-05",
+      version_history: [{ version: "v1.0", lifecycle_status: "published", change_type: "initial_publish", change_summary: "Initial electronics DPP demo publication.", changed_by: "greanlean admin", created_at: "2026-06-05T00:00:00.000Z" }],
     },
     "demo-wpc-flooring": {
       product: {
@@ -92,6 +93,8 @@ function demoPayload(product: string) {
         sku: "MS140K25B",
         dpp_id: "DPP-WPC-MS140K25B",
         category: "WPC DECKING",
+        status: "updated",
+        current_version: "v1.1",
         description: "Outdoor composite decking board, 140x25mm, 2.55kg/m, SANDING finish, colours WOOD / COFFEE / DARK GREY / LIGHT GREY.",
       },
       identity: { gtin: "06900000000203", sgtin: "06900000000203.TRACE-W2605-05", batch_id: "W2605-05", serial_id: "TRACE-W2605-05" },
@@ -112,24 +115,30 @@ function demoPayload(product: string) {
         estimated_fields: ["carbon footprint", "electricity", "water", "renewable energy ratio", "waste recycling rate", "ISO14001 readiness"],
       },
       last_updated: "2026-06-07",
+      version_history: [
+        { version: "v1.0", lifecycle_status: "published", change_type: "initial_publish", change_summary: "Initial WPC DPP publication.", changed_by: "greanlean admin", created_at: "2026-06-04T00:00:00.000Z" },
+        { version: "v1.1", lifecycle_status: "updated", change_type: "data_correction", change_summary: "Updated WPC product data from flooring spreadsheet.", changed_by: "greanlean admin", created_at: "2026-06-07T00:00:00.000Z" }
+      ],
     },
     "demo-office-chair": {
-      product: { slug: product, name: "Disassemblable Office Chair", name_zh: "可拆解办公椅", sku: "GL-CHAIR-001", dpp_id: "DPP-FURN-DEMO-001", category: "Furniture" },
+      product: { slug: product, name: "Disassemblable Office Chair", name_zh: "可拆解办公椅", sku: "GL-CHAIR-001", dpp_id: "DPP-FURN-DEMO-001", category: "Furniture", status: "published", current_version: "v1.0" },
       identity: { gtin: "06900000000302", sgtin: "06900000000302.CHAIR-DEMO-0001", batch_id: "BATCH-FURN-2026-001" },
       esg: { carbon_footprint: 28.6, water_usage: 76, recycled_content: 34 },
       certificates: ["Furniture Durability Test Report", "REACH SVHC and Heavy Metal Screening"],
       materials: ["Powder coated steel", "Recycled PP / nylon", "Polyester mesh and PU foam"],
       last_updated: "2026-06-06",
+      version_history: [{ version: "v1.0", lifecycle_status: "published", change_type: "initial_publish", change_summary: "Initial furniture DPP demo publication.", changed_by: "greanlean admin", created_at: "2026-06-06T00:00:00.000Z" }],
     },
   };
 
   return demos[product] || {
-    product: { slug: product, name: "Organic Cotton T-Shirt", name_zh: "有机棉基础 T 恤", sku: "GL-TSHIRT-001", dpp_id: "DPP-DEMO-001", category: "Textile & Apparel" },
+    product: { slug: product, name: "Organic Cotton T-Shirt", name_zh: "有机棉基础 T 恤", sku: "GL-TSHIRT-001", dpp_id: "DPP-DEMO-001", category: "Textile & Apparel", status: "published", current_version: "v1.0" },
     identity: { gtin: "06900000000012", sgtin: "06900000000012.DEMO-TEE-0001", batch_id: "BATCH-2026-001" },
     esg: { carbon_footprint: 3.2, water_usage: 118, recycled_content: 4 },
     certificates: ["GOTS Scope Certificate", "OEKO-TEX Standard 100", "EU Declaration of Conformity"],
     materials: ["Organic cotton", "Recycled polyester sewing thread"],
     last_updated: "2026-06-04",
+    version_history: [{ version: "v1.0", lifecycle_status: "published", change_type: "initial_publish", change_summary: "Initial textile DPP demo publication.", changed_by: "greanlean admin", created_at: "2026-06-04T00:00:00.000Z" }],
   };
 }
 
@@ -139,7 +148,7 @@ async function databasePayload(productIdentifier: string) {
     .from("products")
     .select("*")
     .eq("dpp_id", productIdentifier)
-    .eq("status", "published")
+    .in("status", ["published", "updated", "expired"])
     .maybeSingle();
   const { data: productBySlug } = productByDpp
     ? { data: null }
@@ -147,13 +156,13 @@ async function databasePayload(productIdentifier: string) {
         .from("products")
         .select("*")
         .eq("public_slug", productIdentifier)
-        .eq("status", "published")
+        .in("status", ["published", "updated", "expired"])
         .maybeSingle();
   const product = productByDpp || productBySlug;
 
   if (!product?.id) return null;
 
-  const [materials, certificates, esgRows, bom, traceability, circularity, digitalIdentity, documents, governance] = await Promise.all([
+  const [materials, certificates, esgRows, bom, traceability, circularity, digitalIdentity, documents, governance, versions] = await Promise.all([
     safeSelect(supabase, "product_materials", product.id),
     safeSelect(supabase, "product_certificates", product.id),
     safeSelect(supabase, "product_esg_metrics", product.id),
@@ -163,6 +172,7 @@ async function databasePayload(productIdentifier: string) {
     safeSelect(supabase, "product_digital_identity", product.id),
     safeSelect(supabase, "product_documents", product.id),
     safeSelect(supabase, "product_data_governance", product.id),
+    safeSelect(supabase, "product_versions", product.id),
   ]);
 
   const identity = latest<any>(digitalIdentity);
@@ -182,6 +192,7 @@ async function databasePayload(productIdentifier: string) {
       dpp_id: product.dpp_id,
       main_image: product.main_image,
       status: product.status,
+      current_version: product.current_version,
       updated_at: product.updated_at,
     },
     identity: {
@@ -252,6 +263,14 @@ async function databasePayload(productIdentifier: string) {
       audit_status: item.audit_status,
       data_quality_score: item.data_quality_score,
     })),
+    version_history: versions.map((item: any) => ({
+      version: item.version,
+      lifecycle_status: item.lifecycle_status,
+      change_type: item.change_type,
+      change_summary: item.change_summary,
+      changed_by: item.changed_by,
+      created_at: item.created_at,
+    })),
     last_updated: product.updated_at || product.created_at,
   };
 }
@@ -263,6 +282,8 @@ function pdfLines(payload: any) {
     `Product: ${payload.product.name || payload.product.slug}`,
     `Chinese name: ${payload.product.name_zh || "-"}`,
     `DPP ID: ${payload.product.dpp_id || "-"}`,
+    `Version: ${payload.product.current_version || "-"}`,
+    `Status: ${payload.product.status || "-"}`,
     `SKU: ${payload.product.sku || "-"}`,
     `Category: ${payload.product.category || "-"}`,
     `GTIN: ${payload.identity?.gtin || "-"}`,

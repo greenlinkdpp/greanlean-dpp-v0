@@ -1,0 +1,224 @@
+{
+  "schema_version": "1.0.0",
+  "passport_type": "Digital Product Passport",
+  "locale": "multi",
+  "product": {
+    "dpp_id": "DPP-WPC-MS140K25B",
+    "slug": "demo-wpc-flooring",
+    "sku": "MS140K25B",
+    "name": "WPC PLANK",
+    "name_zh": "WPC PLANK",
+    "brand": "HUANGSHAN MEISEN",
+    "category": "WPC DECKING",
+    "subcategory": "Outdoor composite decking board",
+    "season": "2026 WPC Demo",
+    "description": "Outdoor composite decking board, 140x25mm, 2.55kg/m, SANDING finish.",
+    "description_zh": "户外木塑复合 decking 板材，规格 140x25mm，重量 2.55kg/m，表面工艺 SANDING。",
+    "main_image": "https://example.com/images/wpc-plank.png",
+    "status": "published",
+    "current_version": "v1.0",
+    "care_instructions": "Clean with mild detergent and water.",
+    "care_instructions_zh": "使用温和清洁剂和清水清洁。",
+    "repair_instructions": "Replace damaged decking panels with same-batch spare panels where possible.",
+    "repair_instructions_zh": "损坏板材优先使用同批次备用板替换。",
+    "end_of_life_instructions": "Remove metal fasteners before mechanical recycling.",
+    "end_of_life_instructions_zh": "机械回收前移除金属紧固件。",
+    "updated_at": "2026-06-11T00:00:00.000Z"
+  },
+  "identity": {
+    "product_uuid": "wpc-ms140k25b-demo",
+    "gtin": "06900000000203",
+    "sgtin": "06900000000203.TRACE-W2605-05",
+    "style_id": "MS140K25B",
+    "batch_id": "W2605-05",
+    "serial_id": "TRACE-W2605-05",
+    "digital_link_url": "https://www.greanlean.com/p/DPP-WPC-MS140K25B",
+    "qr_code_id": "QR-DPP-WPC-MS140K25B",
+    "nfc_id": null,
+    "rfid_epc": null
+  },
+  "suppliers": [
+    {
+      "name": "HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD",
+      "type": "Manufacturer",
+      "country": "China",
+      "city": "Huangshan",
+      "contact_person": null,
+      "email": null,
+      "certifications": "ISO9001, FSC, REACH declaration",
+      "esg_score": 78,
+      "facility_name": "Huangshan Meisen WPC Plant",
+      "facility_name_zh": "黄山美森 WPC 工厂",
+      "location": {
+        "latitude": null,
+        "longitude": null
+      }
+    }
+  ],
+  "supplier_product_links": [
+    {
+      "supplier_name": "HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD",
+      "product_dpp_id": "DPP-WPC-MS140K25B",
+      "product_sku": "MS140K25B",
+      "role": "Manufacturer",
+      "status": "active",
+      "notes": "Demo manufacturer linked to WPC PLANK DPP.",
+      "notes_zh": "示例制造商已关联 WPC PLANK DPP。"
+    }
+  ],
+  "materials": [
+    {
+      "name": "Wood Fiber",
+      "name_zh": "木纤维",
+      "type": "Raw material",
+      "type_zh": "原材料",
+      "percentage": 60,
+      "recycled_content": 0,
+      "origin_country": "China",
+      "supplier": "XXX Wood Supplier",
+      "chemical_info": "Renewable wood-fibre content; supplier declared recyclable input material.",
+      "chemical_info_zh": "可再生木纤维；供应商声明可回收输入材料。",
+      "recyclability": "Recyclable as WPC stream where facilities exist.",
+      "recyclability_zh": "具备设施时可进入 WPC 回收流。",
+      "certification": "FSC Certificate BV-COC-154663"
+    },
+    {
+      "name": "Recycled HDPE",
+      "name_zh": "再生 HDPE",
+      "type": "Raw material",
+      "type_zh": "原材料",
+      "percentage": 30,
+      "recycled_content": 100,
+      "origin_country": "China",
+      "supplier": "XXX Plastic Supplier",
+      "chemical_info": "REACH SVHC screened.",
+      "chemical_info_zh": "已进行 REACH SVHC 筛查。",
+      "recyclability": "Recyclable as polymer-composite stream.",
+      "recyclability_zh": "可作为聚合物复合材料回收。",
+      "certification": "Supplier declaration"
+    }
+  ],
+  "bom": [
+    {
+      "component": "Stainless Steel Clip And Screw with Narrow Gap (304)",
+      "component_zh": "304 不锈钢卡扣和螺丝",
+      "type": "Accessory",
+      "type_zh": "配件",
+      "quantity": "1 set",
+      "quantity_value": 1,
+      "unit": "set",
+      "position": "Installation accessories"
+    }
+  ],
+  "chemical_compliance": [
+    {
+      "test_item": "REACH SVHC",
+      "result": "Not detected",
+      "limit": "≤ 0.1% w/w",
+      "regulation": "REACH",
+      "report_url": "/api/chemical-document?type=svhc&product=DPP-WPC-MS140K25B",
+      "verification_status": "verified",
+      "last_updated": "2026-06-11T00:00:00.000Z"
+    }
+  ],
+  "performance": [
+    {
+      "metric_name": "Dimensions",
+      "metric_value": "140x25",
+      "unit": "mm",
+      "test_method": "Manufacturer specification",
+      "report_url": null,
+      "verification_status": "declared",
+      "last_updated": "2026-06-11T00:00:00.000Z"
+    }
+  ],
+  "traceability": [
+    {
+      "event": "Production release",
+      "event_zh": "生产放行",
+      "type": "manufacturing",
+      "date": "2026-05-20T00:00:00.000Z",
+      "country": "China",
+      "city": "Huangshan",
+      "facility": "Huangshan Meisen WPC Plant",
+      "facility_zh": "黄山美森 WPC 工厂",
+      "supplier_name": "HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD",
+      "location": "Huangshan, China",
+      "transport_method": "Internal transfer",
+      "verification_status": "verified",
+      "notes": "Batch W2605-05 released.",
+      "notes_zh": "W2605-05 批次已放行。"
+    }
+  ],
+  "esg": {
+    "carbon_footprint": 12.4,
+    "carbon_unit": "kg CO2e",
+    "water_usage": 18,
+    "water_unit": "L",
+    "energy_consumption": 15,
+    "energy_unit": "kWh",
+    "waste_generation": 0.85,
+    "waste_unit": "kg",
+    "recycled_content": 30,
+    "chemical_management": "No SVHC above declaration threshold.",
+    "lca_report_url": null,
+    "methodology": "Demo LCA estimate based on WPC formulation and extrusion-energy assumptions.",
+    "verified_by": "GreanLean DPP demo review"
+  },
+  "circularity": {
+    "repairability_score": 70,
+    "recyclability_score": 74,
+    "take_back_program": "Installer take-back or building-material distributor recovery.",
+    "resale_supported": true,
+    "remanufacturing_supported": false,
+    "disassembly_guide": "Mechanical / screw-and-clip disassembly.",
+    "recycling_instructions": "Remove metal fasteners before recycling.",
+    "end_of_life_info": "Mechanical recycling; avoid landfill; reprocess usable WPC material."
+  },
+  "certificates": [
+    {
+      "name": "FSC Certificate",
+      "name_zh": "FSC 证书",
+      "type": "Material",
+      "type_zh": "材料认证",
+      "number": "BV-COC-154663",
+      "issuer": "Bureau Veritas",
+      "issue_date": "2026-01-01",
+      "expiry_date": "2027-01-01",
+      "url": "/api/declaration?product=DPP-WPC-MS140K25B",
+      "verification_status": "verified"
+    }
+  ],
+  "documents": [
+    {
+      "name": "Installation Guide",
+      "type": "Manual",
+      "url": "/api/dpp-export?format=pdf&product=DPP-WPC-MS140K25B",
+      "file_size": "320 KB",
+      "language": "EN / ZH",
+      "uploaded_by": "greanlean admin",
+      "version": "v1.0"
+    }
+  ],
+  "governance": [
+    {
+      "data_source": "地板DPP.xlsx plus demo assumptions for blank environmental and traceability fields.",
+      "data_owner": "greanlean admin",
+      "audit_status": "demo reviewed",
+      "data_quality_score": 82,
+      "verification_scope": "Product identity, material composition, certificates, ESG estimates and traceability events.",
+      "last_updated": "2026-06-11T00:00:00.000Z"
+    }
+  ],
+  "version_history": [
+    {
+      "version": "v1.0",
+      "lifecycle_status": "published",
+      "change_type": "initial_publish",
+      "change_summary": "Initial DPP publication for WPC PLANK MS140K25B.",
+      "changed_by": "greanlean admin",
+      "created_at": "2026-06-11T00:00:00.000Z"
+    }
+  ],
+  "last_updated": "2026-06-11T00:00:00.000Z"
+}

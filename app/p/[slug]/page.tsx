@@ -42,10 +42,10 @@ const demoByIdentifier: Record<string, "tshirt" | "electronics" | "flooring" | "
 
 async function getData(identifier: string) {
   const supabase = createSupabaseClient();
-  const { data: productByDpp } = await supabase.from("products").select("*").eq("dpp_id", identifier).eq("status", "published").maybeSingle();
+  const { data: productByDpp } = await supabase.from("products").select("*").eq("dpp_id", identifier).in("status", ["published", "updated", "expired"]).maybeSingle();
   const { data: productBySlug } = productByDpp
     ? { data: null }
-    : await supabase.from("products").select("*").eq("public_slug", identifier).eq("status", "published").maybeSingle();
+    : await supabase.from("products").select("*").eq("public_slug", identifier).in("status", ["published", "updated", "expired"]).maybeSingle();
   const product = productByDpp || productBySlug;
   if (!product) {
     const demo = demoByIdentifier[identifier];
@@ -59,6 +59,7 @@ async function getData(identifier: string) {
   if (product.public_slug === "demo-wpc-flooring" || product.dpp_id === "DPP-WPC-MS140K25B") {
     return withFlooringDppData({
       product: {
+        ...product,
         id: product.id,
         main_image: product.main_image,
       },

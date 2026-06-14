@@ -52,7 +52,7 @@ export default function Home() {
     locale === "zh"
       ? {
           badge: "面向欧盟市场的 DPP 合规数据服务",
-          titleLine1: "产品数字护照",
+          titleLine1: "产品数字护照 DPP",
           titleLine2: "欧盟合规解决方案",
           subtitle1: "帮助中国制造企业应对欧盟 DPP 逐步强制落地要求，提前建立产品身份、供应链证据、环境数据和证书链。",
           subtitle2: "快速生成、验证、更新产品电子护照，让欧洲买家、监管方和消费者看懂产品全生命周期。",
@@ -95,13 +95,15 @@ export default function Home() {
           compare7: "按材料、供应链、ESG、循环性和消费者说明分模块披露",
           compare8: "同一数据可输出网页、二维码、PDF / JSON，并为未来系统对接预留",
           guideTitle: "2027 年前，企业应该先准备什么",
+          guideTitleLine1: "2027 年前，",
+          guideTitleLine2: "企业应该先准备什么",
           guideSubtitle: "欧盟 DPP 要求会按产品组逐步细化。现在最重要的是把产品数据从文件夹变成可更新、可验证、可对接的结构化资产。",
           guide1: "梳理产品身份",
           guide1Desc: "SKU、GTIN、批次、序列号、图片和公开链接。",
-          guide2: "补齐证据链",
-          guide2Desc: "证书、检测报告、符合性声明、供应商声明和有效期。",
-          guide3: "整理可持续数据",
-          guide3Desc: "碳、水、能源、废弃物、耐用性、可维修性和可回收性。",
+          guide2: "整理材料与产品结构",
+          guide2Desc: "BOM、材料占比、辅料、包装、来源国家和供应商信息。",
+          guide3: "补齐供应链与证据链",
+          guide3Desc: "生产、运输、证书、检测报告、符合性声明、供应商声明和有效期。",
           guide4: "生成公开 DPP",
           guide4Desc: "中英文页面、二维码、PDF/JSON 下载和后续更新机制。",
           serviceTitle: "DPP 落地流程",
@@ -116,6 +118,12 @@ export default function Home() {
           serviceStep4Desc: "生成中英 DPP 页面、二维码和 PDF/JSON，并支持后续证书或批次数据更新。",
           contactTitle: "开始 DPP 准备度评估",
           contactSubtitle: "告诉我们你的产品类别、目标市场和现有资料情况，我们会帮你判断第一阶段应该先补哪些数据。",
+          contactPanelTitle: "建议提前准备的资料",
+          contactPanelDesc: "提交前可先整理产品照片、SKU 清单、BOM、材料来源、供应商信息、证书和检测报告。资料越完整，DPP 结构化速度越快。",
+          contactPanelItem1: "产品身份与图片",
+          contactPanelItem2: "材料、组件、包装和辅料",
+          contactPanelItem3: "供应商、生产和运输记录",
+          contactPanelItem4: "证书、检测报告和声明文件",
           footerTagline: "欧盟 DPP 与 ESPR 合规数据服务，帮助出口企业把产品资料整理成可展示、可审核、可维护的数字产品护照。",
           footerDemo: "DPP 示例",
           footerSolutions: "解决方案",
@@ -168,13 +176,15 @@ export default function Home() {
           compare7: "Materials, supply chain, ESG, circularity and consumer notes are disclosed by module",
           compare8: "The same data can power web pages, QR codes, PDF / JSON and future system integration",
           guideTitle: "What to prepare before 2027",
+          guideTitleLine1: "Before 2027,",
+          guideTitleLine2: "what should companies prepare?",
           guideSubtitle: "EU DPP requirements will be specified by product group. The priority is to turn product files into structured assets that can be updated, verified and connected.",
           guide1: "Map product identity",
           guide1Desc: "SKU, GTIN, batch, serial number, image and public link.",
-          guide2: "Complete evidence chain",
-          guide2Desc: "Certificates, test reports, declaration of conformity, supplier declarations and validity.",
-          guide3: "Structure sustainability data",
-          guide3Desc: "Carbon, water, energy, waste, durability, repairability and recyclability.",
+          guide2: "Structure materials and product data",
+          guide2Desc: "BOM, material share, trims, packaging, origin country and supplier information.",
+          guide3: "Complete supply-chain and evidence chain",
+          guide3Desc: "Production, transport, certificates, test reports, declaration of conformity, supplier declarations and validity.",
           guide4: "Publish public DPP",
           guide4Desc: "Bilingual page, QR code, PDF/JSON download and update mechanism.",
           serviceTitle: "DPP implementation workflow",
@@ -189,6 +199,12 @@ export default function Home() {
           serviceStep4Desc: "Generate bilingual DPP pages, QR codes and PDF/JSON exports, with updates for future certificates and batches.",
           contactTitle: "Start your DPP readiness assessment",
           contactSubtitle: "Tell us your product category, target markets and current documentation. We will identify which data to prepare first.",
+          contactPanelTitle: "Files worth preparing first",
+          contactPanelDesc: "Before submitting, gather product images, SKU lists, BOM, material origins, supplier information, certificates and test reports. More complete files shorten DPP structuring time.",
+          contactPanelItem1: "Product identity and images",
+          contactPanelItem2: "Materials, components, packaging and trims",
+          contactPanelItem3: "Suppliers, production and transport records",
+          contactPanelItem4: "Certificates, test reports and declarations",
           footerTagline: "EU DPP and ESPR compliance data service for turning product documentation into presentable, reviewable and maintainable Digital Product Passports.",
           footerDemo: "DPP demo",
           footerSolutions: "Solutions",
@@ -354,7 +370,10 @@ export default function Home() {
           <div className="mx-auto max-w-7xl px-6">
             <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
               <div>
-                <h2 className="text-4xl font-black">{t.guideTitle}</h2>
+                <h2 className="text-4xl font-black">
+                  <span className="block">{t.guideTitleLine1}</span>
+                  <span className="block">{t.guideTitleLine2}</span>
+                </h2>
                 <p className="mt-4 text-lg leading-8 text-slate-300">{t.guideSubtitle}</p>
               </div>
 
@@ -377,7 +396,7 @@ export default function Home() {
           <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
             <div className="border-b border-slate-200 p-8 lg:p-10">
               <h2 className="text-3xl font-black text-slate-950">{t.serviceTitle}</h2>
-              <p className="mt-4 max-w-4xl text-lg leading-8 text-slate-600">{t.serviceSubtitle}</p>
+              <p className="mt-4 whitespace-nowrap text-lg leading-8 text-slate-600 max-xl:whitespace-normal">{t.serviceSubtitle}</p>
             </div>
             <div className="grid gap-0 md:grid-cols-2 xl:grid-cols-4">
               {serviceSteps.map(([title, desc], index) => (
@@ -397,6 +416,29 @@ export default function Home() {
           <div>
             <h2 className="text-4xl font-black text-slate-950">{t.contactTitle}</h2>
             <p className="mt-4 text-lg leading-8 text-slate-600">{t.contactSubtitle}</p>
+            <div className="mt-8 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+              <div className="grid gap-0 md:grid-cols-[0.9fr_1.1fr]">
+                <div className="relative min-h-56 overflow-hidden bg-slate-950">
+                  <img src="/images/dpp-hero.png" alt="" className="h-full w-full object-cover opacity-75" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-950/80 to-emerald-950/30" />
+                  <div className="absolute bottom-5 left-5 rounded-lg border border-white/15 bg-white/10 px-4 py-3 text-sm font-black text-white backdrop-blur">
+                    DPP readiness
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-black text-slate-950">{t.contactPanelTitle}</h3>
+                  <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">{t.contactPanelDesc}</p>
+                  <div className="mt-5 grid gap-2">
+                    {[t.contactPanelItem1, t.contactPanelItem2, t.contactPanelItem3, t.contactPanelItem4].map((item) => (
+                      <div key={item} className="flex gap-3 rounded-lg bg-slate-50 px-3 py-2.5 text-sm font-bold text-slate-700">
+                        <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand-600" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <LeadForm />

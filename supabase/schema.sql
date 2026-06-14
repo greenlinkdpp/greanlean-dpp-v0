@@ -21,6 +21,7 @@ create table if not exists public.products (
   subcategory text,
   description text,
   status text default 'draft',
+  current_version text default 'v1.0',
   dpp_id text unique,
   public_slug text unique,
   main_image text,
@@ -35,6 +36,19 @@ create table if not exists public.products (
   end_of_life_instructions_zh text,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
+);
+
+create table if not exists public.product_versions (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid references public.products(id) on delete cascade,
+  version text not null,
+  lifecycle_status text not null default 'draft',
+  change_type text,
+  change_summary text,
+  changed_by text default 'greanlean admin',
+  snapshot jsonb,
+  created_at timestamptz default now(),
+  unique (product_id, version)
 );
 
 create table if not exists public.product_suppliers (
@@ -218,6 +232,7 @@ create table if not exists public.product_data_governance (
 
 alter table public.leads enable row level security;
 alter table public.products enable row level security;
+alter table public.product_versions enable row level security;
 alter table public.product_suppliers enable row level security;
 alter table public.supplier_products enable row level security;
 alter table public.product_materials enable row level security;
@@ -241,7 +256,14 @@ create policy "Authenticated can update leads" on public.leads for update to aut
 drop policy if exists "Authenticated can manage products" on public.products;
 create policy "Authenticated can manage products" on public.products for all to authenticated using (true) with check (true);
 drop policy if exists "Public can read published products" on public.products;
-create policy "Public can read published products" on public.products for select to anon using (status = 'published');
+create policy "Public can read published products" on public.products for select to anon using (status in ('published', 'updated', 'expired'));
+
+drop policy if exists "Authenticated can manage product versions" on public.product_versions;
+create policy "Authenticated can manage product versions" on public.product_versions for all to authenticated using (true) with check (true);
+drop policy if exists "Public can read published product versions" on public.product_versions;
+create policy "Public can read published product versions" on public.product_versions for select to anon using (
+  exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired'))
+);
 
 drop policy if exists "Authenticated can manage suppliers" on public.product_suppliers;
 create policy "Authenticated can manage suppliers" on public.product_suppliers for all to authenticated using (true) with check (true);
@@ -251,58 +273,58 @@ create policy "Authenticated can manage supplier products" on public.supplier_pr
 drop policy if exists "Public can read published supplier products" on public.supplier_products;
 create policy "Public can read published supplier products"
 on public.supplier_products for select to anon using (
-  exists (select 1 from public.products p where p.id = product_id and p.status = 'published')
+  exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired'))
 );
 
 drop policy if exists "Authenticated can manage materials" on public.product_materials;
 create policy "Authenticated can manage materials" on public.product_materials for all to authenticated using (true) with check (true);
 drop policy if exists "Public can read materials" on public.product_materials;
-create policy "Public can read materials" on public.product_materials for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status = 'published'));
+create policy "Public can read materials" on public.product_materials for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired')));
 
 drop policy if exists "Authenticated can manage bom" on public.product_bom;
 create policy "Authenticated can manage bom" on public.product_bom for all to authenticated using (true) with check (true);
 drop policy if exists "Public can read bom" on public.product_bom;
-create policy "Public can read bom" on public.product_bom for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status = 'published'));
+create policy "Public can read bom" on public.product_bom for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired')));
 
 drop policy if exists "Authenticated can manage esg" on public.product_esg_metrics;
 create policy "Authenticated can manage esg" on public.product_esg_metrics for all to authenticated using (true) with check (true);
 drop policy if exists "Public can read esg" on public.product_esg_metrics;
-create policy "Public can read esg" on public.product_esg_metrics for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status = 'published'));
+create policy "Public can read esg" on public.product_esg_metrics for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired')));
 
 drop policy if exists "Authenticated can manage certificates" on public.product_certificates;
 create policy "Authenticated can manage certificates" on public.product_certificates for all to authenticated using (true) with check (true);
 drop policy if exists "Public can read certificates" on public.product_certificates;
-create policy "Public can read certificates" on public.product_certificates for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status = 'published'));
+create policy "Public can read certificates" on public.product_certificates for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired')));
 
 drop policy if exists "Authenticated can manage traceability" on public.product_traceability;
 create policy "Authenticated can manage traceability" on public.product_traceability for all to authenticated using (true) with check (true);
 drop policy if exists "Public can read traceability" on public.product_traceability;
-create policy "Public can read traceability" on public.product_traceability for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status = 'published'));
+create policy "Public can read traceability" on public.product_traceability for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired')));
 
 drop policy if exists "Authenticated can manage circularity" on public.product_circularity;
 create policy "Authenticated can manage circularity" on public.product_circularity for all to authenticated using (true) with check (true);
 drop policy if exists "Public can read circularity" on public.product_circularity;
-create policy "Public can read circularity" on public.product_circularity for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status = 'published'));
+create policy "Public can read circularity" on public.product_circularity for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired')));
 
 drop policy if exists "Authenticated can manage consumer transparency" on public.product_consumer_transparency;
 create policy "Authenticated can manage consumer transparency" on public.product_consumer_transparency for all to authenticated using (true) with check (true);
 drop policy if exists "Public can read consumer transparency" on public.product_consumer_transparency;
-create policy "Public can read consumer transparency" on public.product_consumer_transparency for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status = 'published'));
+create policy "Public can read consumer transparency" on public.product_consumer_transparency for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired')));
 
 drop policy if exists "Authenticated can manage digital identity" on public.product_digital_identity;
 create policy "Authenticated can manage digital identity" on public.product_digital_identity for all to authenticated using (true) with check (true);
 drop policy if exists "Public can read digital identity" on public.product_digital_identity;
-create policy "Public can read digital identity" on public.product_digital_identity for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status = 'published'));
+create policy "Public can read digital identity" on public.product_digital_identity for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired')));
 
 drop policy if exists "Authenticated can manage documents" on public.product_documents;
 create policy "Authenticated can manage documents" on public.product_documents for all to authenticated using (true) with check (true);
 drop policy if exists "Public can read documents" on public.product_documents;
-create policy "Public can read documents" on public.product_documents for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status = 'published'));
+create policy "Public can read documents" on public.product_documents for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired')));
 
 drop policy if exists "Authenticated can manage governance" on public.product_data_governance;
 create policy "Authenticated can manage governance" on public.product_data_governance for all to authenticated using (true) with check (true);
 drop policy if exists "Public can read governance" on public.product_data_governance;
-create policy "Public can read governance" on public.product_data_governance for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status = 'published'));
+create policy "Public can read governance" on public.product_data_governance for select to anon using (exists (select 1 from public.products p where p.id = product_id and p.status in ('published', 'updated', 'expired')));
 
 insert into public.products (
   name, name_zh, sku, brand, category, subcategory, season, description, description_zh,

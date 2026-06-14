@@ -57,6 +57,15 @@ function compact(values: any[]) {
   return values.filter((value) => value !== null && value !== undefined && value !== "").join(", ");
 }
 
+function groupRows<T>(rows: T[], getGroup: (row: T) => string) {
+  const groups = new Map<string, T[]>();
+  rows.forEach((row) => {
+    const group = getGroup(row) || "Other";
+    groups.set(group, [...(groups.get(group) || []), row]);
+  });
+  return Array.from(groups.entries()).map(([label, items]) => ({ label, items }));
+}
+
 function addRegulatoryChemicalContext(value: any, locale: Locale) {
   const text = valueOrDash(value, locale);
   const lower = text.toLowerCase();
@@ -100,6 +109,11 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       ? {
           brand: "greanlean DPP",
           published: "已发布",
+          statusDraft: "草稿",
+          statusReview: "待审核",
+          statusUpdated: "已更新",
+          statusArchived: "已归档",
+          statusExpired: "证书过期",
           passport: "数字产品护照",
           verified: "已验证",
           pending: "待验证",
@@ -110,8 +124,18 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           productIdentity: "产品基本信息",
           materialSource: "材料组成与来源",
           materialFormula: "材料配方",
+          materialGroupIntro: "按材料类型归类，并按占比从高到低展示。",
           componentSupplement: "组件、包装与辅料",
-          componentSupplementIntro: "该清单用于补充包装、配件和可更换组件，不计入主材料配方占比。",
+          componentSupplementIntro: "按组件类型归类，用于补充包装、配件和可更换组件，不计入主材料配方占比。",
+          groupCount: "项",
+          openGroup: "展开查看",
+          overviewStatusTitle: "护照数据状态",
+          overviewStatus1: "唯一身份已绑定",
+          overviewStatus1Desc: "DPP ID、SKU、批次与二维码用于稳定访问。",
+          overviewStatus2: "证据链可追溯",
+          overviewStatus2Desc: "材料、证书、供应链和声明文件按模块组织。",
+          overviewStatus3: "支持后续更新",
+          overviewStatus3Desc: "证书、批次和供应商资料变化后可同步维护。",
           itemName: "名称",
           chemicalRestricted: "化学品与受限物质",
           productPerformance: "产品性能",
@@ -327,6 +351,11 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       : {
           brand: "greanlean DPP",
           published: "Published",
+          statusDraft: "Draft",
+          statusReview: "In review",
+          statusUpdated: "Updated",
+          statusArchived: "Archived",
+          statusExpired: "Certificate expired",
           passport: "Digital Product Passport",
           verified: "Verified",
           pending: "Pending",
@@ -338,7 +367,17 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           materialSource: "Materials and sources",
           materialFormula: "Material formula",
           componentSupplement: "Components, packaging and accessories",
-          componentSupplementIntro: "This list supplements packaging, accessories and replaceable components; it is not counted in the primary material formula.",
+          materialGroupIntro: "Grouped by material type and sorted by share from high to low.",
+          componentSupplementIntro: "Grouped by component type; this list supplements packaging, accessories and replaceable components and is not counted in the primary material formula.",
+          groupCount: "items",
+          openGroup: "Open",
+          overviewStatusTitle: "Passport data status",
+          overviewStatus1: "Identity linked",
+          overviewStatus1Desc: "DPP ID, SKU, batch and QR code provide stable access.",
+          overviewStatus2: "Evidence traceable",
+          overviewStatus2Desc: "Materials, certificates, supply chain and declarations are organized by module.",
+          overviewStatus3: "Update-ready",
+          overviewStatus3Desc: "Certificates, batches and supplier records can be maintained after changes.",
           itemName: "Name",
           chemicalRestricted: "Chemicals and restricted substances",
           productPerformance: "Product performance",
@@ -552,6 +591,16 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           textileCollectionDesc: "Donate, resell or repair while usable; send to textile recycling when reuse is no longer possible.",
         };
 
+  const lifecycleStatusLabel =
+    {
+      draft: t.statusDraft,
+      review: t.statusReview,
+      published: t.published,
+      updated: t.statusUpdated,
+      archived: t.statusArchived,
+      expired: t.statusExpired,
+    }[String(product.status || "published").toLowerCase()] || t.published;
+
   const latestEsg = esg[0] || null;
   const firstCircularity = circularity[0] || null;
   const firstTransparency = consumerTransparency[0] || null;
@@ -579,7 +628,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   const qrUrl = `/api/qr?url=${encodeURIComponent(dppUrl)}`;
 
   const compositionMaterials = useMemo(() => {
-    return materials.filter((material: any) => material.percentage !== null && material.percentage !== undefined && material.percentage !== "");
+    return materials
+      .filter((material: any) => material.percentage !== null && material.percentage !== undefined && material.percentage !== "")
+      .sort((a: any, b: any) => Number(b.percentage || 0) - Number(a.percentage || 0));
   }, [materials]);
 
   const supplementalComponents = useMemo(() => {
@@ -612,8 +663,20 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         });
       });
 
-    return Array.from(rows.values());
+    return Array.from(rows.values()).sort((a: any, b: any) => {
+      const typeA = String(a.component_type || a.material_type || "");
+      const typeB = String(b.component_type || b.material_type || "");
+      return typeA.localeCompare(typeB);
+    });
   }, [bom, isFlooring, materials, product?.sku]);
+
+  const materialGroups = useMemo(() => {
+    return groupRows(compositionMaterials, (material: any) => pick(material, locale, "material_type", "material_type_zh"));
+  }, [compositionMaterials, locale]);
+
+  const supplementalComponentGroups = useMemo(() => {
+    return groupRows(supplementalComponents, (component: any) => pick(component, locale, "component_type", "component_type_zh"));
+  }, [locale, supplementalComponents]);
 
   const totalRecycled = useMemo(() => {
     if (!compositionMaterials.length) return null;
@@ -698,6 +761,11 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             [t.carbon, `${carbonCurrent} kg CO2e`, "carbon"],
             [t.nextAction, locale === "zh" ? "护理 / 维修 / 纺织回收" : "Care / repair / textile recycling", "recycle"],
           ];
+  const overviewStatusCards: Array<[string, string, IconName]> = [
+    [t.overviewStatus1, t.overviewStatus1Desc, "qr"],
+    [t.overviewStatus2, t.overviewStatus2Desc, "file"],
+    [t.overviewStatus3, t.overviewStatus3Desc, "route"],
+  ];
   const performanceItems: Array<[string, any]> = isElectronics
     ? [
         [locale === "zh" ? "单次续航" : "Battery life", locale === "zh" ? "8 小时" : "8 hours"],
@@ -1157,12 +1225,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ? "完好部件优先维修、翻新或转售；无法继续使用时按材料拆解进入当地回收渠道。"
           : "Repair, refurbish or resell intact components first; disassemble unusable parts into local material recovery channels."
     : t.textileCollectionDesc;
-  const summaryMetrics: Array<[string, any, IconName]> = [
-    [t.materialCount, compositionMaterials.length, "layers"],
-    [t.recycled, totalRecycled === null ? "0%" : `${totalRecycled}%`, "recycle"],
-    [t.carbon, `${carbonCurrent} kg CO2e`, "carbon"],
-    [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
-  ];
   const navItems: Array<[string, string, IconName]> = [
     ["#identity", t.productIdentity, "box"],
     ["#materials", t.materialSource, "layers"],
@@ -1195,7 +1257,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
             <span className="rounded-full border border-green-200 bg-green-50 px-3 py-1.5 text-sm font-semibold text-green-700 shadow-sm">
-              {t.published}
+              {lifecycleStatusLabel}
             </span>
           </div>
         </div>
@@ -1227,6 +1289,23 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               {heroFocusCards.map(([label, value, icon]) => (
                 <HeroFocusCard key={label} label={label} value={value} locale={locale} icon={icon} />
               ))}
+            </div>
+
+            <div className="mt-5 rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur">
+              <p className="text-sm font-black text-brand-100">{t.overviewStatusTitle}</p>
+              <div className="mt-3 grid gap-3 md:grid-cols-3">
+                {overviewStatusCards.map(([title, desc, icon]) => (
+                  <div key={title} className="flex gap-3 rounded-lg bg-slate-950/25 p-3">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-400/15 text-brand-100 ring-1 ring-brand-300/25">
+                      <Icon name={icon} className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <p className="text-sm font-black text-white">{title}</p>
+                      <p className="mt-1 text-xs font-semibold leading-5 text-slate-300">{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -1285,14 +1364,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </div>
       </section>
 
-      <section className="relative z-10 mx-auto -mt-6 max-w-[1680px] px-6">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {summaryMetrics.map(([label, value, icon]) => (
-            <Metric key={label} label={label} value={value} locale={locale} icon={icon} />
-          ))}
-        </div>
-      </section>
-
       <div className="mx-auto grid max-w-[1680px] gap-6 px-6 py-8 xl:grid-cols-[184px_minmax(0,1fr)]">
         <aside className="hidden xl:block">
           <nav className="sticky top-24 space-y-1 rounded-lg border border-slate-200/80 bg-white/75 p-2 shadow-sm backdrop-blur-xl" aria-label="DPP section navigation">
@@ -1344,11 +1415,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
 
             <Section id="materials" title={t.materialSource} icon="layers">
               {compositionMaterials.length ? (
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  {compositionMaterials.map((material: any) => (
-                    <MaterialCard key={material.id} item={material} locale={locale} t={t} />
-                  ))}
-                </div>
+                <GroupedMaterialList groups={materialGroups} locale={locale} t={t} />
               ) : (
                 <Empty text={t.pendingData} />
               )}
@@ -1477,17 +1544,14 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               {compositionMaterials.length ? (
                 <div>
                   <p className="mb-3 text-sm font-black text-brand-700">{t.materialFormula}</p>
-                  <div className="grid gap-4 lg:grid-cols-2">
-                    {compositionMaterials.map((material: any) => (
-                      <MaterialCard key={material.id} item={material} locale={locale} t={t} />
-                    ))}
-                  </div>
+                  <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.materialGroupIntro}</p>
+                  <GroupedMaterialList groups={materialGroups} locale={locale} t={t} />
                 </div>
               ) : null}
               {supplementalComponents.length ? (
                 <DataCard title={t.componentSupplement} icon="tag" surface="soft">
                   <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.componentSupplementIntro}</p>
-                  <ComponentSupplementTable rows={supplementalComponents} locale={locale} t={t} />
+                  <GroupedComponentSupplementList groups={supplementalComponentGroups} locale={locale} t={t} />
                 </DataCard>
               ) : null}
             </div>
@@ -2240,6 +2304,76 @@ function ChemicalTable({
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function GroupedMaterialList({
+  groups,
+  locale,
+  t,
+}: {
+  groups: Array<{ label: string; items: any[] }>;
+  locale: Locale;
+  t: any;
+}) {
+  return (
+    <div className="space-y-3">
+      {groups.map((group, index) => (
+        <details key={group.label} open={index === 0} className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 bg-slate-50 px-4 py-3 transition hover:bg-emerald-50">
+            <div className="flex items-center gap-3">
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
+                <Icon name="layers" className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="font-black text-slate-950">{group.label}</p>
+                <p className="mt-0.5 text-xs font-bold text-slate-500">{group.items.length} {t.groupCount}</p>
+              </div>
+            </div>
+            <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-black text-slate-600">{t.openGroup}</span>
+          </summary>
+          <div className="grid gap-4 p-4 lg:grid-cols-2">
+            {group.items.map((material: any) => (
+              <MaterialCard key={material.id} item={material} locale={locale} t={t} />
+            ))}
+          </div>
+        </details>
+      ))}
+    </div>
+  );
+}
+
+function GroupedComponentSupplementList({
+  groups,
+  locale,
+  t,
+}: {
+  groups: Array<{ label: string; items: any[] }>;
+  locale: Locale;
+  t: any;
+}) {
+  return (
+    <div className="space-y-3">
+      {groups.map((group, index) => (
+        <details key={group.label} open={index === 0} className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 bg-white px-4 py-3 transition hover:bg-emerald-50">
+            <div className="flex items-center gap-3">
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
+                <Icon name="tag" className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="font-black text-slate-950">{group.label}</p>
+                <p className="mt-0.5 text-xs font-bold text-slate-500">{group.items.length} {t.groupCount}</p>
+              </div>
+            </div>
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-black text-slate-600">{t.openGroup}</span>
+          </summary>
+          <div className="p-4">
+            <ComponentSupplementTable rows={group.items} locale={locale} t={t} />
+          </div>
+        </details>
+      ))}
     </div>
   );
 }
