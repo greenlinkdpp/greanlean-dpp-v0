@@ -21,7 +21,7 @@ export default function Home() {
   useEffect(() => {
     document.title =
       locale === "zh"
-        ? "产品数字护照欧盟合规解决方案 | GREANLEAN DPP"
+        ? "数字产品护照欧盟合规解决方案 | GREANLEAN DPP"
         : "EU Digital Product Passport Compliance Solution | GREANLEAN DPP";
   }, [locale]);
 
@@ -52,7 +52,7 @@ export default function Home() {
     locale === "zh"
       ? {
           badge: "面向欧盟市场的 DPP 合规数据服务",
-          titleLine1: "产品数字护照 DPP",
+          titleLine1: "数字产品护照 DPP",
           titleLine2: "欧盟合规解决方案",
           subtitle1: "帮助中国制造企业应对欧盟 DPP 逐步强制落地要求，提前建立产品身份、供应链证据、环境数据和证书链。",
           subtitle2: "快速生成、验证、更新产品电子护照，让欧洲买家、监管方和消费者看懂产品全生命周期。",
