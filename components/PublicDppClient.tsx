@@ -65,6 +65,10 @@ function hasDisplayValue(value: any) {
   return value !== null && value !== undefined && String(value).trim() !== "" && String(value).trim() !== "-";
 }
 
+function isVerifiedStatus(value: any) {
+  return ["verified", "valid", "active"].includes(String(value || "").trim().toLowerCase());
+}
+
 function groupRows<T>(rows: T[], getGroup: (row: T) => string) {
   const groups = new Map<string, T[]>();
   rows.forEach((row) => {
@@ -733,7 +737,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   ]) || t.noData;
 
   const verifiedCertificates = certificates.filter((certificate: any) => {
-    return String(certificate.verification_status || "").toLowerCase() === "verified";
+    return isVerifiedStatus(certificate.verification_status);
   }).length;
   const sgtin =
     firstIdentity?.gtin && firstIdentity?.serial_id
@@ -822,31 +826,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.overviewStatus2, t.overviewStatus2Desc, "file"],
     [t.overviewStatus3, t.overviewStatus3Desc, "route"],
   ];
-  const displayOrPending = (value: any) => (hasDisplayValue(value) ? value : t.pendingData);
-  const bomWeightGrams = (rows: any[]) =>
-    rows.reduce((sum, row) => {
-      const unit = String(row.unit || "").toLowerCase();
-      if (unit && unit !== "g" && unit !== "gram" && unit !== "grams") return sum;
-      const quantity = Number(row.quantity);
-      return Number.isFinite(quantity) ? sum + quantity : sum;
-    }, 0);
-  const totalBomWeightGrams = bomWeightGrams(bom);
-  const mainFabricWeightGrams = bomWeightGrams(
-    bom.filter((row: any) => {
-      const type = String(row.component_type || row.component_type_zh || "").toLowerCase();
-      return type.includes("fabric") || type.includes("面料");
-    })
-  );
-  const repairableComponentNames = compact(
-    bom
-      .filter((row: any) => {
-        const type = String(row.component_type || row.component_type_zh || "").toLowerCase();
-        return type.includes("trim") || type.includes("label") || type.includes("zipper") || type.includes("辅料") || type.includes("标签");
-      })
-      .slice(0, 6)
-      .map((row: any) => pick(row, locale, "component_name", "component_name_zh"))
-      .filter(hasDisplayValue)
-  );
   const materialChemicalInfo = compact(
     materials
       .map((row: any) => pick(row, locale, "chemical_info", "chemical_info_zh"))
@@ -859,6 +838,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       .filter(hasDisplayValue)
       .slice(0, 6)
   );
+  const chemicalEvidenceDocuments = documents.filter((document: any) => {
+    const text = `${document.document_name || ""} ${document.document_type || ""}`.toLowerCase();
+    return ["chemical", "test", "pfas", "reach", "rsl", "msds", "svhc", "oeko"].some((keyword) => text.includes(keyword));
+  });
   const performanceItems: Array<[string, any]> = isDemoProduct ? (isElectronics
     ? [
         [locale === "zh" ? "单次续航" : "Battery life", locale === "zh" ? "8 小时" : "8 hours"],
@@ -909,38 +892,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.minimumLifetime, locale === "zh" ? "2-3 年" : "2-3 years"],
         [t.testBasis, t.performanceBasis],
       ]
-  ) : [
-    [
-      locale === "zh" ? "产品类型" : "Product type",
-      displayOrPending(product.subcategory || product.category),
-    ],
-    [
-      locale === "zh" ? "BOM 记录重量" : "BOM recorded weight",
-      totalBomWeightGrams ? `${totalBomWeightGrams} g` : t.pendingData,
-    ],
-    [
-      locale === "zh" ? "主面料记录重量" : "Main fabric recorded weight",
-      mainFabricWeightGrams ? `${mainFabricWeightGrams} g` : t.pendingData,
-    ],
-    [
-      locale === "zh" ? "可维修 / 可替换组件" : "Repairable / replaceable parts",
-      displayOrPending(repairableComponentNames),
-    ],
-    [
-      t.minimumLifetime,
-      pick(product, locale, "estimated_lifetime", "estimated_lifetime_zh") !== "-"
-        ? pick(product, locale, "estimated_lifetime", "estimated_lifetime_zh")
-        : locale === "zh"
-          ? "2-4 年（待客户确认）"
-          : "2-4 years (pending customer confirmation)",
-    ],
-    [
-      t.testBasis,
-      locale === "zh"
-        ? "基于客户已提供的产品、材料与 BOM 数据预填；耐洗、色牢度、拉伸强度等正式检测报告待客户上传后更新。"
-        : "Pre-filled from customer-provided product, material and BOM data; wash durability, colour fastness and tensile-strength reports will be updated once uploaded.",
-    ],
-  ];
+  ) : [];
   const performanceMetrics = performanceItems.filter(([label]) => label !== t.testBasis).slice(0, 5);
   const performanceBasis = performanceItems.find(([label]) => label === t.testBasis);
   const chemicalRows = isDemoProduct ? (isElectronics
@@ -1063,37 +1015,28 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     },
       ]
   ) : [
-    {
-      item: t.svhcCandidate,
-      result: locale === "zh" ? "待客户确认" : "Pending customer confirmation",
-      limit: materialChemicalInfo || (locale === "zh" ? "未有意添加受限物质；正式 SVHC / REACH 文件待上传。" : "No intentionally added restricted substances declared; formal SVHC / REACH files pending upload."),
-      type: "svhc",
-    },
-    {
-      item: locale === "zh" ? "REACH / RSL 筛查" : "REACH / RSL screening",
-      result: materialCertificationList || (locale === "zh" ? "待客户确认" : "Pending customer confirmation"),
-      limit: locale === "zh" ? "按纺织品 REACH 与品牌 RSL 证据链预留。" : "Reserved for textile REACH and brand RSL evidence chain.",
-      type: "svhc",
-    },
-    {
-      item: locale === "zh" ? "重金属 - 铅 / 镉 / 六价铬" : "Heavy metals - Pb / Cd / Cr(VI)",
-      result: locale === "zh" ? "待检测报告" : "Test report pending",
-      limit: locale === "zh" ? "第三方重金属检测报告待客户上传。" : "Third-party heavy-metal test report pending customer upload.",
-      type: "heavy-metals",
-    },
-    {
-      item: t.azoDyes,
-      result: locale === "zh" ? "待检测报告" : "Test report pending",
-      limit: locale === "zh" ? "偶氮染料检测报告待客户上传。" : "Azo-dye test report pending customer upload.",
-      type: "azo",
-    },
-    {
-      item: t.msdsFile,
-      result: documents.length ? t.available : locale === "zh" ? "待客户上传" : "Pending customer upload",
-      limit: locale === "zh" ? "材料 MSDS / 化学品声明文件。" : "Material MSDS / chemical declaration files.",
-      type: "msds",
-    },
-  ];
+    materialChemicalInfo
+      ? {
+          item: locale === "zh" ? "材料化学声明" : "Material chemical declaration",
+          result: materialChemicalInfo,
+          limit: materialCertificationList || "-",
+          type: "svhc",
+        }
+      : null,
+    chemicalEvidenceDocuments.length
+      ? {
+          item: locale === "zh" ? "化学/测试文件" : "Chemical / test files",
+          result: chemicalEvidenceDocuments.map((document: any) => document.document_name).filter(hasDisplayValue).join(", "),
+          limit: chemicalEvidenceDocuments.map((document: any) => document.document_type).filter(hasDisplayValue).join(", ") || "-",
+          type: "msds",
+        }
+      : null,
+  ].filter(Boolean) as Array<{ item: string; result: string; limit: string; type: string }>;
+  const chemicalIntroText = isDemoProduct
+    ? t.chemicalIntro
+    : locale === "zh"
+      ? "展示数据库已录入的材料化学声明、合规认证和测试文件；未录入的受限物质项目不自动补充。"
+      : "Shows material chemical declarations, compliance certifications and test files recorded in the database; restricted-substance items are not auto-filled when missing.";
   const declarationItems: Array<[string, any]> = isDemoProduct ? [
     [
       t.applicableEuRules,
@@ -1309,39 +1252,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.fullOriginTrace, t.fullOriginValue],
         [t.animalWelfare, t.animalWelfareValue],
         [t.laborCertification, t.laborCertificationValue],
-      ]) : [
-        [
-          t.microfiberPotential,
-          locale === "zh"
-            ? "含再生涤纶 / 摇粒绒材料，微纤维释放潜力评估字段已预留，待客户上传洗涤或实验室测试数据。"
-            : "Recycled polyester / fleece materials present; microfiber-release assessment is reserved pending wash or lab test data.",
-        ],
-        [
-          t.fullOriginTrace,
-          traceability.length
-            ? compact(
-                traceability
-                  .map((event: any) => pick(event, locale, "facility_name", "facility_name_zh"))
-                  .filter(hasDisplayValue)
-                  .slice(0, 4)
-              )
-            : locale === "zh"
-              ? "已预留原料、裁剪、缝制、包装和出口节点字段，待供应链资料补齐。"
-              : "Material, cutting, sewing, packing and export nodes are reserved pending supplier data.",
-        ],
-        [
-          t.animalWelfare,
-          locale === "zh"
-            ? "当前材料以涤纶、仿皮、口袋布和辅料为主，未识别动物源材料；如后续加入羽绒、羊毛或皮革需补充声明。"
-            : "Current materials are mainly polyester, faux leather, pocket cloth and trims; no animal-origin material identified. Add declaration if down, wool or leather is later used.",
-        ],
-        [
-          t.laborCertification,
-          locale === "zh"
-            ? "待客户补充 BSCI、WRAP、SA8000 或工厂社会责任审核文件。"
-            : "BSCI, WRAP, SA8000 or factory social-compliance audit files pending customer upload.",
-        ],
-      ];
+      ]) : [];
   const batchHistory: string[] = isDemoProduct ? (isElectronics
     ? [
         locale === "zh" ? "2026-04-16 电池、PCB 和外壳材料批次创建并绑定 RoHS / REACH 声明" : "2026-04-16 Battery, PCB and housing material batches created and linked to RoHS / REACH declarations",
@@ -1790,7 +1701,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
 
         {viewMode === "detail" && <Section id="chemicals" title={t.chemicalRestricted} icon="file">
           <DataCard title={t.chemicalTitle} icon="file" surface="soft">
-            <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.chemicalIntro}</p>
+            <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{chemicalIntroText}</p>
             {chemicalRows.length ? (
               <ChemicalTable rows={chemicalRows} locale={locale} t={t} productSlug={product.public_slug || "demo-organic-cotton-tshirt"} />
             ) : (
@@ -2849,7 +2760,7 @@ function StatusBadge({
   verified: string;
   pending: string;
 }) {
-  const isVerified = String(value || "").toLowerCase() === "verified";
+  const isVerified = isVerifiedStatus(value);
   return (
     <span className={isVerified ? "rounded-full bg-green-50 px-3 py-1 text-sm font-bold text-green-700" : "rounded-full bg-amber-50 px-3 py-1 text-sm font-bold text-amber-700"}>
       {isVerified ? verified : valueOrDash(value || pending, locale)}
