@@ -20,6 +20,7 @@ type Props = {
   fields: Field[];
   displayFields: string[];
   orderBy?: string;
+  preparePayload?: (payload: Record<string, any>) => Record<string, any> | Promise<Record<string, any>>;
 };
 
 function displayValue(row: any, key: string) {
@@ -54,7 +55,7 @@ function getPayloadFromForm(form: FormData, fields: Field[], productId?: string)
   return payload;
 }
 
-export function ProductRelatedManager({ productId, title, titleZh, table, fields, displayFields, orderBy = "created_at" }: Props) {
+export function ProductRelatedManager({ productId, title, titleZh, table, fields, displayFields, orderBy = "created_at", preparePayload }: Props) {
   const { locale } = useLanguage();
   const supabase = createSupabaseClient();
   const shownTitle = locale === "zh" ? titleZh : title;
@@ -92,7 +93,7 @@ export function ProductRelatedManager({ productId, title, titleZh, table, fields
     event.preventDefault();
     const formEl = event.currentTarget;
     const form = new FormData(formEl);
-    const payload = getPayloadFromForm(form, fields, productId);
+    const payload = preparePayload ? await preparePayload(getPayloadFromForm(form, fields, productId)) : getPayloadFromForm(form, fields, productId);
     setSaving(true);
     setMessage("");
     const { error } = await supabase.from(table).insert(payload);
@@ -108,7 +109,7 @@ export function ProductRelatedManager({ productId, title, titleZh, table, fields
   async function update(id: string, event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const payload = getPayloadFromForm(form, fields);
+    const payload = preparePayload ? await preparePayload(getPayloadFromForm(form, fields)) : getPayloadFromForm(form, fields);
     setSaving(true);
     setMessage("");
     const { error } = await supabase.from(table).update(payload).eq("id", id).eq("product_id", productId);

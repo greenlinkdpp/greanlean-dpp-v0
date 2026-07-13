@@ -21,6 +21,7 @@
 | 数字身份 | DigitalIdentity | `product_digital_identity` | 数字身份 | 总览 / 产品身份 | `identity` |
 | 供应商 | Suppliers | `product_suppliers`, `supplier_products` | 供应商库 | 供应链 / 证据 | `suppliers` |
 | 生命周期与版本 | LifecycleVersioning | `products`, `product_versions` | 生命周期 / 版本历史 | 顶部状态 / 数据治理 | `product.status`, `product.current_version`, `version_history` |
+| 中央注册库 | RegistrySubmissions | `dpp_registry_submissions`, `dpp_registration_proofs` | 注册提交 / 注册证明 | 合规状态 / 数据治理 | `registry` |
 | 材料组成 | Materials | `product_materials` | 材料 | 材料组成与来源 | `materials` |
 | 组件/包装/辅料 | BOM | `product_bom` | 组件 / BOM | 组件、包装与辅料 | `bom` |
 | 化学与受限物质 | ChemicalCompliance | 当前由页面模型/API 文件生成，建议独立表 | 暂未独立 | 化学品与受限物质 | `chemical_compliance` |
@@ -28,7 +29,10 @@
 | 生产运输追溯 | Traceability | `product_traceability` | 供应链追踪 | 生产与运输追溯 | `traceability` |
 | ESG 与循环 | ESG, Circularity | `product_esg_metrics`, `product_circularity` | ESG / 循环性 | ESG 与循环性 / End of Life | `esg`, `circularity` |
 | 证书与文件 | Certificates, Documents | `product_certificates`, `product_documents` | 证书 / 文档 | 认证证书 / 证据文件 | `certificates`, `documents` |
+| 证据字段映射 | EvidenceLinks | `dpp_evidence_links` | 字段证据映射 | 证据链 / 数据治理 | `evidence_links` |
+| 区块链锚定 | BlockchainAnchors | `dpp_blockchain_anchors` | 链上锚定记录 | 可信验证 / 数据治理 | `blockchain_anchors` |
 | 数据治理 | DataGovernance | `product_data_governance` | 数据治理 | 证据文件与数据治理 | `governance` |
+| 审计日志 | AuditLogs | `dpp_audit_logs` | 审计日志 | 通常不公开 | 内部审计 |
 
 ## 1. 客户信息收集表字段
 
@@ -60,6 +64,10 @@
 | 中文描述 | Description ZH | `products.description_zh` | 描述（中文） | 视页面需要展示 | `product.description_zh` |
 | 产品主图 | Main image URL | `products.main_image` | 主图 URL | 总览产品图片 | `product.main_image` |
 | DPP ID | DPP ID | `products.dpp_id` | 自动/手动维护 | URL / 总览 / 产品身份 | `product.dpp_id` |
+| DPP 粒度 | Model / Batch / Item | `products.granularity_level` | 型号级 / 批次级 / 单品级 | 合规状态 / 产品身份 | `product.granularity_level` |
+| 商品编码 | HS / CN code | `products.commodity_code` | 商品编码 | 海关准备度 / 合规状态 | `product.commodity_code` |
+| 唯一产品标识 | Unique product identifier | `products.unique_product_identifier` | GS1 / UPI | 产品身份 / 注册准备度 | `product.unique_product_identifier` |
+| 中央注册库状态 | EU registry status | `products.eu_registration_status` | 未注册 / 准备 / 已提交 / 已接受 / 已驳回 | 合规状态 | `product.eu_registration_status` |
 | 公开 Slug | Public slug | `products.public_slug` | 公开 Slug | 旧链接兼容 | `product.slug` |
 | 发布状态 | Status | `products.status` | 草稿 / 待审核 / 已发布 / 已更新 / 已归档 / 证书过期 | 顶部状态 | `product.status` |
 | 当前版本 | Current version | `products.current_version` | 当前版本 | 顶部状态 / 数据治理 | `product.current_version` |
@@ -124,6 +132,8 @@
 | 变更说明 | Change summary | `change_summary` | 变更说明 | 版本历史 | `version_history[].change_summary` |
 | 操作人 | Changed by | `changed_by` | 操作人 | 内部 / 可选展示 | `version_history[].changed_by` |
 | 快照 | Snapshot | `snapshot` | 自动生成 | 不直接展示 | 内部审计 |
+| 数据 Hash | Data hash | `data_hash` | 自动生成 SHA-256 | 数据治理 / 可信验证 | `version_history[].data_hash` |
+| Hash 算法 | Hash algorithm | `hash_algorithm` | 默认 SHA-256 | 数据治理 / 可信验证 | `version_history[].hash_algorithm` |
 | 保存时间 | Created at | `created_at` | 自动生成 | 版本历史 | `version_history[].created_at` |
 
 建议版本规则：
@@ -238,6 +248,9 @@
 | 到期日期 | Expiry date | `expiry_date` | 到期日期 | 日期 | `certificates[].expiry_date` |
 | 证书链接 | Certificate URL | `certificate_url` | 证书 URL | 查看 PDF 证书 | `certificates[].url` |
 | 验证状态 | Verification status | `verification_status` | 验证状态 | 状态 | `certificates[].verification_status` |
+| 证据 Hash | Evidence hash | `evidence_hash` | 自动/手动维护 | 可信验证 | `certificates[].evidence_hash` |
+| Hash 算法 | Hash algorithm | `hash_algorithm` | 默认 SHA-256 | 可信验证 | `certificates[].hash_algorithm` |
+| 可见性等级 | Visibility level | `visibility_level` | public / professional / authority / internal | 权限披露 | `certificates[].visibility_level` |
 | 文件名称 | Document name | `product_documents.document_name` | 文件名称 | 证据文件 | `documents[].name` |
 | 文件类型 | Document type | `document_type` | 文件类型 | 证据文件 | `documents[].type` |
 | 文件 URL | File URL | `file_url` | 文件 URL | 下载文件 | `documents[].url` |
@@ -245,8 +258,63 @@
 | 语言 | Language | `language` | 语言 | 文件信息 | `documents[].language` |
 | 上传方 | Uploaded by | `uploaded_by` | 上传者 | 通常不公开 | `documents[].uploaded_by` |
 | 版本 | Version | `version` | 版本 | 文件信息 | `documents[].version` |
+| 证据 Hash | Evidence hash | `evidence_hash` | 自动/手动维护 | 可信验证 | `documents[].evidence_hash` |
+| Hash 算法 | Hash algorithm | `hash_algorithm` | 默认 SHA-256 | 可信验证 | `documents[].hash_algorithm` |
+| 可见性等级 | Visibility level | `visibility_level` | public / professional / authority / internal | 权限披露 | `documents[].visibility_level` |
 
-## 13. 数据治理
+## 13. 中央注册库与注册证明
+
+第二阶段新增中央注册库准备模块。真实 EU 注册库 API 接通前，该模块用于记录提交状态、注册标识、提交 hash、语义模型版本和注册证明。
+
+| 标准字段 | Supabase 字段 | 后台录入字段 | DPP 页面展示 | JSON/API 字段 |
+|---|---|---|---|---|
+| 提交状态 | `dpp_registry_submissions.submission_status` | draft / ready / submitted / accepted / rejected | 合规状态 | `registry.submissions[].status` |
+| 注册环境 | `registry_environment` | sandbox / production | 内部 / 数据治理 | `registry.submissions[].environment` |
+| 欧盟注册 ID | `eu_registration_identifier` | 中央注册库返回 | 合规状态 / 海关准备度 | `registry.submissions[].eu_registration_identifier` |
+| 商品编码 | `commodity_code` | HS / CN code | 海关准备度 | `registry.submissions[].commodity_code` |
+| 提交版本 | `submitted_version` | DPP 版本 | 数据治理 | `registry.submissions[].submitted_version` |
+| 提交 Hash | `submitted_hash` | DPP version hash | 可信验证 | `registry.submissions[].submitted_hash` |
+| 语义模型版本 | `semantic_model_version` | 数据模型版本 | 数据治理 | `registry.submissions[].semantic_model_version` |
+| 注册响应 | `registry_response` | JSON 响应 | 内部 | 内部审计 |
+| 证明 URL | `dpp_registration_proofs.proof_url` | 注册证明文件 | 数据治理 | `registry.proofs[].url` |
+| 证明 Hash | `proof_hash` | 证明文件 hash | 可信验证 | `registry.proofs[].proof_hash` |
+| 合格电子签章状态 | `qualified_seal_status` | eIDAS 签章状态 | 数据治理 | `registry.proofs[].qualified_seal_status` |
+| 合格时间戳 | `qualified_timestamp` | eIDAS 时间戳 | 数据治理 | `registry.proofs[].qualified_timestamp` |
+
+## 14. 证据字段映射
+
+证据字段映射把具体字段声明与证书、文件、注册证明或其他证据记录关联起来。它解决“这个数据由什么证明”的问题。
+
+| 标准字段 | Supabase 字段 | 后台录入字段 | DPP 页面展示 | JSON/API 字段 |
+|---|---|---|---|---|
+| 证据类型 | `evidence_type` | certificate / document / proof / declaration | 证据链 | `evidence_links[].evidence_type` |
+| 证据记录 ID | `evidence_ref_id` | 关联记录 UUID | 内部 / 可选 | `evidence_links[].evidence_ref_id` |
+| 支持字段 | `supported_field` | 如 `esg.carbon_footprint` | 证据链 | `evidence_links[].supported_field` |
+| 支持模块 | `supported_module` | materials / esg / certificates | 证据链 | `evidence_links[].supported_module` |
+| 声明值 | `claim_value` | 字段声明值 | 证据链 | `evidence_links[].claim_value` |
+| 验证状态 | `verification_status` | pending / verified / declared | 证据链 | `evidence_links[].verification_status` |
+| 可见性等级 | `visibility_level` | public / professional / authority / internal | 权限披露 | `evidence_links[].visibility_level` |
+
+## 15. 区块链锚定
+
+区块链锚定是增强可信层，不替代 ESPR 中央注册库、qualified timestamp 或注册证明。系统只把 DPP 版本 hash 或证据 hash 锚定到链上，不把商业数据、证书原文、供应链敏感数据写入链上。
+
+| 标准字段 | Supabase 字段 | 后台录入字段 | DPP 页面展示 | JSON/API 字段 |
+|---|---|---|---|---|
+| DPP 版本 | `version` | v1.0 / v1.1 | 可信验证 | `blockchain_anchors[].version` |
+| 锚定 Hash | `anchored_hash` | DPP / 证据 SHA-256 | 可信验证 | `blockchain_anchors[].anchored_hash` |
+| Hash 算法 | `hash_algorithm` | 默认 SHA-256 | 可信验证 | `blockchain_anchors[].hash_algorithm` |
+| 链名称 | `chain_name` | Polygon / Ethereum / consortium chain | 可信验证 | `blockchain_anchors[].chain_name` |
+| 链 ID | `chain_id` | Chain ID | 可信验证 | `blockchain_anchors[].chain_id` |
+| 网络 | `network` | testnet / mainnet | 可信验证 | `blockchain_anchors[].network` |
+| 合约地址 | `contract_address` | Anchor contract | 可选 | `blockchain_anchors[].contract_address` |
+| 交易 Hash | `transaction_hash` | Tx hash | 可信验证 | `blockchain_anchors[].transaction_hash` |
+| 区块高度 | `block_number` | Block number | 可选 | `blockchain_anchors[].block_number` |
+| 锚定状态 | `anchor_status` | pending / confirmed / failed | 可信验证 | `blockchain_anchors[].anchor_status` |
+| 锚定时间 | `anchored_at` | 链上确认时间 | 可信验证 | `blockchain_anchors[].anchored_at` |
+| 浏览器链接 | `explorer_url` | Block explorer URL | 可信验证 | `blockchain_anchors[].explorer_url` |
+
+## 16. 数据治理
 
 | 标准字段 | 客户收集表字段 | Supabase 字段 | 后台录入字段 | DPP 页面展示 | JSON/API 字段 |
 |---|---|---|---|---|---|

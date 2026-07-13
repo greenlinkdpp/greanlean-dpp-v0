@@ -66,7 +66,7 @@ async function getData(identifier: string) {
     });
   }
 
-  const [materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance] = await Promise.all([
+  const [materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance, registrySubmissions, registrationProofs, evidenceLinks, blockchainAnchors] = await Promise.all([
     safeSelect(supabase, "product_materials", product.id),
     safeSelect(supabase, "product_certificates", product.id),
     safeSelect(supabase, "product_esg_metrics", product.id),
@@ -77,8 +77,12 @@ async function getData(identifier: string) {
     safeSelect(supabase, "product_digital_identity", product.id),
     safeSelect(supabase, "product_documents", product.id),
     safeSelect(supabase, "product_data_governance", product.id),
+    safeSelect(supabase, "dpp_registry_submissions", product.id),
+    safeSelect(supabase, "dpp_registration_proofs", product.id),
+    safeSelect(supabase, "dpp_evidence_links", product.id),
+    safeSelect(supabase, "dpp_blockchain_anchors", product.id),
   ]);
-  const data = { product, materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance };
+  const data = { product, materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance, registrySubmissions, registrationProofs, evidenceLinks, blockchainAnchors };
 
   if (product.public_slug === "demo-organic-cotton-tshirt" || product.dpp_id === "DPP-DEMO-001") {
     return withDemoDppData(data);

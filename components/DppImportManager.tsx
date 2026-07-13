@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { createSupabaseClient } from "@/lib/supabase";
+import { buildGs1DigitalLink, buildUniqueProductIdentifier, normalizeGtin, sha256Hex } from "@/lib/dppCompliance";
 import { slugify } from "@/lib/slugify";
 
 type ModuleKey =
@@ -81,6 +82,10 @@ const modules: ImportModule[] = [
       "batch_id",
       "production_date",
       "origin_country",
+      "granularity_level",
+      "commodity_code",
+      "unique_product_identifier",
+      "eu_registration_status",
       "status",
     ],
     sample: {
@@ -96,6 +101,10 @@ const modules: ImportModule[] = [
       batch_id: "BATCH-AUDIO-2026-001",
       production_date: "2026-05-28",
       origin_country: "China",
+      granularity_level: "item",
+      commodity_code: "851830",
+      unique_product_identifier: "01:06900000000128|10:BATCH-AUDIO-2026-001|21:EARBUDS-DEMO-0001",
+      eu_registration_status: "not_registered",
       status: "published",
     },
   },
@@ -366,6 +375,9 @@ const modules: ImportModule[] = [
       "expiry_date",
       "certificate_url",
       "verification_status",
+      "evidence_hash",
+      "hash_algorithm",
+      "visibility_level",
     ],
     sample: {
       sku: "GL-EARBUDS-001",
@@ -377,6 +389,9 @@ const modules: ImportModule[] = [
       expiry_date: "2027-06-03",
       certificate_url: "/api/declaration?product=DPP-AUDIO-DEMO-001",
       verification_status: "verified",
+      evidence_hash: "",
+      hash_algorithm: "SHA-256",
+      visibility_level: "public",
     },
   },
   {
@@ -433,6 +448,9 @@ const modules: ImportModule[] = [
       "language",
       "uploaded_by",
       "version",
+      "evidence_hash",
+      "hash_algorithm",
+      "visibility_level",
     ],
     sample: {
       sku: "GL-EARBUDS-001",
@@ -443,6 +461,9 @@ const modules: ImportModule[] = [
       language: "EN / ZH",
       uploaded_by: "greanlean admin",
       version: "v1.0",
+      evidence_hash: "",
+      hash_algorithm: "SHA-256",
+      visibility_level: "public",
     },
   },
   {
@@ -1248,6 +1269,10 @@ async function ensureProducts(
       description: clean(row.description_en),
       description_zh: clean(row.description_zh),
       main_image: clean(row.main_image_url),
+      granularity_level: clean(row.granularity_level) || "model",
+      commodity_code: clean(row.commodity_code),
+      unique_product_identifier: clean(row.unique_product_identifier),
+      eu_registration_status: clean(row.eu_registration_status) || "not_registered",
       status: clean(row.status) || "published",
       public_slug: existing?.public_slug || slugify(`${name}-${sku}`),
       dpp_id: existing?.dpp_id || makeDppId(sku),
@@ -1303,15 +1328,24 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
   for (const row of rowsFor(uploads, "DigitalIdentity")) {
     const productId = row.sku ? productIds.get(row.sku) : null;
     if (!productId) continue;
+    const gtin = normalizeGtin(row.gtin) || clean(row.gtin);
+    const batchId = clean(row.batch_id);
+    const serialId = clean(row.serial_id);
+    const gs1DigitalLink = buildGs1DigitalLink({
+      gtin,
+      batchId,
+      serialId,
+      baseUrl: typeof window !== "undefined" ? window.location.origin : null,
+    });
 
     const { error } = await supabase.from("product_digital_identity").insert({
       product_id: productId,
-      product_uuid: clean(row.product_uuid),
-      gtin: clean(row.gtin),
+      product_uuid: clean(row.product_uuid) || buildUniqueProductIdentifier({ gtin, batchId, serialId }),
+      gtin,
       style_id: clean(row.style_id),
-      batch_id: clean(row.batch_id),
-      serial_id: clean(row.serial_id),
-      digital_link_url: clean(row.digital_link_url),
+      batch_id: batchId,
+      serial_id: serialId,
+      digital_link_url: clean(row.digital_link_url) || gs1DigitalLink,
       qr_code_id: clean(row.qr_code_id),
       nfc_id: clean(row.nfc_id),
       rfid_epc: clean(row.rfid_epc),
@@ -1476,9 +1510,7 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
   for (const row of rowsFor(uploads, "Certificates")) {
     const productId = row.sku ? productIds.get(row.sku) : null;
     if (!productId) continue;
-
-    const { error } = await supabase.from("product_certificates").insert({
-      product_id: productId,
+    const certificatePayload = {
       certificate_name: clean(row.certificate_name),
       certificate_type: clean(row.certificate_type),
       certificate_number: clean(row.certificate_number),
@@ -1487,6 +1519,14 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
       expiry_date: clean(row.expiry_date),
       certificate_url: clean(row.certificate_url),
       verification_status: clean(row.verification_status) || "pending",
+      hash_algorithm: clean(row.hash_algorithm) || "SHA-256",
+      visibility_level: clean(row.visibility_level) || "public",
+    };
+
+    const { error } = await supabase.from("product_certificates").insert({
+      product_id: productId,
+      ...certificatePayload,
+      evidence_hash: clean(row.evidence_hash) || await sha256Hex(certificatePayload),
     });
 
     if (error) throw error;
@@ -1530,9 +1570,7 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
   for (const row of rowsFor(uploads, "Documents")) {
     const productId = row.sku ? productIds.get(row.sku) : null;
     if (!productId) continue;
-
-    const { error } = await supabase.from("product_documents").insert({
-      product_id: productId,
+    const documentPayload = {
       document_name: clean(row.document_name),
       document_type: clean(row.document_type),
       file_url: clean(row.file_url),
@@ -1540,6 +1578,14 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
       language: clean(row.language),
       uploaded_by: clean(row.uploaded_by),
       version: clean(row.version),
+      hash_algorithm: clean(row.hash_algorithm) || "SHA-256",
+      visibility_level: clean(row.visibility_level) || "public",
+    };
+
+    const { error } = await supabase.from("product_documents").insert({
+      product_id: productId,
+      ...documentPayload,
+      evidence_hash: clean(row.evidence_hash) || await sha256Hex(documentPayload),
     });
 
     if (error) throw error;

@@ -24,6 +24,9 @@
     "documents",
     "governance",
     "version_history",
+    "registry",
+    "evidence_links",
+    "blockchain_anchors",
     "last_updated"
   ],
   "properties": {
@@ -128,6 +131,23 @@
       },
       "default": []
     },
+    "registry": {
+      "$ref": "#/$defs/registry"
+    },
+    "evidence_links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidenceLink"
+      },
+      "default": []
+    },
+    "blockchain_anchors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/blockchainAnchor"
+      },
+      "default": []
+    },
     "last_updated": {
       "$ref": "#/$defs/dateTime"
     }
@@ -162,6 +182,16 @@
       "properties": {
         "dpp_id": { "type": "string", "minLength": 1 },
         "slug": { "$ref": "#/$defs/nullableString" },
+        "granularity_level": {
+          "type": ["string", "null"],
+          "enum": ["model", "batch", "item", null]
+        },
+        "commodity_code": { "$ref": "#/$defs/nullableString" },
+        "unique_product_identifier": { "$ref": "#/$defs/nullableString" },
+        "eu_registration_status": {
+          "type": ["string", "null"],
+          "enum": ["not_registered", "ready", "submitted", "accepted", "rejected", "corrected", "withdrawn", "expired", null]
+        },
         "sku": { "type": "string", "minLength": 1 },
         "name": { "type": "string", "minLength": 1 },
         "name_zh": { "$ref": "#/$defs/nullableString" },
@@ -372,7 +402,10 @@
         "issue_date": { "$ref": "#/$defs/date" },
         "expiry_date": { "$ref": "#/$defs/date" },
         "url": { "$ref": "#/$defs/uri" },
-        "verification_status": { "$ref": "#/$defs/verificationStatus" }
+        "verification_status": { "$ref": "#/$defs/verificationStatus" },
+        "evidence_hash": { "$ref": "#/$defs/nullableString" },
+        "hash_algorithm": { "$ref": "#/$defs/nullableString" },
+        "visibility_level": { "$ref": "#/$defs/nullableString" }
       }
     },
     "document": {
@@ -386,7 +419,10 @@
         "file_size": { "$ref": "#/$defs/nullableString" },
         "language": { "$ref": "#/$defs/nullableString" },
         "uploaded_by": { "$ref": "#/$defs/nullableString" },
-        "version": { "$ref": "#/$defs/nullableString" }
+        "version": { "$ref": "#/$defs/nullableString" },
+        "evidence_hash": { "$ref": "#/$defs/nullableString" },
+        "hash_algorithm": { "$ref": "#/$defs/nullableString" },
+        "visibility_level": { "$ref": "#/$defs/nullableString" }
       }
     },
     "governance": {
@@ -414,7 +450,86 @@
         "change_type": { "$ref": "#/$defs/nullableString" },
         "change_summary": { "$ref": "#/$defs/nullableString" },
         "changed_by": { "$ref": "#/$defs/nullableString" },
+        "data_hash": { "$ref": "#/$defs/nullableString" },
+        "hash_algorithm": { "$ref": "#/$defs/nullableString" },
         "created_at": { "$ref": "#/$defs/dateTime" }
+      }
+    },
+    "registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "submissions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/registrySubmission" },
+          "default": []
+        },
+        "proofs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/registrationProof" },
+          "default": []
+        }
+      }
+    },
+    "registrySubmission": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": { "$ref": "#/$defs/nullableString" },
+        "environment": { "$ref": "#/$defs/nullableString" },
+        "eu_registration_identifier": { "$ref": "#/$defs/nullableString" },
+        "commodity_code": { "$ref": "#/$defs/nullableString" },
+        "submitted_version": { "$ref": "#/$defs/nullableString" },
+        "submitted_hash": { "$ref": "#/$defs/nullableString" },
+        "semantic_model_version": { "$ref": "#/$defs/nullableString" },
+        "submitted_at": { "$ref": "#/$defs/dateTime" },
+        "accepted_at": { "$ref": "#/$defs/dateTime" },
+        "rejected_reason": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "registrationProof": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "$ref": "#/$defs/nullableString" },
+        "url": { "$ref": "#/$defs/uri" },
+        "proof_hash": { "$ref": "#/$defs/nullableString" },
+        "hash_algorithm": { "$ref": "#/$defs/nullableString" },
+        "qualified_seal_status": { "$ref": "#/$defs/nullableString" },
+        "qualified_timestamp": { "$ref": "#/$defs/nullableString" },
+        "generated_at": { "$ref": "#/$defs/dateTime" },
+        "expires_at": { "$ref": "#/$defs/dateTime" }
+      }
+    },
+    "evidenceLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "evidence_type": { "$ref": "#/$defs/nullableString" },
+        "evidence_ref_id": { "$ref": "#/$defs/nullableString" },
+        "supported_field": { "$ref": "#/$defs/nullableString" },
+        "supported_module": { "$ref": "#/$defs/nullableString" },
+        "claim_value": { "$ref": "#/$defs/nullableString" },
+        "verification_status": { "$ref": "#/$defs/verificationStatus" },
+        "visibility_level": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "blockchainAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": { "$ref": "#/$defs/nullableString" },
+        "anchored_hash": { "$ref": "#/$defs/nullableString" },
+        "hash_algorithm": { "$ref": "#/$defs/nullableString" },
+        "chain_name": { "$ref": "#/$defs/nullableString" },
+        "chain_id": { "$ref": "#/$defs/nullableString" },
+        "network": { "$ref": "#/$defs/nullableString" },
+        "contract_address": { "$ref": "#/$defs/nullableString" },
+        "transaction_hash": { "$ref": "#/$defs/nullableString" },
+        "block_number": { "$ref": "#/$defs/nullableString" },
+        "anchor_status": { "$ref": "#/$defs/nullableString" },
+        "anchored_at": { "$ref": "#/$defs/dateTime" },
+        "explorer_url": { "$ref": "#/$defs/uri" }
       }
     }
   }

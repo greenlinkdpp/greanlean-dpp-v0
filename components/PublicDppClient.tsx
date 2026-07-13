@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/components/LanguageProvider";
+import { buildGs1DigitalLink } from "@/lib/dppCompliance";
 
 type Locale = "en" | "zh";
 type Props = { data: any; dppUrl: string };
@@ -109,6 +110,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     digitalIdentity = [],
     documents = [],
     governance = [],
+    blockchainAnchors = [],
   } = data;
 
   useEffect(() => {
@@ -156,6 +158,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           certificates: "认证证书",
           consumer: "消费者透明化",
           evidence: "证据文件与数据治理",
+          blockchainAnchor: "区块链锚定",
+          chain: "链",
+          network: "网络",
+          transactionHash: "交易 Hash",
+          anchoredHash: "锚定 Hash",
+          anchorStatus: "锚定状态",
+          anchoredAt: "锚定时间",
           textileReserve: "产品特定信息预留",
           batchTracking: "批次追踪",
           noData: "暂无数据",
@@ -167,6 +176,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           season: "季节 / 系列",
           dppId: "DPP ID",
           publicSlug: "公开 Slug",
+          granularity: "DPP 粒度",
+          commodityCode: "商品编码",
+          uniqueProductIdentifier: "唯一产品标识",
+          euRegistrationStatus: "中央注册库状态",
           gtin: "GTIN",
           sgtin: "SGTIN",
           batch: "批次",
@@ -399,6 +412,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           certificates: "Certificates",
           consumer: "Consumer transparency",
           evidence: "Evidence files and data governance",
+          blockchainAnchor: "Blockchain anchor",
+          chain: "Chain",
+          network: "Network",
+          transactionHash: "Transaction hash",
+          anchoredHash: "Anchored hash",
+          anchorStatus: "Anchor status",
+          anchoredAt: "Anchored at",
           textileReserve: "Product-specific reserved fields",
           batchTracking: "Batch tracking",
           noData: "No data yet",
@@ -410,6 +430,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           season: "Season / Collection",
           dppId: "DPP ID",
           publicSlug: "Public slug",
+          granularity: "DPP granularity",
+          commodityCode: "Commodity code",
+          uniqueProductIdentifier: "Unique product identifier",
+          euRegistrationStatus: "EU registry status",
           gtin: "GTIN",
           sgtin: "SGTIN",
           batch: "Batch",
@@ -653,7 +677,23 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? "https://environment.ec.europa.eu/topics/waste-and-recycling/waste-framework-directive_en"
         : "https://www.recyclenow.com/recycle-an-item/clothing-textiles";
   const dppProductRef = product.dpp_id || product.public_slug || "DPP-DEMO-001";
-  const qrUrl = `/api/qr?url=${encodeURIComponent(dppUrl)}`;
+  const dppOrigin = (() => {
+    try {
+      return new URL(dppUrl).origin;
+    } catch {
+      return typeof window !== "undefined" ? window.location.origin : "https://www.greanlean.com";
+    }
+  })();
+  const gs1DigitalLink =
+    firstIdentity?.digital_link_url ||
+    buildGs1DigitalLink({
+      gtin: firstIdentity?.gtin,
+      batchId: firstIdentity?.batch_id,
+      serialId: firstIdentity?.serial_id,
+      baseUrl: dppOrigin,
+    });
+  const qrTargetUrl = gs1DigitalLink || dppUrl;
+  const qrUrl = `/api/qr?url=${encodeURIComponent(qrTargetUrl)}`;
 
   const compositionMaterials = useMemo(() => {
     return materials
@@ -769,6 +809,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.subcategory, product.subcategory],
     [t.season, product.season],
     [t.publicSlug, product.public_slug],
+    [t.granularity, product.granularity_level],
+    [t.commodityCode, product.commodity_code],
+    [t.uniqueProductIdentifier, product.unique_product_identifier],
+    [t.euRegistrationStatus, product.eu_registration_status],
   ];
 
   const identityDetails: Array<[string, any]> = [
@@ -776,7 +820,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.sgtin, sgtin],
     [t.batch, firstIdentity?.batch_id],
     [t.serial, firstIdentity?.serial_id],
-    [t.digitalLink, dppUrl],
+    [t.digitalLink, qrTargetUrl],
   ];
   const heroDetails: Array<[string, any]> = [
     [t.sku, product.sku],
@@ -842,6 +886,22 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     const text = `${document.document_name || ""} ${document.document_type || ""}`.toLowerCase();
     return ["chemical", "test", "pfas", "reach", "rsl", "msds", "svhc", "oeko"].some((keyword) => text.includes(keyword));
   });
+  const chemicalEvidenceCertificates = certificates.filter((certificate: any) => {
+    const text = `${certificate.certificate_name || ""} ${certificate.certificate_type || ""} ${certificate.certificate_number || ""}`.toLowerCase();
+    return ["chemical", "test", "pfas", "reach", "rsl", "msds", "svhc", "oeko", "grs"].some((keyword) => text.includes(keyword));
+  });
+  const chemicalDeclarationKeywords = ["declaration", "statement", "chemical", "reach", "svhc", "pfas", "rsl", "msds", "声明", "合规"];
+  const chemicalTestKeywords = ["test", "report", "lab", "testing", "检测", "测试", "报告"];
+  const chemicalDeclarationDocumentUrl = chemicalEvidenceDocuments.find((document: any) => {
+    const text = `${document.document_name || ""} ${document.document_type || ""}`.toLowerCase();
+    return chemicalDeclarationKeywords.some((keyword) => text.includes(keyword));
+  })?.file_url;
+  const chemicalTestDocumentUrl = chemicalEvidenceDocuments.find((document: any) => {
+    const text = `${document.document_name || ""} ${document.document_type || ""}`.toLowerCase();
+    return chemicalTestKeywords.some((keyword) => text.includes(keyword));
+  })?.file_url;
+  const firstChemicalCertificateUrl = chemicalEvidenceCertificates.map((certificate: any) => certificate.certificate_url).find(hasDisplayValue);
+  const firstChemicalDocumentUrl = chemicalEvidenceDocuments.map((document: any) => document.file_url).find(hasDisplayValue);
   const performanceItems: Array<[string, any]> = isDemoProduct ? (isElectronics
     ? [
         [locale === "zh" ? "单次续航" : "Battery life", locale === "zh" ? "8 小时" : "8 hours"],
@@ -1021,6 +1081,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           result: materialChemicalInfo,
           limit: materialCertificationList || "-",
           type: "svhc",
+          reportUrl: chemicalDeclarationDocumentUrl || firstChemicalCertificateUrl || firstChemicalDocumentUrl,
         }
       : null,
     chemicalEvidenceDocuments.length
@@ -1029,9 +1090,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           result: chemicalEvidenceDocuments.map((document: any) => document.document_name).filter(hasDisplayValue).join(", "),
           limit: chemicalEvidenceDocuments.map((document: any) => document.document_type).filter(hasDisplayValue).join(", ") || "-",
           type: "msds",
+          reportUrl: chemicalTestDocumentUrl || firstChemicalDocumentUrl || firstChemicalCertificateUrl,
         }
       : null,
-  ].filter(Boolean) as Array<{ item: string; result: string; limit: string; type: string }>;
+  ].filter(Boolean) as Array<{ item: string; result: string; limit: string; type: string; reportUrl?: string }>;
   const chemicalIntroText = isDemoProduct
     ? t.chemicalIntro
     : locale === "zh"
@@ -1985,7 +2047,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         </Section>}
 
         {viewMode === "detail" && <Section id="evidence" title={t.evidence} icon="file">
-          {dataSourceRows.length || verificationItems.length || documents.length || governance.length ? (
+          {dataSourceRows.length || verificationItems.length || documents.length || governance.length || blockchainAnchors.length ? (
           <div className="space-y-4">
             {dataSourceRows.length > 0 && (
               <DataCard title={t.dataTransparencyTitle} icon="file" surface="soft">
@@ -2029,6 +2091,26 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                           [t.dataOwner, item.data_owner],
                           [t.verificationScope, item.audit_status],
                           [locale === "zh" ? "数据质量分" : "Data quality score", hasNumber(item.data_quality_score) ? `${item.data_quality_score}` : null],
+                        ]}
+                        locale={locale}
+                      />
+                    ))}
+                  </div>
+                </DataCard>
+              )}
+              {blockchainAnchors.length > 0 && (
+                <DataCard title={t.blockchainAnchor} icon="shield" surface="soft">
+                  <div className="space-y-3">
+                    {blockchainAnchors.map((anchor: any) => (
+                      <InfoGrid
+                        key={anchor.id || anchor.transaction_hash || anchor.anchored_hash}
+                        items={[
+                          [t.chain, compact([anchor.chain_name, anchor.chain_id])],
+                          [t.network, anchor.network],
+                          [t.anchorStatus, anchor.anchor_status],
+                          [t.transactionHash, anchor.transaction_hash],
+                          [t.anchoredHash, anchor.anchored_hash],
+                          [t.anchoredAt, formatDate(anchor.anchored_at, locale)],
                         ]}
                         locale={locale}
                       />
@@ -2461,7 +2543,7 @@ function ChemicalTable({
   t,
   productSlug,
 }: {
-  rows: Array<{ item: string; result: string; limit: string; type: string }>;
+  rows: Array<{ item: string; result: string; limit: string; type: string; reportUrl?: string }>;
   locale: Locale;
   t: any;
   productSlug: string;
@@ -2475,7 +2557,11 @@ function ChemicalTable({
         <span>{t.reportFile}</span>
       </div>
       <div className="divide-y divide-slate-100">
-        {rows.map((row) => (
+        {rows.map((row) => {
+          const reportUrl =
+            row.reportUrl ||
+            `/api/chemical-document?type=${encodeURIComponent(row.type)}&lang=${locale}&product=${encodeURIComponent(productSlug)}`;
+          return (
           <div key={`${row.type}-${row.item}`} className="grid gap-3 px-4 py-4 md:grid-cols-[1.25fr_0.8fr_1.35fr_170px] md:items-center">
             <div>
               <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.testItem}</p>
@@ -2490,7 +2576,7 @@ function ChemicalTable({
               <p className="text-sm font-semibold leading-6 text-slate-700">{row.limit}</p>
             </div>
             <a
-              href={`/api/chemical-document?type=${encodeURIComponent(row.type)}&lang=${locale}&product=${encodeURIComponent(productSlug)}`}
+              href={reportUrl}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-black text-blue-700 transition hover:-translate-y-0.5 hover:bg-blue-600 hover:text-white"
@@ -2499,7 +2585,8 @@ function ChemicalTable({
               {t.downloadReport}
             </a>
           </div>
-        ))}
+        );
+        })}
       </div>
     </div>
   );
