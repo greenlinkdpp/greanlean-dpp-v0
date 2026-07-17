@@ -166,7 +166,7 @@ async function databasePayload(productIdentifier: string) {
 
   if (!product?.id) return null;
 
-  const [materials, certificates, esgRows, bom, traceability, circularity, digitalIdentity, documents, governance, versions, registrySubmissions, registrationProofs, evidenceLinks, blockchainAnchors] = await Promise.all([
+  const [materials, certificates, esgRows, bom, traceability, circularity, digitalIdentity, documents, governance, versions, registrySubmissions, registrationProofs, evidenceLinks, blockchainAnchors, sectorFieldValues] = await Promise.all([
     safeSelect(supabase, "product_materials", product.id),
     safeSelect(supabase, "product_certificates", product.id),
     safeSelect(supabase, "product_esg_metrics", product.id),
@@ -181,6 +181,7 @@ async function databasePayload(productIdentifier: string) {
     safeSelect(supabase, "dpp_registration_proofs", product.id),
     safeSelect(supabase, "dpp_evidence_links", product.id),
     safeSelect(supabase, "dpp_blockchain_anchors", product.id),
+    safeSelect(supabase, "product_sector_field_values", product.id),
   ]);
 
   const identity = latest<any>(digitalIdentity);
@@ -197,6 +198,10 @@ async function databasePayload(productIdentifier: string) {
       brand: product.brand,
       category: product.category,
       subcategory: product.subcategory,
+      sector_code: product.sector_code,
+      category_code: product.category_code,
+      subcategory_code: product.subcategory_code,
+      dpp_profile_key: product.dpp_profile_key,
       dpp_id: product.dpp_id,
       granularity_level: product.granularity_level,
       commodity_code: product.commodity_code,
@@ -207,6 +212,26 @@ async function databasePayload(productIdentifier: string) {
       current_version: product.current_version,
       updated_at: product.updated_at,
     },
+    sector_profile: {
+      sector_code: product.sector_code,
+      category_code: product.category_code,
+      subcategory_code: product.subcategory_code,
+      profile_key: product.dpp_profile_key,
+    },
+    sector_specific_fields: sectorFieldValues.map((item: any) => ({
+      profile_key: item.profile_key,
+      module_key: item.module_key,
+      field_key: item.field_key,
+      label: item.field_label,
+      label_zh: item.field_label_zh,
+      value: item.field_value,
+      value_json: item.field_value_json,
+      unit: item.unit,
+      evidence_status: item.evidence_status,
+      source_type: item.source_type,
+      visibility_level: item.visibility_level,
+      updated_at: item.updated_at,
+    })),
     identity: {
       gtin: identity?.gtin,
       sgtin,
@@ -351,6 +376,7 @@ function pdfLines(payload: any) {
     `Product: ${productName}`,
     isPdfSafeText(chineseName) ? `Chinese name: ${chineseName}` : `Chinese name: see online DPP page (${payload.product.dpp_id || productName})`,
     `DPP ID: ${payload.product.dpp_id || "-"}`,
+    `DPP profile: ${payload.product.dpp_profile_key || payload.sector_profile?.profile_key || "-"}`,
     `Unique product identifier: ${payload.product.unique_product_identifier || "-"}`,
     `Granularity: ${payload.product.granularity_level || "-"}`,
     `Commodity code: ${payload.product.commodity_code || "-"}`,

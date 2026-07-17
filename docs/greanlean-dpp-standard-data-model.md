@@ -18,6 +18,7 @@
 |---|---|---|---|---|---|
 | 客户与线索 | 客户联系信息 | `leads` | 客户提交 | 不展示 | 可作为 CRM API |
 | 产品基本信息 | Products | `products` | 产品基础信息 | 产品基本信息 / 总览 | `product` |
+| 行业分类与字段模板 | CategoryProfiles | `dpp_category_profiles`, `dpp_field_templates`, `dpp_validation_rules`, `product_sector_field_values` | 行业模板 / 行业专属字段 | 产品特定信息 | `sector_profile`, `sector_specific_fields` |
 | 数字身份 | DigitalIdentity | `product_digital_identity` | 数字身份 | 总览 / 产品身份 | `identity` |
 | 供应商 | Suppliers | `product_suppliers`, `supplier_products` | 供应商库 | 供应链 / 证据 | `suppliers` |
 | 生命周期与版本 | LifecycleVersioning | `products`, `product_versions` | 生命周期 / 版本历史 | 顶部状态 / 数据治理 | `product.status`, `product.current_version`, `version_history` |
@@ -59,6 +60,10 @@
 | 品牌 | Brand | `products.brand` | 品牌 | 产品基本信息 | `product.brand` |
 | 分类 | Category | `products.category` | 分类 | 总览标签 / 产品基本信息 | `product.category` |
 | 子分类 | Subcategory | `products.subcategory` | 子分类 | 产品基本信息 | `product.subcategory` |
+| 行业代码 | Sector code | `products.sector_code` | 行业模板自动带出 | 产品特定信息 | `product.sector_code`, `sector_profile.sector_code` |
+| 大类代码 | Category code | `products.category_code` | 行业模板自动带出 | 产品特定信息 | `product.category_code`, `sector_profile.category_code` |
+| 细分类代码 | Subcategory code | `products.subcategory_code` | 行业模板自动带出 | 产品特定信息 | `product.subcategory_code`, `sector_profile.subcategory_code` |
+| DPP 字段模板 | DPP profile key | `products.dpp_profile_key` | 行业模板 | 产品特定信息 | `product.dpp_profile_key`, `sector_profile.profile_key` |
 | 系列 / 季节 | Season / Collection | `products.season` | 季节 / 系列 | 产品基本信息 | `product.season` |
 | 英文描述 | Description EN | `products.description` | 描述（英文） | 视页面需要展示 | `product.description` |
 | 中文描述 | Description ZH | `products.description_zh` | 描述（中文） | 视页面需要展示 | `product.description_zh` |
@@ -75,6 +80,34 @@
 | 维修说明 | Repair instructions | `products.repair_instructions`, `products.repair_instructions_zh` | 维修说明 | 消费者说明 / End of Life | `product.repair_instructions` |
 | 生命周期结束说明 | End-of-life instructions | `products.end_of_life_instructions`, `products.end_of_life_instructions_zh` | 生命周期结束说明 | End of Life | `product.end_of_life_instructions` |
 | 更新时间 | Last updated | `products.updated_at` | 自动生成 | 总览 / 数据治理 | `product.updated_at`, `last_updated` |
+
+## 2.1 行业分类与字段模板
+
+ESPR 和电池法规会按产品组逐步细化字段要求，因此系统采用“通用核心字段 + 行业模板 + 子类字段值”的结构。`products` 只保存所有产品通用的核心字段和当前选中的模板；行业差异字段保存到 `product_sector_field_values`，由 `dpp_category_profiles` 和 `dpp_field_templates` 定义其含义。
+
+| 标准字段 | Supabase 字段 | 说明 | JSON/API 字段 |
+|---|---|---|---|
+| 行业模板 | `dpp_category_profiles.profile_key` | 如 `battery.ev.unit.v1`, `textile.fabric.woven.v1` | `sector_profile.profile_key` |
+| 行业 / 大类 / 细类 | `sector_code`, `category_code`, `subcategory_code` | 支持行业下继续细分 | `sector_profile` |
+| 模板字段 | `dpp_field_templates.field_key` | 定义该类别需要哪些字段、单位、是否必填、是否需要证据 | 可用于验证和动态表单 |
+| 验证规则 | `dpp_validation_rules` | 必填、格式、单位、证据要求、监管级别等 | 后续用于 readiness check |
+| 产品字段值 | `product_sector_field_values.field_value` | 具体产品填报的行业专属字段值 | `sector_specific_fields[]` |
+| 证据状态 | `product_sector_field_values.evidence_status` | pending / declared / verified 等 | `sector_specific_fields[].evidence_status` |
+
+首批内置模板：
+
+| Profile key | 行业 | 细分 | 用途 |
+|---|---|---|---|
+| `textile.apparel.garment.v1` | textile | apparel / garment | 服装 DPP |
+| `textile.fabric.woven.v1` | textile | fabric / woven fabric | 面料 DPP |
+| `battery.ev.unit.v1` | battery | EV battery / battery unit | BatteryPass-Ready EV 电池护照 |
+| `battery.lmt.unit.v1` | battery | LMT battery / battery unit | BatteryPass-Ready LMT 电池护照 |
+| `battery.industrial.without_bms.v1` | battery | industrial without BMS / battery unit | BatteryPass-Ready 无 BMS 工业电池 |
+| `battery.industrial.other_above_2kwh.v1` | battery | other industrial above 2kWh / battery unit | BatteryPass-Ready 其他 2kWh 以上工业电池 |
+| `battery.industrial.stationary_above_2kwh.v1` | battery | stationary industrial above 2kWh / battery unit | BatteryPass-Ready 固定式 2kWh 以上工业电池 |
+| `furniture.office.chair.v1` | furniture | office chair | 家具 DPP |
+| `construction.material.wpc_decking.v1` | construction | WPC decking | 建材 DPP |
+| `electronics.consumer.audio.v1` | electronics | audio device | 消费电子 DPP |
 
 ## 3. 数字身份与数据载体
 

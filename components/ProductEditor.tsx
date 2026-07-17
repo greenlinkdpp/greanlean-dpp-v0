@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createSupabaseClient } from "@/lib/supabase";
 import { buildGs1DigitalLink, buildUniqueProductIdentifier, normalizeGtin, sha256Hex } from "@/lib/dppCompliance";
+import { DPP_SECTOR_PROFILES, findDppSectorProfile, uniqueByCode } from "@/lib/dppSectorProfiles";
 import { useLanguage } from "@/components/LanguageProvider";
 import { ProductRelatedManager } from "@/components/ProductRelatedManager";
 
@@ -118,6 +119,16 @@ export function ProductEditor({ productId }: { productId: string }) {
           brand: "品牌",
           category: "分类",
           subcategory: "子分类",
+          sectorTemplate: "行业模板",
+          sector: "行业",
+          categoryLevel: "产品类别",
+          profileLevel: "细分模板",
+          sectorCode: "行业代码",
+          categoryCode: "大类代码",
+          subcategoryCode: "细分类代码",
+          dppProfile: "DPP 字段模板",
+          regulationBasis: "法规依据",
+          sectorFields: "行业专属字段",
           season: "季节 / 系列",
           description: "描述（英文）",
           descriptionZh: "描述（中文）",
@@ -173,6 +184,16 @@ export function ProductEditor({ productId }: { productId: string }) {
           brand: "Brand",
           category: "Category",
           subcategory: "Subcategory",
+          sectorTemplate: "Sector template",
+          sector: "Sector",
+          categoryLevel: "Product category",
+          profileLevel: "Detailed profile",
+          sectorCode: "Sector code",
+          categoryCode: "Category code",
+          subcategoryCode: "Subcategory code",
+          dppProfile: "DPP field profile",
+          regulationBasis: "Regulation basis",
+          sectorFields: "Sector-specific fields",
           season: "Season / Collection",
           description: "Description (English)",
           descriptionZh: "Description (Chinese)",
@@ -221,12 +242,21 @@ export function ProductEditor({ productId }: { productId: string }) {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [versionRefreshKey, setVersionRefreshKey] = useState(0);
+  const [profileKey, setProfileKey] = useState("");
+  const [sectorCode, setSectorCode] = useState("");
+  const [categoryCode, setCategoryCode] = useState("");
 
   async function loadProduct() {
     setLoading(true);
     const { data, error } = await supabase.from("products").select("*").eq("id", productId).single();
     if (error) setMessage(error.message);
-    else setProduct(data);
+    else {
+      setProduct(data);
+      const savedProfile = findDppSectorProfile(data?.dpp_profile_key);
+      setProfileKey(savedProfile?.profileKey || data?.dpp_profile_key || "");
+      setSectorCode(savedProfile?.sectorCode || data?.sector_code || "");
+      setCategoryCode(savedProfile?.categoryCode || data?.category_code || "");
+    }
     setLoading(false);
   }
 
@@ -249,6 +279,10 @@ export function ProductEditor({ productId }: { productId: string }) {
       "brand",
       "category",
       "subcategory",
+      "sector_code",
+      "category_code",
+      "subcategory_code",
+      "dpp_profile_key",
       "season",
       "description",
       "description_zh",
@@ -272,6 +306,12 @@ export function ProductEditor({ productId }: { productId: string }) {
     payload.current_version = payload.current_version || "v1.0";
     payload.granularity_level = payload.granularity_level || "model";
     payload.eu_registration_status = payload.eu_registration_status || "not_registered";
+    const selectedProfile = findDppSectorProfile(payload.dpp_profile_key);
+    if (selectedProfile) {
+      payload.sector_code = selectedProfile.sectorCode;
+      payload.category_code = selectedProfile.categoryCode;
+      payload.subcategory_code = selectedProfile.subcategoryCode;
+    }
     payload.updated_at = now;
 
     const version = String(form.get("version") || payload.current_version || "v1.0").trim();
@@ -328,6 +368,15 @@ export function ProductEditor({ productId }: { productId: string }) {
 
   const publicIdentifier = product.dpp_id || product.public_slug;
   const suggestedVersion = product.current_version ? nextPatchVersion(product.current_version) : "v1.0";
+  const selectedProfile = findDppSectorProfile(profileKey || product.dpp_profile_key);
+  const sectorOptions = uniqueByCode(DPP_SECTOR_PROFILES, "sectorCode");
+  const categoryOptions = uniqueByCode(
+    DPP_SECTOR_PROFILES.filter((profile) => !sectorCode || profile.sectorCode === sectorCode),
+    "categoryCode",
+  );
+  const profileOptions = DPP_SECTOR_PROFILES.filter(
+    (profile) => (!sectorCode || profile.sectorCode === sectorCode) && (!categoryCode || profile.categoryCode === categoryCode),
+  );
   const prepareEvidencePayload = async (payload: Record<string, any>) => ({
     ...payload,
     evidence_hash: payload.evidence_hash || (await sha256Hex(payload)),
@@ -352,6 +401,12 @@ export function ProductEditor({ productId }: { productId: string }) {
       visibility_level: payload.visibility_level || "public",
     };
   };
+  const prepareSectorFieldPayload = (payload: Record<string, any>) => ({
+    ...payload,
+    profile_key: payload.profile_key || selectedProfile?.profileKey || product.dpp_profile_key || null,
+    visibility_level: payload.visibility_level || "public",
+    source_type: payload.source_type || "manual",
+  });
 
   return (
     <div className="space-y-8">
@@ -385,6 +440,83 @@ export function ProductEditor({ productId }: { productId: string }) {
           <div className="grid gap-4 md:grid-cols-2">
             <input className="input" name="subcategory" defaultValue={product.subcategory || ""} placeholder={t.subcategory} />
             <input className="input" name="season" defaultValue={product.season || ""} placeholder={t.season} />
+          </div>
+          <div className="rounded-2xl border border-brand-100 bg-brand-50/40 p-4">
+            <h3 className="text-base font-black text-slate-950">{t.sectorTemplate}</h3>
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <label>
+                <span className="label">{t.sector}</span>
+                <select
+                  className="input mt-1"
+                  value={sectorCode}
+                  onChange={(event) => {
+                    const nextSector = event.target.value;
+                    const nextCategory = DPP_SECTOR_PROFILES.find((profile) => profile.sectorCode === nextSector)?.categoryCode || "";
+                    const nextProfile = DPP_SECTOR_PROFILES.find((profile) => profile.sectorCode === nextSector && profile.categoryCode === nextCategory);
+                    setSectorCode(nextSector);
+                    setCategoryCode(nextCategory);
+                    setProfileKey(nextProfile?.profileKey || "");
+                  }}
+                >
+                  <option value="">-</option>
+                  {sectorOptions.map((profile) => (
+                    <option key={profile.sectorCode} value={profile.sectorCode}>
+                      {locale === "zh" ? profile.sectorNameZh : profile.sectorName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span className="label">{t.categoryLevel}</span>
+                <select
+                  className="input mt-1"
+                  value={categoryCode}
+                  onChange={(event) => {
+                    const nextCategory = event.target.value;
+                    const nextProfile = DPP_SECTOR_PROFILES.find((profile) => profile.sectorCode === sectorCode && profile.categoryCode === nextCategory);
+                    setCategoryCode(nextCategory);
+                    setProfileKey(nextProfile?.profileKey || "");
+                  }}
+                >
+                  <option value="">-</option>
+                  {categoryOptions.map((profile) => (
+                    <option key={profile.categoryCode} value={profile.categoryCode}>
+                      {locale === "zh" ? profile.categoryNameZh : profile.categoryName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="md:col-span-2">
+                <span className="label">{t.profileLevel}</span>
+                <select
+                  className="input mt-1"
+                  name="dpp_profile_key"
+                  value={profileKey}
+                  onChange={(event) => {
+                    const nextProfile = findDppSectorProfile(event.target.value);
+                    setProfileKey(event.target.value);
+                    if (nextProfile) {
+                      setSectorCode(nextProfile.sectorCode);
+                      setCategoryCode(nextProfile.categoryCode);
+                    }
+                  }}
+                >
+                  <option value="">-</option>
+                  {profileOptions.map((profile) => (
+                    <option key={profile.profileKey} value={profile.profileKey}>
+                      {locale === "zh" ? profile.subcategoryNameZh : profile.subcategoryName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <input type="hidden" name="sector_code" value={selectedProfile?.sectorCode || product.sector_code || ""} />
+              <input type="hidden" name="category_code" value={selectedProfile?.categoryCode || product.category_code || ""} />
+              <input type="hidden" name="subcategory_code" value={selectedProfile?.subcategoryCode || product.subcategory_code || ""} />
+              <Info label={t.sectorCode} value={selectedProfile?.sectorCode || product.sector_code} />
+              <Info label={t.categoryCode} value={selectedProfile?.categoryCode || product.category_code} />
+              <Info label={t.subcategoryCode} value={selectedProfile?.subcategoryCode || product.subcategory_code} />
+              <Info label={t.regulationBasis} value={selectedProfile?.regulationBasis} />
+            </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <label>
@@ -475,6 +607,7 @@ export function ProductEditor({ productId }: { productId: string }) {
       <ProductRelatedManager productId={productId} title="Evidence Field Links" titleZh={t.evidenceLinks} table="dpp_evidence_links" displayFields={["evidence_type", "supported_field", "verification_status", "visibility_level"]} fields={[{ name: "evidence_type", label: "Evidence Type", labelZh: "证据类型", required: true }, { name: "evidence_ref_id", label: "Evidence Ref ID", labelZh: "证据记录 ID" }, { name: "supported_field", label: "Supported Field", labelZh: "支持字段", required: true }, { name: "supported_module", label: "Supported Module", labelZh: "支持模块" }, { name: "claim_value", label: "Claim Value", labelZh: "声明值", type: "textarea" }, { name: "verification_status", label: "Verification Status", labelZh: "验证状态" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
       <ProductRelatedManager productId={productId} title="Audit Logs" titleZh={t.auditLogs} table="dpp_audit_logs" displayFields={["action_type", "actor_name", "target_table", "new_hash"]} fields={[{ name: "actor_name", label: "Actor Name", labelZh: "操作人" }, { name: "actor_role", label: "Actor Role", labelZh: "操作角色" }, { name: "action_type", label: "Action Type", labelZh: "操作类型", required: true }, { name: "target_table", label: "Target Table", labelZh: "目标表" }, { name: "target_id", label: "Target ID", labelZh: "目标记录 ID" }, { name: "previous_hash", label: "Previous Hash", labelZh: "前 Hash" }, { name: "new_hash", label: "New Hash", labelZh: "新 Hash" }, { name: "ip_context", label: "IP / Context", labelZh: "IP / 上下文" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
       <ProductRelatedManager productId={productId} title="Blockchain Anchors" titleZh={t.blockchainAnchors} table="dpp_blockchain_anchors" displayFields={["version", "chain_name", "anchor_status", "transaction_hash"]} preparePayload={prepareBlockchainPayload} fields={[{ name: "version", label: "DPP Version", labelZh: "DPP 版本" }, { name: "anchored_hash", label: "Anchored Hash", labelZh: "锚定 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "chain_name", label: "Chain Name", labelZh: "区块链名称" }, { name: "chain_id", label: "Chain ID", labelZh: "链 ID" }, { name: "network", label: "Network", labelZh: "网络" }, { name: "contract_address", label: "Contract Address", labelZh: "合约地址" }, { name: "transaction_hash", label: "Transaction Hash", labelZh: "交易 Hash" }, { name: "block_number", label: "Block Number", labelZh: "区块高度" }, { name: "anchor_status", label: "Anchor Status", labelZh: "锚定状态" }, { name: "anchored_at", label: "Anchored At", labelZh: "锚定时间", type: "datetime-local" }, { name: "explorer_url", label: "Explorer URL", labelZh: "区块浏览器 URL", type: "url" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
+      <ProductRelatedManager productId={productId} title="Sector-specific Fields" titleZh={t.sectorFields} table="product_sector_field_values" displayFields={["field_key", "module_key", "field_value", "evidence_status"]} preparePayload={prepareSectorFieldPayload} fields={[{ name: "module_key", label: "Module Key", labelZh: "模块 Key" }, { name: "field_key", label: "Field Key", labelZh: "字段 Key", required: true }, { name: "field_label", label: "Field Label", labelZh: "字段标签" }, { name: "field_label_zh", label: "Field Label Chinese", labelZh: "字段中文标签" }, { name: "field_value", label: "Field Value", labelZh: "字段值", type: "textarea" }, { name: "unit", label: "Unit", labelZh: "单位" }, { name: "evidence_status", label: "Evidence Status", labelZh: "证据状态" }, { name: "source_type", label: "Source Type", labelZh: "来源类型" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
 
       <ProductRelatedManager productId={productId} title="Components / BOM" titleZh={t.components} table="product_bom" displayFields={["component_name", "component_type", "quantity", "unit", "position"]} fields={[{ name: "component_name", label: "Component Name", labelZh: "组件名称", required: true }, { name: "component_name_zh", label: "Component Name Chinese", labelZh: "组件名称中文" }, { name: "component_type", label: "Component Type", labelZh: "组件类型" }, { name: "component_type_zh", label: "Component Type Chinese", labelZh: "组件类型中文" }, { name: "quantity", label: "Quantity", labelZh: "数量", type: "number" }, { name: "unit", label: "Unit", labelZh: "单位" }, { name: "position", label: "Position", labelZh: "位置" }]} />
       <ProductRelatedManager productId={productId} title="Materials" titleZh={t.materials} table="product_materials" displayFields={["material_name", "percentage", "origin_country", "certification"]} fields={[{ name: "material_name", label: "Material Name", labelZh: "材料名称", required: true }, { name: "material_name_zh", label: "Material Name Chinese", labelZh: "材料名称中文" }, { name: "material_type", label: "Material Type", labelZh: "材料类型" }, { name: "material_type_zh", label: "Material Type Chinese", labelZh: "材料类型中文" }, { name: "percentage", label: "Percentage", labelZh: "占比 (%)", type: "number" }, { name: "recycled_content", label: "Recycled Content", labelZh: "再生成分 (%)", type: "number" }, { name: "origin_country", label: "Origin Country", labelZh: "原产国" }, { name: "chemical_info", label: "Chemical Info", labelZh: "化学信息" }, { name: "recyclability", label: "Recyclability", labelZh: "可回收性" }, { name: "certification", label: "Certification", labelZh: "认证" }]} />

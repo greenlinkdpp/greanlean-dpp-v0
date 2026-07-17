@@ -10,6 +10,8 @@
     "passport_type",
     "locale",
     "product",
+    "sector_profile",
+    "sector_specific_fields",
     "identity",
     "suppliers",
     "supplier_product_links",
@@ -44,6 +46,16 @@
     },
     "product": {
       "$ref": "#/$defs/product"
+    },
+    "sector_profile": {
+      "$ref": "#/$defs/sectorProfile"
+    },
+    "sector_specific_fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sectorSpecificField"
+      },
+      "default": []
     },
     "identity": {
       "$ref": "#/$defs/identity"
@@ -198,6 +210,10 @@
         "brand": { "$ref": "#/$defs/nullableString" },
         "category": { "type": "string", "minLength": 1 },
         "subcategory": { "$ref": "#/$defs/nullableString" },
+        "sector_code": { "$ref": "#/$defs/nullableString" },
+        "category_code": { "$ref": "#/$defs/nullableString" },
+        "subcategory_code": { "$ref": "#/$defs/nullableString" },
+        "dpp_profile_key": { "$ref": "#/$defs/nullableString" },
         "season": { "$ref": "#/$defs/nullableString" },
         "description": { "$ref": "#/$defs/nullableString" },
         "description_zh": { "$ref": "#/$defs/nullableString" },
@@ -213,6 +229,34 @@
         "repair_instructions_zh": { "$ref": "#/$defs/nullableString" },
         "end_of_life_instructions": { "$ref": "#/$defs/nullableString" },
         "end_of_life_instructions_zh": { "$ref": "#/$defs/nullableString" },
+        "updated_at": { "$ref": "#/$defs/dateTime" }
+      }
+    },
+    "sectorProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sector_code": { "$ref": "#/$defs/nullableString" },
+        "category_code": { "$ref": "#/$defs/nullableString" },
+        "subcategory_code": { "$ref": "#/$defs/nullableString" },
+        "profile_key": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "sectorSpecificField": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "profile_key": { "$ref": "#/$defs/nullableString" },
+        "module_key": { "$ref": "#/$defs/nullableString" },
+        "field_key": { "type": "string" },
+        "label": { "$ref": "#/$defs/nullableString" },
+        "label_zh": { "$ref": "#/$defs/nullableString" },
+        "value": { "$ref": "#/$defs/nullableString" },
+        "value_json": true,
+        "unit": { "$ref": "#/$defs/nullableString" },
+        "evidence_status": { "$ref": "#/$defs/nullableString" },
+        "source_type": { "$ref": "#/$defs/nullableString" },
+        "visibility_level": { "$ref": "#/$defs/nullableString" },
         "updated_at": { "$ref": "#/$defs/dateTime" }
       }
     },

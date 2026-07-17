@@ -15,6 +15,10 @@
     "brand": "HUANGSHAN MEISEN",
     "category": "WPC DECKING",
     "subcategory": "Outdoor composite decking board",
+    "sector_code": "construction",
+    "category_code": "building_material",
+    "subcategory_code": "wpc_decking",
+    "dpp_profile_key": "construction.material.wpc_decking.v1",
     "season": "2026 WPC Demo",
     "description": "Outdoor composite decking board, 140x25mm, 2.55kg/m, SANDING finish.",
     "description_zh": "户外木塑复合 decking 板材，规格 140x25mm，重量 2.55kg/m，表面工艺 SANDING。",
@@ -29,6 +33,28 @@
     "end_of_life_instructions_zh": "机械回收前移除金属紧固件。",
     "updated_at": "2026-06-11T00:00:00.000Z"
   },
+  "sector_profile": {
+    "sector_code": "construction",
+    "category_code": "building_material",
+    "subcategory_code": "wpc_decking",
+    "profile_key": "construction.material.wpc_decking.v1"
+  },
+  "sector_specific_fields": [
+    {
+      "profile_key": "construction.material.wpc_decking.v1",
+      "module_key": "performance",
+      "field_key": "declaration_of_performance",
+      "label": "Declaration of performance",
+      "label_zh": "性能声明",
+      "value": "https://example.com/docs/dop-ms140k25b.pdf",
+      "value_json": null,
+      "unit": null,
+      "evidence_status": "verified",
+      "source_type": "document",
+      "visibility_level": "public",
+      "updated_at": "2026-06-11T00:00:00.000Z"
+    }
+  ],
   "identity": {
     "product_uuid": "wpc-ms140k25b-demo",
     "gtin": "06900000000203",

@@ -111,6 +111,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     documents = [],
     governance = [],
     blockchainAnchors = [],
+    sectorFieldValues = [],
   } = data;
 
   useEffect(() => {
@@ -1288,7 +1289,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.recyclability, hasNumber(firstCircularity?.recyclability_score) ? `${firstCircularity.recyclability_score} / 100` : t.noData, "recycle"],
     [t.minimumLifetime, t.noData, "check"],
   ] as Array<[string, any, IconName]>).filter(([, value]) => hasDisplayValue(value) && value !== t.noData);
-  const textileReserveItems: Array<[string, any]> = isDemoProduct ? (isElectronics
+  const sectorSpecificItems: Array<[string, any]> = sectorFieldValues
+    .filter((field: any) => hasDisplayValue(field.field_value) || hasDisplayValue(field.field_value_json))
+    .map((field: any) => [
+      pick(field, locale, "field_label", "field_label_zh") || field.field_key,
+      compact([field.field_value || (field.field_value_json ? JSON.stringify(field.field_value_json) : ""), field.unit].filter(hasDisplayValue)),
+    ]);
+  const textileReserveItems: Array<[string, any]> = sectorSpecificItems.length ? sectorSpecificItems : isDemoProduct ? (isElectronics
     ? [
         [locale === "zh" ? "电池拆解与回收准备" : "Battery removal and recycling readiness", locale === "zh" ? "预留电池护照字段；当前披露 MSDS、UN38.3 和 WEEE 回收路径。" : "Battery-passport fields reserved; MSDS, UN38.3 and WEEE path disclosed now."],
         [locale === "zh" ? "RoHS / CE 证据链" : "RoHS / CE evidence chain", locale === "zh" ? "预留后续与欧盟系统对接的合规文件索引和验证状态。" : "Evidence-file index and verification status reserved for future EU-system connection."],
