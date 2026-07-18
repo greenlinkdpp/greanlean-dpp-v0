@@ -12,6 +12,10 @@ type ProductPayload = {
   brand: string;
   category: string;
   subcategory: string;
+  sector_code: string;
+  category_code: string;
+  subcategory_code: string;
+  dpp_profile_key: string;
   season: string;
   description: string;
   description_zh: string;
@@ -34,6 +38,10 @@ const earbudsProduct: ProductPayload = {
   brand: "greanlean",
   category: "Consumer Electronics",
   subcategory: "Wireless Earbuds",
+  sector_code: "consumer_electronics",
+  category_code: "audio_device",
+  subcategory_code: "audio_device",
+  dpp_profile_key: "consumer_electronics.audio_device.v1",
   season: "2026 Audio Export Series",
   description:
     "A consumer electronics digital product passport demo for EU exports, covering GS1 identifiers, RoHS and REACH evidence, battery and WEEE end-of-life information.",
@@ -58,6 +66,10 @@ const flooringProduct: ProductPayload = {
   brand: "HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD",
   category: "WPC DECKING",
   subcategory: "Outdoor WPC Decking",
+  sector_code: "construction",
+  category_code: "building_material",
+  subcategory_code: "wpc_decking",
+  dpp_profile_key: "construction.material.wpc_decking.v1",
   season: "2026 Outdoor Decking Series",
   description:
     "Outdoor composite decking board. Model MS140K25B, 140x25mm, 2.55kg/m, SANDING finish, colours WOOD / COFFEE / DARK GREY / LIGHT GREY, made in China by HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD.",
@@ -83,6 +95,10 @@ const furnitureProduct: ProductPayload = {
   brand: "greanlean",
   category: "Furniture",
   subcategory: "Office Chair",
+  sector_code: "furniture",
+  category_code: "office_furniture",
+  subcategory_code: "office_chair",
+  dpp_profile_key: "furniture.office.chair.v1",
   season: "2026 EU Furniture Demo",
   description:
     "A furniture digital product passport demo for EU exports, covering material composition, recycled content, durability testing, repairability, disassembly and end-of-life recovery.",
@@ -427,9 +443,9 @@ export function DemoDataSyncButton() {
       ]);
 
       await insertRows(supabase, "product_digital_identity", [
-        { product_id: earbudsId, product_uuid: "8a61f0d2-4f6a-4cf2-b11c-demoaudio01", gtin: "06900000000128", style_id: "STYLE-AUDIO-001", batch_id: "BATCH-AUDIO-2026-001", serial_id: "EARBUDS-DEMO-0001", digital_link_url: "https://www.greanlean.com/p/DPP-AUDIO-DEMO-001", qr_code_id: "QR-DPP-EARBUDS-001", nfc_id: "NFC-EARBUDS-001", rfid_epc: "RFID-RESERVED" },
-        { product_id: flooringId, product_uuid: "51e0f9f3-3c7b-45c0-9b8f-demofloor01", gtin: "06900000000203", style_id: "STYLE-WPC-MS140K25B", batch_id: "W2605-05", serial_id: "TRACE-W2605-05", digital_link_url: "https://www.greanlean.com/p/DPP-WPC-MS140K25B", qr_code_id: "QR-DPP-WPC-001", nfc_id: "NFC-RESERVED", rfid_epc: "RFID-PALLET-RESERVED" },
-        { product_id: furnitureId, product_uuid: "e01b59d5-0f1f-4a7d-a25d-demochair01", gtin: "06900000000302", style_id: "STYLE-FURN-CHAIR-001", batch_id: "BATCH-FURN-2026-001", serial_id: "CHAIR-DEMO-0001", digital_link_url: "https://www.greanlean.com/p/DPP-FURN-DEMO-001", qr_code_id: "QR-DPP-CHAIR-001", nfc_id: "NFC-CHAIR-RESERVED", rfid_epc: "RFID-CARTON-RESERVED" },
+        { product_id: earbudsId, product_uuid: "8a61f0d2-4f6a-4cf2-b11c-demoaudio01", gtin: "06900000000128", style_id: "STYLE-AUDIO-001", batch_id: "BATCH-AUDIO-2026-001", serial_id: "EARBUDS-DEMO-0001", digital_link_url: "https://www.greanlean.com/p/DPP-AUDIO-DEMO-001", data_carrier_type: "qr", data_carrier_url: "https://www.greanlean.com/p/DPP-AUDIO-DEMO-001", qr_code_id: "QR-DPP-EARBUDS-001", nfc_id: "NFC-EARBUDS-001", rfid_epc: "RFID-RESERVED" },
+        { product_id: flooringId, product_uuid: "51e0f9f3-3c7b-45c0-9b8f-demofloor01", gtin: "06900000000203", style_id: "STYLE-WPC-MS140K25B", batch_id: "W2605-05", serial_id: "TRACE-W2605-05", digital_link_url: "https://www.greanlean.com/p/DPP-WPC-MS140K25B", data_carrier_type: "qr", data_carrier_url: "https://www.greanlean.com/p/DPP-WPC-MS140K25B", qr_code_id: "QR-DPP-WPC-001", nfc_id: "NFC-RESERVED", rfid_epc: "RFID-PALLET-RESERVED" },
+        { product_id: furnitureId, product_uuid: "e01b59d5-0f1f-4a7d-a25d-demochair01", gtin: "06900000000302", style_id: "STYLE-FURN-CHAIR-001", batch_id: "BATCH-FURN-2026-001", serial_id: "CHAIR-DEMO-0001", digital_link_url: "https://www.greanlean.com/p/DPP-FURN-DEMO-001", data_carrier_type: "qr", data_carrier_url: "https://www.greanlean.com/p/DPP-FURN-DEMO-001", qr_code_id: "QR-DPP-CHAIR-001", nfc_id: "NFC-CHAIR-RESERVED", rfid_epc: "RFID-CARTON-RESERVED" },
       ]);
 
       await insertRows(supabase, "product_documents", [

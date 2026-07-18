@@ -60,6 +60,10 @@ alter table public.products
   add column if not exists subcategory_code text,
   add column if not exists dpp_profile_key text;
 
+alter table public.product_digital_identity
+  add column if not exists data_carrier_type text default 'qr',
+  add column if not exists data_carrier_url text;
+
 do $$
 begin
   if not exists (
@@ -136,7 +140,7 @@ values
   ('battery', 'industrial_stationary_above_2kwh', 'battery_unit', 'battery.industrial.stationary_above_2kwh.v1', 'Battery / Industrial battery / Stationary above 2 kWh', '电池 / 工业电池 / 固定式 2kWh 以上', 'BatteryPass-Ready Stationary Industrial above 2kWh schema and EU Battery Regulation', 'v1', 34, '["identity","performance_durability","carbon_footprint","materials","circularity","due_diligence","conformity"]'::jsonb),
   ('furniture', 'office_furniture', 'office_chair', 'furniture.office.chair.v1', 'Furniture / Office furniture / Office chair', '家具 / 办公家具 / 办公椅', 'ESPR furniture product group preparation', 'v1', 40, '["identity","materials","performance","repair","disassembly","circularity","evidence"]'::jsonb),
   ('construction', 'building_material', 'wpc_decking', 'construction.material.wpc_decking.v1', 'Construction / Building material / WPC decking', '建材 / 建筑材料 / 木塑地板', 'ESPR and construction product documentation readiness', 'v1', 50, '["identity","materials","performance","chemical_compliance","installation","circularity","evidence"]'::jsonb),
-  ('electronics', 'consumer_electronics', 'audio_device', 'electronics.consumer.audio.v1', 'Electronics / Consumer electronics / Audio device', '电子电器 / 消费电子 / 音频设备', 'ESPR electronics product group preparation', 'v1', 60, '["identity","materials","battery_readiness","repair","software","circularity","evidence"]'::jsonb)
+  ('consumer_electronics', 'audio_device', 'audio_device', 'consumer_electronics.audio_device.v1', 'Consumer electronics / Audio device', '消费电子 / 音频设备', 'ESPR consumer electronics product group preparation', 'v1', 60, '["identity","materials","battery_readiness","repair","software","circularity","evidence"]'::jsonb)
 on conflict (profile_key) do update set
   sector_code = excluded.sector_code,
   category_code = excluded.category_code,
@@ -165,12 +169,36 @@ values
   ('battery.ev.unit.v1', 'carbon_footprint', 'carbon_footprint_per_kwh', 'Carbon footprint per functional unit', '单位功能碳足迹', 'number', 'kgCO2-eq/kWh', true, true, 'public', 'Battery carbon footprint per kWh.', 40),
   ('battery.ev.unit.v1', 'materials', 'battery_chemistry', 'Battery chemistry', '电池化学体系', 'text', null, true, false, 'public', 'Example: Li-ion NMC, LFP.', 50),
   ('battery.ev.unit.v1', 'due_diligence', 'due_diligence_report', 'Due diligence report', '供应链尽调报告', 'url', null, true, true, 'authority', 'Reference report URL or URN.', 60),
+  ('battery.lmt.unit.v1', 'identifiers', 'battery_model_identifier', 'Battery model identifier', '电池型号标识', 'text', null, true, false, 'public', 'BatteryPass-Ready product category specific identifier.', 10),
+  ('battery.lmt.unit.v1', 'performance_durability', 'rated_capacity', 'Rated capacity', '额定容量', 'number', 'Ah', true, true, 'public', 'Use value plus unit.', 20),
+  ('battery.lmt.unit.v1', 'performance_durability', 'state_of_charge', 'State of charge SoC', '荷电状态 SoC', 'number', '%', false, false, 'public', 'Percentage value.', 30),
+  ('battery.lmt.unit.v1', 'carbon_footprint', 'carbon_footprint_per_kwh', 'Carbon footprint per functional unit', '单位功能碳足迹', 'number', 'kgCO2-eq/kWh', true, true, 'public', 'Battery carbon footprint per kWh.', 40),
+  ('battery.lmt.unit.v1', 'materials', 'battery_chemistry', 'Battery chemistry', '电池化学体系', 'text', null, true, false, 'public', 'Example: Li-ion NMC, LFP.', 50),
+  ('battery.lmt.unit.v1', 'due_diligence', 'due_diligence_report', 'Due diligence report', '供应链尽调报告', 'url', null, true, true, 'authority', 'Reference report URL or URN.', 60),
+  ('battery.industrial.without_bms.v1', 'identifiers', 'battery_model_identifier', 'Battery model identifier', '电池型号标识', 'text', null, true, false, 'public', 'BatteryPass-Ready product category specific identifier.', 10),
+  ('battery.industrial.without_bms.v1', 'performance_durability', 'rated_capacity', 'Rated capacity', '额定容量', 'number', 'Ah', true, true, 'public', 'Use value plus unit.', 20),
+  ('battery.industrial.without_bms.v1', 'performance_durability', 'state_of_charge', 'State of charge SoC', '荷电状态 SoC', 'number', '%', false, false, 'public', 'Percentage value.', 30),
+  ('battery.industrial.without_bms.v1', 'carbon_footprint', 'carbon_footprint_per_kwh', 'Carbon footprint per functional unit', '单位功能碳足迹', 'number', 'kgCO2-eq/kWh', true, true, 'public', 'Battery carbon footprint per kWh.', 40),
+  ('battery.industrial.without_bms.v1', 'materials', 'battery_chemistry', 'Battery chemistry', '电池化学体系', 'text', null, true, false, 'public', 'Example: Li-ion NMC, LFP.', 50),
+  ('battery.industrial.without_bms.v1', 'due_diligence', 'due_diligence_report', 'Due diligence report', '供应链尽调报告', 'url', null, true, true, 'authority', 'Reference report URL or URN.', 60),
+  ('battery.industrial.other_above_2kwh.v1', 'identifiers', 'battery_model_identifier', 'Battery model identifier', '电池型号标识', 'text', null, true, false, 'public', 'BatteryPass-Ready product category specific identifier.', 10),
+  ('battery.industrial.other_above_2kwh.v1', 'performance_durability', 'rated_capacity', 'Rated capacity', '额定容量', 'number', 'Ah', true, true, 'public', 'Use value plus unit.', 20),
+  ('battery.industrial.other_above_2kwh.v1', 'performance_durability', 'state_of_charge', 'State of charge SoC', '荷电状态 SoC', 'number', '%', false, false, 'public', 'Percentage value.', 30),
+  ('battery.industrial.other_above_2kwh.v1', 'carbon_footprint', 'carbon_footprint_per_kwh', 'Carbon footprint per functional unit', '单位功能碳足迹', 'number', 'kgCO2-eq/kWh', true, true, 'public', 'Battery carbon footprint per kWh.', 40),
+  ('battery.industrial.other_above_2kwh.v1', 'materials', 'battery_chemistry', 'Battery chemistry', '电池化学体系', 'text', null, true, false, 'public', 'Example: Li-ion NMC, LFP.', 50),
+  ('battery.industrial.other_above_2kwh.v1', 'due_diligence', 'due_diligence_report', 'Due diligence report', '供应链尽调报告', 'url', null, true, true, 'authority', 'Reference report URL or URN.', 60),
+  ('battery.industrial.stationary_above_2kwh.v1', 'identifiers', 'battery_model_identifier', 'Battery model identifier', '电池型号标识', 'text', null, true, false, 'public', 'BatteryPass-Ready product category specific identifier.', 10),
+  ('battery.industrial.stationary_above_2kwh.v1', 'performance_durability', 'rated_capacity', 'Rated capacity', '额定容量', 'number', 'Ah', true, true, 'public', 'Use value plus unit.', 20),
+  ('battery.industrial.stationary_above_2kwh.v1', 'performance_durability', 'state_of_charge', 'State of charge SoC', '荷电状态 SoC', 'number', '%', false, false, 'public', 'Percentage value.', 30),
+  ('battery.industrial.stationary_above_2kwh.v1', 'carbon_footprint', 'carbon_footprint_per_kwh', 'Carbon footprint per functional unit', '单位功能碳足迹', 'number', 'kgCO2-eq/kWh', true, true, 'public', 'Battery carbon footprint per kWh.', 40),
+  ('battery.industrial.stationary_above_2kwh.v1', 'materials', 'battery_chemistry', 'Battery chemistry', '电池化学体系', 'text', null, true, false, 'public', 'Example: Li-ion NMC, LFP.', 50),
+  ('battery.industrial.stationary_above_2kwh.v1', 'due_diligence', 'due_diligence_report', 'Due diligence report', '供应链尽调报告', 'url', null, true, true, 'authority', 'Reference report URL or URN.', 60),
   ('furniture.office.chair.v1', 'performance', 'durability_test', 'Durability test', '耐久性测试', 'text', null, true, true, 'public', 'Reference seating durability and stability reports.', 10),
   ('furniture.office.chair.v1', 'repair', 'replaceable_parts', 'Replaceable parts', '可替换部件', 'text', null, true, false, 'public', 'List casters, gas lift, armrests, cushion or other service parts.', 20),
   ('construction.material.wpc_decking.v1', 'performance', 'declaration_of_performance', 'Declaration of performance', '性能声明', 'url', null, true, true, 'public', 'Reference DoP or performance report.', 10),
   ('construction.material.wpc_decking.v1', 'chemical_compliance', 'voc_or_reach_evidence', 'VOC / REACH evidence', 'VOC / REACH 证据', 'url', null, true, true, 'public', 'Reference VOC, formaldehyde, REACH or SVHC evidence.', 20),
-  ('electronics.consumer.audio.v1', 'battery_readiness', 'battery_safety_document', 'Battery safety document', '电池安全文件', 'url', null, false, true, 'public', 'Reference MSDS, UN38.3 or battery handling evidence.', 10),
-  ('electronics.consumer.audio.v1', 'software', 'firmware_security_update_policy', 'Firmware security update policy', '固件安全更新政策', 'text', null, false, false, 'public', 'Reserve field for connected electronics.', 20)
+  ('consumer_electronics.audio_device.v1', 'battery_readiness', 'battery_safety_document', 'Battery safety document', '电池安全文件', 'url', null, false, true, 'public', 'Reference MSDS, UN38.3 or battery handling evidence.', 10),
+  ('consumer_electronics.audio_device.v1', 'software', 'firmware_security_update_policy', 'Firmware security update policy', '固件安全更新政策', 'text', null, false, false, 'public', 'Reserve field for connected electronics.', 20)
 on conflict (profile_key, field_key) do update set
   module_key = excluded.module_key,
   field_label = excluded.field_label,
@@ -191,3 +219,13 @@ set
   dpp_profile_key = coalesce(dpp_profile_key, 'textile.apparel.garment.v1')
 where public_slug = 'demo-organic-cotton-tshirt'
    or dpp_id = 'DPP-DEMO-001';
+
+update public.products
+set
+  sector_code = 'consumer_electronics',
+  category_code = 'audio_device',
+  subcategory_code = 'audio_device',
+  dpp_profile_key = 'consumer_electronics.audio_device.v1'
+where public_slug = 'demo-wireless-earbuds'
+   or dpp_id = 'DPP-AUDIO-DEMO-001'
+   or dpp_profile_key = 'electronics.consumer.audio.v1';

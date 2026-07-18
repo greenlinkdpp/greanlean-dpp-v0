@@ -2,21 +2,24 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createSupabaseClient } from "@/lib/supabase";
 import { PublicDppClient } from "@/components/PublicDppClient";
+import { PublicDppPreviewLoader } from "@/components/PublicDppPreviewLoader";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const data = await getData(decodeURIComponent(params.slug));
+export async function generateMetadata({ params, searchParams }: { params: { slug: string }; searchParams?: { preview?: string; lang?: string } }): Promise<Metadata> {
+  const data = await getData(decodeURIComponent(params.slug), searchParams?.preview === "1");
   if (!data) {
+    if (searchParams?.preview === "1") return { title: "DPP Preview" };
     return { title: "DPP Not Found" };
   }
   const product = data.product || {};
-  const name = product.name || product.name_zh || "Digital Product Passport";
+  const isZh = searchParams?.lang === "zh";
+  const name = (isZh ? product.name_zh || product.name : product.name || product.name_zh) || (isZh ? "数字产品护照" : "Digital Product Passport");
   const identifier = product.dpp_id || product.public_slug || params.slug;
   return {
     title: `${name} - ${identifier}`,
-    description: product.description || product.description_zh || "GREANLEAN digital product passport.",
+    description: (isZh ? product.description_zh || product.description : product.description || product.description_zh) || (isZh ? "GREANLEAN 数字产品护照。" : "GREANLEAN digital product passport."),
   };
 }
 
@@ -40,12 +43,17 @@ const demoByIdentifier: Record<string, "tshirt" | "electronics" | "flooring" | "
   "DPP-FURN-DEMO-001": "furniture",
 };
 
-async function getData(identifier: string) {
+async function getData(identifier: string, includeDraft = false) {
   const supabase = createSupabaseClient();
-  const { data: productByDpp } = await supabase.from("products").select("*").eq("dpp_id", identifier).in("status", ["published", "updated", "expired"]).maybeSingle();
+  let productByDppQuery = supabase.from("products").select("*").eq("dpp_id", identifier);
+  if (!includeDraft) productByDppQuery = productByDppQuery.in("status", ["published", "updated", "expired"]);
+  const { data: productByDpp } = await productByDppQuery.maybeSingle();
+
+  let productBySlugQuery = supabase.from("products").select("*").eq("public_slug", identifier);
+  if (!includeDraft) productBySlugQuery = productBySlugQuery.in("status", ["published", "updated", "expired"]);
   const { data: productBySlug } = productByDpp
     ? { data: null }
-    : await supabase.from("products").select("*").eq("public_slug", identifier).in("status", ["published", "updated", "expired"]).maybeSingle();
+    : await productBySlugQuery.maybeSingle();
   const product = productByDpp || productBySlug;
   if (!product) {
     const demo = demoByIdentifier[identifier];
@@ -1519,13 +1527,18 @@ function withFurnitureDppData(data?: any) {
   };
 }
 
-export default async function PublicDppPage({ params, searchParams }: { params: { slug: string }; searchParams?: { view?: string; lang?: string } }) {
-  const data = await getData(params.slug);
+export default async function PublicDppPage({ params, searchParams }: { params: { slug: string }; searchParams?: { view?: string; lang?: string; preview?: string } }) {
+  const isPreview = searchParams?.preview === "1";
+  const data = await getData(decodeURIComponent(params.slug), isPreview);
+  if (!data && isPreview) {
+    return <PublicDppPreviewLoader identifier={decodeURIComponent(params.slug)} lang={searchParams?.lang} view={searchParams?.view} />;
+  }
   if (!data) notFound();
   const site = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const query = new URLSearchParams();
-  if (searchParams?.view === "simple" || searchParams?.view === "detail") query.set("view", searchParams.view);
+  if (["simple", "detail", "consumer", "professional", "audit"].includes(searchParams?.view || "")) query.set("view", searchParams?.view || "");
   if (searchParams?.lang === "zh" || searchParams?.lang === "en") query.set("lang", searchParams.lang);
+  if (isPreview) query.set("preview", "1");
   const publicId = encodeURIComponent(data.product.dpp_id || data.product.public_slug);
   const dppUrl = `${site}/p/${publicId}${query.toString() ? `?${query.toString()}` : ""}`;
   return <PublicDppClient data={data} dppUrl={dppUrl} />;

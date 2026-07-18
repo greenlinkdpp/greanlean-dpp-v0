@@ -61,6 +61,23 @@ begin
   if flooring_id is null then
     select id into flooring_id from public.products where public_slug = 'demo-wpc-flooring';
   end if;
+
+  update public.products
+  set
+    sector_code = 'consumer_electronics',
+    category_code = 'audio_device',
+    subcategory_code = 'audio_device',
+    dpp_profile_key = 'consumer_electronics.audio_device.v1'
+  where id = earbuds_id;
+
+  update public.products
+  set
+    sector_code = 'construction',
+    category_code = 'building_material',
+    subcategory_code = 'wpc_decking',
+    dpp_profile_key = 'construction.material.wpc_decking.v1'
+  where id = flooring_id;
+
   if flooring_id is null then
     insert into public.products (
       name, name_zh, sku, brand, category, subcategory, season, description, description_zh,
@@ -114,6 +131,14 @@ begin
       updated_at = now()
     where id = flooring_id;
   end if;
+
+  update public.products
+  set
+    sector_code = 'construction',
+    category_code = 'building_material',
+    subcategory_code = 'wpc_decking',
+    dpp_profile_key = 'construction.material.wpc_decking.v1'
+  where id = flooring_id;
 
   delete from public.product_materials where product_id in (earbuds_id, flooring_id);
   delete from public.product_bom where product_id in (earbuds_id, flooring_id);
@@ -298,15 +323,15 @@ begin
 
   insert into public.product_digital_identity (
     product_id, product_uuid, gtin, style_id, batch_id, serial_id,
-    digital_link_url, qr_code_id, nfc_id, rfid_epc
+    digital_link_url, data_carrier_type, data_carrier_url, qr_code_id, nfc_id, rfid_epc
   )
   values
     (earbuds_id, '8a61f0d2-4f6a-4cf2-b11c-demoaudio01', '06900000000128', 'STYLE-AUDIO-001',
       'BATCH-AUDIO-2026-001', 'EARBUDS-DEMO-0001', 'https://www.greanlean.com/p/DPP-AUDIO-DEMO-001',
-      'QR-DPP-EARBUDS-001', 'NFC-EARBUDS-001', 'RFID-RESERVED'),
+      'qr', 'https://www.greanlean.com/p/DPP-AUDIO-DEMO-001', 'QR-DPP-EARBUDS-001', 'NFC-EARBUDS-001', 'RFID-RESERVED'),
     (flooring_id, '51e0f9f3-3c7b-45c0-9b8f-demofloor01', '06900000000203', 'STYLE-WPC-MS140K25B',
       'W2605-05', 'TRACE-W2605-05', 'https://www.greanlean.com/p/DPP-WPC-MS140K25B',
-      'QR-DPP-WPC-001', 'NFC-RESERVED', 'RFID-PALLET-RESERVED');
+      'qr', 'https://www.greanlean.com/p/DPP-WPC-MS140K25B', 'QR-DPP-WPC-001', 'NFC-RESERVED', 'RFID-PALLET-RESERVED');
 
   insert into public.product_documents (
     product_id, document_name, document_type, file_url, file_size, language, uploaded_by, version

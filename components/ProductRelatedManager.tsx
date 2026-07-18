@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase";
 import { useLanguage } from "@/components/LanguageProvider";
 
-type Field = {
+export type RelatedField = {
   name: string;
   label: string;
   labelZh: string;
@@ -16,8 +16,10 @@ type Props = {
   productId: string;
   title: string;
   titleZh: string;
+  description?: string;
+  descriptionZh?: string;
   table: string;
-  fields: Field[];
+  fields: RelatedField[];
   displayFields: string[];
   orderBy?: string;
   preparePayload?: (payload: Record<string, any>) => Record<string, any> | Promise<Record<string, any>>;
@@ -30,7 +32,7 @@ function displayValue(row: any, key: string) {
   return String(value);
 }
 
-function inputValue(row: any, field: Field) {
+function inputValue(row: any, field: RelatedField) {
   const value = row?.[field.name];
   if (value === null || value === undefined) return "";
   if (field.type === "datetime-local") {
@@ -42,7 +44,7 @@ function inputValue(row: any, field: Field) {
   return String(value);
 }
 
-function getPayloadFromForm(form: FormData, fields: Field[], productId?: string) {
+function getPayloadFromForm(form: FormData, fields: RelatedField[], productId?: string) {
   const payload: Record<string, any> = productId ? { product_id: productId } : {};
   fields.forEach((field) => {
     if (field.type === "checkbox") {
@@ -55,10 +57,14 @@ function getPayloadFromForm(form: FormData, fields: Field[], productId?: string)
   return payload;
 }
 
-export function ProductRelatedManager({ productId, title, titleZh, table, fields, displayFields, orderBy = "created_at", preparePayload }: Props) {
+export function ProductRelatedManager({ productId, title, titleZh, description, descriptionZh, table, fields, displayFields, orderBy = "created_at", preparePayload }: Props) {
   const { locale } = useLanguage();
   const supabase = createSupabaseClient();
   const shownTitle = locale === "zh" ? titleZh : title;
+  const shownDescription = locale === "zh" ? descriptionZh : description;
+  const fieldLabelByName = useMemo(() => {
+    return new Map(fields.map((field) => [field.name, locale === "zh" ? field.labelZh : field.label]));
+  }, [fields, locale]);
   const t = locale === "zh"
     ? { add: "新增", save: "保存", saving: "保存中...", search: "搜索", refresh: "刷新", edit: "编辑", cancel: "取消", update: "保存修改", delete: "删除", confirmDelete: "确定删除这条记录吗？", noRecords: "暂无记录。", loading: "加载中...", saved: "已保存。", updated: "已更新。", records: "条记录" }
     : { add: "Add", save: "Save", saving: "Saving...", search: "Search", refresh: "Refresh", edit: "Edit", cancel: "Cancel", update: "Save Changes", delete: "Delete", confirmDelete: "Delete this record?", noRecords: "No records yet.", loading: "Loading...", saved: "saved.", updated: "updated.", records: "records" };
@@ -132,7 +138,11 @@ export function ProductRelatedManager({ productId, title, titleZh, table, fields
   return (
     <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div><h2 className="text-xl font-black text-slate-950">{shownTitle}</h2><p className="mt-1 text-sm text-slate-500">{filteredRows.length} {t.records}</p></div>
+        <div>
+          <h2 className="text-xl font-black text-slate-950">{shownTitle}</h2>
+          {shownDescription && <p className="mt-1 max-w-3xl text-sm font-semibold leading-6 text-slate-500">{shownDescription}</p>}
+          <p className="mt-1 text-sm text-slate-500">{filteredRows.length} {t.records}</p>
+        </div>
         <button onClick={load} type="button" className="btn-secondary py-2">{t.refresh}</button>
       </div>
       <form onSubmit={create} className="mt-5 grid gap-4 md:grid-cols-2">
@@ -187,7 +197,7 @@ export function ProductRelatedManager({ productId, title, titleZh, table, fields
                   <div className="min-w-0 flex-1">
                     <p className="font-bold text-slate-950">{displayValue(row, displayFields[0])}</p>
                     <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500">
-                      {displayFields.slice(1).map((field) => <span key={field} className="rounded-full bg-slate-100 px-3 py-1">{field}: {displayValue(row, field)}</span>)}
+                      {displayFields.slice(1).map((field) => <span key={field} className="rounded-full bg-slate-100 px-3 py-1">{fieldLabelByName.get(field) || field}: {displayValue(row, field)}</span>)}
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">

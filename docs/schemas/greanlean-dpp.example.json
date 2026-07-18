@@ -63,6 +63,8 @@
     "batch_id": "W2605-05",
     "serial_id": "TRACE-W2605-05",
     "digital_link_url": "https://www.greanlean.com/01/06900000000203/10/W2605-05/21/TRACE-W2605-05",
+    "data_carrier_type": "qr",
+    "data_carrier_url": "https://www.greanlean.com/01/06900000000203/10/W2605-05/21/TRACE-W2605-05",
     "qr_code_id": "QR-DPP-WPC-MS140K25B",
     "nfc_id": null,
     "rfid_epc": null

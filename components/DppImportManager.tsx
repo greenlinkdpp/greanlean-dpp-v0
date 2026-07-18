@@ -1346,6 +1346,8 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
       batch_id: batchId,
       serial_id: serialId,
       digital_link_url: clean(row.digital_link_url) || gs1DigitalLink,
+      data_carrier_type: clean(row.data_carrier_type) || "qr",
+      data_carrier_url: clean(row.data_carrier_url) || clean(row.digital_link_url) || gs1DigitalLink,
       qr_code_id: clean(row.qr_code_id),
       nfc_id: clean(row.nfc_id),
       rfid_epc: clean(row.rfid_epc),

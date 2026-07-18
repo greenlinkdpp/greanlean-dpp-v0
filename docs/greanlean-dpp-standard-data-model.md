@@ -107,7 +107,7 @@ ESPR 和电池法规会按产品组逐步细化字段要求，因此系统采用
 | `battery.industrial.stationary_above_2kwh.v1` | battery | stationary industrial above 2kWh / battery unit | BatteryPass-Ready 固定式 2kWh 以上工业电池 |
 | `furniture.office.chair.v1` | furniture | office chair | 家具 DPP |
 | `construction.material.wpc_decking.v1` | construction | WPC decking | 建材 DPP |
-| `electronics.consumer.audio.v1` | electronics | audio device | 消费电子 DPP |
+| `consumer_electronics.audio_device.v1` | consumer_electronics | audio device | 消费电子 DPP |
 
 ## 3. 数字身份与数据载体
 
@@ -120,6 +120,8 @@ ESPR 和电池法规会按产品组逐步细化字段要求，因此系统采用
 | 批次号 | Batch ID | `product_digital_identity.batch_id` | 批次 ID | 总览 / 产品身份 | `identity.batch_id` |
 | 序列号 | Serial ID | `product_digital_identity.serial_id` | 序列号 | 产品身份 | `identity.serial_id` |
 | 数字链接 | Digital link URL | `product_digital_identity.digital_link_url` | 数字链接 URL | 产品身份 / 二维码 | `identity.digital_link_url` |
+| 数据载体类型 | Data carrier type | `product_digital_identity.data_carrier_type` | QR / NFC / RFID / GS1 Digital Link | 产品身份 / 二维码 | `identity.data_carrier_type` |
+| 数据载体 URL | Data carrier URL | `product_digital_identity.data_carrier_url` | 数据载体解析 URL | 产品身份 / 二维码 | `identity.data_carrier_url` |
 | QR ID | QR code ID | `product_digital_identity.qr_code_id` | 二维码 ID | 二维码 | `identity.qr_code_id` |
 | NFC ID | NFC ID | `product_digital_identity.nfc_id` | NFC ID | 数据载体 | `identity.nfc_id` |
 | RFID EPC | RFID EPC | `product_digital_identity.rfid_epc` | RFID EPC | 数据载体 | `identity.rfid_epc` |

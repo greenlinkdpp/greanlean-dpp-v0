@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -11,6 +11,8 @@ import { buildGs1DigitalLink } from "@/lib/dppCompliance";
 
 type Locale = "en" | "zh";
 type Props = { data: any; dppUrl: string };
+type ViewMode = "consumer" | "professional" | "audit";
+type DisplayField = { key: string; label: string; labelZh: string; format?: "percent" | "kgco2e" | "kwh" | "liter" | "kg" | "score" | "boolean" };
 type IconName =
   | "box"
   | "layers"
@@ -30,13 +32,232 @@ type IconName =
   | "trash"
   | "scissors";
 
+const PUBLIC_SOURCE_DISPLAY: Record<string, { materials: DisplayField[]; bom: DisplayField[]; esg: DisplayField[]; circularity: DisplayField[]; materialIntroZh: string; materialIntro: string; bomIntroZh: string; bomIntro: string }> = {
+  battery: {
+    materialIntroZh: "展示后台录入的活性材料、关键原材料、再生成分和受限物质证据。",
+    materialIntro: "Active materials, critical raw materials, recycled content and restricted-substance evidence.",
+    bomIntroZh: "按电芯、模组、电池包、外壳、BMS 等层级展示电池组成。",
+    bomIntro: "Battery system composition at cell, module, pack, enclosure and BMS level.",
+    materials: [
+      { key: "material_type", label: "Battery material category", labelZh: "电池材料类别" },
+      { key: "percentage", label: "Mass share", labelZh: "质量占比", format: "percent" },
+      { key: "recycled_content", label: "Recycled content", labelZh: "再生成分", format: "percent" },
+      { key: "origin_country", label: "Origin / source country", labelZh: "来源国家 / 产地" },
+      { key: "chemical_info", label: "Hazardous substance declaration", labelZh: "有害物质声明" },
+      { key: "certification", label: "Supplier evidence / certificate", labelZh: "供应商证据 / 证书" },
+    ],
+    bom: [
+      { key: "component_type", label: "Component level", labelZh: "组件层级" },
+      { key: "quantity", label: "Quantity", labelZh: "数量" },
+      { key: "position", label: "Pack / module position", labelZh: "电池包 / 模组位置" },
+    ],
+    esg: [
+      { key: "carbon_footprint", label: "Battery carbon footprint", labelZh: "电池碳足迹", format: "kgco2e" },
+      { key: "energy_consumption", label: "Manufacturing energy use", labelZh: "制造能源消耗", format: "kwh" },
+      { key: "recycled_content", label: "Recycled content claim", labelZh: "再生成分声明", format: "percent" },
+      { key: "chemical_management", label: "Due diligence / sourcing note", labelZh: "尽责调查 / 采购说明" },
+      { key: "methodology", label: "Calculation methodology", labelZh: "核算方法" },
+      { key: "verified_by", label: "Verifier", labelZh: "验证方" },
+    ],
+    circularity: [
+      { key: "recyclability_score", label: "Recyclability score", labelZh: "可回收性评分", format: "score" },
+      { key: "take_back_program", label: "Collection / take-back route", labelZh: "回收 / 退役回收路径" },
+      { key: "remanufacturing_supported", label: "Repurposing supported", labelZh: "支持梯次利用", format: "boolean" },
+      { key: "disassembly_guide", label: "Dismantling instructions", labelZh: "拆解说明" },
+      { key: "recycling_instructions", label: "Recycling instructions", labelZh: "回收处理说明" },
+      { key: "end_of_life_info", label: "End-of-life safety information", labelZh: "生命周期结束安全信息" },
+    ],
+  },
+  textile: {
+    materialIntroZh: "展示纤维成分、再生成分、来源和化学合规证据。",
+    materialIntro: "Fibre composition, recycled content, origin and chemical compliance evidence.",
+    bomIntroZh: "展示面料、里料、辅料、标签和包装等纺织产品组成。",
+    bomIntro: "Textile parts such as shell fabric, lining, trims, labels and packaging.",
+    materials: [
+      { key: "material_type", label: "Fibre / fabric type", labelZh: "纤维 / 面料类型" },
+      { key: "percentage", label: "Composition share", labelZh: "成分占比", format: "percent" },
+      { key: "recycled_content", label: "Recycled fibre", labelZh: "再生纤维", format: "percent" },
+      { key: "origin_country", label: "Origin country", labelZh: "原产国" },
+      { key: "chemical_info", label: "RSL / REACH chemical note", labelZh: "RSL / REACH 化学说明" },
+      { key: "certification", label: "Textile certificate", labelZh: "纺织认证" },
+    ],
+    bom: [
+      { key: "component_type", label: "Part type", labelZh: "部件类型" },
+      { key: "quantity", label: "Quantity / usage", labelZh: "数量 / 用量" },
+      { key: "position", label: "Garment / fabric position", labelZh: "服装 / 面料位置" },
+    ],
+    esg: [
+      { key: "carbon_footprint", label: "Product carbon footprint", labelZh: "产品碳足迹", format: "kgco2e" },
+      { key: "water_usage", label: "Water use", labelZh: "用水量", format: "liter" },
+      { key: "energy_consumption", label: "Energy use", labelZh: "能源消耗", format: "kwh" },
+      { key: "chemical_management", label: "Chemical management", labelZh: "化学品管理" },
+      { key: "methodology", label: "Methodology", labelZh: "方法学" },
+      { key: "verified_by", label: "Verifier", labelZh: "验证方" },
+    ],
+    circularity: [
+      { key: "repairability_score", label: "Durability / repair score", labelZh: "耐用 / 可维修评分", format: "score" },
+      { key: "recyclability_score", label: "Textile recyclability score", labelZh: "纺织可回收评分", format: "score" },
+      { key: "take_back_program", label: "Take-back / collection program", labelZh: "回收 / 收集计划" },
+      { key: "resale_supported", label: "Reuse / resale supported", labelZh: "支持再利用 / 转售", format: "boolean" },
+      { key: "recycling_instructions", label: "Recycling instructions", labelZh: "回收说明" },
+      { key: "end_of_life_info", label: "End-of-life information", labelZh: "生命周期结束信息" },
+    ],
+  },
+};
+
+PUBLIC_SOURCE_DISPLAY.furniture = {
+  ...PUBLIC_SOURCE_DISPLAY.textile,
+  materialIntroZh: "展示木材、金属、塑料、泡棉、涂层等材料及来源和合规证据。",
+  materialIntro: "Furniture materials with source and compliance evidence.",
+  bomIntroZh: "展示框架、坐垫、面料、五金和包装等家具组成。",
+  bomIntro: "Furniture parts such as frame, seat, upholstery, fittings and packaging.",
+  materials: [
+    { key: "material_type", label: "Material class", labelZh: "材料类别" },
+    { key: "percentage", label: "Mass share", labelZh: "质量占比", format: "percent" },
+    { key: "recycled_content", label: "Recycled content", labelZh: "再生成分", format: "percent" },
+    { key: "origin_country", label: "Source country", labelZh: "来源国家" },
+    { key: "chemical_info", label: "Coating / restricted substance note", labelZh: "涂层 / 受限物质说明" },
+    { key: "certification", label: "FSC / PEFC / safety certificate", labelZh: "FSC / PEFC / 安全认证" },
+  ],
+  bom: [
+    { key: "component_type", label: "Component type", labelZh: "部件类型" },
+    { key: "quantity", label: "Quantity", labelZh: "数量" },
+    { key: "position", label: "Assembly position", labelZh: "装配位置" },
+  ],
+  esg: [
+    { key: "carbon_footprint", label: "Product carbon footprint", labelZh: "产品碳足迹", format: "kgco2e" },
+    { key: "waste_generation", label: "Production waste", labelZh: "生产废弃物", format: "kg" },
+    { key: "recycled_content", label: "Recycled content", labelZh: "再生成分", format: "percent" },
+    { key: "chemical_management", label: "Chemical / VOC management", labelZh: "化学品 / VOC 管理" },
+    { key: "methodology", label: "Methodology", labelZh: "方法学" },
+    { key: "verified_by", label: "Verifier", labelZh: "验证方" },
+  ],
+  circularity: [
+    { key: "repairability_score", label: "Repairability score", labelZh: "可维修性评分", format: "score" },
+    { key: "recyclability_score", label: "Recyclability score", labelZh: "可回收性评分", format: "score" },
+    { key: "take_back_program", label: "Take-back / spare parts program", labelZh: "回收 / 备件计划" },
+    { key: "resale_supported", label: "Resale supported", labelZh: "支持二手转售", format: "boolean" },
+    { key: "remanufacturing_supported", label: "Refurbishment supported", labelZh: "支持翻新再制造", format: "boolean" },
+    { key: "disassembly_guide", label: "Disassembly guide", labelZh: "拆解指南" },
+    { key: "end_of_life_info", label: "End-of-life route", labelZh: "生命周期结束路径" },
+  ],
+};
+
+PUBLIC_SOURCE_DISPLAY.construction = {
+  ...PUBLIC_SOURCE_DISPLAY.furniture,
+  materialIntroZh: "展示建材组成、再生成分、来源、可回收性和 EPD 等证据。",
+  materialIntro: "Composition, recycled content, origin, recyclability and EPD evidence for building materials.",
+  bomIntroZh: "展示结构层、配件、包装和安装相关组件。",
+  bomIntro: "Layers, accessories, packaging and installation-related components.",
+  materials: [
+    { key: "material_type", label: "Material class", labelZh: "材料类别" },
+    { key: "percentage", label: "Mass share", labelZh: "质量占比", format: "percent" },
+    { key: "recycled_content", label: "Recycled content", labelZh: "再生成分", format: "percent" },
+    { key: "origin_country", label: "Source country", labelZh: "来源国家" },
+    { key: "recyclability", label: "Recyclability note", labelZh: "可回收性说明" },
+    { key: "certification", label: "EPD / standard certificate", labelZh: "EPD / 标准认证" },
+  ],
+  bom: [
+    { key: "component_type", label: "Layer / accessory type", labelZh: "结构层 / 配件类型" },
+    { key: "quantity", label: "Quantity / coverage", labelZh: "数量 / 覆盖量" },
+    { key: "position", label: "Installation position", labelZh: "安装位置" },
+  ],
+  esg: [
+    { key: "carbon_footprint", label: "Embodied carbon", labelZh: "隐含碳", format: "kgco2e" },
+    { key: "energy_consumption", label: "Manufacturing energy", labelZh: "制造能源消耗", format: "kwh" },
+    { key: "waste_generation", label: "Production waste", labelZh: "生产废弃物", format: "kg" },
+    { key: "recycled_content", label: "Recycled content", labelZh: "再生成分", format: "percent" },
+    { key: "methodology", label: "EPD / LCA methodology", labelZh: "EPD / LCA 方法" },
+    { key: "verified_by", label: "Verifier", labelZh: "验证方" },
+  ],
+};
+
+PUBLIC_SOURCE_DISPLAY.consumer_electronics = {
+  ...PUBLIC_SOURCE_DISPLAY.furniture,
+  materialIntroZh: "展示外壳、金属、塑料、电池相关材料和受限物质证据。",
+  materialIntro: "Casing, metals, plastics, battery-related materials and restricted-substance evidence.",
+  bomIntroZh: "展示 PCB、电池、外壳、传感器、线缆和包装等组件。",
+  bomIntro: "Product assemblies such as PCB, battery, enclosure, sensors, cables and packaging.",
+  materials: [
+    { key: "material_type", label: "Material class", labelZh: "材料类别" },
+    { key: "percentage", label: "Mass share", labelZh: "质量占比", format: "percent" },
+    { key: "recycled_content", label: "Recycled content", labelZh: "再生成分", format: "percent" },
+    { key: "origin_country", label: "Source country", labelZh: "来源国家" },
+    { key: "chemical_info", label: "RoHS / REACH / SVHC note", labelZh: "RoHS / REACH / SVHC 说明" },
+    { key: "certification", label: "Compliance evidence", labelZh: "合规证据" },
+  ],
+  bom: [
+    { key: "component_type", label: "Component type", labelZh: "组件类型" },
+    { key: "quantity", label: "Quantity", labelZh: "数量" },
+    { key: "position", label: "Assembly position", labelZh: "装配位置" },
+  ],
+  esg: [
+    { key: "carbon_footprint", label: "Product carbon footprint", labelZh: "产品碳足迹", format: "kgco2e" },
+    { key: "energy_consumption", label: "Energy consumption / efficiency", labelZh: "能耗 / 能效", format: "kwh" },
+    { key: "recycled_content", label: "Recycled content", labelZh: "再生成分", format: "percent" },
+    { key: "chemical_management", label: "Restricted substance management", labelZh: "受限物质管理" },
+    { key: "methodology", label: "Methodology", labelZh: "方法学" },
+    { key: "verified_by", label: "Verifier", labelZh: "验证方" },
+  ],
+};
+
+function sourceDisplayConfig(sectorCode?: string | null) {
+  return PUBLIC_SOURCE_DISPLAY[sectorCode || ""] || PUBLIC_SOURCE_DISPLAY.textile;
+}
+
+const COMMON_ZH_VALUE: Record<string, string> = {
+  Fabric: "面料",
+  Packaging: "包装",
+  "Outer shell fabric": "外层面料",
+  "Product identification label": "产品识别标签",
+  "Protective packaging bag": "保护包装袋",
+  "Core tube for fabric rolling": "卷布纸管",
+  "Chemical compliance": "化学合规",
+  "Material chemical declaration": "材料化学声明",
+  "Test Report": "测试报告",
+  Certificate: "证书",
+  Valid: "有效",
+  verified: "已验证",
+  pending: "待验证",
+  active: "已生效",
+  draft: "草稿",
+};
+
+function localizeCommonValue(value: string, locale: Locale) {
+  if (locale !== "zh") return value;
+  return COMMON_ZH_VALUE[value] || value;
+}
+
+function fieldLabel(field: DisplayField, locale: Locale) {
+  return locale === "zh" ? field.labelZh : field.label;
+}
+
 function valueOrDash(value: any, locale: Locale = "en") {
   if (value === null || value === undefined || value === "") return "-";
   if (typeof value === "boolean") {
     if (locale === "zh") return value ? "是" : "否";
     return value ? "Yes" : "No";
   }
-  return String(value);
+  return localizeCommonValue(String(value), locale);
+}
+
+function displayFieldValue(row: any, field: DisplayField, locale: Locale) {
+  const value = row?.[field.key];
+  if (value === null || value === undefined || value === "") return null;
+  if (field.format === "boolean") return valueOrDash(Boolean(value), locale);
+  if (field.format === "percent") return `${value}%`;
+  if (field.format === "kgco2e") return `${value} kg CO2e`;
+  if (field.format === "kwh") return `${value} kWh`;
+  if (field.format === "liter") return `${value} L`;
+  if (field.format === "kg") return `${value} kg`;
+  if (field.format === "score") return `${value} / 100`;
+  return valueOrDash(value, locale);
+}
+
+function displayItems(row: any, fields: DisplayField[], locale: Locale) {
+  return fields
+    .map((field) => [fieldLabel(field, locale), displayFieldValue(row, field, locale)] as [string, any])
+    .filter(([, value]) => hasDisplayValue(value));
 }
 
 function pick(row: any, locale: Locale, enKey: string, zhKey?: string) {
@@ -93,11 +314,17 @@ function addRegulatoryChemicalContext(value: any, locale: Locale) {
     : `${text}; screened against EU REACH requirements and RSL (Restricted Substances List) standards.`;
 }
 
+function normalizeViewMode(view: string | null): ViewMode {
+  if (view === "simple" || view === "consumer") return "consumer";
+  if (view === "audit") return "audit";
+  return "professional";
+}
+
 export function PublicDppClient({ data, dppUrl }: Props) {
   const { locale } = useLanguage();
   const searchParams = useSearchParams();
   const [activeCertificate, setActiveCertificate] = useState<any>(null);
-  const [viewMode, setViewMode] = useState<"simple" | "detail">("detail");
+  const viewMode = normalizeViewMode(searchParams.get("view"));
   const {
     product,
     materials = [],
@@ -110,14 +337,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     digitalIdentity = [],
     documents = [],
     governance = [],
+    registrySubmissions = [],
+    registrationProofs = [],
+    evidenceLinks = [],
     blockchainAnchors = [],
     sectorFieldValues = [],
   } = data;
-
-  useEffect(() => {
-    const view = searchParams.get("view");
-    if (view === "simple" || view === "detail") setViewMode(view);
-  }, [searchParams]);
 
   const t =
     locale === "zh"
@@ -130,6 +355,16 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           statusArchived: "已归档",
           statusExpired: "证书过期",
           passport: "数字产品护照",
+          consumerView: "消费者版",
+          professionalView: "专业版",
+          auditView: "审计版",
+          consumerViewDesc: "公开扫码用户",
+          professionalViewDesc: "专业客户与采购",
+          auditViewDesc: "监管与验证",
+          auditLayer: "监管与审计数据",
+          registryLayer: "中央注册库记录",
+          proofLayer: "注册证明",
+          evidenceMapping: "字段证据映射",
           verified: "已验证",
           pending: "待验证",
           qrTitle: "扫码查看产品护照",
@@ -162,8 +397,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           blockchainAnchor: "区块链锚定",
           chain: "链",
           network: "网络",
-          transactionHash: "交易 Hash",
-          anchoredHash: "锚定 Hash",
+          transactionHash: "交易哈希",
+          anchoredHash: "锚定哈希",
           anchorStatus: "锚定状态",
           anchoredAt: "锚定时间",
           textileReserve: "产品特定信息预留",
@@ -256,9 +491,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           notDetected: "未检出",
           available: "可查看",
           svhcLimit: "≤ 0.1% w/w；如含有需披露",
-          leadLimit: "Demo RSL 限值：≤ 90 mg/kg",
-          cadmiumLimit: "Demo RSL 限值：≤ 40 mg/kg",
-          chromiumLimit: "Demo RSL 限值：≤ 3 mg/kg",
+          leadLimit: "示例受限物质清单限值：≤ 90 mg/kg",
+          cadmiumLimit: "示例受限物质清单限值：≤ 40 mg/kg",
+          chromiumLimit: "示例受限物质清单限值：≤ 3 mg/kg",
           azoLimit: "禁用芳香胺 < 30 mg/kg",
           msdsLimit: "染整助剂和相关化学品文件",
           downloadReport: "下载报告",
@@ -270,8 +505,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           minimumLifetime: "最小使用寿命",
           testBasis: "测试/声明依据",
           performanceBasis: "示例性能声明，面向纺织品 DPP 技术文件展示；实际产品应以检测报告和客户规格为准。",
-          declarationTitle: "EU Declaration of Conformity",
-          declarationSubtitle: "欧盟符合性声明",
+          declarationTitle: "欧盟符合性声明",
+          declarationSubtitle: "适用法规与责任方声明",
           declarationIntro: "该声明用于汇总产品适用的欧盟法规、经济运营方信息和声明有效期，并作为 DPP 证据链的一部分提供下载。",
           applicableEuRules: "适用欧盟法规 / 指令",
           manufacturerInfo: "制造商信息",
@@ -279,19 +514,19 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           declarationDate: "声明日期",
           declarationValidity: "有效期",
           declarationDownload: "下载符合性声明 PDF",
-          declarationRule1: "Regulation (EU) 2024/1781 - ESPR 可持续产品生态设计法规框架",
-          declarationRule2: "Regulation (EC) No 1907/2006 - REACH 化学品法规及 RSL 受限物质清单",
-          declarationRule3: "Regulation (EU) 2023/988 - General Product Safety Regulation 通用产品安全法规",
-          declarationRule4: "Regulation (EU) No 1007/2011 - Textile fibre names and labelling 纺织纤维名称与标签",
-          manufacturerValue: "Demo Garment Factory Co., Ltd., 88 Textile Road, Ningbo, Zhejiang, China",
-          importerValue: "Greanlean EU Compliance GmbH, Demo Strasse 12, 20457 Hamburg, Germany",
+          declarationRule1: "欧盟法规 (EU) 2024/1781 - ESPR 可持续产品生态设计法规框架",
+          declarationRule2: "欧盟法规 (EC) No 1907/2006 - REACH 化学品法规及受限物质清单",
+          declarationRule3: "欧盟法规 (EU) 2023/988 - 通用产品安全法规",
+          declarationRule4: "欧盟法规 (EU) No 1007/2011 - 纺织纤维名称与标签法规",
+          manufacturerValue: "示例服装工厂有限公司，中国浙江省宁波市纺织路 88 号",
+          importerValue: "Greanlean 欧盟合规有限公司，德国汉堡示例街 12 号，20457",
           declarationDateValue: "2026-06-04",
           declarationValidityValue: "2026-06-04 至 2027-06-03",
           viewPdfCertificate: "查看 PDF 证书",
           certificatePreview: "证书预览",
           closePreview: "关闭预览",
           openNewTab: "新窗口打开",
-          endOfLifeGuide: "End of Life 生命周期结束指南",
+          endOfLifeGuide: "生命周期结束指南",
           endOfLifeIntro: "面向消费者的循环利用指引，帮助产品在再使用、回收和拆解阶段保持可操作。",
           reuseOptions: "再使用选项",
           takeBackPlanDetails: "品牌旧衣回收计划",
@@ -303,7 +538,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           commonRepairTypes: "常见维修类型",
           commonRepairTypesValue: "缝线修补、领口加固、轻微破洞织补、标签更换、局部改造",
           repairProviders: "推荐维修服务商",
-          repairProvidersValue: "Demo Textile Repair Hub；EU Local Alteration Partner Network",
+          repairProvidersValue: "示例纺织维修中心；欧盟本地改衣合作网络",
           sparePartsGuide: "零部件采购指南",
           sparePartsGuideValue: "优先采购棉线、可拆卸标签和低影响辅料；避免加入难回收复合辅料。",
           textileRecycling: "纺织品回收",
@@ -319,7 +554,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           sourceLabel: "来源",
           verificationLabel: "验证",
           lastUpdated: "最后更新时间",
-          carbonSource: "LCA Database + 产品材料模型",
+          carbonSource: "生命周期评价数据库 + 产品材料模型",
           waterSource: "生产商声明",
           wasteSource: "第三方审计",
           recycledSource: "BOM 与供应商声明",
@@ -336,8 +571,8 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           verificationExpiryValue: "2026-06-04 至 2027-06-03",
           dataLastUpdatedValue: "2026-06-04",
           dataVersionLabel: "数据版本",
-          downloadPdf: "下载 DPP PDF",
-          downloadJson: "下载 JSON",
+          downloadPdf: "下载护照 PDF",
+          downloadJson: "下载数据 JSON",
           benchmarkTitle: "该产品的碳足迹",
           thisProduct: "该产品",
           industryAverage: "行业平均",
@@ -384,6 +619,16 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           statusArchived: "Archived",
           statusExpired: "Certificate expired",
           passport: "Digital Product Passport",
+          consumerView: "Consumer",
+          professionalView: "Professional",
+          auditView: "Audit",
+          consumerViewDesc: "Public scan users",
+          professionalViewDesc: "B2B and procurement",
+          auditViewDesc: "Regulators and verifiers",
+          auditLayer: "Regulatory and audit data",
+          registryLayer: "Central registry records",
+          proofLayer: "Registration proofs",
+          evidenceMapping: "Field evidence mapping",
           verified: "Verified",
           pending: "Pending",
           qrTitle: "Scan to view passport",
@@ -649,9 +894,14 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
-  const isElectronics = /electronics|earbud|headphone|audio|蓝牙|耳机|电子/.test(categoryText);
-  const isFlooring = /floor|flooring|wpc|building|construction|地板|木塑|建材/.test(categoryText);
-  const isFurniture = /furniture|chair|office chair|办公椅|家具/.test(categoryText);
+  const productSectorCode = String(product.sector_code || "").toLowerCase();
+  const isBattery = productSectorCode === "battery" || /battery|电池/.test(categoryText);
+  const isElectronics = productSectorCode === "consumer_electronics" || /electronics|earbud|headphone|audio|蓝牙|耳机|电子/.test(categoryText);
+  const isFlooring = productSectorCode === "construction" || /floor|flooring|wpc|building|construction|地板|木塑|建材/.test(categoryText);
+  const isFurniture = productSectorCode === "furniture" || /furniture|chair|office chair|办公椅|家具/.test(categoryText);
+  const publicSourceConfig = sourceDisplayConfig(
+    isBattery ? "battery" : isElectronics ? "consumer_electronics" : isFlooring ? "construction" : isFurniture ? "furniture" : productSectorCode || "textile"
+  );
   const isDemoProduct = new Set([
     "demo-organic-cotton-tshirt",
     "demo-wireless-earbuds",
@@ -1107,15 +1357,15 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         ? [
             t.declarationRule1,
             t.declarationRule2,
-            locale === "zh" ? "Directive 2011/65/EU - RoHS 电子电气受限物质指令" : "Directive 2011/65/EU - RoHS restriction of hazardous substances",
-            locale === "zh" ? "Directive 2012/19/EU - WEEE 电子电气废弃物指令" : "Directive 2012/19/EU - WEEE waste electrical and electronic equipment",
-            locale === "zh" ? "Directive 2014/53/EU - RED 无线电设备指令" : "Directive 2014/53/EU - Radio Equipment Directive",
+            locale === "zh" ? "欧盟指令 2011/65/EU - RoHS 电子电气受限物质指令" : "Directive 2011/65/EU - RoHS restriction of hazardous substances",
+            locale === "zh" ? "欧盟指令 2012/19/EU - WEEE 电子电气废弃物指令" : "Directive 2012/19/EU - WEEE waste electrical and electronic equipment",
+            locale === "zh" ? "欧盟指令 2014/53/EU - RED 无线电设备指令" : "Directive 2014/53/EU - Radio Equipment Directive",
           ].join("\n")
         : isFlooring
           ? [
               t.declarationRule1,
               t.declarationRule2,
-              locale === "zh" ? "Regulation (EU) No 305/2011 - 建筑产品法规 CPR 与性能声明" : "Regulation (EU) No 305/2011 - Construction Products Regulation and Declaration of Performance",
+              locale === "zh" ? "欧盟法规 (EU) No 305/2011 - 建筑产品法规（CPR）与性能声明" : "Regulation (EU) No 305/2011 - Construction Products Regulation and Declaration of Performance",
               locale === "zh" ? "EN 16516 / VOC 室内空气排放测试方法（示例）" : "EN 16516 / VOC indoor-air-emission test method (demo)",
             ].join("\n")
           : isFurniture
@@ -1131,12 +1381,16 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       t.manufacturerInfo,
       isElectronics
         ? locale === "zh"
-          ? "Demo Electronics Assembly Plant Co., Ltd., 18 Smart Hardware Road, Dongguan, Guangdong, China"
+          ? "示例电子装配工厂有限公司，中国广东省东莞市智能硬件路 18 号"
           : "Demo Electronics Assembly Plant Co., Ltd., 18 Smart Hardware Road, Dongguan, Guangdong, China"
         : isFlooring
-          ? "HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD, Huangshan, Anhui, China"
+          ? locale === "zh"
+            ? "黄山美森新材料科技有限公司，中国安徽省黄山市"
+            : "HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD, Huangshan, Anhui, China"
           : isFurniture
-            ? "Demo Office Furniture Factory Co., Ltd., 28 Modular Furniture Road, Anji, Zhejiang, China"
+            ? locale === "zh"
+              ? "示例办公家具工厂有限公司，中国浙江省安吉县模块家具路 28 号"
+              : "Demo Office Furniture Factory Co., Ltd., 28 Modular Furniture Road, Anji, Zhejiang, China"
         : t.manufacturerValue,
     ],
     [t.importerInfo, t.importerValue],
@@ -1170,19 +1424,19 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   const repairItems: Array<[string, any]> = isDemoProduct ? (isElectronics
     ? [
         [t.commonRepairTypes, locale === "zh" ? "耳塞更换、充电盒检测、电池健康评估、固件重置、清洁维护" : "Ear-tip replacement, charging-case diagnostics, battery-health check, firmware reset and cleaning"],
-        [t.repairProviders, locale === "zh" ? "Demo EU Electronics Service Network；授权电池维修服务商" : "Demo EU Electronics Service Network; authorized battery repair providers"],
+        [t.repairProviders, locale === "zh" ? "示例欧盟电子产品服务网络；授权电池维修服务商" : "Demo EU Electronics Service Network; authorized battery repair providers"],
         [t.sparePartsGuide, locale === "zh" ? "优先使用原厂耳塞、充电盒和合规电池组件；避免非授权电池替换。" : "Prioritize original ear tips, charging case and compliant battery modules; avoid unauthorized battery replacement."],
       ]
     : isFlooring
       ? [
           [t.commonRepairTypes, locale === "zh" ? "单片替换、锁扣修复、表面划痕修补、边条更换、局部重铺" : "Single-plank replacement, click-lock repair, surface scratch repair, trim replacement and local reinstall"],
-          [t.repairProviders, locale === "zh" ? "Demo Flooring Installer Network；本地建材维修服务商" : "Demo Flooring Installer Network; local building-material repair providers"],
+          [t.repairProviders, locale === "zh" ? "示例地板安装服务网络；本地建材维修服务商" : "Demo Flooring Installer Network; local building-material repair providers"],
           [t.sparePartsGuide, locale === "zh" ? "保留同批次备用板、边条和地垫；避免胶粘安装导致后续拆解困难。" : "Keep spare planks, trims and underlayment from the same batch; avoid adhesive installation where future disassembly is required."],
         ]
       : isFurniture
         ? [
             [t.commonRepairTypes, locale === "zh" ? "脚轮更换、扶手垫更换、坐垫模块更换、气压杆更换、螺丝紧固" : "Castor replacement, armrest-pad replacement, seat-cushion replacement, gas-lift replacement and fastener tightening"],
-            [t.repairProviders, locale === "zh" ? "Demo EU Furniture Service Network；本地办公家具维修服务商" : "Demo EU Furniture Service Network; local office-furniture repair providers"],
+            [t.repairProviders, locale === "zh" ? "示例欧盟家具服务网络；本地办公家具维修服务商" : "Demo EU Furniture Service Network; local office-furniture repair providers"],
             [t.sparePartsGuide, locale === "zh" ? "优先使用兼容脚轮、扶手、坐垫和气压杆；维修前记录批次和紧固件位置。" : "Prioritize compatible castors, armrests, cushions and gas lifts; record batch and fastener positions before repair."],
           ]
     : [
@@ -1226,9 +1480,9 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       point: t.carbon,
       value: hasCarbonData ? `${carbonCurrent} kg CO2e` : t.noData,
       source: isElectronics
-        ? locale === "zh" ? "LCA Database + 电子 BOM / 电池模型" : "LCA Database + electronics BOM / battery model"
+        ? locale === "zh" ? "生命周期评价数据库 + 电子 BOM / 电池模型" : "LCA Database + electronics BOM / battery model"
         : isFlooring
-          ? locale === "zh" ? "LCA Database + WPC 配方 / 挤出能耗模型" : "LCA Database + WPC formulation / extrusion-energy model"
+          ? locale === "zh" ? "生命周期评价数据库 + WPC 配方 / 挤出能耗模型" : "LCA Database + WPC formulation / extrusion-energy model"
         : t.carbonSource,
       verification: t.independentVerified,
       updated: dataLastUpdatedValue,
@@ -1421,7 +1675,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ? "完好部件优先维修、翻新或转售；无法继续使用时按材料拆解进入当地回收渠道。"
           : "Repair, refurbish or resell intact components first; disassemble unusable parts into local material recovery channels."
     : t.textileCollectionDesc) : "";
-  const navItems: Array<[string, string, IconName]> = [
+  const professionalNavItems: Array<[string, string, IconName]> = [
     ["#identity", t.productIdentity, "box"],
     ["#materials", t.materialSource, "layers"],
     ["#chemicals", t.chemicalRestricted, "file"],
@@ -1433,17 +1687,19 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     ["#end-of-life", t.endOfLifeGuide, "recycle"],
     ["#textile-reserve", t.textileReserve, "layers"],
     ["#batch-tracking", t.batchTracking, "route"],
-    ["#evidence", t.evidence, "file"],
   ];
-  const simpleNavItems: Array<[string, string, IconName]> = [
+  const consumerNavItems: Array<[string, string, IconName]> = [
     ["#identity", t.productIdentity, "box"],
     ["#materials", t.materialSource, "layers"],
-    ["#traceability", t.traceability, "route"],
-    ["#esg", t.esg, "leaf"],
     ["#certificates", t.certificates, "certificate"],
     ["#consumer", t.consumer, "eye"],
+    ["#end-of-life", t.endOfLifeGuide, "recycle"],
   ];
-  const currentNavItems = viewMode === "simple" ? simpleNavItems : navItems;
+  const auditNavItems: Array<[string, string, IconName]> = [
+    ["#identity", t.productIdentity, "box"],
+    ["#evidence", t.auditLayer, "file"],
+  ];
+  const currentNavItems = viewMode === "consumer" ? consumerNavItems : viewMode === "audit" ? auditNavItems : professionalNavItems;
 
   return (
     <main className="min-h-screen bg-[#f7faf8] text-slate-950" aria-label={t.passport}>
@@ -1592,7 +1848,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ))}
         </nav>
 
-        {viewMode === "simple" && (
+        {viewMode === "consumer" && (
           <div className="space-y-6">
             <Section id="identity" title={t.productIdentity} eyebrow={t.overview} icon="box">
               <DataCard title={t.productRecordTitle} icon="box" surface="soft">
@@ -1613,69 +1869,17 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             <Section id="materials" title={t.materialSource} icon="layers">
               {compositionMaterials.length || supplementalComponents.length ? (
                 <div className="space-y-5">
-                  {compositionMaterials.length ? <GroupedMaterialList groups={materialGroups} locale={locale} t={t} /> : null}
+                  {compositionMaterials.length ? <GroupedMaterialList groups={materialGroups} locale={locale} t={t} fields={publicSourceConfig.materials} intro={locale === "zh" ? publicSourceConfig.materialIntroZh : publicSourceConfig.materialIntro} /> : null}
                   {supplementalComponents.length ? (
                     <DataCard title={t.componentSupplement} icon="tag" surface="soft">
-                      <GroupedComponentSupplementList groups={supplementalComponentGroups} locale={locale} t={t} />
+                      <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{locale === "zh" ? publicSourceConfig.bomIntroZh : publicSourceConfig.bomIntro}</p>
+                      <GroupedComponentSupplementList groups={supplementalComponentGroups} locale={locale} t={t} fields={publicSourceConfig.bom} />
                     </DataCard>
                   ) : null}
                 </div>
               ) : (
                 <Empty text={t.pendingData} />
               )}
-            </Section>
-
-            <Section id="traceability" title={t.traceability} icon="route">
-              {traceability.length ? (
-                <div className="space-y-4">
-                  {traceability.slice(0, 4).map((event: any, index: number) => (
-                    <TimelineItem
-                      key={event.id || index}
-                      title={pick(event, locale, "event_name", "event_name_zh")}
-                      items={[
-                        [t.date, formatDate(event.event_date, locale)],
-                        [t.facility, pick(event, locale, "facility_name", "facility_name_zh")],
-                        [t.location, compact([event.city, event.country])],
-                        [t.transport, event.transport_method],
-                        [t.status, event.verification_status],
-                      ]}
-                      locale={locale}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <Empty text={t.pendingData} />
-              )}
-            </Section>
-
-            <Section id="esg" title={t.esg} icon="leaf">
-              <div className="grid gap-4 lg:grid-cols-2">
-                <InfoGrid
-                  items={[
-                    [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : null],
-                    [t.water, hasWaterData ? `${waterCurrent} L` : null],
-                    [t.energy, latestEsg?.energy_consumption ? `${latestEsg.energy_consumption} kWh` : null],
-                    [t.recycled, totalRecycled === null ? latestEsg?.recycled_content ? `${latestEsg.recycled_content}%` : null : `${totalRecycled}%`],
-                    [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100` : null],
-                    [t.takeBack, firstCircularity?.take_back_program],
-                  ]}
-                  locale={locale}
-                />
-                <DataCard title={t.visualizationTitle} icon="leaf" surface="soft">
-                  {hasWaterData ? (
-                    <ComparisonBars
-                      currentLabel={t.thisProduct}
-                      averageLabel={t.industryAverage}
-                      currentValue={waterCurrent}
-                      averageValue={waterAverage}
-                      unit="L"
-                      note={t.waterBenchmark}
-                    />
-                  ) : (
-                    <Empty text={t.pendingData} />
-                  )}
-                </DataCard>
-              </div>
             </Section>
 
             <Section id="certificates" title={t.certificates} icon="certificate">
@@ -1725,10 +1929,24 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 <Empty text={t.pendingData} />
               )}
             </Section>
+
+            <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
+              <DataCard title={t.endOfLife} icon="recycle" surface="soft">
+                <InfoGrid
+                  items={[
+                    [t.care, pick(product, locale, "care_instructions", "care_instructions_zh")],
+                    [t.repair, pick(product, locale, "repair_instructions", "repair_instructions_zh")],
+                    [t.takeBack, firstCircularity?.take_back_program],
+                    [t.endOfLife, firstCircularity?.end_of_life_info || pick(product, locale, "end_of_life_instructions", "end_of_life_instructions_zh")],
+                  ]}
+                  locale={locale}
+                />
+              </DataCard>
+            </Section>
           </div>
         )}
 
-        {viewMode === "detail" && (
+        {viewMode !== "consumer" && (
           <>
         <Section id="identity" title={t.productIdentity} eyebrow={t.overview} icon="box">
           <div className="grid gap-4 lg:grid-cols-2">
@@ -1746,20 +1964,20 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           </>
         )}
 
-        {viewMode === "detail" && <Section id="materials" title={t.materialSource} icon="layers">
+        {viewMode === "professional" && <Section id="materials" title={t.materialSource} icon="layers">
           {compositionMaterials.length || supplementalComponents.length ? (
             <div className="space-y-5">
               {compositionMaterials.length ? (
                 <div>
                   <p className="mb-3 text-sm font-black text-brand-700">{t.materialFormula}</p>
                   <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.materialGroupIntro}</p>
-                  <GroupedMaterialList groups={materialGroups} locale={locale} t={t} />
+                  <GroupedMaterialList groups={materialGroups} locale={locale} t={t} fields={publicSourceConfig.materials} intro={locale === "zh" ? publicSourceConfig.materialIntroZh : publicSourceConfig.materialIntro} />
                 </div>
               ) : null}
               {supplementalComponents.length ? (
                 <DataCard title={t.componentSupplement} icon="tag" surface="soft">
-                  <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.componentSupplementIntro}</p>
-                  <GroupedComponentSupplementList groups={supplementalComponentGroups} locale={locale} t={t} />
+                  <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{locale === "zh" ? publicSourceConfig.bomIntroZh : publicSourceConfig.bomIntro}</p>
+                  <GroupedComponentSupplementList groups={supplementalComponentGroups} locale={locale} t={t} fields={publicSourceConfig.bom} />
                 </DataCard>
               ) : null}
             </div>
@@ -1768,7 +1986,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="chemicals" title={t.chemicalRestricted} icon="file">
+        {viewMode === "professional" && <Section id="chemicals" title={t.chemicalRestricted} icon="file">
           <DataCard title={t.chemicalTitle} icon="file" surface="soft">
             <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{chemicalIntroText}</p>
             {chemicalRows.length ? (
@@ -1779,7 +1997,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           </DataCard>
         </Section>}
 
-        {viewMode === "detail" && <Section id="performance" title={t.productPerformance} icon="shield">
+        {viewMode === "professional" && <Section id="performance" title={t.productPerformance} icon="shield">
           {performanceItems.length ? (
           <div className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -1800,7 +2018,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="traceability" title={t.traceability} icon="route">
+        {viewMode === "professional" && <Section id="traceability" title={t.traceability} icon="route">
           {traceability.length ? (
             <div className="space-y-4">
               {traceability.map((event: any, index: number) => (
@@ -1825,28 +2043,18 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="esg" title={t.esg} icon="leaf">
+        {viewMode === "professional" && <Section id="esg" title={t.esg} icon="leaf">
           {latestEsg || firstCircularity ? (
             <div className="grid gap-4 md:grid-cols-2">
               <InfoGrid
                 items={[
-                  [t.carbon, latestEsg?.carbon_footprint ? `${latestEsg.carbon_footprint} kg CO2e` : null],
-                  [t.water, latestEsg?.water_usage ? `${latestEsg.water_usage} L` : null],
-                  [t.energy, latestEsg?.energy_consumption ? `${latestEsg.energy_consumption} kWh` : null],
-                  [t.waste, latestEsg?.waste_generation ? `${latestEsg.waste_generation} kg` : null],
-                  [t.recycled, latestEsg?.recycled_content ? `${latestEsg.recycled_content}%` : null],
-                  [t.methodology, latestEsg?.methodology],
-                  [t.verifiedBy, latestEsg?.verified_by],
+                  ...displayItems(latestEsg, publicSourceConfig.esg, locale),
                 ]}
                 locale={locale}
               />
               <InfoGrid
                 items={[
-                  [t.repairability, firstCircularity?.repairability_score ? `${firstCircularity.repairability_score} / 100 · ${t.jrcNote}` : null],
-                  [t.recyclability, firstCircularity?.recyclability_score ? `${firstCircularity.recyclability_score} / 100 · ${t.jrcNote}` : null],
-                  [t.takeBack, firstCircularity?.take_back_program],
-                  [t.resale, firstCircularity?.resale_supported],
-                  [t.remanufacturing, firstCircularity?.remanufacturing_supported],
+                  ...displayItems(firstCircularity, publicSourceConfig.circularity, locale),
                   [t.endOfLife, firstCircularity?.end_of_life_info || pick(product, locale, "end_of_life_instructions", "end_of_life_instructions_zh")],
                 ]}
                 locale={locale}
@@ -1857,7 +2065,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="certificates" title={t.certificates} icon="certificate">
+        {viewMode === "professional" && <Section id="certificates" title={t.certificates} icon="certificate">
           {certificates.length || declarationItems.length ? (
             <div className="space-y-4">
               {certificates.length > 0 && (
@@ -1911,7 +2119,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="consumer" title={t.consumer} icon="eye">
+        {viewMode === "professional" && <Section id="consumer" title={t.consumer} icon="eye">
           {hasConsumerData ? (
             <div className="grid gap-4 lg:grid-cols-2">
               <InfoGrid
@@ -1937,7 +2145,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
+        {viewMode === "professional" && <Section id="end-of-life" title={t.endOfLifeGuide} icon="recycle">
           {isDemoProduct ? (
             <div className="space-y-4">
               <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-5">
@@ -2005,7 +2213,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="textile-reserve" title={t.textileReserve} icon="layers">
+        {viewMode === "professional" && <Section id="textile-reserve" title={t.textileReserve} icon="layers">
           {textileReserveItems.length ? (
             <div className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
               <div className="rounded-lg border border-blue-200 bg-blue-50 p-5">
@@ -2020,7 +2228,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="batch-tracking" title={t.batchTracking} icon="route">
+        {viewMode === "professional" && <Section id="batch-tracking" title={t.batchTracking} icon="route">
           {batchHistory.length ? (
           <div className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
             <DataCard title={t.batchHistoryTitle} icon="route" surface="soft">
@@ -2053,9 +2261,66 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           )}
         </Section>}
 
-        {viewMode === "detail" && <Section id="evidence" title={t.evidence} icon="file">
-          {dataSourceRows.length || verificationItems.length || documents.length || governance.length || blockchainAnchors.length ? (
+        {viewMode === "audit" && <Section id="evidence" title={t.auditLayer} icon="file">
+          {dataSourceRows.length || verificationItems.length || documents.length || governance.length || registrySubmissions.length || registrationProofs.length || evidenceLinks.length || blockchainAnchors.length ? (
           <div className="space-y-4">
+            <div className="grid gap-4 lg:grid-cols-3">
+              {registrySubmissions.length > 0 && (
+                <DataCard title={t.registryLayer} icon="file" surface="soft">
+                  <div className="space-y-3">
+                    {registrySubmissions.map((submission: any) => (
+                      <InfoGrid
+                        key={submission.id || submission.eu_registration_identifier || submission.submitted_hash}
+                        items={[
+                          [t.status, submission.submission_status],
+                          [locale === "zh" ? "欧盟注册 ID" : "EU registration ID", submission.eu_registration_identifier],
+                          [locale === "zh" ? "提交版本" : "Submitted version", submission.submitted_version],
+                          [locale === "zh" ? "提交哈希" : "Submitted hash", submission.submitted_hash],
+                          [t.lastUpdated, formatDate(submission.submitted_at || submission.accepted_at, locale)],
+                        ]}
+                        locale={locale}
+                      />
+                    ))}
+                  </div>
+                </DataCard>
+              )}
+              {registrationProofs.length > 0 && (
+                <DataCard title={t.proofLayer} icon="shield" surface="soft">
+                  <div className="space-y-3">
+                    {registrationProofs.map((proof: any) => (
+                      <InfoGrid
+                        key={proof.id || proof.proof_hash}
+                        items={[
+                          [locale === "zh" ? "证明类型" : "Proof type", proof.proof_type],
+                          [locale === "zh" ? "证明哈希" : "Proof hash", proof.proof_hash],
+                          [locale === "zh" ? "合格电子签章状态" : "Qualified seal status", proof.qualified_seal_status],
+                          [locale === "zh" ? "过期时间" : "Expires at", formatDate(proof.expires_at, locale)],
+                        ]}
+                        locale={locale}
+                      />
+                    ))}
+                  </div>
+                </DataCard>
+              )}
+              {evidenceLinks.length > 0 && (
+                <DataCard title={t.evidenceMapping} icon="file" surface="soft">
+                  <div className="space-y-3">
+                    {evidenceLinks.map((link: any) => (
+                      <InfoGrid
+                        key={link.id || `${link.evidence_type}-${link.supported_field}`}
+                        items={[
+                          [locale === "zh" ? "证据类型" : "Evidence type", link.evidence_type],
+                          [locale === "zh" ? "支持字段" : "Supported field", link.supported_field],
+                          [locale === "zh" ? "支持模块" : "Supported module", link.supported_module],
+                          [t.status, link.verification_status],
+                        ]}
+                        locale={locale}
+                      />
+                    ))}
+                  </div>
+                </DataCard>
+              )}
+            </div>
             {dataSourceRows.length > 0 && (
               <DataCard title={t.dataTransparencyTitle} icon="file" surface="soft">
                 <p className="mb-4 text-sm font-semibold leading-6 text-slate-600">{t.dataTransparencyIntro}</p>
@@ -2076,10 +2341,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                         key={document.id}
                         items={[
                           [t.documentName, document.document_name || t.documentName],
-                          ["Type", document.document_type],
-                          ["Language", document.language],
-                          ["Version", document.version],
-                          ["Size", document.file_size],
+                          [locale === "zh" ? "类型" : "Type", document.document_type],
+                          [locale === "zh" ? "语言" : "Language", document.language],
+                          [locale === "zh" ? "版本" : "Version", document.version],
+                          [locale === "zh" ? "文件大小" : "Size", document.file_size],
                         ]}
                         locale={locale}
                       />
@@ -2603,13 +2868,18 @@ function GroupedMaterialList({
   groups,
   locale,
   t,
+  fields,
+  intro,
 }: {
   groups: Array<{ label: string; items: any[] }>;
   locale: Locale;
   t: any;
+  fields: DisplayField[];
+  intro?: string;
 }) {
   return (
     <div className="space-y-3">
+      {intro && <p className="text-sm font-semibold leading-6 text-slate-600">{intro}</p>}
       {groups.map((group, index) => (
         <details key={group.label} open={index === 0} className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 bg-slate-50 px-4 py-3 transition hover:bg-emerald-50">
@@ -2626,7 +2896,7 @@ function GroupedMaterialList({
           </summary>
           <div className="grid gap-4 p-4 lg:grid-cols-2">
             {group.items.map((material: any) => (
-              <MaterialCard key={material.id} item={material} locale={locale} t={t} />
+              <MaterialCard key={material.id} item={material} locale={locale} fields={fields} />
             ))}
           </div>
         </details>
@@ -2639,10 +2909,12 @@ function GroupedComponentSupplementList({
   groups,
   locale,
   t,
+  fields,
 }: {
   groups: Array<{ label: string; items: any[] }>;
   locale: Locale;
   t: any;
+  fields: DisplayField[];
 }) {
   return (
     <div className="space-y-3">
@@ -2661,7 +2933,7 @@ function GroupedComponentSupplementList({
             <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-black text-slate-600">{t.openGroup}</span>
           </summary>
           <div className="p-4">
-            <ComponentSupplementTable rows={group.items} locale={locale} t={t} />
+            <ComponentSupplementTable rows={group.items} locale={locale} t={t} fields={fields} />
           </div>
         </details>
       ))}
@@ -2669,34 +2941,28 @@ function GroupedComponentSupplementList({
   );
 }
 
-function ComponentSupplementTable({ rows, locale, t }: { rows: any[]; locale: Locale; t: any }) {
+function ComponentSupplementTable({ rows, locale, t, fields }: { rows: any[]; locale: Locale; t: any; fields: DisplayField[] }) {
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="hidden grid-cols-[1.2fr_1fr_0.7fr_1.4fr] bg-slate-950 px-4 py-3 text-xs font-black uppercase text-white md:grid">
+      <div className="hidden grid-cols-[1.2fr_1fr_0.8fr_1.2fr] bg-slate-950 px-4 py-3 text-xs font-black uppercase text-white md:grid">
         <span>{t.itemName}</span>
-        <span>{t.component}</span>
-        <span>{t.quantity}</span>
-        <span>{t.position}</span>
+        {fields.slice(0, 3).map((field) => <span key={field.key}>{fieldLabel(field, locale)}</span>)}
       </div>
       <div className="divide-y divide-slate-100">
         {rows.map((row: any, index: number) => (
-          <div key={row.id || `${row.component_name || row.material_name}-${index}`} className="grid gap-3 px-4 py-4 md:grid-cols-[1.2fr_1fr_0.7fr_1.4fr] md:items-center">
+          <div key={row.id || `${row.component_name || row.material_name}-${index}`} className="grid gap-3 px-4 py-4 md:grid-cols-[1.2fr_1fr_0.8fr_1.2fr] md:items-center">
             <div>
               <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.itemName}</p>
               <p className="font-black text-slate-950">{pick(row, locale, "component_name", "component_name_zh")}</p>
             </div>
-            <div>
-              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.component}</p>
-              <p className="text-sm font-semibold leading-6 text-slate-700">{pick(row, locale, "component_type", "component_type_zh")}</p>
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.quantity}</p>
-              <p className="text-sm font-semibold leading-6 text-slate-700">{valueOrDash(compact([row.quantity, row.unit]), locale)}</p>
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{t.position}</p>
-              <p className="text-sm font-semibold leading-6 text-slate-700">{valueOrDash(row.position, locale)}</p>
-            </div>
+            {fields.slice(0, 3).map((field) => (
+              <div key={field.key}>
+                <p className="text-xs font-bold uppercase text-slate-500 md:hidden">{fieldLabel(field, locale)}</p>
+                <p className="text-sm font-semibold leading-6 text-slate-700">
+                  {field.key === "quantity" ? valueOrDash(compact([row.quantity, row.unit]), locale) : valueOrDash(displayFieldValue(row, field, locale), locale)}
+                </p>
+              </div>
+            ))}
           </div>
         ))}
       </div>
@@ -2796,20 +3062,17 @@ function ComparisonBars({
   );
 }
 
-function MaterialCard({ item, locale, t }: { item: any; locale: Locale; t: any }) {
+function MaterialCard({ item, locale, fields }: { item: any; locale: Locale; fields: DisplayField[] }) {
   const pct = Number(item.percentage || 0);
   return (
     <DataCard title={pick(item, locale, "material_name", "material_name_zh")} icon="layers">
       <InfoGrid
-        items={[
-          [t.materialType, pick(item, locale, "material_type", "material_type_zh")],
-          [t.percentage, pct ? `${pct}%` : null],
-          [t.recycled, item.recycled_content ? `${item.recycled_content}%` : null],
-          [t.origin, item.origin_country],
-          [t.certification, item.certification],
-          [t.chemical, addRegulatoryChemicalContext(pick(item, locale, "chemical_info", "chemical_info_zh"), locale)],
-          [t.recyclability, pick(item, locale, "recyclability", "recyclability_zh")],
-        ]}
+        items={fields.map((field) => {
+          const value = field.key === "chemical_info"
+            ? addRegulatoryChemicalContext(valueOrDash(displayFieldValue(item, field, locale), locale), locale)
+            : displayFieldValue(item, field, locale);
+          return [fieldLabel(field, locale), value] as [string, any];
+        })}
         locale={locale}
       />
       <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200">

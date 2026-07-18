@@ -6,7 +6,8 @@ import { createSupabaseClient } from "@/lib/supabase";
 import { buildGs1DigitalLink, buildUniqueProductIdentifier, normalizeGtin, sha256Hex } from "@/lib/dppCompliance";
 import { DPP_SECTOR_PROFILES, findDppSectorProfile, uniqueByCode } from "@/lib/dppSectorProfiles";
 import { useLanguage } from "@/components/LanguageProvider";
-import { ProductRelatedManager } from "@/components/ProductRelatedManager";
+import { ProductRelatedManager, type RelatedField } from "@/components/ProductRelatedManager";
+import { SectorFieldManager } from "@/components/SectorFieldManager";
 
 type Product = Record<string, any>;
 
@@ -14,6 +15,304 @@ const LIFECYCLE_STATUSES = ["draft", "review", "published", "updated", "archived
 const CHANGE_TYPES = ["initial_publish", "certificate_update", "carbon_update", "batch_change", "data_correction", "status_change"] as const;
 const GRANULARITY_LEVELS = ["model", "batch", "item"] as const;
 const REGISTRATION_STATUSES = ["not_registered", "ready", "submitted", "accepted", "rejected", "corrected", "withdrawn", "expired"] as const;
+
+type SourceModuleConfig = {
+  description: string;
+  descriptionZh: string;
+  displayFields: string[];
+  fields: RelatedField[];
+};
+
+type SourceDataConfig = {
+  materials: SourceModuleConfig;
+  bom: SourceModuleConfig;
+  esg: SourceModuleConfig;
+  circularity: SourceModuleConfig;
+};
+
+const SOURCE_DATA_FIELDS: Record<string, SourceDataConfig> = {
+  battery: {
+    materials: {
+      description: "Capture active materials, critical raw materials and restricted substance evidence for the selected battery profile.",
+      descriptionZh: "录入活性材料、关键原材料、再生成分和受限物质证据，支撑电池护照字段。",
+      displayFields: ["material_name", "material_type", "percentage", "recycled_content"],
+      fields: [
+        { name: "material_name", label: "Material / substance name", labelZh: "材料 / 物质名称", required: true },
+        { name: "material_type", label: "Battery material category", labelZh: "电池材料类别" },
+        { name: "percentage", label: "Mass share (%)", labelZh: "质量占比 (%)", type: "number" },
+        { name: "recycled_content", label: "Recycled content (%)", labelZh: "再生成分 (%)", type: "number" },
+        { name: "origin_country", label: "Origin / source country", labelZh: "来源国家 / 产地" },
+        { name: "chemical_info", label: "Hazardous substance declaration", labelZh: "有害物质声明", type: "textarea" },
+        { name: "certification", label: "Supplier evidence / certificate", labelZh: "供应商证据 / 证书" },
+      ],
+    },
+    bom: {
+      description: "Define battery system parts at cell, module, pack, enclosure and BMS level where applicable.",
+      descriptionZh: "按电芯、模组、电池包、外壳、BMS 等层级维护电池组成。",
+      displayFields: ["component_name", "component_type", "quantity", "position"],
+      fields: [
+        { name: "component_name", label: "Battery component", labelZh: "电池组件", required: true },
+        { name: "component_type", label: "Component level", labelZh: "组件层级" },
+        { name: "quantity", label: "Quantity", labelZh: "数量", type: "number" },
+        { name: "unit", label: "Unit", labelZh: "单位" },
+        { name: "position", label: "Pack / module position", labelZh: "电池包 / 模组位置" },
+      ],
+    },
+    esg: {
+      description: "Keep carbon footprint, method, recycled content and due diligence verification data together.",
+      descriptionZh: "集中维护碳足迹、核算方法、再生成分和尽责调查验证信息。",
+      displayFields: ["carbon_footprint", "recycled_content", "methodology", "verified_by"],
+      fields: [
+        { name: "carbon_footprint", label: "Battery carbon footprint", labelZh: "电池碳足迹", type: "number" },
+        { name: "energy_consumption", label: "Manufacturing energy use", labelZh: "制造能源消耗", type: "number" },
+        { name: "recycled_content", label: "Recycled content claim", labelZh: "再生成分声明", type: "number" },
+        { name: "chemical_management", label: "Due diligence / sourcing note", labelZh: "尽责调查 / 采购说明" },
+        { name: "lca_report_url", label: "Carbon / LCA report URL", labelZh: "碳足迹 / LCA 报告 URL", type: "url" },
+        { name: "methodology", label: "Calculation methodology", labelZh: "核算方法" },
+        { name: "verified_by", label: "Verifier", labelZh: "验证方" },
+      ],
+    },
+    circularity: {
+      description: "Record removability, dismantling, recycled content and end-of-life handling information.",
+      descriptionZh: "维护可拆卸性、拆解、回收利用和生命周期结束处理信息。",
+      displayFields: ["recyclability_score", "take_back_program", "remanufacturing_supported", "end_of_life_info"],
+      fields: [
+        { name: "recyclability_score", label: "Recyclability score", labelZh: "可回收性评分", type: "number" },
+        { name: "take_back_program", label: "Collection / take-back route", labelZh: "回收 / 退役回收路径" },
+        { name: "remanufacturing_supported", label: "Repurposing supported", labelZh: "支持梯次利用", type: "checkbox" },
+        { name: "disassembly_guide", label: "Dismantling instructions", labelZh: "拆解说明", type: "textarea" },
+        { name: "recycling_instructions", label: "Recycling instructions", labelZh: "回收处理说明", type: "textarea" },
+        { name: "end_of_life_info", label: "End-of-life safety information", labelZh: "生命周期结束安全信息", type: "textarea" },
+      ],
+    },
+  },
+  textile: {
+    materials: {
+      description: "Capture fibre composition, recycled content, origin and chemical compliance evidence.",
+      descriptionZh: "录入纤维成分、再生成分、来源和化学合规证据。",
+      displayFields: ["material_name", "percentage", "origin_country", "certification"],
+      fields: [
+        { name: "material_name", label: "Fibre / fabric component", labelZh: "纤维 / 面料成分", required: true },
+        { name: "material_type", label: "Fibre / fabric type", labelZh: "纤维 / 面料类型" },
+        { name: "percentage", label: "Composition share (%)", labelZh: "成分占比 (%)", type: "number" },
+        { name: "recycled_content", label: "Recycled fibre (%)", labelZh: "再生纤维 (%)", type: "number" },
+        { name: "origin_country", label: "Origin country", labelZh: "原产国" },
+        { name: "chemical_info", label: "RSL / REACH chemical note", labelZh: "RSL / REACH 化学说明", type: "textarea" },
+        { name: "certification", label: "Textile certificate", labelZh: "纺织认证" },
+      ],
+    },
+    bom: {
+      description: "Record textile parts such as shell fabric, lining, trims, labels and packaging.",
+      descriptionZh: "维护面料、里料、辅料、标签和包装等纺织产品组成。",
+      displayFields: ["component_name", "component_type", "quantity", "position"],
+      fields: [
+        { name: "component_name", label: "Textile part", labelZh: "纺织部件", required: true },
+        { name: "component_type", label: "Part type", labelZh: "部件类型" },
+        { name: "quantity", label: "Quantity / usage", labelZh: "数量 / 用量", type: "number" },
+        { name: "unit", label: "Unit", labelZh: "单位" },
+        { name: "position", label: "Garment / fabric position", labelZh: "服装 / 面料位置" },
+      ],
+    },
+    esg: {
+      description: "Keep product carbon, water, energy, chemical management and verification data.",
+      descriptionZh: "维护产品碳、水、能源、化学品管理和验证信息。",
+      displayFields: ["carbon_footprint", "water_usage", "chemical_management", "verified_by"],
+      fields: [
+        { name: "carbon_footprint", label: "Product carbon footprint", labelZh: "产品碳足迹", type: "number" },
+        { name: "water_usage", label: "Water use", labelZh: "用水量", type: "number" },
+        { name: "energy_consumption", label: "Energy use", labelZh: "能源消耗", type: "number" },
+        { name: "chemical_management", label: "Chemical management", labelZh: "化学品管理" },
+        { name: "lca_report_url", label: "LCA / test report URL", labelZh: "LCA / 测试报告 URL", type: "url" },
+        { name: "methodology", label: "Methodology", labelZh: "方法学" },
+        { name: "verified_by", label: "Verifier", labelZh: "验证方" },
+      ],
+    },
+    circularity: {
+      description: "Record durability, repair, reuse, recycling and end-of-life guidance for textile products.",
+      descriptionZh: "维护耐用性、维修、再利用、回收和生命周期结束指引。",
+      displayFields: ["repairability_score", "recyclability_score", "resale_supported", "take_back_program"],
+      fields: [
+        { name: "repairability_score", label: "Durability / repair score", labelZh: "耐用 / 可维修评分", type: "number" },
+        { name: "recyclability_score", label: "Textile recyclability score", labelZh: "纺织可回收评分", type: "number" },
+        { name: "take_back_program", label: "Take-back / collection program", labelZh: "回收 / 收集计划" },
+        { name: "resale_supported", label: "Reuse / resale supported", labelZh: "支持再利用 / 转售", type: "checkbox" },
+        { name: "recycling_instructions", label: "Recycling instructions", labelZh: "回收说明", type: "textarea" },
+        { name: "end_of_life_info", label: "End-of-life information", labelZh: "生命周期结束信息", type: "textarea" },
+      ],
+    },
+  },
+  furniture: {
+    materials: {
+      description: "Capture wood, metal, plastic, foam and coating materials with source and compliance evidence.",
+      descriptionZh: "录入木材、金属、塑料、泡棉、涂层等材料及来源和合规证据。",
+      displayFields: ["material_name", "material_type", "percentage", "certification"],
+      fields: [
+        { name: "material_name", label: "Furniture material", labelZh: "家具材料", required: true },
+        { name: "material_type", label: "Material class", labelZh: "材料类别" },
+        { name: "percentage", label: "Mass share (%)", labelZh: "质量占比 (%)", type: "number" },
+        { name: "recycled_content", label: "Recycled content (%)", labelZh: "再生成分 (%)", type: "number" },
+        { name: "origin_country", label: "Source country", labelZh: "来源国家" },
+        { name: "chemical_info", label: "Coating / restricted substance note", labelZh: "涂层 / 受限物质说明", type: "textarea" },
+        { name: "certification", label: "FSC / PEFC / safety certificate", labelZh: "FSC / PEFC / 安全认证" },
+      ],
+    },
+    bom: {
+      description: "Define furniture parts such as frame, seat, upholstery, fittings and packaging.",
+      descriptionZh: "维护框架、坐垫、面料、五金和包装等家具组成。",
+      displayFields: ["component_name", "component_type", "quantity", "position"],
+      fields: [
+        { name: "component_name", label: "Furniture component", labelZh: "家具部件", required: true },
+        { name: "component_type", label: "Component type", labelZh: "部件类型" },
+        { name: "quantity", label: "Quantity", labelZh: "数量", type: "number" },
+        { name: "unit", label: "Unit", labelZh: "单位" },
+        { name: "position", label: "Assembly position", labelZh: "装配位置" },
+      ],
+    },
+    esg: {
+      description: "Keep carbon, material efficiency, chemical and verification information for furniture.",
+      descriptionZh: "维护家具产品碳、材料效率、化学品和验证信息。",
+      displayFields: ["carbon_footprint", "recycled_content", "methodology", "verified_by"],
+      fields: [
+        { name: "carbon_footprint", label: "Product carbon footprint", labelZh: "产品碳足迹", type: "number" },
+        { name: "waste_generation", label: "Production waste", labelZh: "生产废弃物", type: "number" },
+        { name: "recycled_content", label: "Recycled content", labelZh: "再生成分", type: "number" },
+        { name: "chemical_management", label: "Chemical / VOC management", labelZh: "化学品 / VOC 管理" },
+        { name: "lca_report_url", label: "LCA / EPD report URL", labelZh: "LCA / EPD 报告 URL", type: "url" },
+        { name: "methodology", label: "Methodology", labelZh: "方法学" },
+        { name: "verified_by", label: "Verifier", labelZh: "验证方" },
+      ],
+    },
+    circularity: {
+      description: "Record repairability, spare parts, disassembly, reuse and end-of-life routes.",
+      descriptionZh: "维护可维修性、备件、拆解、再利用和生命周期结束路径。",
+      displayFields: ["repairability_score", "recyclability_score", "resale_supported", "remanufacturing_supported"],
+      fields: [
+        { name: "repairability_score", label: "Repairability score", labelZh: "可维修性评分", type: "number" },
+        { name: "recyclability_score", label: "Recyclability score", labelZh: "可回收性评分", type: "number" },
+        { name: "take_back_program", label: "Take-back / spare parts program", labelZh: "回收 / 备件计划" },
+        { name: "resale_supported", label: "Resale supported", labelZh: "支持二手转售", type: "checkbox" },
+        { name: "remanufacturing_supported", label: "Refurbishment supported", labelZh: "支持翻新再制造", type: "checkbox" },
+        { name: "disassembly_guide", label: "Disassembly guide", labelZh: "拆解指南", type: "textarea" },
+        { name: "end_of_life_info", label: "End-of-life route", labelZh: "生命周期结束路径", type: "textarea" },
+      ],
+    },
+  },
+  construction: {
+    materials: {
+      description: "Capture composition, recycled content, origin, recyclability and EPD evidence for building materials.",
+      descriptionZh: "录入建材组成、再生成分、来源、可回收性和 EPD 等证据。",
+      displayFields: ["material_name", "material_type", "recycled_content", "recyclability"],
+      fields: [
+        { name: "material_name", label: "Construction material", labelZh: "建材组成", required: true },
+        { name: "material_type", label: "Material class", labelZh: "材料类别" },
+        { name: "percentage", label: "Mass share (%)", labelZh: "质量占比 (%)", type: "number" },
+        { name: "recycled_content", label: "Recycled content (%)", labelZh: "再生成分 (%)", type: "number" },
+        { name: "origin_country", label: "Source country", labelZh: "来源国家" },
+        { name: "recyclability", label: "Recyclability note", labelZh: "可回收性说明" },
+        { name: "certification", label: "EPD / standard certificate", labelZh: "EPD / 标准认证" },
+      ],
+    },
+    bom: {
+      description: "Define layers, accessories, packaging and installation-related components.",
+      descriptionZh: "维护结构层、配件、包装和安装相关组件。",
+      displayFields: ["component_name", "component_type", "quantity", "unit"],
+      fields: [
+        { name: "component_name", label: "Building product component", labelZh: "建材产品组件", required: true },
+        { name: "component_type", label: "Layer / accessory type", labelZh: "结构层 / 配件类型" },
+        { name: "quantity", label: "Quantity / coverage", labelZh: "数量 / 覆盖量", type: "number" },
+        { name: "unit", label: "Unit", labelZh: "单位" },
+        { name: "position", label: "Installation position", labelZh: "安装位置" },
+      ],
+    },
+    esg: {
+      description: "Keep embodied carbon, EPD methodology, recycled content and verification data.",
+      descriptionZh: "维护隐含碳、EPD 方法、再生成分和验证信息。",
+      displayFields: ["carbon_footprint", "recycled_content", "methodology", "verified_by"],
+      fields: [
+        { name: "carbon_footprint", label: "Embodied carbon", labelZh: "隐含碳", type: "number" },
+        { name: "energy_consumption", label: "Manufacturing energy", labelZh: "制造能源消耗", type: "number" },
+        { name: "waste_generation", label: "Production waste", labelZh: "生产废弃物", type: "number" },
+        { name: "recycled_content", label: "Recycled content", labelZh: "再生成分", type: "number" },
+        { name: "lca_report_url", label: "EPD / LCA report URL", labelZh: "EPD / LCA 报告 URL", type: "url" },
+        { name: "methodology", label: "EPD / LCA methodology", labelZh: "EPD / LCA 方法" },
+        { name: "verified_by", label: "Verifier", labelZh: "验证方" },
+      ],
+    },
+    circularity: {
+      description: "Record design-for-disassembly, reuse, recycling and construction waste handling routes.",
+      descriptionZh: "维护可拆卸设计、再利用、回收和建筑废弃物处理路径。",
+      displayFields: ["recyclability_score", "take_back_program", "remanufacturing_supported", "end_of_life_info"],
+      fields: [
+        { name: "recyclability_score", label: "Recyclability score", labelZh: "可回收性评分", type: "number" },
+        { name: "take_back_program", label: "Construction waste recovery route", labelZh: "建筑废弃物回收路径" },
+        { name: "remanufacturing_supported", label: "Reuse supported", labelZh: "支持再利用", type: "checkbox" },
+        { name: "disassembly_guide", label: "Disassembly / removal guide", labelZh: "拆卸 / 移除指南", type: "textarea" },
+        { name: "recycling_instructions", label: "Recycling instructions", labelZh: "回收说明", type: "textarea" },
+        { name: "end_of_life_info", label: "End-of-life route", labelZh: "生命周期结束路径", type: "textarea" },
+      ],
+    },
+  },
+  consumer_electronics: {
+    materials: {
+      description: "Capture casing, metals, plastics, battery-related materials and restricted substance evidence.",
+      descriptionZh: "录入外壳、金属、塑料、电池相关材料和受限物质证据。",
+      displayFields: ["material_name", "material_type", "recycled_content", "chemical_info"],
+      fields: [
+        { name: "material_name", label: "Material / substance", labelZh: "材料 / 物质", required: true },
+        { name: "material_type", label: "Material class", labelZh: "材料类别" },
+        { name: "percentage", label: "Mass share (%)", labelZh: "质量占比 (%)", type: "number" },
+        { name: "recycled_content", label: "Recycled content (%)", labelZh: "再生成分 (%)", type: "number" },
+        { name: "origin_country", label: "Source country", labelZh: "来源国家" },
+        { name: "chemical_info", label: "RoHS / REACH / SVHC note", labelZh: "RoHS / REACH / SVHC 说明", type: "textarea" },
+        { name: "certification", label: "Compliance evidence", labelZh: "合规证据" },
+      ],
+    },
+    bom: {
+      description: "Define product assemblies such as PCB, battery, enclosure, sensors, cables and packaging.",
+      descriptionZh: "维护 PCB、电池、外壳、传感器、线缆和包装等组件。",
+      displayFields: ["component_name", "component_type", "quantity", "position"],
+      fields: [
+        { name: "component_name", label: "Electronic component", labelZh: "电子组件", required: true },
+        { name: "component_type", label: "Component type", labelZh: "组件类型" },
+        { name: "quantity", label: "Quantity", labelZh: "数量", type: "number" },
+        { name: "unit", label: "Unit", labelZh: "单位" },
+        { name: "position", label: "Assembly position", labelZh: "装配位置" },
+      ],
+    },
+    esg: {
+      description: "Keep carbon, energy efficiency, restricted substance and verification data.",
+      descriptionZh: "维护碳足迹、能效、受限物质和验证信息。",
+      displayFields: ["carbon_footprint", "energy_consumption", "chemical_management", "verified_by"],
+      fields: [
+        { name: "carbon_footprint", label: "Product carbon footprint", labelZh: "产品碳足迹", type: "number" },
+        { name: "energy_consumption", label: "Energy consumption / efficiency", labelZh: "能耗 / 能效", type: "number" },
+        { name: "recycled_content", label: "Recycled content", labelZh: "再生成分", type: "number" },
+        { name: "chemical_management", label: "Restricted substance management", labelZh: "受限物质管理" },
+        { name: "lca_report_url", label: "LCA / compliance report URL", labelZh: "LCA / 合规报告 URL", type: "url" },
+        { name: "methodology", label: "Methodology", labelZh: "方法学" },
+        { name: "verified_by", label: "Verifier", labelZh: "验证方" },
+      ],
+    },
+    circularity: {
+      description: "Record repairability, spare parts, software support, take-back and recycling guidance.",
+      descriptionZh: "维护可维修性、备件、软件支持、回收计划和回收说明。",
+      displayFields: ["repairability_score", "take_back_program", "resale_supported", "end_of_life_info"],
+      fields: [
+        { name: "repairability_score", label: "Repairability score", labelZh: "可维修性评分", type: "number" },
+        { name: "recyclability_score", label: "Recyclability score", labelZh: "可回收性评分", type: "number" },
+        { name: "take_back_program", label: "Take-back / WEEE program", labelZh: "回收 / WEEE 计划" },
+        { name: "resale_supported", label: "Reuse / resale supported", labelZh: "支持再利用 / 转售", type: "checkbox" },
+        { name: "disassembly_guide", label: "Repair / disassembly guide", labelZh: "维修 / 拆解指南", type: "textarea" },
+        { name: "recycling_instructions", label: "Recycling instructions", labelZh: "回收说明", type: "textarea" },
+        { name: "end_of_life_info", label: "Software support / end-of-life note", labelZh: "软件支持 / 生命周期结束说明", type: "textarea" },
+      ],
+    },
+  },
+};
+
+function getSourceDataConfig(sectorCode?: string | null) {
+  return SOURCE_DATA_FIELDS[sectorCode || ""] || SOURCE_DATA_FIELDS.textile;
+}
 
 function nextPatchVersion(version: string | null | undefined) {
   const match = String(version || "v1.0").match(/^v(\d+)\.(\d+)$/);
@@ -107,12 +406,16 @@ export function ProductEditor({ productId }: { productId: string }) {
   const t =
     locale === "zh"
       ? {
-          loading: "加载产品中...",
-          notFound: "未找到产品。",
-          back: "返回产品列表",
-          view: "查看公开 DPP",
-          basic: "基础信息",
-          publish: "生命周期与版本",
+	          loading: "加载产品中...",
+	          notFound: "未找到产品。",
+	          back: "返回产品列表",
+	          consumerView: "消费者版 DPP",
+	          professionalView: "专业版 DPP",
+	          auditView: "审计版 DPP",
+          basic: "1. 产品核心信息与行业选择",
+          publish: "保存草稿与发布状态",
+          registryReadiness: "中央注册库对接字段",
+          publicContent: "公开 DPP 展示内容",
           name: "产品名称（英文）",
           nameZh: "产品名称（中文）",
           sku: "SKU",
@@ -128,7 +431,7 @@ export function ProductEditor({ productId }: { productId: string }) {
           subcategoryCode: "细分类代码",
           dppProfile: "DPP 字段模板",
           regulationBasis: "法规依据",
-          sectorFields: "行业专属字段",
+          sectorFields: "法规字段清单",
           season: "季节 / 系列",
           description: "描述（英文）",
           descriptionZh: "描述（中文）",
@@ -170,14 +473,28 @@ export function ProductEditor({ productId }: { productId: string }) {
           evidenceLinks: "证据字段映射",
           auditLogs: "审计日志",
           blockchainAnchors: "区块链锚定",
+          flowIdentity: "2. 数字身份与二维码",
+          flowIdentityDesc: "维护 GTIN、批次、序列号、GS1 Digital Link、二维码和其他数据载体。",
+          flowSource: "3. 数据源录入",
+          flowSourceDesc: "先维护材料、组件、ESG、追溯、循环、证书和文档；这些是真实数据源。",
+          flowChecklist: "4. 法规字段清单",
+          flowChecklistDesc: "根据行业模板检查披露字段、建议数据源、证据状态和缺失项。",
+          flowPublish: "5. 发布、版本与注册库",
+          flowPublishDesc: "保存版本、生成 Hash，并记录中央注册库提交、注册证明和发布状态。",
+          flowIntegrity: "6. 证据治理与不可篡改记录",
+          flowIntegrityDesc: "把字段证据映射、审计日志和区块链锚定组织成可验证证据链。",
         }
       : {
-          loading: "Loading product...",
-          notFound: "Product not found.",
-          back: "Back to products",
-          view: "View Public DPP",
-          basic: "Basic Information",
-          publish: "Lifecycle and versioning",
+	          loading: "Loading product...",
+	          notFound: "Product not found.",
+	          back: "Back to products",
+	          consumerView: "Consumer DPP",
+	          professionalView: "Professional DPP",
+	          auditView: "Audit DPP",
+          basic: "1. Product core and sector selection",
+          publish: "Draft and publication status",
+          registryReadiness: "Central registry fields",
+          publicContent: "Public DPP display content",
           name: "Product name (English)",
           nameZh: "Product name (Chinese)",
           sku: "SKU",
@@ -193,7 +510,7 @@ export function ProductEditor({ productId }: { productId: string }) {
           subcategoryCode: "Subcategory code",
           dppProfile: "DPP field profile",
           regulationBasis: "Regulation basis",
-          sectorFields: "Sector-specific fields",
+          sectorFields: "Regulatory field checklist",
           season: "Season / Collection",
           description: "Description (English)",
           descriptionZh: "Description (Chinese)",
@@ -235,6 +552,16 @@ export function ProductEditor({ productId }: { productId: string }) {
           evidenceLinks: "Evidence Field Links",
           auditLogs: "Audit Logs",
           blockchainAnchors: "Blockchain Anchors",
+          flowIdentity: "2. Digital identity and QR code",
+          flowIdentityDesc: "Maintain GTIN, batch, serial number, GS1 Digital Link, QR code and other data carriers.",
+          flowSource: "3. Source data entry",
+          flowSourceDesc: "Maintain materials, components, ESG, traceability, circularity, certificates and documents first; these are the real source records.",
+          flowChecklist: "4. Regulatory field checklist",
+          flowChecklistDesc: "Check disclosure fields, suggested source modules, evidence status and missing items by sector profile.",
+          flowPublish: "5. Publication, versioning and registry",
+          flowPublishDesc: "Save versions, generate hashes, and record central registry submissions, proofs and lifecycle status.",
+          flowIntegrity: "6. Evidence governance and immutable records",
+          flowIntegrityDesc: "Organize field evidence links, audit logs and blockchain anchors into a verifiable evidence chain.",
         };
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -297,6 +624,8 @@ export function ProductEditor({ productId }: { productId: string }) {
       "commodity_code",
       "unique_product_identifier",
       "eu_registration_status",
+      "dpp_id",
+      "public_slug",
       "status",
       "current_version",
     ].forEach((key) => {
@@ -369,6 +698,7 @@ export function ProductEditor({ productId }: { productId: string }) {
   const publicIdentifier = product.dpp_id || product.public_slug;
   const suggestedVersion = product.current_version ? nextPatchVersion(product.current_version) : "v1.0";
   const selectedProfile = findDppSectorProfile(profileKey || product.dpp_profile_key);
+  const sourceDataConfig = getSourceDataConfig(selectedProfile?.sectorCode || sectorCode || product.sector_code);
   const sectorOptions = uniqueByCode(DPP_SECTOR_PROFILES, "sectorCode");
   const categoryOptions = uniqueByCode(
     DPP_SECTOR_PROFILES.filter((profile) => !sectorCode || profile.sectorCode === sectorCode),
@@ -401,13 +731,6 @@ export function ProductEditor({ productId }: { productId: string }) {
       visibility_level: payload.visibility_level || "public",
     };
   };
-  const prepareSectorFieldPayload = (payload: Record<string, any>) => ({
-    ...payload,
-    profile_key: payload.profile_key || selectedProfile?.profileKey || product.dpp_profile_key || null,
-    visibility_level: payload.visibility_level || "public",
-    source_type: payload.source_type || "manual",
-  });
-
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -420,11 +743,19 @@ export function ProductEditor({ productId }: { productId: string }) {
             {t.dppId}: {product.dpp_id || "—"} · {t.currentVersion}: {product.current_version || "v1.0"} · {statusLabel(product.status || "draft", locale)}
           </p>
         </div>
-        {publicIdentifier && (
-          <Link href={`/p/${encodeURIComponent(publicIdentifier)}`} target="_blank" className="btn-secondary">
-            {t.view}
-          </Link>
-        )}
+	        {publicIdentifier && (
+	          <div className="flex flex-wrap gap-2">
+	            <Link href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=consumer`} target="_blank" className="btn-secondary">
+	              {t.consumerView}
+	            </Link>
+	            <Link href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=professional`} target="_blank" className="btn-primary">
+	              {t.professionalView}
+	            </Link>
+	            <Link href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=audit`} target="_blank" className="btn-secondary">
+	              {t.auditView}
+	            </Link>
+	          </div>
+	        )}
       </div>
 
       <form onSubmit={saveProduct} className="grid gap-8 xl:grid-cols-[1fr_380px]">
@@ -441,6 +772,7 @@ export function ProductEditor({ productId }: { productId: string }) {
             <input className="input" name="subcategory" defaultValue={product.subcategory || ""} placeholder={t.subcategory} />
             <input className="input" name="season" defaultValue={product.season || ""} placeholder={t.season} />
           </div>
+
           <div className="rounded-2xl border border-brand-100 bg-brand-50/40 p-4">
             <h3 className="text-base font-black text-slate-950">{t.sectorTemplate}</h3>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -518,31 +850,9 @@ export function ProductEditor({ productId }: { productId: string }) {
               <Info label={t.regulationBasis} value={selectedProfile?.regulationBasis} />
             </div>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <label>
-              <span className="label">{t.granularity}</span>
-              <select className="input mt-1" name="granularity_level" defaultValue={product.granularity_level || "model"}>
-                {GRANULARITY_LEVELS.map((level) => (
-                  <option key={level} value={level}>
-                    {optionLabel(level, locale)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <input className="input" name="commodity_code" defaultValue={product.commodity_code || ""} placeholder={t.commodityCode} />
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <input className="input" name="unique_product_identifier" defaultValue={product.unique_product_identifier || ""} placeholder={t.uniqueProductIdentifier} />
-            <label>
-              <span className="label">{t.euRegistrationStatus}</span>
-              <select className="input mt-1" name="eu_registration_status" defaultValue={product.eu_registration_status || "not_registered"}>
-                {REGISTRATION_STATUSES.map((status) => (
-                  <option key={status} value={status}>
-                    {optionLabel(status, locale)}
-                  </option>
-                ))}
-              </select>
-            </label>
+
+          <div className="border-t border-slate-200 pt-5">
+            <h3 className="text-base font-black text-slate-950">{t.publicContent}</h3>
           </div>
           <textarea className="input min-h-28" name="description" defaultValue={product.description || ""} placeholder={t.description} />
           <textarea className="input min-h-28" name="description_zh" defaultValue={product.description_zh || ""} placeholder={t.descriptionZh} />
@@ -557,6 +867,35 @@ export function ProductEditor({ productId }: { productId: string }) {
 
         <section className="card h-fit space-y-5">
           <h2 className="text-xl font-bold">{t.publish}</h2>
+          <div className="rounded-2xl border border-blue-100 bg-blue-50/40 p-4">
+            <h3 className="text-base font-black text-slate-950">{t.registryReadiness}</h3>
+            <div className="mt-4 space-y-4">
+              <input className="input" name="dpp_id" defaultValue={product.dpp_id || ""} placeholder={t.dppId} />
+              <input className="input" name="public_slug" defaultValue={product.public_slug || ""} placeholder={t.publicSlug} />
+              <label>
+                <span className="label">{t.granularity}</span>
+                <select className="input mt-1" name="granularity_level" defaultValue={product.granularity_level || "model"}>
+                  {GRANULARITY_LEVELS.map((level) => (
+                    <option key={level} value={level}>
+                      {optionLabel(level, locale)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <input className="input" name="commodity_code" defaultValue={product.commodity_code || ""} placeholder={t.commodityCode} />
+              <input className="input" name="unique_product_identifier" defaultValue={product.unique_product_identifier || ""} placeholder={t.uniqueProductIdentifier} />
+              <label>
+                <span className="label">{t.euRegistrationStatus}</span>
+                <select className="input mt-1" name="eu_registration_status" defaultValue={product.eu_registration_status || "not_registered"}>
+                  {REGISTRATION_STATUSES.map((status) => (
+                    <option key={status} value={status}>
+                      {optionLabel(status, locale)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
           <label>
             <span className="label">{t.status}</span>
             <select className="input mt-1" name="status" defaultValue={product.status || "draft"}>
@@ -589,10 +928,6 @@ export function ProductEditor({ productId }: { productId: string }) {
             <span className="label">{t.changeSummary}</span>
             <textarea className="input mt-1 min-h-24" name="change_summary" placeholder={t.versionNote} />
           </label>
-          <Info label={t.publicSlug} value={product.public_slug} />
-          <Info label={t.dppId} value={product.dpp_id} />
-          <Info label={t.uniqueProductIdentifier} value={product.unique_product_identifier} />
-          <Info label={t.euRegistrationStatus} value={optionLabel(product.eu_registration_status || "not_registered", locale)} />
           <button disabled={saving} className="btn-primary w-full">
             {saving ? t.saving : t.save}
           </button>
@@ -600,22 +935,7 @@ export function ProductEditor({ productId }: { productId: string }) {
         </section>
       </form>
 
-      <ProductVersionHistory productId={productId} refreshKey={versionRefreshKey} title={t.versions} />
-
-      <ProductRelatedManager productId={productId} title="EU Registry Submissions" titleZh={t.registrySubmissions} table="dpp_registry_submissions" displayFields={["submission_status", "eu_registration_identifier", "submitted_version", "submitted_hash"]} preparePayload={prepareRegistryPayload} fields={[{ name: "submission_status", label: "Submission Status", labelZh: "提交状态" }, { name: "registry_environment", label: "Registry Environment", labelZh: "注册库环境" }, { name: "eu_registration_identifier", label: "EU Registration Identifier", labelZh: "欧盟注册 ID" }, { name: "commodity_code", label: "Commodity Code", labelZh: "商品编码" }, { name: "submitted_version", label: "Submitted Version", labelZh: "提交版本" }, { name: "submitted_hash", label: "Submitted Hash", labelZh: "提交 Hash" }, { name: "semantic_model_version", label: "Semantic Model Version", labelZh: "语义模型版本" }, { name: "submitted_payload", label: "Submitted Payload JSON", labelZh: "提交载荷 JSON", type: "textarea" }, { name: "registry_response", label: "Registry Response JSON", labelZh: "注册库响应 JSON", type: "textarea" }, { name: "submitted_at", label: "Submitted At", labelZh: "提交时间", type: "datetime-local" }, { name: "accepted_at", label: "Accepted At", labelZh: "接受时间", type: "datetime-local" }, { name: "rejected_reason", label: "Rejected Reason", labelZh: "驳回原因", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-      <ProductRelatedManager productId={productId} title="Registration Proofs" titleZh={t.registrationProofs} table="dpp_registration_proofs" displayFields={["proof_type", "proof_hash", "qualified_seal_status", "expires_at"]} preparePayload={prepareEvidencePayload} fields={[{ name: "proof_type", label: "Proof Type", labelZh: "证明类型" }, { name: "submission_id", label: "Submission ID", labelZh: "提交记录 ID" }, { name: "proof_url", label: "Proof URL", labelZh: "证明文件 URL", type: "url" }, { name: "proof_hash", label: "Proof Hash", labelZh: "证明文件 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "qualified_seal_status", label: "Qualified Seal Status", labelZh: "合格电子签章状态" }, { name: "qualified_timestamp", label: "Qualified Timestamp", labelZh: "合格时间戳" }, { name: "generated_at", label: "Generated At", labelZh: "生成时间", type: "datetime-local" }, { name: "expires_at", label: "Expires At", labelZh: "过期时间", type: "datetime-local" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-      <ProductRelatedManager productId={productId} title="Evidence Field Links" titleZh={t.evidenceLinks} table="dpp_evidence_links" displayFields={["evidence_type", "supported_field", "verification_status", "visibility_level"]} fields={[{ name: "evidence_type", label: "Evidence Type", labelZh: "证据类型", required: true }, { name: "evidence_ref_id", label: "Evidence Ref ID", labelZh: "证据记录 ID" }, { name: "supported_field", label: "Supported Field", labelZh: "支持字段", required: true }, { name: "supported_module", label: "Supported Module", labelZh: "支持模块" }, { name: "claim_value", label: "Claim Value", labelZh: "声明值", type: "textarea" }, { name: "verification_status", label: "Verification Status", labelZh: "验证状态" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-      <ProductRelatedManager productId={productId} title="Audit Logs" titleZh={t.auditLogs} table="dpp_audit_logs" displayFields={["action_type", "actor_name", "target_table", "new_hash"]} fields={[{ name: "actor_name", label: "Actor Name", labelZh: "操作人" }, { name: "actor_role", label: "Actor Role", labelZh: "操作角色" }, { name: "action_type", label: "Action Type", labelZh: "操作类型", required: true }, { name: "target_table", label: "Target Table", labelZh: "目标表" }, { name: "target_id", label: "Target ID", labelZh: "目标记录 ID" }, { name: "previous_hash", label: "Previous Hash", labelZh: "前 Hash" }, { name: "new_hash", label: "New Hash", labelZh: "新 Hash" }, { name: "ip_context", label: "IP / Context", labelZh: "IP / 上下文" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-      <ProductRelatedManager productId={productId} title="Blockchain Anchors" titleZh={t.blockchainAnchors} table="dpp_blockchain_anchors" displayFields={["version", "chain_name", "anchor_status", "transaction_hash"]} preparePayload={prepareBlockchainPayload} fields={[{ name: "version", label: "DPP Version", labelZh: "DPP 版本" }, { name: "anchored_hash", label: "Anchored Hash", labelZh: "锚定 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "chain_name", label: "Chain Name", labelZh: "区块链名称" }, { name: "chain_id", label: "Chain ID", labelZh: "链 ID" }, { name: "network", label: "Network", labelZh: "网络" }, { name: "contract_address", label: "Contract Address", labelZh: "合约地址" }, { name: "transaction_hash", label: "Transaction Hash", labelZh: "交易 Hash" }, { name: "block_number", label: "Block Number", labelZh: "区块高度" }, { name: "anchor_status", label: "Anchor Status", labelZh: "锚定状态" }, { name: "anchored_at", label: "Anchored At", labelZh: "锚定时间", type: "datetime-local" }, { name: "explorer_url", label: "Explorer URL", labelZh: "区块浏览器 URL", type: "url" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-      <ProductRelatedManager productId={productId} title="Sector-specific Fields" titleZh={t.sectorFields} table="product_sector_field_values" displayFields={["field_key", "module_key", "field_value", "evidence_status"]} preparePayload={prepareSectorFieldPayload} fields={[{ name: "module_key", label: "Module Key", labelZh: "模块 Key" }, { name: "field_key", label: "Field Key", labelZh: "字段 Key", required: true }, { name: "field_label", label: "Field Label", labelZh: "字段标签" }, { name: "field_label_zh", label: "Field Label Chinese", labelZh: "字段中文标签" }, { name: "field_value", label: "Field Value", labelZh: "字段值", type: "textarea" }, { name: "unit", label: "Unit", labelZh: "单位" }, { name: "evidence_status", label: "Evidence Status", labelZh: "证据状态" }, { name: "source_type", label: "Source Type", labelZh: "来源类型" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-
-      <ProductRelatedManager productId={productId} title="Components / BOM" titleZh={t.components} table="product_bom" displayFields={["component_name", "component_type", "quantity", "unit", "position"]} fields={[{ name: "component_name", label: "Component Name", labelZh: "组件名称", required: true }, { name: "component_name_zh", label: "Component Name Chinese", labelZh: "组件名称中文" }, { name: "component_type", label: "Component Type", labelZh: "组件类型" }, { name: "component_type_zh", label: "Component Type Chinese", labelZh: "组件类型中文" }, { name: "quantity", label: "Quantity", labelZh: "数量", type: "number" }, { name: "unit", label: "Unit", labelZh: "单位" }, { name: "position", label: "Position", labelZh: "位置" }]} />
-      <ProductRelatedManager productId={productId} title="Materials" titleZh={t.materials} table="product_materials" displayFields={["material_name", "percentage", "origin_country", "certification"]} fields={[{ name: "material_name", label: "Material Name", labelZh: "材料名称", required: true }, { name: "material_name_zh", label: "Material Name Chinese", labelZh: "材料名称中文" }, { name: "material_type", label: "Material Type", labelZh: "材料类型" }, { name: "material_type_zh", label: "Material Type Chinese", labelZh: "材料类型中文" }, { name: "percentage", label: "Percentage", labelZh: "占比 (%)", type: "number" }, { name: "recycled_content", label: "Recycled Content", labelZh: "再生成分 (%)", type: "number" }, { name: "origin_country", label: "Origin Country", labelZh: "原产国" }, { name: "chemical_info", label: "Chemical Info", labelZh: "化学信息" }, { name: "recyclability", label: "Recyclability", labelZh: "可回收性" }, { name: "certification", label: "Certification", labelZh: "认证" }]} />
-      <ProductRelatedManager productId={productId} title="ESG Metrics" titleZh={t.esg} table="product_esg_metrics" displayFields={["carbon_footprint", "water_usage", "recycled_content", "methodology"]} fields={[{ name: "carbon_footprint", label: "Carbon Footprint", labelZh: "碳足迹", type: "number" }, { name: "water_usage", label: "Water Usage", labelZh: "用水量", type: "number" }, { name: "energy_consumption", label: "Energy Consumption", labelZh: "能源消耗", type: "number" }, { name: "waste_generation", label: "Waste Generation", labelZh: "废弃物", type: "number" }, { name: "recycled_content", label: "Recycled Content", labelZh: "再生成分", type: "number" }, { name: "chemical_management", label: "Chemical Management", labelZh: "化学品管理" }, { name: "lca_report_url", label: "LCA Report URL", labelZh: "LCA 报告 URL", type: "url" }, { name: "methodology", label: "Methodology", labelZh: "方法学" }, { name: "verified_by", label: "Verified By", labelZh: "验证方" }]} />
-      <ProductRelatedManager productId={productId} title="Certificates" titleZh={t.certificates} table="product_certificates" displayFields={["certificate_name", "certificate_type", "issuer", "verification_status"]} preparePayload={prepareEvidencePayload} fields={[{ name: "certificate_name", label: "Certificate Name", labelZh: "证书名称", required: true }, { name: "certificate_name_zh", label: "Certificate Name Chinese", labelZh: "证书名称中文" }, { name: "certificate_type", label: "Certificate Type", labelZh: "证书类型" }, { name: "certificate_type_zh", label: "Certificate Type Chinese", labelZh: "证书类型中文" }, { name: "certificate_number", label: "Certificate Number", labelZh: "证书编号" }, { name: "issuer", label: "Issuer", labelZh: "签发机构" }, { name: "issue_date", label: "Issue Date", labelZh: "签发日期", type: "date" }, { name: "expiry_date", label: "Expiry Date", labelZh: "到期日期", type: "date" }, { name: "certificate_url", label: "Certificate URL", labelZh: "证书 URL", type: "url" }, { name: "verification_status", label: "Verification Status", labelZh: "验证状态" }, { name: "evidence_hash", label: "Evidence Hash", labelZh: "证据 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-      <ProductRelatedManager productId={productId} title="Traceability Events" titleZh={t.traceability} table="product_traceability" orderBy="event_date" displayFields={["event_name", "country", "city", "facility_name", "verification_status"]} fields={[{ name: "event_type", label: "Event Type", labelZh: "事件类型" }, { name: "event_name", label: "Event Name", labelZh: "事件名称", required: true }, { name: "event_name_zh", label: "Event Name Chinese", labelZh: "事件名称中文" }, { name: "event_date", label: "Event Date", labelZh: "事件日期", type: "datetime-local" }, { name: "country", label: "Country", labelZh: "国家" }, { name: "city", label: "City", labelZh: "城市" }, { name: "facility_name", label: "Facility Name", labelZh: "设施名称" }, { name: "facility_name_zh", label: "Facility Name Chinese", labelZh: "设施名称中文" }, { name: "transport_method", label: "Transport Method", labelZh: "运输方式" }, { name: "verification_status", label: "Verification Status", labelZh: "验证状态" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "notes_zh", label: "Notes Chinese", labelZh: "备注中文", type: "textarea" }]} />
-      <ProductRelatedManager productId={productId} title="Circularity" titleZh={t.circularity} table="product_circularity" displayFields={["repairability_score", "recyclability_score", "take_back_program", "resale_supported"]} fields={[{ name: "repairability_score", label: "Repairability Score", labelZh: "可维修性评分", type: "number" }, { name: "recyclability_score", label: "Recyclability Score", labelZh: "可回收性评分", type: "number" }, { name: "take_back_program", label: "Take Back Program", labelZh: "回收计划" }, { name: "resale_supported", label: "Resale Supported", labelZh: "支持二手转售", type: "checkbox" }, { name: "remanufacturing_supported", label: "Remanufacturing Supported", labelZh: "支持再制造", type: "checkbox" }, { name: "disassembly_guide", label: "Disassembly Guide", labelZh: "拆解指南", type: "textarea" }, { name: "recycling_instructions", label: "Recycling Instructions", labelZh: "回收说明", type: "textarea" }, { name: "end_of_life_info", label: "End-of-Life Info", labelZh: "生命周期结束信息", type: "textarea" }]} />
-      <ProductRelatedManager productId={productId} title="Consumer Transparency" titleZh={t.transparency} table="product_consumer_transparency" displayFields={["brand_story", "sustainability_story", "consumer_notice"]} fields={[{ name: "brand_story", label: "Brand Story", labelZh: "品牌故事", type: "textarea" }, { name: "brand_story_zh", label: "Brand Story Chinese", labelZh: "品牌故事中文", type: "textarea" }, { name: "sustainability_story", label: "Sustainability Story", labelZh: "可持续故事", type: "textarea" }, { name: "sustainability_story_zh", label: "Sustainability Story Chinese", labelZh: "可持续故事中文", type: "textarea" }, { name: "consumer_notice", label: "Consumer Notice", labelZh: "消费者提示", type: "textarea" }, { name: "consumer_notice_zh", label: "Consumer Notice Chinese", labelZh: "消费者提示中文", type: "textarea" }, { name: "marketing_content", label: "Marketing Content", labelZh: "营销内容", type: "textarea" }, { name: "marketing_content_zh", label: "Marketing Content Chinese", labelZh: "营销内容中文", type: "textarea" }]} />
+      <SectionHeading title={t.flowIdentity} description={t.flowIdentityDesc} />
       <ProductRelatedManager productId={productId} title="Digital Identity" titleZh={t.identity} table="product_digital_identity" displayFields={["gtin", "batch_id", "serial_id", "digital_link_url"]} preparePayload={(payload) => {
         const gtin = normalizeGtin(payload.gtin);
         const baseUrl = typeof window !== "undefined" ? window.location.origin : null;
@@ -624,10 +944,34 @@ export function ProductEditor({ productId }: { productId: string }) {
           ...payload,
           gtin: gtin || payload.gtin,
           digital_link_url: payload.digital_link_url || digitalLink,
+          data_carrier_type: payload.data_carrier_type || "qr",
+          data_carrier_url: payload.data_carrier_url || payload.digital_link_url || digitalLink,
           product_uuid: payload.product_uuid || buildUniqueProductIdentifier({ gtin, batchId: payload.batch_id, serialId: payload.serial_id }),
         };
-      }} fields={[{ name: "product_uuid", label: "Product UUID / UPI", labelZh: "产品 UUID / UPI" }, { name: "gtin", label: "GTIN", labelZh: "GTIN" }, { name: "style_id", label: "Style ID", labelZh: "款式 ID" }, { name: "batch_id", label: "Batch ID", labelZh: "批次 ID" }, { name: "serial_id", label: "Serial ID", labelZh: "序列号" }, { name: "digital_link_url", label: "GS1 Digital Link URL", labelZh: "GS1 数字链接 URL", type: "url" }, { name: "qr_code_id", label: "QR Code ID", labelZh: "二维码 ID" }, { name: "nfc_id", label: "NFC ID", labelZh: "NFC ID" }, { name: "rfid_epc", label: "RFID EPC", labelZh: "RFID EPC" }]} />
+      }} fields={[{ name: "product_uuid", label: "Product UUID / UPI", labelZh: "产品 UUID / UPI" }, { name: "gtin", label: "GTIN", labelZh: "GTIN" }, { name: "style_id", label: "Style ID", labelZh: "款式 ID" }, { name: "batch_id", label: "Batch ID", labelZh: "批次 ID" }, { name: "serial_id", label: "Serial ID", labelZh: "序列号" }, { name: "digital_link_url", label: "GS1 Digital Link URL", labelZh: "GS1 数字链接 URL", type: "url" }, { name: "data_carrier_type", label: "Data Carrier Type", labelZh: "数据载体类型" }, { name: "data_carrier_url", label: "Data Carrier URL", labelZh: "数据载体 URL", type: "url" }, { name: "qr_code_id", label: "QR Code ID", labelZh: "二维码 ID" }, { name: "nfc_id", label: "NFC ID", labelZh: "NFC ID" }, { name: "rfid_epc", label: "RFID EPC", labelZh: "RFID EPC" }]} />
+
+      <SectionHeading title={t.flowSource} description={t.flowSourceDesc} />
+      <ProductRelatedManager productId={productId} title="Materials" titleZh={t.materials} description={sourceDataConfig.materials.description} descriptionZh={sourceDataConfig.materials.descriptionZh} table="product_materials" displayFields={sourceDataConfig.materials.displayFields} fields={sourceDataConfig.materials.fields} />
+      <ProductRelatedManager productId={productId} title="Components / BOM" titleZh={t.components} description={sourceDataConfig.bom.description} descriptionZh={sourceDataConfig.bom.descriptionZh} table="product_bom" displayFields={sourceDataConfig.bom.displayFields} fields={sourceDataConfig.bom.fields} />
+      <ProductRelatedManager productId={productId} title="ESG Metrics" titleZh={t.esg} description={sourceDataConfig.esg.description} descriptionZh={sourceDataConfig.esg.descriptionZh} table="product_esg_metrics" displayFields={sourceDataConfig.esg.displayFields} fields={sourceDataConfig.esg.fields} />
+      <ProductRelatedManager productId={productId} title="Traceability Events" titleZh={t.traceability} table="product_traceability" orderBy="event_date" displayFields={["event_name", "country", "city", "facility_name", "verification_status"]} fields={[{ name: "event_type", label: "Event Type", labelZh: "事件类型" }, { name: "event_name", label: "Event Name", labelZh: "事件名称", required: true }, { name: "event_name_zh", label: "Event Name Chinese", labelZh: "事件名称中文" }, { name: "event_date", label: "Event Date", labelZh: "事件日期", type: "datetime-local" }, { name: "country", label: "Country", labelZh: "国家" }, { name: "city", label: "City", labelZh: "城市" }, { name: "facility_name", label: "Facility Name", labelZh: "设施名称" }, { name: "facility_name_zh", label: "Facility Name Chinese", labelZh: "设施名称中文" }, { name: "transport_method", label: "Transport Method", labelZh: "运输方式" }, { name: "verification_status", label: "Verification Status", labelZh: "验证状态" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "notes_zh", label: "Notes Chinese", labelZh: "备注中文", type: "textarea" }]} />
+      <ProductRelatedManager productId={productId} title="Circularity" titleZh={t.circularity} description={sourceDataConfig.circularity.description} descriptionZh={sourceDataConfig.circularity.descriptionZh} table="product_circularity" displayFields={sourceDataConfig.circularity.displayFields} fields={sourceDataConfig.circularity.fields} />
+      <ProductRelatedManager productId={productId} title="Consumer Transparency" titleZh={t.transparency} table="product_consumer_transparency" displayFields={["brand_story", "sustainability_story", "consumer_notice"]} fields={[{ name: "brand_story", label: "Brand Story", labelZh: "品牌故事", type: "textarea" }, { name: "brand_story_zh", label: "Brand Story Chinese", labelZh: "品牌故事中文", type: "textarea" }, { name: "sustainability_story", label: "Sustainability Story", labelZh: "可持续故事", type: "textarea" }, { name: "sustainability_story_zh", label: "Sustainability Story Chinese", labelZh: "可持续故事中文", type: "textarea" }, { name: "consumer_notice", label: "Consumer Notice", labelZh: "消费者提示", type: "textarea" }, { name: "consumer_notice_zh", label: "Consumer Notice Chinese", labelZh: "消费者提示中文", type: "textarea" }, { name: "marketing_content", label: "Marketing Content", labelZh: "营销内容", type: "textarea" }, { name: "marketing_content_zh", label: "Marketing Content Chinese", labelZh: "营销内容中文", type: "textarea" }]} />
+      <ProductRelatedManager productId={productId} title="Certificates" titleZh={t.certificates} table="product_certificates" displayFields={["certificate_name", "certificate_type", "issuer", "verification_status"]} preparePayload={prepareEvidencePayload} fields={[{ name: "certificate_name", label: "Certificate Name", labelZh: "证书名称", required: true }, { name: "certificate_name_zh", label: "Certificate Name Chinese", labelZh: "证书名称中文" }, { name: "certificate_type", label: "Certificate Type", labelZh: "证书类型" }, { name: "certificate_type_zh", label: "Certificate Type Chinese", labelZh: "证书类型中文" }, { name: "certificate_number", label: "Certificate Number", labelZh: "证书编号" }, { name: "issuer", label: "Issuer", labelZh: "签发机构" }, { name: "issue_date", label: "Issue Date", labelZh: "签发日期", type: "date" }, { name: "expiry_date", label: "Expiry Date", labelZh: "到期日期", type: "date" }, { name: "certificate_url", label: "Certificate URL", labelZh: "证书 URL", type: "url" }, { name: "verification_status", label: "Verification Status", labelZh: "验证状态" }, { name: "evidence_hash", label: "Evidence Hash", labelZh: "证据 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
       <ProductRelatedManager productId={productId} title="Documents" titleZh={t.documents} table="product_documents" displayFields={["document_name", "document_type", "language", "version"]} preparePayload={prepareEvidencePayload} fields={[{ name: "document_name", label: "Document Name", labelZh: "文档名称", required: true }, { name: "document_type", label: "Document Type", labelZh: "文档类型" }, { name: "file_url", label: "File URL", labelZh: "文件 URL", type: "url" }, { name: "file_size", label: "File Size", labelZh: "文件大小" }, { name: "language", label: "Language", labelZh: "语言" }, { name: "uploaded_by", label: "Uploaded By", labelZh: "上传者" }, { name: "version", label: "Version", labelZh: "版本" }, { name: "evidence_hash", label: "Evidence Hash", labelZh: "证据 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
+
+      <SectionHeading title={t.flowChecklist} description={t.flowChecklistDesc} />
+      <SectorFieldManager productId={productId} profileKey={selectedProfile?.profileKey || product.dpp_profile_key} title={t.sectorFields} />
+
+      <SectionHeading title={t.flowPublish} description={t.flowPublishDesc} />
+      <ProductVersionHistory productId={productId} refreshKey={versionRefreshKey} title={t.versions} />
+      <ProductRelatedManager productId={productId} title="EU Registry Submissions" titleZh={t.registrySubmissions} table="dpp_registry_submissions" displayFields={["submission_status", "eu_registration_identifier", "submitted_version", "submitted_hash"]} preparePayload={prepareRegistryPayload} fields={[{ name: "submission_status", label: "Submission Status", labelZh: "提交状态" }, { name: "registry_environment", label: "Registry Environment", labelZh: "注册库环境" }, { name: "eu_registration_identifier", label: "EU Registration Identifier", labelZh: "欧盟注册 ID" }, { name: "commodity_code", label: "Commodity Code", labelZh: "商品编码" }, { name: "submitted_version", label: "Submitted Version", labelZh: "提交版本" }, { name: "submitted_hash", label: "Submitted Hash", labelZh: "提交 Hash" }, { name: "semantic_model_version", label: "Semantic Model Version", labelZh: "语义模型版本" }, { name: "submitted_payload", label: "Submitted Payload JSON", labelZh: "提交载荷 JSON", type: "textarea" }, { name: "registry_response", label: "Registry Response JSON", labelZh: "注册库响应 JSON", type: "textarea" }, { name: "submitted_at", label: "Submitted At", labelZh: "提交时间", type: "datetime-local" }, { name: "accepted_at", label: "Accepted At", labelZh: "接受时间", type: "datetime-local" }, { name: "rejected_reason", label: "Rejected Reason", labelZh: "驳回原因", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
+      <ProductRelatedManager productId={productId} title="Registration Proofs" titleZh={t.registrationProofs} table="dpp_registration_proofs" displayFields={["proof_type", "proof_hash", "qualified_seal_status", "expires_at"]} preparePayload={prepareEvidencePayload} fields={[{ name: "proof_type", label: "Proof Type", labelZh: "证明类型" }, { name: "submission_id", label: "Submission ID", labelZh: "提交记录 ID" }, { name: "proof_url", label: "Proof URL", labelZh: "证明文件 URL", type: "url" }, { name: "proof_hash", label: "Proof Hash", labelZh: "证明文件 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "qualified_seal_status", label: "Qualified Seal Status", labelZh: "合格电子签章状态" }, { name: "qualified_timestamp", label: "Qualified Timestamp", labelZh: "合格时间戳" }, { name: "generated_at", label: "Generated At", labelZh: "生成时间", type: "datetime-local" }, { name: "expires_at", label: "Expires At", labelZh: "过期时间", type: "datetime-local" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
+
+      <SectionHeading title={t.flowIntegrity} description={t.flowIntegrityDesc} />
+      <ProductRelatedManager productId={productId} title="Evidence Field Links" titleZh={t.evidenceLinks} table="dpp_evidence_links" displayFields={["evidence_type", "supported_field", "verification_status", "visibility_level"]} fields={[{ name: "evidence_type", label: "Evidence Type", labelZh: "证据类型", required: true }, { name: "evidence_ref_id", label: "Evidence Ref ID", labelZh: "证据记录 ID" }, { name: "supported_field", label: "Supported Field", labelZh: "支持字段", required: true }, { name: "supported_module", label: "Supported Module", labelZh: "支持模块" }, { name: "claim_value", label: "Claim Value", labelZh: "声明值", type: "textarea" }, { name: "verification_status", label: "Verification Status", labelZh: "验证状态" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
+      <ProductRelatedManager productId={productId} title="Audit Logs" titleZh={t.auditLogs} table="dpp_audit_logs" displayFields={["action_type", "actor_name", "target_table", "new_hash"]} fields={[{ name: "actor_name", label: "Actor Name", labelZh: "操作人" }, { name: "actor_role", label: "Actor Role", labelZh: "操作角色" }, { name: "action_type", label: "Action Type", labelZh: "操作类型", required: true }, { name: "target_table", label: "Target Table", labelZh: "目标表" }, { name: "target_id", label: "Target ID", labelZh: "目标记录 ID" }, { name: "previous_hash", label: "Previous Hash", labelZh: "前 Hash" }, { name: "new_hash", label: "New Hash", labelZh: "新 Hash" }, { name: "ip_context", label: "IP / Context", labelZh: "IP / 上下文" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
+      <ProductRelatedManager productId={productId} title="Blockchain Anchors" titleZh={t.blockchainAnchors} table="dpp_blockchain_anchors" displayFields={["version", "chain_name", "anchor_status", "transaction_hash"]} preparePayload={prepareBlockchainPayload} fields={[{ name: "version", label: "DPP Version", labelZh: "DPP 版本" }, { name: "anchored_hash", label: "Anchored Hash", labelZh: "锚定 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "chain_name", label: "Chain Name", labelZh: "区块链名称" }, { name: "chain_id", label: "Chain ID", labelZh: "链 ID" }, { name: "network", label: "Network", labelZh: "网络" }, { name: "contract_address", label: "Contract Address", labelZh: "合约地址" }, { name: "transaction_hash", label: "Transaction Hash", labelZh: "交易 Hash" }, { name: "block_number", label: "Block Number", labelZh: "区块高度" }, { name: "anchor_status", label: "Anchor Status", labelZh: "锚定状态" }, { name: "anchored_at", label: "Anchored At", labelZh: "锚定时间", type: "datetime-local" }, { name: "explorer_url", label: "Explorer URL", labelZh: "区块浏览器 URL", type: "url" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
     </div>
   );
 }
@@ -682,6 +1026,16 @@ function ProductVersionHistory({ productId, refreshKey, title }: { productId: st
         ))}
         {!rows.length && <p className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500">{emptyText}</p>}
       </div>
+    </section>
+  );
+}
+
+function SectionHeading({ title, description }: { title: string; description: string }) {
+  return (
+    <section className="rounded-[2rem] border border-slate-200 bg-slate-950 p-6 text-white shadow-sm">
+      <p className="text-xs font-black uppercase text-brand-200">DPP Backoffice Layer</p>
+      <h2 className="mt-2 text-2xl font-black">{title}</h2>
+      <p className="mt-2 max-w-3xl text-sm font-semibold leading-6 text-slate-300">{description}</p>
     </section>
   );
 }

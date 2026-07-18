@@ -55,10 +55,11 @@ export function ProductManager() {
         creating: "创建中...",
         list: "产品列表",
         noSku: "无 SKU",
-        edit: "编辑",
-        simple: "简易版 DPP",
-        detail: "详细版 DPP",
-        del: "删除",
+	        edit: "编辑",
+	        simple: "消费者版 DPP",
+	        detail: "专业版 DPP",
+	        audit: "审计版 DPP",
+	        del: "删除",
         confirm: "确定删除这个产品吗？",
         empty: "暂无产品。",
         created: "产品草稿已创建。",
@@ -86,10 +87,11 @@ export function ProductManager() {
         creating: "Creating...",
         list: "Products",
         noSku: "No SKU",
-        edit: "Edit",
-        simple: "Simple DPP",
-        detail: "Detailed DPP",
-        del: "Delete",
+	        edit: "Edit",
+	        simple: "Consumer DPP",
+	        detail: "Professional DPP",
+	        audit: "Audit DPP",
+	        del: "Delete",
         confirm: "Delete this product?",
         empty: "No products yet.",
         created: "Product draft created.",
@@ -291,10 +293,11 @@ export function ProductManager() {
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Link className="btn-secondary py-2" href={`/dashboard/products/${p.id}`}>{t.edit}</Link>
-                    {dppPath && <Link className="btn-secondary py-2" href={`/p/${dppPath}?view=simple&lang=${locale}`} target="_blank">{t.simple}</Link>}
-                    {dppPath && <Link className="btn-primary py-2" href={`/p/${dppPath}?view=detail&lang=${locale}`} target="_blank">{t.detail}</Link>}
-                    <button onClick={() => remove(p.id)} className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700" type="button">{t.del}</button>
+	                    <Link className="btn-secondary py-2" href={`/dashboard/products/${p.id}`}>{t.edit}</Link>
+	                    {dppPath && <Link className="btn-secondary py-2" href={`/p/${dppPath}?view=consumer&lang=${locale}&preview=1`} target="_blank">{t.simple}</Link>}
+	                    {dppPath && <Link className="btn-primary py-2" href={`/p/${dppPath}?view=professional&lang=${locale}&preview=1`} target="_blank">{t.detail}</Link>}
+	                    {dppPath && <Link className="btn-secondary py-2" href={`/p/${dppPath}?view=audit&lang=${locale}&preview=1`} target="_blank">{t.audit}</Link>}
+	                    <button onClick={() => remove(p.id)} className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700" type="button">{t.del}</button>
                   </div>
                 </div>
               );

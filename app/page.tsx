@@ -73,7 +73,7 @@ export default function Home() {
           showroomTitle: "DPP 用例展厅",
           showroomSubtitle: "不是概念介绍，而是可以直接扫码、查看、下载的产品护照示例。",
           case1: "有机棉 T 恤",
-          case1Desc: "展示材料来源、GTIN/SGTIN、证书、REACH/RSL、碳足迹和 End of Life 指南。",
+          case1Desc: "展示材料来源、GTIN/SGTIN、证书、REACH/RSL、碳足迹和生命周期结束指南。",
           case2: "无线蓝牙耳机",
           case2Desc: "展示 CE、RoHS、REACH、WEEE、电池 MSDS、性能指标和电子废弃物回收路径。",
           case3: "WPC PLANK",
