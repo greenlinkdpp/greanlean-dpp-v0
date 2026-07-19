@@ -61,7 +61,7 @@ const earbudsProduct: ProductPayload = {
 
 const flooringProduct: ProductPayload = {
   name: "WPC PLANK",
-  name_zh: "WPC PLANK",
+  name_zh: "WPC 户外地板",
   sku: "MS140K25B",
   brand: "HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD",
   category: "WPC DECKING",
@@ -74,15 +74,15 @@ const flooringProduct: ProductPayload = {
   description:
     "Outdoor composite decking board. Model MS140K25B, 140x25mm, 2.55kg/m, SANDING finish, colours WOOD / COFFEE / DARK GREY / LIGHT GREY, made in China by HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD.",
   description_zh:
-    "户外木塑复合 decking 板材。型号 MS140K25B，规格 140x25mm，重量 2.55kg/m，表面工艺 SANDING，颜色 WOOD / COFFEE / DARK GREY / LIGHT GREY，中国制造，制造商 HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD。",
+    "户外木塑复合板材。型号 MS140K25B，规格 140x25mm，重量 2.55kg/m，表面工艺 SANDING，颜色 WOOD / COFFEE / DARK GREY / LIGHT GREY，中国制造，制造商 HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD。",
   status: "published",
   dpp_id: "DPP-WPC-MS140K25B",
   public_slug: "demo-wpc-flooring",
   main_image: "/images/demo-wpc-flooring.svg",
   care_instructions: "Outdoor decking use. Clean with neutral detergent and water; avoid strong solvents and prolonged high-temperature exposure.",
-  care_instructions_zh: "用于户外 decking。建议使用中性清洁剂和清水清洁，避免强溶剂和长期高温暴晒。",
+  care_instructions_zh: "用于户外地板铺装。建议使用中性清洁剂和清水清洁，避免强溶剂和长期高温暴晒。",
   repair_instructions: "Replaceable decking panels. Use screw-and-clip disassembly and keep batch W2605-05 spare planks for colour matching.",
-  repair_instructions_zh: "可更换单片 decking 板。建议采用螺钉与卡扣拆装方式，并保留 W2605-05 批次备用板以保证颜色一致。",
+  repair_instructions_zh: "可更换单片板材。建议采用螺钉与卡扣拆装方式，并保留 W2605-05 批次备用板以保证颜色一致。",
   end_of_life_instructions:
     "Mechanical recycling is preferred. Avoid landfill, remove metal fasteners before recycling, and reprocess usable WPC material into composite products where facilities exist.",
   end_of_life_instructions_zh: "优先机械回收。避免填埋，回收前移除金属紧固件，具备条件时将可用 WPC 材料再加工为复合材料产品。",
@@ -391,7 +391,7 @@ export function DemoDataSyncButton() {
         { product_id: earbudsId, component_name: "Wireless earbud main unit", component_name_zh: "无线耳机主体", component_type: "Electronic assembly", component_type_zh: "电子组件", quantity: 2, unit: "pcs", position: "Left / Right earbuds" },
         { product_id: earbudsId, component_name: "Charging case", component_name_zh: "充电盒", component_type: "Battery-containing accessory", component_type_zh: "含电池配件", quantity: 1, unit: "pc", position: "Packaging set" },
         { product_id: earbudsId, component_name: "USB-C charging cable", component_name_zh: "USB-C 充电线", component_type: "Accessory", component_type_zh: "配件", quantity: 1, unit: "pc", position: "Packaging set" },
-        { product_id: flooringId, component_name: "WPC PLANK MS140K25B", component_name_zh: "WPC PLANK MS140K25B", component_type: "Outdoor composite decking board", component_type_zh: "户外木塑复合 decking 板", quantity: 1, unit: "2.55kg/m", position: "140x25mm; SANDING; WOOD / COFFEE / DARK GREY / LIGHT GREY" },
+        { product_id: flooringId, component_name: "WPC PLANK MS140K25B", component_name_zh: "WPC 户外地板 MS140K25B", component_type: "Outdoor composite decking board", component_type_zh: "户外木塑复合板", quantity: 1, unit: "2.55kg/m", position: "140x25mm; SANDING; WOOD / COFFEE / DARK GREY / LIGHT GREY" },
         { product_id: flooringId, component_name: "Pallet", component_name_zh: "托盘", component_type: "Packaging", component_type_zh: "包装", quantity: 1, unit: "set", position: "Supplier: 泾县兴林木业有限公司" },
         { product_id: flooringId, component_name: "Stainless Steel Clip And Screw with Narrow Gap (304)", component_name_zh: "304 不锈钢窄缝卡扣和螺丝", component_type: "Installation accessory", component_type_zh: "安装配件", quantity: 1, unit: "set", position: "Supplier: 南皮县珺成科技有限公司" },
         { product_id: furnitureId, component_name: "Steel base and frame", component_name_zh: "钢制底座与框架", component_type: "Structural part", component_type_zh: "结构件", quantity: 1, unit: "set", position: "Base / back frame" },
@@ -438,7 +438,7 @@ export function DemoDataSyncButton() {
 
       await insertRows(supabase, "product_consumer_transparency", [
         { product_id: earbudsId, brand_story: "This demo shows how consumer electronics export data can become a public digital product passport.", brand_story_zh: "该示例展示如何将消费电子出口数据转化为公开数字产品护照。", sustainability_story: "Recycled plastic content, RoHS-screened components and WEEE instructions are disclosed for buyers and consumers.", sustainability_story_zh: "披露再生塑料成分、RoHS 筛查组件和 WEEE 指引，面向采购商和消费者透明展示。", consumer_notice: "Battery performance varies by use. Scan again before repair, resale or recycling for the latest product information.", consumer_notice_zh: "电池表现会随使用方式变化。维修、转售或回收前可再次扫码查看最新产品信息。", packaging_info: "FSC paper box with reduced plastic insert." },
-        { product_id: flooringId, brand_story: "WPC PLANK MS140K25B is an outdoor composite decking board made in China by HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD.", brand_story_zh: "WPC PLANK MS140K25B 是由 HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD 在中国制造的户外木塑 composite decking 板材。", sustainability_story: "Material composition is 60% wood fiber, 30% recycled HDPE, 7% stabilizer additives and 3% brown masterbatch, with mechanical recycling and FSC/REACH/VOC/ISO9001 evidence reserved.", sustainability_story_zh: "材料组成为 60% 木纤维、30% 再生 HDPE、7% 稳定剂助剂和 3% 棕色母粒，并预留机械回收及 FSC/REACH/VOC/ISO9001 证据。", consumer_notice: "Available colours: WOOD / COFFEE / DARK GREY / LIGHT GREY. Batch W2605-05 was produced on 2026-05-20.", consumer_notice_zh: "可选颜色：WOOD / COFFEE / DARK GREY / LIGHT GREY。W2605-05 批次生产日期为 2026-05-20。", packaging_info: "Recyclable pallet supplied by 泾县兴林木业有限公司; remove pallet and metal accessories before WPC recycling." },
+        { product_id: flooringId, brand_story: "WPC PLANK MS140K25B is an outdoor composite decking board made in China by HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD.", brand_story_zh: "WPC 户外地板 MS140K25B 是由 HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD 在中国制造的户外木塑复合板材。", sustainability_story: "Material composition is 60% wood fiber, 30% recycled HDPE, 7% stabilizer additives and 3% brown masterbatch, with mechanical recycling and FSC/REACH/VOC/ISO9001 evidence reserved.", sustainability_story_zh: "材料组成为 60% 木纤维、30% 再生 HDPE、7% 稳定剂助剂和 3% 棕色母粒，并预留机械回收及 FSC/REACH/VOC/ISO9001 证据。", consumer_notice: "Available colours: WOOD / COFFEE / DARK GREY / LIGHT GREY. Batch W2605-05 was produced on 2026-05-20.", consumer_notice_zh: "可选颜色：WOOD / COFFEE / DARK GREY / LIGHT GREY。W2605-05 批次生产日期为 2026-05-20。", packaging_info: "Recyclable pallet supplied by 泾县兴林木业有限公司; remove pallet and metal accessories before WPC recycling." },
         { product_id: furnitureId, brand_story: "This demo shows how furniture data can be organized into a repairable and reusable product passport.", brand_story_zh: "该示例展示如何将家具数据组织成支持维修和再使用的数字产品护照。", sustainability_story: "Recycled metal and plastic content, replaceable modules and disassembly instructions are disclosed.", sustainability_story_zh: "披露再生金属和塑料含量、可更换模块和拆解说明。", consumer_notice: "Check fasteners periodically. Scan before resale, repair or bulky-waste collection for the latest product information.", consumer_notice_zh: "建议定期检查紧固件。转售、维修或大件回收前可扫码查看最新产品信息。", packaging_info: "Flat-pack cardboard carton with reduced EPS foam and reusable parts bag." },
       ]);
 
@@ -468,7 +468,7 @@ export function DemoDataSyncButton() {
         { product_id: furnitureId, data_source: "Supplier declarations, recycled-content statements, durability reports, production batch records, packaging data and logistics documents.", data_owner: "greanlean admin", audit_status: "Demo review completed\nVerifier: Demo Furniture Testing Institute\nCertificate: DPP-FURN-2026-021\nValid until: 2027-06-03\nLast updated: 2026-06-06", data_quality_score: 89 },
       ]);
 
-      setMessage(isZh ? "Demo 数据已同步。请刷新产品列表查看耳机、WPC 地板和办公椅。" : "Demo data synced. Refresh the product list to view earbuds, WPC flooring and office chair.");
+      setMessage(isZh ? "示例数据已同步。请刷新产品列表查看耳机、WPC 地板和办公椅。" : "Demo data synced. Refresh the product list to view earbuds, WPC flooring and office chair.");
     } catch (error) {
       const rawMessage = error instanceof Error ? error.message : typeof error === "object" && error && "message" in error ? String(error.message) : String(error);
       setMessage(
@@ -487,7 +487,7 @@ export function DemoDataSyncButton() {
     <div className="rounded-lg border border-brand-200 bg-brand-50 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="font-black text-slate-950">{isZh ? "Demo 数据同步" : "Demo data sync"}</p>
+          <p className="font-black text-slate-950">{isZh ? "示例数据同步" : "Demo data sync"}</p>
           <p className="mt-1 text-sm leading-6 text-slate-600">
             {isZh
               ? "补齐 MS140K25B WPC 地板，并把无线耳机和办公椅写入产品中心。"
@@ -495,7 +495,7 @@ export function DemoDataSyncButton() {
           </p>
         </div>
         <button className="btn-primary" disabled={syncing} onClick={syncDemoData} type="button">
-          {syncing ? (isZh ? "同步中..." : "Syncing...") : isZh ? "同步 Demo 数据" : "Sync Demo Data"}
+          {syncing ? (isZh ? "同步中..." : "Syncing...") : isZh ? "同步示例数据" : "Sync Demo Data"}
         </button>
       </div>
       {message && <p className="mt-3 text-sm font-semibold text-slate-700">{message}</p>}

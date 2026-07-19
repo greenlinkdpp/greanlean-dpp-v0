@@ -27,7 +27,7 @@ export default function DashboardPage() {
           esg: "ESG、环境与循环性",
           esgDesc: "补充碳足迹、水、能源、废弃物、再生成分、维修性、回收性、回收计划和生命周期结束方案。",
           certificates: "证书与符合性声明",
-          certificatesDesc: "维护证书、检测报告、EU Declaration of Conformity、签发机构、有效期、链接和验证状态。",
+          certificatesDesc: "维护证书、检测报告、欧盟符合性声明、签发机构、有效期、链接和验证状态。",
           consumer: "消费者透明化",
           consumerDesc: "补充品牌故事、可持续说明、护理、维修、包装、回收指引和消费者提示。",
           governance: "数据来源与验证治理",

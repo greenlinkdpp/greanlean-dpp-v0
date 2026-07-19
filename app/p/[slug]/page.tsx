@@ -756,7 +756,7 @@ function withFlooringDppData(data?: any) {
     ...(data?.product || {}),
     id: productId,
     name: data?.product?.name || "WPC PLANK",
-    name_zh: data?.product?.name_zh || "WPC PLANK",
+    name_zh: data?.product?.name_zh || "WPC 户外地板",
     sku: data?.product?.sku || "MS140K25B",
     brand: data?.product?.brand || "HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD",
     category: data?.product?.category || "WPC DECKING",
@@ -770,7 +770,7 @@ function withFlooringDppData(data?: any) {
       "Outdoor composite decking board. Model MS140K25B, 140x25mm, 2.55kg/m, SANDING finish, colours WOOD / COFFEE / DARK GREY / LIGHT GREY, made in China by HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD.",
     description_zh:
       data?.product?.description_zh ||
-      "户外木塑复合 decking 板材。型号 MS140K25B，规格 140x25mm，重量 2.55kg/m，表面工艺 SANDING，颜色 WOOD / COFFEE / DARK GREY / LIGHT GREY，中国制造，制造商 HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD。",
+      "户外木塑复合板材。型号 MS140K25B，规格 140x25mm，重量 2.55kg/m，表面工艺 SANDING，颜色 WOOD / COFFEE / DARK GREY / LIGHT GREY，中国制造，制造商 HUANGSHAN MEISEN NEW MATERIAL TECHNOLOGY CO., LTD。",
     care_instructions:
       data?.product?.care_instructions ||
       "Clean with neutral detergent and damp mop. Avoid long-term standing water, strong solvents and direct high-temperature exposure.",
@@ -991,9 +991,9 @@ function withFlooringDppData(data?: any) {
             id: "demo-floor-bom-1",
             product_id: productId,
             component_name: "WPC PLANK MS140K25B",
-            component_name_zh: "WPC PLANK MS140K25B",
+            component_name_zh: "WPC 户外地板 MS140K25B",
             component_type: "Outdoor composite decking board",
-            component_type_zh: "户外木塑复合 decking 板",
+            component_type_zh: "户外木塑复合板",
             quantity: 1,
             unit: "2.55kg/m",
             position: "140x25mm; SANDING; WOOD / COFFEE / DARK GREY / LIGHT GREY",

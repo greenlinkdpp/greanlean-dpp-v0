@@ -206,26 +206,128 @@ function sourceDisplayConfig(sectorCode?: string | null) {
 }
 
 const COMMON_ZH_VALUE: Record<string, string> = {
+  Accessories: "配件",
+  "Active battery material": "电池活性材料",
+  "Aluminium enclosure and connector set": "铝合金外壳与连接器组件",
+  "Authorised battery recycling stream": "授权电池回收流",
+  "Authorised battery collection, retailer take-back and e-bike service network.": "授权电池收集点、零售商回收渠道和电动自行车服务网络。",
+  "Auxiliary material": "辅助材料",
+  "Battery active materials": "电池活性材料",
+  "Battery and WEEE": "电池与回收",
+  "Battery category": "电池类别",
+  "Battery chemistry": "电池化学体系",
+  "Battery management system PCB": "电池管理系统 PCB",
+  "Battery material": "电池材料",
+  "Battery pack": "电池包",
+  "Battery passport evidence checklist": "电池护照证据清单",
+  "Battery recycling stream": "电池回收流",
+  "Battery safety": "电池安全",
+  "Battery safety / transport": "电池安全 / 运输",
+  "Battery safety and transport evidence placeholder": "电池安全与运输证据占位文件",
+  "BMS board with temperature protection": "带温度保护的 BMS 板",
+  "Cell sourcing": "电芯采购",
+  "Care / DPP label": "护理 / DPP 标签",
+  "Cell module": "电芯模组",
+  "Chemical safety": "化学安全",
+  "Compliance evidence": "合规证据",
+  "Conformity": "符合性声明",
+  "Data governance": "数据治理",
+  "DPP data completion note": "DPP 数据补齐说明",
+  "Digital": "数字记录",
+  "Electronic assembly": "电子组件",
+  Electronics: "电子组件",
+  Enclosure: "外壳",
+  "EU distribution": "欧盟分销",
+  "EU battery declaration of conformity - pending upload": "欧盟电池符合性声明 - 待上传",
+  "Evidence checklist": "证据清单",
+  "Evidence placeholder": "证据占位文件",
   Fabric: "面料",
+  "Front zipper and puller": "前中拉链和拉头",
+  "Garment assembly": "成衣组件",
+  "GRS recycled-content certificate - pending upload": "GRS 再生成分证书 - 待上传",
+  "IEC 62133 battery safety certificate - pending upload": "IEC 62133 电池安全证书 - 待上传",
+  "Inside pack": "电池包内部",
+  "Internal transfer": "内部转运",
+  "Lockable aluminium housing": "可锁止铝合金外壳",
+  "LMT Battery Pack": "轻型交通工具电池包",
+  "Main product": "产品主体",
+  "Manufacturing": "制造",
+  "Material compliance certificate - pending upload": "材料合规证书 - 待上传",
+  "Material sourcing": "材料采购",
+  "Metal recycling stream": "金属回收流",
+  "NMC lithium-ion cell modules": "NMC 锂离子电芯模组",
+  "Outer housing": "外部壳体",
+  Other: "其他",
+  "Outdoor Jacket": "户外夹克",
   Packaging: "包装",
+  "Pack / module position": "电池包 / 模组位置",
+  "Pack assembly": "电池包装配",
+  "Pending-GRS": "GRS 待补充",
+  Polymer: "聚合物",
   "Outer shell fabric": "外层面料",
   "Product identification label": "产品识别标签",
   "Protective packaging bag": "保护包装袋",
+  "REACH / RSL supplier declaration - pending upload": "REACH / RSL 供应商声明 - 待上传",
+  "REACH / RSL test report - pending upload": "REACH / RSL 检测报告 - 待上传",
+  "Recycled polyester": "再生涤纶",
+  "Recycled polyester softshell fabric": "再生涤纶软壳面料",
+  "Restricted substances": "受限物质",
+  "Safety evidence placeholder": "安全证据占位文件",
+  "Sea freight + truck": "海运 + 卡车",
+  "Sea freight + rail": "海运 + 铁路",
+  "Shell fabric": "主面料",
+  "Softshell jacket body": "软壳夹克主体",
+  "Supplier declaration pending": "供应商声明待上传",
+  "Supplier material declaration pending": "供应商材料声明待上传",
+  "Supplier to provide": "供应商待提供",
+  "Trim": "辅料",
+  Truck: "卡车运输",
+  "Textile & Apparel": "纺织与服装",
+  "UN38.3 transport test summary - pending upload": "UN38.3 运输测试摘要 - 待上传",
+  "WEEE electronics stream after dismantling": "拆解后进入 WEEE 电子元件回收流",
+  "WPC PLANK": "WPC 户外地板",
+  "WPC PLANK MS140K25B": "WPC 户外地板 MS140K25B",
   "Core tube for fabric rolling": "卷布纸管",
   "Chemical compliance": "化学合规",
   "Material chemical declaration": "材料化学声明",
   "Test Report": "测试报告",
   Certificate: "证书",
+  China: "中国",
+  Germany: "德国",
+  Netherlands: "荷兰",
+  Shenzhen: "深圳",
+  Dongguan: "东莞",
+  Hamburg: "汉堡",
+  Rotterdam: "鹿特丹",
+  Suzhou: "苏州",
+  Ningbo: "宁波",
+  Shaoxing: "绍兴",
+  Huangshan: "黄山",
+  Foshan: "佛山",
+  Anji: "安吉",
   Valid: "有效",
   verified: "已验证",
   pending: "待验证",
   active: "已生效",
   draft: "草稿",
+  item: "单品",
+  model: "型号",
+  professional: "专业客户可见",
+  public: "公开",
+  "zh/en": "中文 / 英文",
 };
 
 function localizeCommonValue(value: string, locale: Locale) {
   if (locale !== "zh") return value;
-  return COMMON_ZH_VALUE[value] || value;
+  const trimmed = value.trim();
+  if (COMMON_ZH_VALUE[trimmed]) return COMMON_ZH_VALUE[trimmed];
+  if (/^PENDING[-_]/i.test(trimmed)) return trimmed.replace(/^PENDING[-_]/i, "待补充-");
+  if (/pending upload/i.test(trimmed)) return trimmed.replace(/pending upload/gi, "待上传");
+  if (/supplier to provide/i.test(trimmed)) return "供应商待提供";
+  if (/laboratory to provide/i.test(trimmed)) return "检测机构待提供";
+  if (/certification body to provide/i.test(trimmed)) return "认证机构待提供";
+  if (/economic operator to provide/i.test(trimmed)) return "经济运营者待提供";
+  return trimmed;
 }
 
 function fieldLabel(field: DisplayField, locale: Locale) {
@@ -374,11 +476,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           productIdentity: "产品基本信息",
           materialSource: "材料组成与来源",
           materialFormula: "材料配方",
-          materialGroupIntro: "按材料类型归类，并按占比从高到低展示。",
-          componentSupplement: "组件、包装与辅料",
-          componentSupplementIntro: "按组件类型归类，用于补充包装、配件和可更换组件，不计入主材料配方占比。",
-          groupCount: "项",
-          openGroup: "展开查看",
+	          materialGroupIntro: "按材料类型归类，并按占比从高到低展示。",
+	          componentSupplement: "组件、包装与辅料",
+	          componentSupplementIntro: "按组件类型归类，用于补充包装、配件和可更换组件，不计入主材料配方占比。",
+	          groupCount: "项",
+	          openGroup: "展开查看",
+	          closeGroup: "收起内容",
           overviewStatusTitle: "护照数据状态",
           overviewStatus1: "唯一身份已绑定",
           overviewStatus1Desc: "DPP ID、SKU、批次与二维码用于稳定访问。",
@@ -639,10 +742,11 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           materialSource: "Materials and sources",
           materialFormula: "Material formula",
           componentSupplement: "Components, packaging and accessories",
-          materialGroupIntro: "Grouped by material type and sorted by share from high to low.",
-          componentSupplementIntro: "Grouped by component type; this list supplements packaging, accessories and replaceable components and is not counted in the primary material formula.",
-          groupCount: "items",
-          openGroup: "Open",
+	          materialGroupIntro: "Grouped by material type and sorted by share from high to low.",
+	          componentSupplementIntro: "Grouped by component type; this list supplements packaging, accessories and replaceable components and is not counted in the primary material formula.",
+	          groupCount: "items",
+	          openGroup: "Open",
+	          closeGroup: "Collapse",
           overviewStatusTitle: "Passport data status",
           overviewStatus1: "Identity linked",
           overviewStatus1Desc: "DPP ID, SKU, batch and QR code provide stable access.",
@@ -1177,7 +1281,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           [
             t.testBasis,
             locale === "zh"
-              ? "示例性能声明，面向 WPC PLANK / MS140K25B 户外 decking DPP 技术文件展示；实际产品应以 VOC、尺寸稳定性、安装和质保文件为准。"
+              ? "示例性能声明，面向 WPC 户外地板 MS140K25B 的 DPP 技术文件展示；实际产品应以 VOC、尺寸稳定性、安装和质保文件为准。"
               : "Demo performance declaration for WPC PLANK / MS140K25B outdoor decking DPP display; real products should reference VOC, dimensional-stability, installation and warranty documents.",
           ],
         ]
@@ -1642,7 +1746,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       : "Do not discard earbuds, charging case or battery-containing parts with household waste; use WEEE or battery collection streams."
     : isFlooring
       ? locale === "zh"
-        ? "请勿将 WPC PLANK 混入普通生活垃圾或直接填埋；拆除后应进入建材回收或复合材料再加工渠道。"
+        ? "请勿将 WPC 户外地板混入普通生活垃圾或直接填埋；拆除后应进入建材回收或复合材料再加工渠道。"
         : "Do not mix WPC PLANK with ordinary household waste or landfill directly; use building-material recovery or composite-material reprocessing channels."
       : isFurniture
         ? locale === "zh"
@@ -2029,12 +2133,13 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                     [t.eventType, event.event_type],
                     [t.date, formatDate(event.event_date, locale)],
                     [t.facility, pick(event, locale, "facility_name", "facility_name_zh")],
-                    [t.location, compact([event.city, event.country])],
+                    [t.location, compact([valueOrDash(event.city, locale), valueOrDash(event.country, locale)])],
                     [t.transport, event.transport_method],
                     [t.status, event.verification_status],
                     [t.notes, pick(event, locale, "notes", "notes_zh")],
                   ]}
                   locale={locale}
+                  t={t}
                 />
               ))}
             </div>
@@ -2881,7 +2986,8 @@ function GroupedMaterialList({
     <div className="space-y-3">
       {intro && <p className="text-sm font-semibold leading-6 text-slate-600">{intro}</p>}
       {groups.map((group, index) => (
-        <details key={group.label} open={index === 0} className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+        <DisclosureDetails key={group.label} defaultOpen={index === 0} className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+          {(open) => <>
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 bg-slate-50 px-4 py-3 transition hover:bg-emerald-50">
             <div className="flex items-center gap-3">
               <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
@@ -2892,14 +2998,15 @@ function GroupedMaterialList({
                 <p className="mt-0.5 text-xs font-bold text-slate-500">{group.items.length} {t.groupCount}</p>
               </div>
             </div>
-            <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-black text-slate-600">{t.openGroup}</span>
+            <DisclosureAction open={open} t={t} />
           </summary>
           <div className="grid gap-4 p-4 lg:grid-cols-2">
             {group.items.map((material: any) => (
               <MaterialCard key={material.id} item={material} locale={locale} fields={fields} />
             ))}
           </div>
-        </details>
+          </>}
+        </DisclosureDetails>
       ))}
     </div>
   );
@@ -2919,7 +3026,8 @@ function GroupedComponentSupplementList({
   return (
     <div className="space-y-3">
       {groups.map((group, index) => (
-        <details key={group.label} open={index === 0} className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+        <DisclosureDetails key={group.label} defaultOpen={index === 0} className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+          {(open) => <>
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 bg-white px-4 py-3 transition hover:bg-emerald-50">
             <div className="flex items-center gap-3">
               <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-50 text-brand-700 ring-1 ring-brand-100">
@@ -2930,14 +3038,40 @@ function GroupedComponentSupplementList({
                 <p className="mt-0.5 text-xs font-bold text-slate-500">{group.items.length} {t.groupCount}</p>
               </div>
             </div>
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-black text-slate-600">{t.openGroup}</span>
+            <DisclosureAction open={open} t={t} />
           </summary>
           <div className="p-4">
             <ComponentSupplementTable rows={group.items} locale={locale} t={t} fields={fields} />
           </div>
-        </details>
+          </>}
+        </DisclosureDetails>
       ))}
     </div>
+  );
+}
+
+function DisclosureDetails({
+  defaultOpen,
+  className,
+  children,
+}: {
+  defaultOpen?: boolean;
+  className?: string;
+  children: (open: boolean) => ReactNode;
+}) {
+  const [open, setOpen] = useState(Boolean(defaultOpen));
+  return (
+    <details open={open} onToggle={(event) => setOpen(event.currentTarget.open)} className={className}>
+      {children(open)}
+    </details>
+  );
+}
+
+function DisclosureAction({ open, t }: { open: boolean; t: any }) {
+  return (
+    <span className={open ? "rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700" : "rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-black text-slate-600"}>
+      {open ? t.closeGroup : t.openGroup}
+    </span>
   );
 }
 
@@ -3086,23 +3220,30 @@ function TimelineItem({
   title,
   items,
   locale,
+  t,
 }: {
   title: string;
   items: Array<[string, any]>;
   locale: Locale;
+  t: any;
 }) {
   return (
-    <details className="rounded-lg border border-slate-200 bg-slate-50 p-5 shadow-sm transition duration-300 open:bg-white hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
-      <summary className="flex cursor-pointer items-center gap-4">
-        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-slate-950 text-white shadow-sm">
-          <Icon name="route" className="h-6 w-6" />
-        </span>
-        <span className="font-black text-slate-950">{title}</span>
-      </summary>
-      <div className="mt-4 pl-0 sm:pl-16">
-        <InfoGrid items={items} locale={locale} />
-      </div>
-    </details>
+    <DisclosureDetails className="rounded-lg border border-slate-200 bg-slate-50 p-5 shadow-sm transition duration-300 open:bg-white hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg">
+      {(open) => <>
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
+          <span className="flex min-w-0 items-center gap-4">
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-slate-950 text-white shadow-sm">
+              <Icon name="route" className="h-6 w-6" />
+            </span>
+            <span className="min-w-0 font-black text-slate-950">{title}</span>
+          </span>
+          <DisclosureAction open={open} t={t} />
+        </summary>
+        <div className="mt-4 pl-0 sm:pl-16">
+          <InfoGrid items={items} locale={locale} />
+        </div>
+      </>}
+    </DisclosureDetails>
   );
 }
 
