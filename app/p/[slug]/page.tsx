@@ -43,6 +43,21 @@ const demoByIdentifier: Record<string, "tshirt" | "electronics" | "flooring" | "
   "DPP-FURN-DEMO-001": "furniture",
 };
 
+const LMT_EBIKE_BATTERY_IMAGE = "/images/lmt-ebike-battery-48v15ah.png";
+
+function normalizeProductImage(product: any) {
+  if (!product) return product;
+  const isLmtEbikeBattery =
+    product.dpp_id === "DPP-LMT-BAT-48V15AH" ||
+    product.sku === "GL-LMT-BAT-48V15AH" ||
+    /48V 15Ah/i.test(product.name || "") ||
+    /48V 15Ah/.test(product.name_zh || "");
+  if (isLmtEbikeBattery && (!product.main_image || product.main_image === "/images/demo-wireless-earbuds.png")) {
+    return { ...product, main_image: LMT_EBIKE_BATTERY_IMAGE };
+  }
+  return product;
+}
+
 async function getData(identifier: string, includeDraft = false) {
   const supabase = createSupabaseClient();
   let productByDppQuery = supabase.from("products").select("*").eq("dpp_id", identifier);
@@ -91,7 +106,7 @@ async function getData(identifier: string, includeDraft = false) {
     safeSelect(supabase, "dpp_blockchain_anchors", product.id),
     safeSelect(supabase, "product_sector_field_values", product.id),
   ]);
-  const data = { product, materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance, registrySubmissions, registrationProofs, evidenceLinks, blockchainAnchors, sectorFieldValues };
+  const data = { product: normalizeProductImage(product), materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance, registrySubmissions, registrationProofs, evidenceLinks, blockchainAnchors, sectorFieldValues };
 
   if (product.public_slug === "demo-organic-cotton-tshirt" || product.dpp_id === "DPP-DEMO-001") {
     return withDemoDppData(data);
