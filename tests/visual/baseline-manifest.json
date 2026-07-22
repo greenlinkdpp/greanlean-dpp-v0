@@ -1,0 +1,26 @@
+{
+  "version": "1.0.0",
+  "note": "Routes and viewports to capture in preview before production. Phase 3 changes no visual styles.",
+  "cases": [
+    {
+      "name": "textile-consumer-zh-desktop",
+      "path": "/p/DPP-DEMO-001?lang=zh&view=consumer",
+      "viewport": { "width": 1440, "height": 1000 }
+    },
+    {
+      "name": "textile-consumer-zh-mobile",
+      "path": "/p/DPP-DEMO-001?lang=zh&view=consumer",
+      "viewport": { "width": 390, "height": 844 }
+    },
+    {
+      "name": "electronics-professional-en-desktop",
+      "path": "/p/DPP-AUDIO-DEMO-001?lang=en&view=detail",
+      "viewport": { "width": 1440, "height": 1000 }
+    },
+    {
+      "name": "product-center-zh-desktop",
+      "path": "/dashboard/products?lang=zh",
+      "viewport": { "width": 1440, "height": 1000 }
+    }
+  ]
+}

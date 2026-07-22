@@ -8,6 +8,8 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/components/LanguageProvider";
 import { buildGs1DigitalLink } from "@/lib/dppCompliance";
+import { BatteryPublicProjection } from "@/components/battery/BatteryPublicProjection";
+import { publicFeatureFlags } from "@/lib/featureFlags";
 
 type Locale = "en" | "zh";
 type Props = { data: any; dppUrl: string };
@@ -1951,6 +1953,14 @@ export function PublicDppClient({ data, dppUrl }: Props) {
             </a>
           ))}
         </nav>
+
+        {isBattery && publicFeatureFlags.batteryDppV2 && (
+          <BatteryPublicProjection
+            identifier={String(dppProductRef)}
+            audience={viewMode === "consumer" ? "public" : viewMode === "audit" ? "authority" : "professional"}
+            locale={locale}
+          />
+        )}
 
         {viewMode === "consumer" && (
           <div className="space-y-6">

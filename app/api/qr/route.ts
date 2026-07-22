@@ -1,8 +1,8 @@
-import { NextRequest } from "next/server";
 import QRCode from "qrcode";
+import { withApiRoute } from "@/lib/server/apiRoute";
 
-export async function GET(request: NextRequest) {
-  const url = request.nextUrl.searchParams.get("url") || "https://greanlean.com";
+export const GET = withApiRoute(async (request) => {
+  const url = new URL(request.url).searchParams.get("url") || "https://greanlean.com";
   const buffer = await QRCode.toBuffer(url, {
     type: "png",
     width: 320,
@@ -17,4 +17,4 @@ export async function GET(request: NextRequest) {
       "Cache-Control": "public, max-age=86400",
     },
   });
-}
+});

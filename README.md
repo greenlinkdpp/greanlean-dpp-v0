@@ -1,120 +1,104 @@
-# greanlean DPP
+# Greanlean DPP
 
-Next.js + Supabase based Digital Product Passport demo and admin workspace for EU DPP / ESPR data preparation.
+Greanlean is a Next.js and Supabase workspace for preparing, validating,
+publishing, and presenting Digital Product Passports. The current product keeps
+five industry tracks: battery, textile, furniture, construction materials, and
+consumer electronics.
 
-## Current Pages
+The repository is being upgraded incrementally. Existing demos remain active
+while the versioned Schema Registry and future battery module are introduced
+behind feature flags.
+
+## Routes
 
 - `/` public website
-- `/login` DPP workspace login
+- `/login` workspace login
 - `/dashboard` workflow overview
 - `/dashboard/products` product center
-- `/dashboard/import` CSV / XLSX import center
+- `/dashboard/import` CSV/XLSX import center
 - `/dashboard/suppliers` supplier library
-- `/p/DPP-DEMO-001` textile DPP demo
-- `/p/DPP-AUDIO-DEMO-001` consumer electronics DPP demo
-- `/p/DPP-WPC-MS140K25B` WPC flooring DPP demo
-- `/p/DPP-FURN-DEMO-001` furniture DPP demo
+- `/p/DPP-DEMO-001` textile demo
+- `/p/DPP-AUDIO-DEMO-001` consumer electronics demo
+- `/p/DPP-WPC-MS140K25B` construction-material demo
+- `/p/DPP-FURN-DEMO-001` furniture demo
 
-Each public DPP page supports:
+Public DPP pages support `lang=zh|en` and audience views selected by the
+application. JSON/PDF export is available through `/api/dpp-export`.
 
-- `?lang=zh` or `?lang=en`
-- `?view=simple` or `?view=detail`
-- PDF / JSON export through `/api/dpp-export`
+## Local Development
 
-## Local Preview First
-
-Use local preview before pushing to production.
+Requirements: Node.js 22 or newer and npm.
 
 ```bash
-npm install
+npm ci
+cp .env.example .env.local
 npm run dev
 ```
 
-Open:
+Open `http://localhost:3000`. Environment variables and feature flags are
+documented in [environment-matrix.md](docs/engineering/environment-matrix.md).
 
-```text
-http://localhost:3000
-http://localhost:3000/dashboard
-http://localhost:3000/p/DPP-AUDIO-DEMO-001?view=detail&lang=zh
-```
-
-Run a production check before deployment:
+## Quality Checks
 
 ```bash
+npm run lint
+npm run typecheck
+npm test
+npm run test:migrations
 npm run build
 ```
 
-## Environment Variables
+With a local server running:
 
-Create `.env.local` from `.env.example`.
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```bash
+BASE_URL=http://localhost:3000 npm run test:smoke
 ```
 
-On Vercel, use:
+The dependency-free lint script checks repository hygiene; TypeScript performs
+the semantic source check. CI runs the complete non-browser suite on every push
+and pull request.
+
+## Database
+
+`supabase/schema.sql` is the legacy bootstrap snapshot for a fresh copy of the
+current demo database. Do not append new production changes to it.
+
+All new changes use paired files:
 
 ```text
-NEXT_PUBLIC_SITE_URL=https://www.greanlean.com
+supabase/migrations/NNNN_name.sql
+supabase/rollbacks/NNNN_name.down.sql
+tests/migrations/NNNN_name.test.mjs
 ```
 
-## Supabase Setup
+Read [database-migrations.md](docs/engineering/database-migrations.md) before
+applying SQL. Phase 3 migrations are additive and do not modify existing product
+or demo records.
 
-For a new database, run this first in Supabase SQL Editor:
+## Architecture And Regulation
 
-```text
-supabase/schema.sql
-```
+- [Product specification](SPEC.md)
+- [Implementation plan](PLAN.md)
+- [Target architecture](docs/architecture/target-architecture.md)
+- [Database design](docs/architecture/database-design.md)
+- [Current-system audit](docs/architecture/current-system-audit.md)
+- [Battery migration mapping](docs/regulatory/eu-battery-dpp/migration-mapping.md)
+- [Known regulatory uncertainties](docs/regulatory/eu-battery-dpp/known-uncertainties.md)
+- [Engineering documentation index](docs/engineering/README.md)
 
-To reset testing data and keep only the core textile demo:
+BatteryPass-Ready reference models are treated as versioned mapping and
+validation sources. They are not represented as final EU Registry semantics.
 
-```text
-supabase/reset_to_demo.sql
-```
-
-To add the electronics and WPC flooring demos:
-
-```text
-supabase/upsert_demo_products.sql
-```
-
-To add the office chair demo:
-
-```text
-supabase/upsert_office_chair_demo.sql
-```
-
-The SQL scripts are written to be re-runnable where possible. The public DPP pages also include demo fallback data, so demo pages can still render if a demo row is missing from Supabase.
-
-## Admin Access
-
-Create users in Supabase Authentication. The current phase uses one admin-style workspace: authenticated users can manage all products. Company-level account isolation is not implemented yet.
-
-## Import Workflow
-
-Use `/dashboard/import` to:
-
-- download the full XLSX template grouped by Sheet
-- download a single-module CSV template
-- upload CSV / TSV / XLSX files
-- validate required fields, duplicate SKUs, unknown columns, dates, numbers and URLs
-- import by SKU
-
-When importing module data, existing rows for the uploaded product/module are replaced before new rows are inserted. This keeps repeated imports from duplicating related DPP records.
+The Phase 4 battery module includes six legal battery categories, five imported
+BatteryPass-Ready validation configurations, a normalized 100-field longlist,
+append-only operating metrics, and server-side access projections. See
+[phase-4-implementation.md](docs/regulatory/eu-battery-dpp/phase-4-implementation.md).
 
 ## Deployment
 
-Preferred workflow:
+Deployments must pass local/CI checks and use a preview environment before
+production. Preview must not write to the production database. See
+[deployment.md](docs/engineering/deployment.md) for the release and rollback
+checklist.
 
-1. Preview locally with `npm run dev`.
-2. Run `npm run build`.
-3. Commit and push to `main`.
-4. Vercel deploys the production site.
-
-Production domain:
-
-```text
-https://www.greanlean.com
-```
+Production: `https://www.greanlean.com`

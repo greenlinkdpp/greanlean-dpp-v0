@@ -5,7 +5,16 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "node scripts/lint.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --no-warnings --experimental-strip-types --test tests/unit/*.test.ts tests/integration/*.test.mjs",
+    "test:unit": "node --no-warnings --experimental-strip-types --test tests/unit/*.test.ts",
+    "test:integration": "node --test tests/integration/*.test.mjs",
+    "test:migrations": "node --test tests/migrations/*.test.mjs",
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "bundle:battery-sql": "node scripts/database/build_battery_preview_bundle.mjs",
+    "test:all": "npm run lint && npm run typecheck && npm run test && npm run test:migrations && npm run build"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",

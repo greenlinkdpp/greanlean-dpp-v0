@@ -1,5 +1,10 @@
 node_modules
 .next
 .env.local
+.env.*.local
+!.env.example
 .DS_Store
 tsconfig.tsbuildinfo
+coverage
+test-results
+playwright-report

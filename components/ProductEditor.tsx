@@ -8,6 +8,8 @@ import { DPP_SECTOR_PROFILES, findDppSectorProfile, uniqueByCode } from "@/lib/d
 import { useLanguage } from "@/components/LanguageProvider";
 import { ProductRelatedManager, type RelatedField } from "@/components/ProductRelatedManager";
 import { SectorFieldManager } from "@/components/SectorFieldManager";
+import { BatteryDppWorkspace } from "@/components/battery/BatteryDppWorkspace";
+import { publicFeatureFlags } from "@/lib/featureFlags";
 
 type Product = Record<string, any>;
 
@@ -699,6 +701,8 @@ export function ProductEditor({ productId }: { productId: string }) {
   const suggestedVersion = product.current_version ? nextPatchVersion(product.current_version) : "v1.0";
   const selectedProfile = findDppSectorProfile(profileKey || product.dpp_profile_key);
   const sourceDataConfig = getSourceDataConfig(selectedProfile?.sectorCode || sectorCode || product.sector_code);
+  const useBatteryDppV2 = publicFeatureFlags.batteryDppV2
+    && (selectedProfile?.sectorCode || sectorCode || product.sector_code) === "battery";
   const sectorOptions = uniqueByCode(DPP_SECTOR_PROFILES, "sectorCode");
   const categoryOptions = uniqueByCode(
     DPP_SECTOR_PROFILES.filter((profile) => !sectorCode || profile.sectorCode === sectorCode),
@@ -935,6 +939,14 @@ export function ProductEditor({ productId }: { productId: string }) {
         </section>
       </form>
 
+      {useBatteryDppV2 ? (
+        <>
+          <BatteryDppWorkspace productId={productId} />
+          <SectionHeading title={t.flowPublish} description={t.flowPublishDesc} />
+          <ProductVersionHistory productId={productId} refreshKey={versionRefreshKey} title={t.versions} />
+        </>
+      ) : (
+        <>
       <SectionHeading title={t.flowIdentity} description={t.flowIdentityDesc} />
       <ProductRelatedManager productId={productId} title="Digital Identity" titleZh={t.identity} table="product_digital_identity" displayFields={["gtin", "batch_id", "serial_id", "digital_link_url"]} preparePayload={(payload) => {
         const gtin = normalizeGtin(payload.gtin);
@@ -972,6 +984,8 @@ export function ProductEditor({ productId }: { productId: string }) {
       <ProductRelatedManager productId={productId} title="Evidence Field Links" titleZh={t.evidenceLinks} table="dpp_evidence_links" displayFields={["evidence_type", "supported_field", "verification_status", "visibility_level"]} fields={[{ name: "evidence_type", label: "Evidence Type", labelZh: "证据类型", required: true }, { name: "evidence_ref_id", label: "Evidence Ref ID", labelZh: "证据记录 ID" }, { name: "supported_field", label: "Supported Field", labelZh: "支持字段", required: true }, { name: "supported_module", label: "Supported Module", labelZh: "支持模块" }, { name: "claim_value", label: "Claim Value", labelZh: "声明值", type: "textarea" }, { name: "verification_status", label: "Verification Status", labelZh: "验证状态" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
       <ProductRelatedManager productId={productId} title="Audit Logs" titleZh={t.auditLogs} table="dpp_audit_logs" displayFields={["action_type", "actor_name", "target_table", "new_hash"]} fields={[{ name: "actor_name", label: "Actor Name", labelZh: "操作人" }, { name: "actor_role", label: "Actor Role", labelZh: "操作角色" }, { name: "action_type", label: "Action Type", labelZh: "操作类型", required: true }, { name: "target_table", label: "Target Table", labelZh: "目标表" }, { name: "target_id", label: "Target ID", labelZh: "目标记录 ID" }, { name: "previous_hash", label: "Previous Hash", labelZh: "前 Hash" }, { name: "new_hash", label: "New Hash", labelZh: "新 Hash" }, { name: "ip_context", label: "IP / Context", labelZh: "IP / 上下文" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
       <ProductRelatedManager productId={productId} title="Blockchain Anchors" titleZh={t.blockchainAnchors} table="dpp_blockchain_anchors" displayFields={["version", "chain_name", "anchor_status", "transaction_hash"]} preparePayload={prepareBlockchainPayload} fields={[{ name: "version", label: "DPP Version", labelZh: "DPP 版本" }, { name: "anchored_hash", label: "Anchored Hash", labelZh: "锚定 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "chain_name", label: "Chain Name", labelZh: "区块链名称" }, { name: "chain_id", label: "Chain ID", labelZh: "链 ID" }, { name: "network", label: "Network", labelZh: "网络" }, { name: "contract_address", label: "Contract Address", labelZh: "合约地址" }, { name: "transaction_hash", label: "Transaction Hash", labelZh: "交易 Hash" }, { name: "block_number", label: "Block Number", labelZh: "区块高度" }, { name: "anchor_status", label: "Anchor Status", labelZh: "锚定状态" }, { name: "anchored_at", label: "Anchored At", labelZh: "锚定时间", type: "datetime-local" }, { name: "explorer_url", label: "Explorer URL", labelZh: "区块浏览器 URL", type: "url" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
+        </>
+      )}
     </div>
   );
 }
