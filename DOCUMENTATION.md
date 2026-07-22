@@ -2,7 +2,7 @@
 
 ## 当前里程碑
 
-Phase 5：EU DPP Registry 测试适配器已实现，等待执行 `0011` 数据库迁移并完成 Preview 端到端验证。
+Phase 5：EU DPP Registry 测试适配器已实现，`0011` 已应用且数据库只读验收全部通过，进入 Preview 登录态流程验收。
 
 ## 已完成内容
 
@@ -62,6 +62,7 @@ supabase/rollbacks/0011_registry_adapter.down.sql
 | Battery SQL generator | 连续生成哈希一致 |
 | Next.js production build | 通过，17 个页面完成生成，新增 2 个 Registry API 路由 |
 | Local production smoke | 本阶段未重复执行；上一阶段 5/5 通过 |
+| Supabase Preview migration | `0011` 已应用，Registry 表、映射、RLS 和只追加触发器验收通过 |
 
 启用电池功能开关后，公开电池页面在尚未配置 service-role key/迁移时会隔离显示模块错误，主 DPP 页面仍可用。后台写入端到端测试尚未执行，因为本地浏览器没有登录会话且新迁移未应用；不能据此认定数据库写入已验证。
 
