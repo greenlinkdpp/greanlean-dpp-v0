@@ -8,3 +8,4 @@ tsconfig.tsbuildinfo
 coverage
 test-results
 playwright-report
+.vercel
