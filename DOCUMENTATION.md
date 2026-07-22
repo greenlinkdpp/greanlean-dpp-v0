@@ -82,8 +82,8 @@ supabase/rollbacks/0011_registry_adapter.down.sql
 - 电池编辑和公开投影已经接入，但由 `NEXT_PUBLIC_FEATURE_BATTERY_DPP_V2` 控制且默认关闭；
 - 公开 DPP、JSON 导出和二维码冒烟通过；
 - 未修改 Supabase 数据库；
-- 未部署 Vercel；
-- 未提交或推送 Git。
+- 已部署两个 Vercel Preview，生产环境未变；
+- Phase 5 已提交并推送到 `feature/battery-dpp`。
 
 ## 回滚
 
