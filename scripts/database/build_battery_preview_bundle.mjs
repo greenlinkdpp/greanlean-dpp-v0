@@ -10,8 +10,10 @@ const migrations = [
   "0007_field_definitions_and_rules.sql",
   "0009_battery_domain.sql",
   "0010_battery_dynamic_metrics.sql",
+  "0011_registry_adapter.sql",
 ];
 const rollbacks = [
+  "0011_registry_adapter.down.sql",
   "0010_battery_dynamic_metrics.down.sql",
   "0009_battery_domain.down.sql",
   "0007_field_definitions_and_rules.down.sql",
@@ -102,6 +104,25 @@ with checks(check_name, expected, actual) as (
   union all
   select 'authenticated battery write policies', 0::bigint,
     (select count(*) from pg_policies where schemaname = 'public' and tablename like 'battery_%' and cmd <> 'SELECT' and 'authenticated' = any(roles))
+  union all
+  select 'Registry adapter tables', 6::bigint,
+    (select count(*) from unnest(array[
+      to_regclass('public.registry_mapping'),
+      to_regclass('public.registry_organisation_enrolment'),
+      to_regclass('public.registry_submission'),
+      to_regclass('public.registry_validation_result'),
+      to_regclass('public.registry_error_log'),
+      to_regclass('public.registry_registration_proof')
+    ]) item where item is not null)
+  union all
+  select 'published TEST battery Registry mapping', 1::bigint,
+    (select count(*) from public.registry_mapping where product_group_code = 'battery' and mapping_version = 'battery-test-file-1.0.0' and status = 'published' and registry_schema_version is null)
+  union all
+  select 'direct Registry access policies', 0::bigint,
+    (select count(*) from pg_policies where schemaname = 'public' and tablename like 'registry_%')
+  union all
+  select 'Registry append-only evidence triggers', 3::bigint,
+    (select count(*) from pg_trigger where not tgisinternal and tgname in ('registry_validation_append_only', 'registry_error_append_only', 'registry_proof_append_only'))
 )
 select check_name, expected, actual, actual = expected as passed
 from checks

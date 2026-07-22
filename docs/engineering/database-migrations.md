@@ -31,15 +31,23 @@ Application flags and the previous Vercel release are the first rollback path.
 Run a down migration only when the new tables have not accepted business data.
 Once data exists, stop writes and preserve the tables for a forward repair.
 
-The current additive sequence is `0001`, `0006`, `0007`, `0009`, `0010`.
+The current additive sequence is `0001`, `0006`, `0007`, `0009`, `0010`, `0011`.
 Intentional gaps remain reserved by `PLAN.md`. Phase 4 creates the battery
 reference catalog, domain tables, and append-only operating metrics. It does not
 backfill, update, or delete existing product data.
+
+Phase 5 migration `0011` adds the isolated Registry TEST adapter tables,
+versioned mapping, validation history, error history, retry chain, and proof
+boundary. It does not alter the legacy `dpp_registry_submissions` table.
 
 After applying `0009` and `0010` to a preview database, provide
 `SUPABASE_SERVICE_ROLE_KEY` only to the server runtime and enable
 `NEXT_PUBLIC_FEATURE_BATTERY_DPP_V2=true` only in that preview deployment. Never
 expose the service-role key through a `NEXT_PUBLIC_` variable.
+
+After applying `0011`, enable `FEATURE_REGISTRY_ADAPTER=true` in Preview/Test
+only. Production remains disabled until the official battery semantic
+catalogue and approved integration contract are available.
 
 For manual Preview installation through Supabase SQL Editor, run
 `supabase/bundles/battery_dpp_preview_install.sql` and then the read-only

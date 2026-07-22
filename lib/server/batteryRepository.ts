@@ -47,7 +47,7 @@ function databaseError(error: { message?: string } | null, code = "BATTERY_DATAB
 export async function requireBatteryProduct(admin: AdminClient, productId: string) {
   const { data, error } = await admin
     .from("products")
-    .select("id,name,name_zh,dpp_id,public_slug,status,sector_code,dpp_profile_key,commodity_code,unique_product_identifier")
+    .select("id,name,name_zh,dpp_id,public_slug,status,sector_code,dpp_profile_key,granularity_level,commodity_code,unique_product_identifier")
     .eq("id", productId)
     .maybeSingle();
   databaseError(error);

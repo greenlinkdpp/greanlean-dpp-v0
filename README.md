@@ -94,6 +94,12 @@ BatteryPass-Ready validation configurations, a normalized 100-field longlist,
 append-only operating metrics, and server-side access projections. See
 [phase-4-implementation.md](docs/regulatory/eu-battery-dpp/phase-4-implementation.md).
 
+The Phase 5 Registry adapter generates traceable TEST mapping files, performs
+local validation, and records manual results and retries. It keeps PRODUCTION
+disabled and cannot mark battery registration successful until an official
+battery semantic catalogue is available. See
+[phase-5-implementation.md](docs/regulatory/eu-battery-dpp/phase-5-implementation.md).
+
 ## Deployment
 
 Deployments must pass local/CI checks and use a preview environment before

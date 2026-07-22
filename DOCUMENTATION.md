@@ -2,7 +2,7 @@
 
 ## 当前里程碑
 
-Phase 4：电池 DPP 模块，应用代码和结构验证已完成，等待在隔离数据库执行迁移后启用。
+Phase 5：EU DPP Registry 测试适配器已实现，等待执行 `0011` 数据库迁移并完成 Preview 端到端验证。
 
 ## 已完成内容
 
@@ -23,10 +23,13 @@ Phase 4：电池 DPP 模块，应用代码和结构验证已完成，等待在�
 - 建立 11 步电池 DPP 录入工作台，并分开显示必填、条件必填、证据、核验、Registry 和待确认准备度；
 - 建立消费者、正当利益、主管机关和内部四级服务器端字段投影；
 - 建立动态指标和生命周期事件只追加、不覆盖的数据库约束与 API。
+- 建立版本化 Registry 映射、组织验证状态、提交、校验、错误和证明数据边界；
+- 建立 Registry 测试 JSON 下载、人工结果记录、错误脱敏和重试链；
+- 强制测试/生产环境隔离，并阻止缺少官方电池语义目录的记录进入“已接受”状态。
 
 ## 数据库迁移
 
-Phase 3 和 Phase 4 新增但未应用：
+Phase 3 至 Phase 5 编号化迁移：
 
 ```text
 supabase/migrations/0001_project_migration_ledger.sql
@@ -34,11 +37,13 @@ supabase/migrations/0006_schema_registry.sql
 supabase/migrations/0007_field_definitions_and_rules.sql
 supabase/migrations/0009_battery_domain.sql
 supabase/migrations/0010_battery_dynamic_metrics.sql
+supabase/migrations/0011_registry_adapter.sql
 supabase/rollbacks/0001_project_migration_ledger.down.sql
 supabase/rollbacks/0006_schema_registry.down.sql
 supabase/rollbacks/0007_field_definitions_and_rules.down.sql
 supabase/rollbacks/0009_battery_domain.down.sql
 supabase/rollbacks/0010_battery_dynamic_metrics.down.sql
+supabase/rollbacks/0011_registry_adapter.down.sql
 ```
 
 编号 `0002` 至 `0005` 和 `0008` 按 `PLAN.md` 预留。本阶段没有修改、回填或删除现有产品和演示数据。
@@ -51,12 +56,12 @@ supabase/rollbacks/0010_battery_dynamic_metrics.down.sql
 |---|---|
 | Repository lint | 通过 |
 | TypeScript `tsc --noEmit` | 通过 |
-| Unit tests | 13/13 通过 |
+| Unit tests | 17/17 通过 |
 | Reference/contract tests | 5/5 通过 |
-| Migration structural tests | 5/5 通过 |
+| Migration structural tests | 7/7 通过 |
 | Battery SQL generator | 连续生成哈希一致 |
-| Next.js production build | 通过，17 个页面完成生成，新增 2 个电池 API 路由 |
-| Local production smoke | 5/5 通过 |
+| Next.js production build | 通过，17 个页面完成生成，新增 2 个 Registry API 路由 |
+| Local production smoke | 本阶段未重复执行；上一阶段 5/5 通过 |
 
 启用电池功能开关后，公开电池页面在尚未配置 service-role key/迁移时会隔离显示模块错误，主 DPP 页面仍可用。后台写入端到端测试尚未执行，因为本地浏览器没有登录会话且新迁移未应用；不能据此认定数据库写入已验证。
 
@@ -82,8 +87,8 @@ supabase/rollbacks/0010_battery_dynamic_metrics.down.sql
 
 ## 回滚
 
-应用层回滚优先关闭 `NEXT_PUBLIC_FEATURE_BATTERY_DPP_V2`。数据库如尚未承载业务数据，按 `0010 -> 0009 -> 0007 -> 0006 -> 0001` 执行 down；如果已经写入数据，只关闭功能并停止写入，保留表并采用前向修复。
+Registry 应用层回滚优先关闭 `FEATURE_REGISTRY_ADAPTER`；电池模块回滚关闭 `NEXT_PUBLIC_FEATURE_BATTERY_DPP_V2`。数据库如尚未承载业务数据，按 `0011 -> 0010 -> 0009 -> 0007 -> 0006 -> 0001` 执行 down；如果已经写入数据，只关闭功能并停止写入，保留表并采用前向修复。
 
 ## 下一步
 
-在独立 Supabase 测试项目按顺序执行迁移并完成 up/down 演练；验证 RLS、登录权限和已有电池产品映射后，再在 Preview 环境开启电池功能开关。中央注册库适配器仍属于下一阶段，当前 Registry 指标仅表示本地数据准备度。
+在 Supabase 测试项目执行 `0011_registry_adapter.sql` 和只读验收 SQL；随后在 Preview 开启 `FEATURE_REGISTRY_ADAPTER`，使用已发布电池 DPP 验证生成、下载、人工结果记录和重试。当前只验证测试文件闭环，不代表欧盟 Registry 注册成功。

@@ -16,6 +16,7 @@ import {
 } from "@/lib/battery/catalog";
 import { calculateBatteryReadiness } from "@/lib/battery/readiness";
 import { createSupabaseClient } from "@/lib/supabase";
+import { RegistryWorkbench } from "./RegistryWorkbench";
 
 type Props = { productId: string };
 
@@ -279,7 +280,7 @@ export function BatteryDppWorkspace({ productId }: Props) {
           {currentFields.length === 0 && !["item_operation", "preview_publish", "registry_readiness"].includes(activeStep) ? <p className="mt-5 border-y border-slate-200 py-8 text-center text-sm font-semibold text-slate-500">{t.noFields}</p> : null}
           {activeStep === "item_operation" ? <ItemOperation workspace={workspace} isZh={isZh} saving={saving} t={t} onAction={performAction} /> : null}
           {activeStep === "preview_publish" ? <div className="mt-5 border-y border-slate-200 py-6"><h4 className="font-black text-slate-950">{t.previewTitle}</h4><p className="mt-2 text-sm text-slate-600">{t.publishNote}</p><div className="mt-4 flex flex-wrap gap-3">{publicIdentifier ? <><Link className="btn-secondary" href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=consumer`} target="_blank">{t.consumer}</Link><Link className="btn-primary" href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=professional`} target="_blank">{t.professional}</Link><Link className="btn-secondary" href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=audit`} target="_blank">{t.audit}</Link></> : null}</div></div> : null}
-          {activeStep === "registry_readiness" ? <div className="mt-5 border-y border-slate-200 py-6"><h4 className="font-black text-slate-950">{t.registryTitle}</h4><p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-amber-800">{t.registryNotice}</p></div> : null}
+          {activeStep === "registry_readiness" ? <div className="mt-5"><h4 className="font-black text-slate-950">{t.registryTitle}</h4><p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-amber-800">{t.registryNotice}</p><RegistryWorkbench productId={productId} isZh={isZh} /></div> : null}
           {message ? <p className={`mt-4 text-sm font-semibold ${message === t.saved ? "text-emerald-700" : "text-red-700"}`}>{message}</p> : null}
         </div>
 

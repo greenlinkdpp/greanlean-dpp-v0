@@ -7,8 +7,8 @@ const migrationDirectory = "supabase/migrations";
 const rollbackDirectory = "supabase/rollbacks";
 const migrationFiles = (await readdir(migrationDirectory)).filter((name) => name.endsWith(".sql")).sort();
 const rollbackFiles = (await readdir(rollbackDirectory)).filter((name) => name.endsWith(".down.sql")).sort();
-const batteryBundleMigrations = ["0001_project_migration_ledger.sql", "0006_schema_registry.sql", "0007_field_definitions_and_rules.sql", "0009_battery_domain.sql", "0010_battery_dynamic_metrics.sql"];
-const batteryBundleRollbacks = ["0010_battery_dynamic_metrics.down.sql", "0009_battery_domain.down.sql", "0007_field_definitions_and_rules.down.sql", "0006_schema_registry.down.sql", "0001_project_migration_ledger.down.sql"];
+const batteryBundleMigrations = ["0001_project_migration_ledger.sql", "0006_schema_registry.sql", "0007_field_definitions_and_rules.sql", "0009_battery_domain.sql", "0010_battery_dynamic_metrics.sql", "0011_registry_adapter.sql"];
+const batteryBundleRollbacks = ["0011_registry_adapter.down.sql", "0010_battery_dynamic_metrics.down.sql", "0009_battery_domain.down.sql", "0007_field_definitions_and_rules.down.sql", "0006_schema_registry.down.sql", "0001_project_migration_ledger.down.sql"];
 
 test("every numbered migration has a matching rollback", () => {
   assert.ok(migrationFiles.length > 0);
@@ -74,6 +74,20 @@ test("battery operating metrics preserve immutable measurements and a secure lat
   assert.match(sql, /battery_operating_metric_append_only/i);
   assert.match(sql, /with\s*\(security_invoker\s*=\s*true\)/i);
   assert.doesNotMatch(sql, /for\s+(all|insert|update|delete)\s+to\s+authenticated/i);
+});
+
+test("Registry adapter isolates environments and keeps evidence append-only", async () => {
+  const sql = await readFile(`${migrationDirectory}/0011_registry_adapter.sql`, "utf8");
+  for (const table of ["registry_mapping", "registry_organisation_enrolment", "registry_submission", "registry_validation_result", "registry_error_log", "registry_registration_proof"]) {
+    assert.match(sql, new RegExp(`create table if not exists public\\.${table}\\b`, "i"));
+  }
+  assert.match(sql, /environment in \('TEST', 'PRODUCTION'\)/i);
+  assert.match(sql, /battery_semantics_check/i);
+  assert.match(sql, /registry_schema_version is null/i);
+  assert.match(sql, /registry_validation_append_only/i);
+  assert.match(sql, /registry_error_append_only/i);
+  assert.match(sql, /registry_proof_append_only/i);
+  assert.doesNotMatch(sql, /create policy[\s\S]*registry_/i);
 });
 
 test("generated battery Preview bundles preserve source order and checksums", async () => {

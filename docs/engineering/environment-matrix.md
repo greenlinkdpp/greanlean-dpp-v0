@@ -24,4 +24,4 @@
 | `NEXT_PUBLIC_FEATURE_SCHEMA_REGISTRY` | false | new Schema-driven UI reads |
 | `NEXT_PUBLIC_FEATURE_BATTERY_DPP_V2` | false | future battery workflow |
 | `FEATURE_SERVER_API_V2` | false | new server-side write boundary |
-| `FEATURE_REGISTRY_ADAPTER` | false | Registry adapter; test first |
+| `FEATURE_REGISTRY_ADAPTER` | false | server-only Registry TEST adapter; PRODUCTION remains disabled |
