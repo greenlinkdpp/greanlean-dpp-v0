@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { createSupabaseClient } from "@/lib/supabase";
 import { PublicDppClient } from "@/components/PublicDppClient";
 import { PublicDppPreviewLoader } from "@/components/PublicDppPreviewLoader";
+import { projectBatteryValuesIntoLegacyDpp } from "@/lib/battery/legacyProjection";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -30,6 +31,32 @@ async function safeSelect(supabase: ReturnType<typeof createSupabaseClient>, tab
   } catch {
     return [];
   }
+}
+
+async function publicBatteryValues(
+  supabase: ReturnType<typeof createSupabaseClient>,
+  productId: string,
+) {
+  const { data: profile } = await supabase
+    .from("battery_model_profile")
+    .select("id")
+    .eq("product_id", productId)
+    .maybeSingle();
+  if (!profile) return {};
+  const { data: rows } = await supabase
+    .from("battery_field_value")
+    .select("value_json,field_definition!inner(field_code)")
+    .eq("battery_model_profile_id", profile.id)
+    .is("battery_batch_id", null)
+    .is("battery_item_id", null)
+    .in("field_definition.field_code", [
+      "battery.battery_carbon_footprint_per_functional_unit",
+      "battery.battery_serial_number",
+    ]);
+  return Object.fromEntries((rows || []).flatMap((row: any) => {
+    const definition = Array.isArray(row.field_definition) ? row.field_definition[0] : row.field_definition;
+    return definition?.field_code ? [[definition.field_code, row.value_json]] : [];
+  }));
 }
 
 const demoByIdentifier: Record<string, "tshirt" | "electronics" | "flooring" | "furniture"> = {
@@ -106,7 +133,10 @@ async function getData(identifier: string, includeDraft = false) {
     safeSelect(supabase, "dpp_blockchain_anchors", product.id),
     safeSelect(supabase, "product_sector_field_values", product.id),
   ]);
-  const data = { product: normalizeProductImage(product), materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance, registrySubmissions, registrationProofs, evidenceLinks, blockchainAnchors, sectorFieldValues };
+  let data = { product: normalizeProductImage(product), materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance, registrySubmissions, registrationProofs, evidenceLinks, blockchainAnchors, sectorFieldValues };
+  if (product.sector_code === "battery") {
+    data = projectBatteryValuesIntoLegacyDpp(data, await publicBatteryValues(supabase, product.id));
+  }
 
   if (product.public_slug === "demo-organic-cotton-tshirt" || product.dpp_id === "DPP-DEMO-001") {
     return withDemoDppData(data);
