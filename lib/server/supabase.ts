@@ -16,6 +16,13 @@ export function createServerAuthClient(accessToken: string) {
   });
 }
 
+export function createSupabasePublicServerClient() {
+  const { url, anonKey } = configuration();
+  return createClient(url, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
+
 export function createSupabaseAdminClient() {
   const { url } = configuration();
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

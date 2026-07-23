@@ -1,0 +1,266 @@
+{
+  "Battery_Passport": {
+    "IdentifiersAndProductData": {
+      "DPPSchemaVersion": "BatteryPass-Ready LMT schema 1.0 (test dataset)",
+      "DPPStatus": {
+        "dppStatusValue": "Active"
+      },
+      "DPPGranularity": "Item",
+      "Date-timeOfLatestUpdateOfDPP": "2026-07-23T14:00:00Z",
+      "UniqueBatteryPassportIdentifierUniqueDPPIdentifier": "https://greanlean.com/p/DPP-LMT-BAT-48V15AH",
+      "UniqueBatteryIdentifierUniqueProductIdentifier": "https://greanlean.com/p/DPP-LMT-BAT-48V15AH",
+      "BatteryModelIdentifier": "GL-LMT-48V15AH-NMC",
+      "BatterySerialNumber": "LMT-48V15AH-TEST-001",
+      "UniqueEconomicOperatorIdentifier": "GL-EO-TEST-0001",
+      "UniqueManufacturerIdentifier": "GL-MFR-TEST-0001",
+      "UniqueFacilityIdentifier": "GL-FAC-TEST-SZX-0001",
+      "EconomicOperatorInformation": {
+        "name": "Greanlean DPP Test Operator",
+        "registeredTradeNameOrRegisteredTrademark": "GREANLEAN TEST DATA",
+        "postalAddress": "Test dataset, Shenzhen, Guangdong, China",
+        "webAddress": "https://greanlean.com",
+        "e-mailAddress": "dpp-test@greanlean.com"
+      },
+      "ManufacturerInformation": {
+        "name": "Greanlean Demonstration Battery Manufacturing",
+        "registeredTradeNameOrRegisteredTrademark": "GREANLEAN TEST DATA",
+        "postalAddress": "Test manufacturing site, Shenzhen, Guangdong, China",
+        "webAddress": "https://greanlean.com",
+        "e-mailAddress": "dpp-test@greanlean.com"
+      },
+      "ManufacturingPlace": "Test manufacturing site, Shenzhen, Guangdong, China",
+      "ManufacturingDate": "2026-06-30",
+      "DateOfPuttingTheBatteryIntoService": "2026-07-01",
+      "WarrantyPeriodOfTheBattery": "2028-06-30",
+      "BatteryCategory": {
+        "batteryCategoryValue": "LMT battery"
+      },
+      "BatteryMass": {
+        "gramKg": "kg",
+        "gramKgValue": 4.2
+      },
+      "BatteryStatus": {
+        "batteryStatusValues": "original"
+      }
+    },
+    "SymbolsLabelsAndDocumentationOfConformity": {
+      "SeparateCollectionSymbol": "https://greanlean.com/test-evidence/lmt-48v15ah/separate-collection-symbol",
+      "SymbolsForCadmiumAndLead": "https://greanlean.com/test-evidence/lmt-48v15ah/cd-pb-symbol-declaration",
+      "CarbonFootprintLabel": "https://greanlean.com/test-evidence/lmt-48v15ah/carbon-footprint-label",
+      "ExtinguishingAgent": {
+        "agentFireClass": "Lithium-ion battery fire response",
+        "extinguishingAgent": "Water cooling and the manufacturer's emergency procedure; synthetic test guidance only."
+      },
+      "MeaningOfLabelsAndSymbols": "Synthetic test label set: separate collection, lithium-ion handling and carbon-footprint information. Not verified product labelling.",
+      "EUDeclarationOfConformity": "https://greanlean.com/test-evidence/lmt-48v15ah/eu-declaration-of-conformity",
+      "ResultsOfTestReportsProvingCompliance": "https://greanlean.com/test-evidence/lmt-48v15ah/test-reports"
+    },
+    "BatteryCarbonFootprint": {
+      "BatteryCarbonFootprintPerFunctionalUnit": {
+        "kgCO2-equivalentPerKilowattHourValue": 65,
+        "kgCO2-equivalentPerKilowattHour": "kgCO2-eq/kWh"
+      },
+      "ContributionOfRawMaterialAcquisitionAndPre-processingLifecycleStage": {
+        "kgCO2-equivalentPerKilowattHourValue": 28,
+        "kgCO2-equivalentPerKilowattHour": "kgCO2-eq/kWh"
+      },
+      "ContributionOfMainProductProductionLifecycleStage": {
+        "kgCO2-equivalentPerKilowattHourValue": 24,
+        "kgCO2-equivalentPerKilowattHour": "kgCO2-eq/kWh"
+      },
+      "ContributionOfDistributionLifecycleStage": {
+        "kgCO2-equivalentPerKilowattHourValue": 5,
+        "kgCO2-equivalentPerKilowattHour": "kgCO2-eq/kWh"
+      },
+      "ContributionOfEndOfLifeAndRecyclingLifecycleStage": {
+        "kgCO2-equivalentPerKilowattHourValue": 8,
+        "kgCO2-equivalentPerKilowattHour": "kgCO2-eq/kWh"
+      },
+      "CarbonFootprintPerformanceClass": "Test class pending delegated-act methodology and third-party verification",
+      "WebLinkToPublicCarbonFootprintStudy": "https://greanlean.com/test-evidence/lmt-48v15ah/carbon-footprint-study",
+      "AbsoluteBatteryCarbonFootprint": {
+        "kgCO2-equivalentValue": 47,
+        "kgCO2-equivalent": "kgCO2-eq"
+      }
+    },
+    "SupplyChainDueDiligence": {
+      "InformationOfDueDiligenceReport": "https://greanlean.com/test-evidence/lmt-48v15ah/supply-chain-due-diligence",
+      "ThirdPartyAssurancesOfRecognisedSchemes": "Synthetic test declaration; no third-party assurance is claimed.",
+      "SupplyChainIndices": "Synthetic test supply-chain index GL-SCI-TEST-001; requires supplier verification."
+    },
+    "BatteryMaterialsAndComposition": {
+      "BatteryChemistry": {
+        "chemicalCodeValue": "Li-ion NMC",
+        "additionallyPossibleValue": "Graphite anode and LiPF6-based electrolyte; synthetic test composition."
+      },
+      "CriticalRawMaterials": "Synthetic test declaration: lithium, cobalt, nickel, natural graphite and manganese; quantities require supplier verification.",
+      "MaterialsUsedInCathodeAnodeAndElectrolyte": "Cathode: NMC; anode: graphite; electrolyte: LiPF6 in organic carbonate solvents. Synthetic test composition, not laboratory verified.",
+      "HazardousSubstances": "Synthetic declaration: no intentionally added cadmium, lead or mercury above applicable thresholds; supplier and laboratory verification required.",
+      "ImpactOfSubstancesOnEnvironmentHumanHealthSafetyPersons": "Lithium-ion electrolyte may be flammable and irritating; damaged cells may present thermal-runaway risk. Follow the synthetic test safety instructions and obtain verified SDS data."
+    },
+    "CircularityAndResourceEfficiency": {
+      "DismantlingInformation-ManualsForTheRemovalAndTheDisassemblyOfTheBatteryPack": "https://greanlean.com/test-evidence/lmt-48v15ah/removal-and-disassembly",
+      "PartNumbersForComponents": "https://greanlean.com/test-evidence/lmt-48v15ah/component-part-numbers",
+      "InformationOnSourcesOfSpareParts": "https://greanlean.com/test-evidence/lmt-48v15ah/spare-parts",
+      "SafetyMeasures": "https://greanlean.com/test-evidence/lmt-48v15ah/safety-measures",
+      "Pre-consumerRecycledNickelShare": {
+        "percent": "%",
+        "percentageValue": 3
+      },
+      "Pre-consumerRecycledCobaltShare": {
+        "percent": "%",
+        "percentageValue": 2
+      },
+      "Pre-consumerRecycledLithiumShare": {
+        "percent": "%",
+        "percentageValue": 1
+      },
+      "Post-consumerRecycledNickelShare": {
+        "percent": "%",
+        "percentageValue": 7
+      },
+      "Post-consumerRecycledCobaltShare": {
+        "percent": "%",
+        "percentageValue": 5
+      },
+      "Post-consumerRecycledLithiumShare": {
+        "percent": "%",
+        "percentageValue": 3
+      },
+      "RecycledLeadShare": {
+        "percent": "%",
+        "percentageValue": 0
+      },
+      "RenewableContentShare": {
+        "percent": "%",
+        "percentageValue": 15
+      },
+      "InformationOnTheRoleOfEnd-usersInContributingToWastePrevention": "https://greanlean.com/test-evidence/lmt-48v15ah/waste-prevention",
+      "InformationOnTheRoleOfEnd-usersInContributingToTheSeparateCollectionOfWasteBatteries": "https://greanlean.com/test-evidence/lmt-48v15ah/separate-collection",
+      "InformationOnBatteryCollectionPreparationForSecondLifeAndOnTreatmentAtEndOfLife": "https://greanlean.com/test-evidence/lmt-48v15ah/collection-second-life-end-of-life"
+    },
+    "PerformanceAndDurability": {
+      "RatedCapacity": {
+        "amperehourMiliamperehourValue": 15,
+        "ampereHourMiliamperehour": "Ah"
+      },
+      "RemainingCapacity": {
+        "amperehourMiliamperehourValue": 15,
+        "ampereHourMiliamperehour": "Ah"
+      },
+      "CapacityFade": {
+        "percent": "%",
+        "percentageValue": 2.7
+      },
+      "StateOfChargeSoC": {
+        "percent": "%",
+        "percentageValue": 76
+      },
+      "MinimumVoltage": {
+        "voltValue": 39,
+        "volt": "V"
+      },
+      "MaximumVoltage": {
+        "voltValue": 54.6,
+        "volt": "V"
+      },
+      "NominalVoltage": {
+        "voltValue": 48,
+        "volt": "V"
+      },
+      "OriginalPowerCapability": {
+        "wattValueAt80SoC": 750,
+        "wattValueAt20SoC": 600,
+        "watt": "W"
+      },
+      "RemainingPowerCapability": {
+        "wattValueAt80SoC": 720,
+        "wattValueAt20SoC": 580,
+        "watt": "W"
+      },
+      "PowerFade": {
+        "percent": "%",
+        "percentageValue": 4
+      },
+      "MaximumPermittedBatteryPower": {
+        "wattValue": 750,
+        "watt": "W"
+      },
+      "RatioBetweenNominalBatteryPowerAndBatteryEnergy": {
+        "wattPerWattHourValue": 1,
+        "wattPerWattHour": "W/Wh"
+      },
+      "InitialRoundTripEnergyEfficiency": {
+        "percent": "%",
+        "percentageValue": 94
+      },
+      "RoundTripEnergyEfficiencyAt50OfCycleLife": {
+        "percent": "%",
+        "percentageValue": 91
+      },
+      "RemainingRoundTripEnergyEfficiency": {
+        "percent": "%",
+        "percentageValue": 92.8
+      },
+      "EnergyRoundTripEfficiencyFade": {
+        "percent": "%",
+        "percentageValue": 1.2
+      },
+      "InitialSelf-dischargeRate": {
+        "percentMonth": "%/month",
+        "percentMonthValue": 1.3
+      },
+      "CurrentSelf-dischargeRate": {
+        "percentMonth": "%/month",
+        "percentMonthValue": 1.6
+      },
+      "EvolutionOfSelf-dischargeRates": {
+        "percent": "%",
+        "percentageValue": 0.3
+      },
+      "InitialInternalResistanceOfBatteryCellAndPackModuleRecommended": {
+        "ohmValue": 1,
+        "ohm": "Ohm"
+      },
+      "InternalResistanceIncreaseOfPackCellAndModuleRecommended": {
+        "percent": "%",
+        "percentageValue": 3
+      },
+      "ExpectedLifetimeInCalendarYears": 5,
+      "ExpectedLifetime-NumberOfCharge-dischargeCycles": 800,
+      "NumberOfFullChargingAndDischargingCycles": 42,
+      "Cycle-lifeReferenceTest": "Synthetic IEC 61960-aligned cycle-life profile; not a laboratory certificate.",
+      "C-rateOfRelevantCycle-lifeTest": {
+        "amperePerAmpereHourValue": 1,
+        "amperePerAmpereHour": "A/Ah"
+      },
+      "EnergyThroughput": {
+        "kilowattHourValue": 30.2,
+        "kilowattHour": "kWh"
+      },
+      "CapacityThroughput": {
+        "amperehourMiliamperehourValue": 630,
+        "amperehourMiliamperehour": "Ah"
+      },
+      "TemperatureInformation": {
+        "degreeCelsius": "°C",
+        "celsiusValue": 24
+      },
+      "TemperatureRangeIdleStateLowerBoundary": {
+        "degreeCelsius": "°C",
+        "celsiusValue": -20
+      },
+      "TemperatureRangeIdleStateUpperBoundary": {
+        "degreeCelsius": "°C",
+        "celsiusValue": 45
+      },
+      "TimeSpentInExtremeTemperaturesAboveBoundary": 0,
+      "TimeSpentInExtremeTemperaturesBelowBoundary": 0,
+      "TimeSpentChargingDuringExtremeTemperaturesAboveBoundary": 0,
+      "TimeSpentChargingDuringExtremeTemperaturesBelowBoundary": 0,
+      "NumberOfDeepDischargeEvents": 0,
+      "NumberOfOverchargeEvents": 0,
+      "InformationOnAccidents": "https://greanlean.com/test-evidence/lmt-48v15ah/accident-declaration-none-recorded"
+    }
+  }
+}

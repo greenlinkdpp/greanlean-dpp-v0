@@ -7,6 +7,7 @@ import {
   type BatteryFieldValue,
   type BatterySchemaCode,
 } from "../battery/catalog.ts";
+import { batteryDynamicValuesForWorkspace } from "../battery/batteryPass.ts";
 import { calculateBatteryReadiness } from "../battery/readiness.ts";
 import { projectBatteryFields, projectionAccessForAudience } from "../battery/projection.ts";
 import type { AccessLevel } from "../schemaRegistry.ts";
@@ -47,7 +48,7 @@ function databaseError(error: { message?: string } | null, code = "BATTERY_DATAB
 export async function requireBatteryProduct(admin: AdminClient, productId: string) {
   const { data, error } = await admin
     .from("products")
-    .select("id,name,name_zh,dpp_id,public_slug,status,sector_code,dpp_profile_key,granularity_level,commodity_code,unique_product_identifier")
+    .select("id,name,name_zh,dpp_id,public_slug,status,sector_code,dpp_profile_key,granularity_level,commodity_code,unique_product_identifier,updated_at")
     .eq("id", productId)
     .maybeSingle();
   databaseError(error);
@@ -143,16 +144,22 @@ export async function loadBatteryWorkspace(admin: AdminClient, productId: string
   ]);
   [fieldResult, batchResult, itemResult, metricResult, eventResult].forEach((result) => databaseError(result.error));
   const values = valuesByFieldCode(fieldResult.data || [], fields);
-  return {
+  const workspaceData = {
     product,
     profile,
     classification: { ...classification, applicability: profile.passport_applicability, reasonZh: profile.applicability_reason || classification.reasonZh },
     values,
-    readiness: calculateBatteryReadiness(classification, values),
     batches: batchResult.data || [],
     items: itemResult.data || [],
     metrics: metricResult.data || [],
     lifecycleEvents: eventResult.data || [],
+  };
+  const dynamicValues = batteryDynamicValuesForWorkspace(workspaceData, process.env.NEXT_PUBLIC_SITE_URL || "https://greanlean.com");
+  return {
+    ...workspaceData,
+    values,
+    dynamicValues,
+    readiness: calculateBatteryReadiness(classification, { ...values, ...dynamicValues }),
     catalog: BATTERY_CATALOG_METADATA,
   };
 }
