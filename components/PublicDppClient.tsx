@@ -490,13 +490,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
 	          groupCount: "项",
 	          openGroup: "展开查看",
 	          closeGroup: "收起内容",
-          overviewStatusTitle: "护照数据状态",
-          overviewStatus1: "唯一身份已绑定",
-          overviewStatus1Desc: "DPP ID、SKU、批次与二维码用于稳定访问。",
-          overviewStatus2: "证据链可追溯",
-          overviewStatus2Desc: "材料、证书、供应链和声明文件按模块组织。",
-          overviewStatus3: "支持后续更新",
-          overviewStatus3Desc: "证书、批次和供应商资料变化后可同步维护。",
           itemName: "名称",
           chemicalRestricted: "化学品与受限物质",
           productPerformance: "产品性能",
@@ -705,8 +698,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           complianceScopeValue: "ESPR / REACH / RSL / 纺织标签法规",
           materialProfile: "材料结构",
           materialProfileValue: "95% 有机棉 + 5% 再生涤纶缝纫线",
-          nextAction: "消费者可执行动作",
-          nextActionValue: "查看证书、维修/回收、下载 DPP 数据",
           performanceSnapshot: "性能快照",
           performanceSnapshotValue: "耐洗 ≥50 次；使用寿命 2-3 年",
           batchRecord1: "2026-03-18 原料批次创建并绑定 GOTS 范围证书",
@@ -755,13 +746,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
 	          groupCount: "items",
 	          openGroup: "Open",
 	          closeGroup: "Collapse",
-          overviewStatusTitle: "Passport data status",
-          overviewStatus1: "Identity linked",
-          overviewStatus1Desc: "DPP ID, SKU, batch and QR code provide stable access.",
-          overviewStatus2: "Evidence traceable",
-          overviewStatus2Desc: "Materials, certificates, supply chain and declarations are organized by module.",
-          overviewStatus3: "Update-ready",
-          overviewStatus3Desc: "Certificates, batches and supplier records can be maintained after changes.",
           itemName: "Name",
           chemicalRestricted: "Chemicals and restricted substances",
           productPerformance: "Product performance",
@@ -970,8 +954,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           complianceScopeValue: "ESPR / REACH / RSL / textile labelling rules",
           materialProfile: "Material profile",
           materialProfileValue: "95% organic cotton + 5% recycled polyester sewing thread",
-          nextAction: "Consumer actions",
-          nextActionValue: "View certificates, repair/recycle, download DPP data",
           performanceSnapshot: "Performance snapshot",
           performanceSnapshotValue: "Wash durability >=50 cycles; service life 2-3 years",
           batchRecord1: "2026-03-18 Material batch created and linked to GOTS scope certificate",
@@ -1133,12 +1115,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       ? formatDate(product.updated_at || product.created_at, locale)
       : t.dataLastUpdatedValue;
 
-  const nextActionFromData = compact([
-    pick(product, locale, "care_instructions", "care_instructions_zh") !== "-" ? t.care : null,
-    pick(product, locale, "repair_instructions", "repair_instructions_zh") !== "-" ? t.repair : null,
-    pick(product, locale, "end_of_life_instructions", "end_of_life_instructions_zh") !== "-" ? t.endOfLife : null,
-  ]) || t.noData;
-
   const verifiedCertificates = certificates.filter((certificate: any) => {
     return isVerifiedStatus(certificate.verification_status);
   }).length;
@@ -1199,40 +1175,30 @@ export function PublicDppClient({ data, dppUrl }: Props) {
         [t.complianceScope, locale === "zh" ? "CE / RoHS / REACH / WEEE" : "CE / RoHS / REACH / WEEE", "shield"],
         [locale === "zh" ? "电池与回收" : "Battery and WEEE", locale === "zh" ? "UN38.3 / 电池 MSDS" : "UN38.3 / battery MSDS", "file"],
         [t.performanceSnapshot, locale === "zh" ? "8 小时 / ≥500 次" : "8h / >=500 cycles", "check"],
-        [t.nextAction, locale === "zh" ? "维修 / WEEE 回收" : "Repair / WEEE collection", "recycle"],
       ]
       : isFlooring
         ? [
           [locale === "zh" ? "规格尺寸" : "Dimensions", "140x25mm / 2.55kg/m", "box"],
           [locale === "zh" ? "材料配方" : "Material formula", materialProfileFromData, "layers"],
           [locale === "zh" ? "合规证据" : "Compliance evidence", locale === "zh" ? "REACH / VOC / FSC / ISO9001" : "REACH / VOC / FSC / ISO9001", "shield"],
-          [locale === "zh" ? "回收路径" : "Recovery route", locale === "zh" ? "机械回收 / 移除金属件" : "Mechanical recycling / remove metal", "recycle"],
         ]
         : isFurniture
           ? [
             [t.performanceSnapshot, locale === "zh" ? "耐久性测试 / 7-10 年" : "Durability tested / 7-10 years", "check"],
             [locale === "zh" ? "可维修部件" : "Repairable modules", locale === "zh" ? "坐垫 / 扶手 / 脚轮 / 气压杆" : "Cushion / armrests / castors / gas lift", "tag"],
             [t.materialProfile, materialProfileFromData, "layers"],
-            [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
           ]
           : [
               [t.materialProfile, materialProfileFromData, "layers"],
               [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
               [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : t.noData, "carbon"],
-              [t.nextAction, nextActionFromData, "recycle"],
             ]
     : [
         [t.materialProfile, materialProfileFromData, "layers"],
         [t.certificatesVerified, certificates.length ? `${verifiedCertificates} / ${certificates.length}` : t.pendingData, "shield"],
         [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : t.pendingData, "carbon"],
-        [t.nextAction, nextActionFromData, "recycle"],
       ]
   ).map(([label, value, icon]) => [label, value === t.noData ? t.pendingData : value, icon]) as Array<[string, any, IconName]>;
-  const overviewStatusCards: Array<[string, string, IconName]> = [
-    [t.overviewStatus1, t.overviewStatus1Desc, "qr"],
-    [t.overviewStatus2, t.overviewStatus2Desc, "file"],
-    [t.overviewStatus3, t.overviewStatus3Desc, "route"],
-  ];
   const materialChemicalInfo = compact(
     materials
       .map((row: any) => pick(row, locale, "chemical_info", "chemical_info_zh"))
@@ -1881,27 +1847,10 @@ export function PublicDppClient({ data, dppUrl }: Props) {
               ))}
             </div>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {heroFocusCards.map(([label, value, icon]) => (
                 <HeroFocusCard key={label} label={label} value={value} locale={locale} icon={icon} />
               ))}
-            </div>
-
-            <div className="mt-5 rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur">
-              <p className="text-sm font-black text-brand-100">{t.overviewStatusTitle}</p>
-              <div className="mt-3 grid gap-3 md:grid-cols-3">
-                {overviewStatusCards.map(([title, desc, icon]) => (
-                  <div key={title} className="flex gap-3 rounded-lg bg-slate-950/25 p-3">
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-400/15 text-brand-100 ring-1 ring-brand-300/25">
-                      <Icon name={icon} className="h-4 w-4" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-black text-white">{title}</p>
-                      <p className="mt-1 text-xs font-semibold leading-5 text-slate-300">{desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
 
@@ -1937,7 +1886,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 alt="DPP QR Code"
                 src={qrUrl}
               />
-              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              <div className={`mt-4 grid gap-2 ${viewMode === "consumer" ? "" : "sm:grid-cols-2"}`}>
                 <a
                   href={`/api/dpp-export?format=pdf&lang=${locale}&product=${encodeURIComponent(dppProductRef)}`}
                   target="_blank"
@@ -1946,14 +1895,16 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                 >
                   {t.downloadPdf}
                 </a>
-                <a
-                  href={`/api/dpp-export?format=json&lang=${locale}&product=${encodeURIComponent(dppProductRef)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm font-black text-emerald-700 transition hover:bg-emerald-600 hover:text-white"
-                >
-                  {t.downloadJson}
-                </a>
+                {viewMode !== "consumer" && (
+                  <a
+                    href={`/api/dpp-export?format=json&lang=${locale}&product=${encodeURIComponent(dppProductRef)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm font-black text-emerald-700 transition hover:bg-emerald-600 hover:text-white"
+                  >
+                    {t.downloadJson}
+                  </a>
+                )}
               </div>
             </div>
           </aside>
