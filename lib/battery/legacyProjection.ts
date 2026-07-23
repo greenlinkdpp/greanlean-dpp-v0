@@ -19,6 +19,9 @@ export function projectBatteryValuesIntoLegacyDpp<T extends LegacyDppData>(
     "kgCO2-equivalentPerKilowattHourValue",
   );
   const serialNumber = values["battery.battery_serial_number"];
+  const epcSerial = typeof serialNumber === "string"
+    ? serialNumber.replaceAll(/[^A-Za-z0-9]/g, "").slice(0, 20)
+    : "";
   return {
     ...data,
     esg: (data.esg || []).map((row, index) => (
@@ -28,7 +31,13 @@ export function projectBatteryValuesIntoLegacyDpp<T extends LegacyDppData>(
     )),
     digitalIdentity: (data.digitalIdentity || []).map((row, index) => (
       index === 0 && typeof serialNumber === "string" && serialNumber
-        ? { ...row, serial_id: serialNumber }
+        ? {
+          ...row,
+          serial_id: serialNumber,
+          rfid_epc: typeof row.rfid_epc === "string" && epcSerial
+            ? row.rfid_epc.replace(/[^.]+$/, epcSerial)
+            : row.rfid_epc,
+        }
         : row
     )),
   } as T;

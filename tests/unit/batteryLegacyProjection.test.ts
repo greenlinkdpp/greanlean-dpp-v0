@@ -5,7 +5,11 @@ import { projectBatteryValuesIntoLegacyDpp } from "../../lib/battery/legacyProje
 test("uses canonical BatteryPass values for duplicated legacy display fields", () => {
   const projected = projectBatteryValuesIntoLegacyDpp({
     esg: [{ carbon_footprint: 62, water_usage: 28 }],
-    digitalIdentity: [{ serial_id: "OLD-SERIAL", gtin: "06900000004804" }],
+    digitalIdentity: [{
+      serial_id: "OLD-SERIAL",
+      gtin: "06900000004804",
+      rfid_epc: "urn:epc:id:sgtin:6900000.000480.OLD-SERIAL",
+    }],
   }, {
     "battery.battery_carbon_footprint_per_functional_unit": {
       "kgCO2-equivalentPerKilowattHourValue": 65,
@@ -18,4 +22,5 @@ test("uses canonical BatteryPass values for duplicated legacy display fields", (
   assert.equal(projected.esg[0].water_usage, 28);
   assert.equal(projected.digitalIdentity[0].serial_id, "LMT-48V15AH-TEST-001");
   assert.equal(projected.digitalIdentity[0].gtin, "06900000004804");
+  assert.equal(projected.digitalIdentity[0].rfid_epc, "urn:epc:id:sgtin:6900000.000480.LMT48V15AHTEST001");
 });
