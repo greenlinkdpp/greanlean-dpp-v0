@@ -14,6 +14,11 @@ import {
   type BatteryLegalCategory,
   type BatteryWorkflowStepCode,
 } from "@/lib/battery/catalog";
+import {
+  BATTERY_OPERATING_METRICS,
+  operatingDataFreshness,
+  operatingDataPolicyForBattery,
+} from "@/lib/battery/operatingDataPolicy";
 import { calculateBatteryReadiness } from "@/lib/battery/readiness";
 import { createSupabaseClient } from "@/lib/supabase";
 import { RegistryWorkbench } from "./RegistryWorkbench";
@@ -55,9 +60,10 @@ export function BatteryDppWorkspace({ productId }: Props) {
         source: "建议数据来源", evidence: "证明材料", evidenceRequired: "需要证明材料", evidenceOptional: "当前未要求证明材料", regulation: "法规/参考来源",
         complete: "已填写", missing: "未填写", evidenceStatus: "证据状态", verificationStatus: "核验状态", value: "字段值",
         confirmed: "法规必填完整度", conditionalMetric: "条件必填完整度", evidenceMetric: "证明材料完整度", verification: "数据核验完成度", registry: "Registry 注册准备度", tbdFields: "待确认字段",
-        noFields: "此步骤没有需要人工填写的静态字段。", itemTitle: "单体与动态运行数据", itemIntro: "动态指标和生命周期事件只新增历史记录，不覆盖旧值。",
+        noFields: "此步骤没有需要人工填写的静态字段。", itemTitle: "单体运行记录", itemIntro: "这里保存单体级最新快照和完整历史。运行数据只追加、不覆盖，并且不进入消费者公开页面。",
         item: "电池单体", serial: "序列号", upi: "唯一产品标识", createItem: "新增单体", metric: "动态指标", metricValue: "指标值", measuredAt: "测量时间", appendMetric: "追加指标",
         event: "生命周期事件", eventType: "事件类型", eventNote: "事件说明", appendEvent: "追加事件", noItems: "请先新增一个电池单体。",
+        collectionMode: "采集方式", restrictedAccess: "访问级别", syncCadence: "更新节奏", latestSnapshot: "最近快照", legitimateInterest: "仅限经批准的正当利益主体", noSnapshot: "尚无运行数据", sourceType: "数据来源", sourceDevice: "设备或网关标识",
         previewTitle: "DPP 预览和发布", consumer: "消费者预览", professional: "专业预览", audit: "审计预览", publishNote: "发布仍由上方产品版本区控制；电池字段会随发布版本形成快照。",
         registryTitle: "Registry 注册准备", registryNotice: "EU DPP Registry 已上线，但当前官方指南仍未提供可成功注册电池 DPP 的最终语义目录。本页只计算本地准备度，不宣称已经注册成功。",
       }
@@ -70,9 +76,10 @@ export function BatteryDppWorkspace({ productId }: Props) {
         source: "Suggested source", evidence: "Evidence", evidenceRequired: "Evidence required", evidenceOptional: "No evidence currently required", regulation: "Regulatory/reference source",
         complete: "Complete", missing: "Missing", evidenceStatus: "Evidence status", verificationStatus: "Verification status", value: "Field value",
         confirmed: "Confirmed mandatory completeness", conditionalMetric: "Conditional completeness", evidenceMetric: "Evidence completeness", verification: "Verification completion", registry: "Registry readiness", tbdFields: "TBD fields",
-        noFields: "This step has no manually entered static fields.", itemTitle: "Items and operating data", itemIntro: "Dynamic metrics and lifecycle events append history and never overwrite earlier records.",
+        noFields: "This step has no manually entered static fields.", itemTitle: "Item operating records", itemIntro: "This area stores item-level latest snapshots and complete history. Operating data is append-only and never enters the public consumer page.",
         item: "Battery item", serial: "Serial identifier", upi: "Unique product identifier", createItem: "Add item", metric: "Operating metric", metricValue: "Metric value", measuredAt: "Measured at", appendMetric: "Append metric",
         event: "Lifecycle event", eventType: "Event type", eventNote: "Event note", appendEvent: "Append event", noItems: "Add a battery item first.",
+        collectionMode: "Collection mode", restrictedAccess: "Access level", syncCadence: "Update cadence", latestSnapshot: "Latest snapshot", legitimateInterest: "Approved legitimate-interest users only", noSnapshot: "No operating data yet", sourceType: "Data source", sourceDevice: "Device or gateway identifier",
         previewTitle: "DPP preview and publishing", consumer: "Consumer preview", professional: "Professional preview", audit: "Audit preview", publishNote: "Publishing remains controlled by the product version section above; battery fields are included in the release snapshot.",
         registryTitle: "Registry readiness", registryNotice: "The EU DPP Registry is live, but its current official guide does not yet provide final battery semantics for a successful registration. This view measures local readiness and does not claim registration success.",
       };
@@ -105,9 +112,15 @@ export function BatteryDppWorkspace({ productId }: Props) {
       SERIAL_IDENTIFIER_REQUIRED: "请填写电池单体序列号。",
       BATTERY_ITEM_NOT_FOUND: "没有找到对应的电池单体。",
       INVALID_BATTERY_METRIC: "请完整填写电池单体、动态指标和数值。",
+      BATTERY_METRIC_OUT_OF_RANGE: "动态指标数值超出允许范围。",
+      INVALID_MEASUREMENT_TIME: "测量时间无效或晚于当前时间。",
+      INVALID_BATTERY_DATA_SOURCE: "请选择有效的数据来源。",
+      BATTERY_SOURCE_DEVICE_REQUIRED: "BMS 或网关数据必须填写设备标识。",
+      BATTERY_OPERATING_DATA_NOT_APPLICABLE: "请先确认电池护照分类，再启用自动运行数据采集。",
       INVALID_BATTERY_EVENT: "请完整填写电池单体和生命周期事件。",
       BATTERY_SCHEMA_NOT_INSTALLED: "电池字段目录尚未安装。",
       BATTERY_SCHEMA_NOT_PUBLISHED: "电池字段目录尚未发布。",
+      BATTERY_INTERNAL_ACCESS_REQUIRED: "当前账号尚未获得电池 DPP 内部管理权限。",
     };
     return messages[payload?.error?.code] || "电池 DPP 请求未完成，请检查填写内容后重试。";
   }
@@ -157,6 +170,7 @@ export function BatteryDppWorkspace({ productId }: Props) {
   const currentFields = fieldsForBattery(classification, { workflowStep: activeStep })
     .filter((field) => field.dataBehavior === "STATIC");
   const publicIdentifier = workspace?.product?.dpp_id || workspace?.product?.public_slug;
+  const operatingPolicy = operatingDataPolicyForBattery(classification);
 
   function derivedValue(fieldCode: string) {
     const derived: Record<string, unknown> = {
@@ -302,7 +316,7 @@ export function BatteryDppWorkspace({ productId }: Props) {
           </div> : null}
 
           {currentFields.length === 0 && !["item_operation", "preview_publish", "registry_readiness"].includes(activeStep) ? <p className="mt-5 border-y border-slate-200 py-8 text-center text-sm font-semibold text-slate-500">{t.noFields}</p> : null}
-          {activeStep === "item_operation" ? <ItemOperation workspace={workspace} isZh={isZh} saving={saving} t={t} onAction={performAction} /> : null}
+          {activeStep === "item_operation" ? <ItemOperation workspace={workspace} operatingPolicy={operatingPolicy} isZh={isZh} saving={saving} t={t} onAction={performAction} /> : null}
           {activeStep === "preview_publish" ? <div className="mt-5 border-y border-slate-200 py-6"><h4 className="font-black text-slate-950">{t.previewTitle}</h4><p className="mt-2 text-sm text-slate-600">{t.publishNote}</p><div className="mt-4 flex flex-wrap gap-3">{publicIdentifier ? <><Link className="btn-secondary" href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=consumer`} target="_blank">{t.consumer}</Link><Link className="btn-primary" href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=professional`} target="_blank">{t.professional}</Link><Link className="btn-secondary" href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=audit`} target="_blank">{t.audit}</Link></> : null}</div></div> : null}
           {activeStep === "registry_readiness" ? <div className="mt-5"><h4 className="font-black text-slate-950">{t.registryTitle}</h4><p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-amber-800">{t.registryNotice}</p><RegistryWorkbench productId={productId} isZh={isZh} /></div> : null}
           {message ? <p className={`mt-4 text-sm font-semibold ${message === t.saved ? "text-emerald-700" : "text-red-700"}`}>{message}</p> : null}
@@ -318,22 +332,76 @@ export function BatteryDppWorkspace({ productId }: Props) {
   );
 }
 
-function ItemOperation({ workspace, isZh, saving, t, onAction }: { workspace: any; isZh: boolean; saving: boolean; t: any; onAction: (body: Record<string, unknown>) => Promise<void> }) {
+function ItemOperation({
+  workspace,
+  operatingPolicy,
+  isZh,
+  saving,
+  t,
+  onAction,
+}: {
+  workspace: any;
+  operatingPolicy: ReturnType<typeof operatingDataPolicyForBattery>;
+  isZh: boolean;
+  saving: boolean;
+  t: any;
+  onAction: (body: Record<string, unknown>) => Promise<void>;
+}) {
   const [itemId, setItemId] = useState(workspace.items?.[0]?.id || "");
+  const [dataSource, setDataSource] = useState("manual");
 
   useEffect(() => {
     if (!itemId && workspace.items?.[0]?.id) setItemId(workspace.items[0].id);
   }, [itemId, workspace.items]);
 
   const selectedItemId = itemId || workspace.items?.[0]?.id || "";
+  const selectedMetrics = (workspace.metrics || []).filter((metric: any) => !selectedItemId || metric.battery_item_id === selectedItemId);
+  const latestMeasuredAt = selectedMetrics[0]?.measured_at || null;
+  const freshness = operatingDataFreshness(operatingPolicy, latestMeasuredAt);
+  const databaseMetricByCode = new Map((workspace.metricTypes || []).map((metric: any) => [metric.code, metric]));
+  const metricDefinitions = BATTERY_OPERATING_METRICS.map((metric) => ({
+    ...metric,
+    ...(databaseMetricByCode.get(metric.code) || {}),
+  }));
+  const collectionMode = {
+    BMS_DAILY: isZh ? "BMS 日级快照" : "Daily BMS snapshot",
+    CONNECTED_OR_SERVICE: isZh ? "设备网关或维保快照" : "Gateway or service snapshot",
+    SERVICE_SNAPSHOT: isZh ? "维保事件快照" : "Service-event snapshot",
+    VOLUNTARY: isZh ? "自愿记录" : "Voluntary record",
+    MANUAL_REVIEW: isZh ? "分类确认后启用" : "Enable after classification",
+  }[operatingPolicy.collectionMode];
+  const freshnessLabel = {
+    NOT_APPLICABLE: isZh ? "当前分类无强制要求" : "Not required for this category",
+    MISSING: t.noSnapshot,
+    RECORDED: latestMeasuredAt ? new Date(latestMeasuredAt).toLocaleString() : t.noSnapshot,
+    CURRENT: latestMeasuredAt ? new Date(latestMeasuredAt).toLocaleString() : t.noSnapshot,
+    DUE: isZh ? "需要更新" : "Update due",
+    OVERDUE: isZh ? "已逾期" : "Overdue",
+  }[freshness.status];
+  const syncCadence = operatingPolicy.recommendedSyncHours
+    ? (isZh ? `至少每 ${operatingPolicy.recommendedSyncHours} 小时` : `At least every ${operatingPolicy.recommendedSyncHours} hours`)
+    : (isZh ? "按状态或维保事件更新" : "On status or service events");
+
   return <div className="mt-5 border-y border-slate-200 py-6">
     <h4 className="font-black text-slate-950">{t.itemTitle}</h4><p className="mt-2 text-sm text-slate-600">{t.itemIntro}</p>
+    <div className="mt-5 grid gap-px overflow-hidden rounded-lg border border-slate-200 bg-slate-200 sm:grid-cols-2 xl:grid-cols-4">
+      {[
+        [t.collectionMode, collectionMode],
+        [t.restrictedAccess, t.legitimateInterest],
+        [t.syncCadence, syncCadence],
+        [t.latestSnapshot, freshnessLabel],
+      ].map(([label, value]) => <div key={label} className="bg-slate-50 p-4"><p className="text-xs font-bold text-slate-500">{label}</p><p className="mt-2 text-sm font-black leading-5 text-slate-900">{value}</p></div>)}
+    </div>
+    <div className={`mt-4 border-l-4 px-4 py-3 text-sm font-semibold leading-6 ${operatingPolicy.passportOperatingDataApplies ? "border-emerald-500 bg-emerald-50 text-emerald-900" : "border-amber-500 bg-amber-50 text-amber-900"}`}>
+      <p>{isZh ? operatingPolicy.guidanceZh : operatingPolicy.guidanceEn}</p>
+      <p className="mt-1 text-xs font-bold opacity-80">{isZh ? operatingPolicy.legalBasisZh : operatingPolicy.legalBasisEn}</p>
+    </div>
     <form className="mt-5 grid gap-3 md:grid-cols-3" onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); onAction({ action: "createItem", serialIdentifier: form.get("serial"), uniqueProductIdentifier: form.get("upi") }); event.currentTarget.reset(); }}><label><span className="label">{t.serial}</span><input className="input mt-1" name="serial" required /></label><label><span className="label">{t.upi}</span><input className="input mt-1" name="upi" /></label><button className="btn-secondary self-end" disabled={saving}>{t.createItem}</button></form>
     {workspace.items?.length ? <>
       <div className="mt-6"><label><span className="label">{t.item}</span><select className="input mt-1" value={selectedItemId} onChange={(event) => setItemId(event.target.value)}>{workspace.items.map((item: any) => <option key={item.id} value={item.id}>{item.serial_identifier}</option>)}</select></label></div>
-      <form className="mt-4 grid gap-3 md:grid-cols-4" onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const measuredAt = form.get("measuredAt"); onAction({ action: "appendMetric", batteryItemId: selectedItemId, metricType: form.get("metricType"), metricValue: form.get("metricValue"), measuredAt: measuredAt ? new Date(String(measuredAt)).toISOString() : new Date().toISOString(), dataSource: "manual" }); }}><label><span className="label">{t.metric}</span><select className="input mt-1" name="metricType"><option value="SOC">{isZh ? "荷电状态" : "State of charge"}</option><option value="REMAINING_CAPACITY">{isZh ? "剩余容量" : "Remaining capacity"}</option><option value="TEMPERATURE">{isZh ? "温度" : "Temperature"}</option><option value="FULL_CYCLE_COUNT">{isZh ? "完整循环次数" : "Full cycle count"}</option><option value="SOH_VOLUNTARY">{isZh ? "健康状态（自愿）" : "State of health (voluntary)"}</option></select></label><label><span className="label">{t.metricValue}</span><input className="input mt-1" name="metricValue" required step="any" type="number" /></label><label><span className="label">{t.measuredAt}</span><input className="input mt-1" name="measuredAt" type="datetime-local" /></label><button className="btn-primary self-end" disabled={saving}>{t.appendMetric}</button></form>
+      <form className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-6" onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const measuredAt = form.get("measuredAt"); onAction({ action: "appendMetric", batteryItemId: selectedItemId, metricType: form.get("metricType"), metricValue: form.get("metricValue"), measuredAt: measuredAt ? new Date(String(measuredAt)).toISOString() : new Date().toISOString(), dataSource: form.get("dataSource"), sourceDevice: form.get("sourceDevice") }); }}><label className="xl:col-span-2"><span className="label">{t.metric}</span><select className="input mt-1" name="metricType">{metricDefinitions.map((metric: any) => <option key={metric.code} value={metric.code}>{isZh ? metric.label_zh || metric.labelZh : metric.label_en || metric.labelEn} ({metric.default_unit || metric.defaultUnit})</option>)}</select></label><label><span className="label">{t.metricValue}</span><input className="input mt-1" name="metricValue" required step="any" type="number" /></label><label><span className="label">{t.measuredAt}</span><input className="input mt-1" name="measuredAt" type="datetime-local" /></label><label><span className="label">{t.sourceType}</span><select className="input mt-1" name="dataSource" value={dataSource} onChange={(event) => setDataSource(event.target.value)}><option value="manual">{isZh ? "人工记录" : "Manual"}</option><option value="service">{isZh ? "维保记录" : "Service record"}</option><option value="bms">{isZh ? "电池管理系统" : "BMS"}</option><option value="bms_gateway">{isZh ? "设备网关" : "Equipment gateway"}</option><option value="import">{isZh ? "经核验导入" : "Verified import"}</option></select></label><label><span className="label">{t.sourceDevice}</span><input className="input mt-1" disabled={!["bms", "bms_gateway"].includes(dataSource)} name="sourceDevice" required={["bms", "bms_gateway"].includes(dataSource)} /></label><button className="btn-primary md:col-span-2 xl:col-span-6 xl:justify-self-end" disabled={saving}>{t.appendMetric}</button></form>
       <form className="mt-4 grid gap-3 md:grid-cols-3" onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); onAction({ action: "appendLifecycleEvent", batteryItemId: selectedItemId, eventType: form.get("eventType"), eventData: { note: form.get("eventNote") }, dataSource: "manual" }); }}><label><span className="label">{t.eventType}</span><select className="input mt-1" name="eventType"><option value="commissioned">{isZh ? "投入使用" : "Commissioned"}</option><option value="repaired">{isZh ? "维修" : "Repaired"}</option><option value="repurposed">{isZh ? "梯次利用" : "Repurposed"}</option><option value="accident">{isZh ? "事故" : "Accident"}</option><option value="decommissioned">{isZh ? "退役" : "Decommissioned"}</option></select></label><label><span className="label">{t.eventNote}</span><input className="input mt-1" name="eventNote" /></label><button className="btn-secondary self-end" disabled={saving}>{t.appendEvent}</button></form>
-      <div className="mt-6 grid gap-3 md:grid-cols-2">{workspace.metrics?.slice(0, 8).map((metric: any) => <div key={metric.id} className="rounded border border-slate-200 px-3 py-2 text-sm"><strong>{metric.metric_type}</strong><span className="ml-2">{metric.metric_value} {metric.unit}</span><p className="mt-1 text-xs text-slate-500">{new Date(metric.measured_at).toLocaleString()}</p></div>)}{workspace.lifecycleEvents?.slice(0, 8).map((event: any) => <div key={event.id} className="rounded border border-slate-200 px-3 py-2 text-sm"><strong>{event.event_type}</strong><p className="mt-1 text-xs text-slate-500">{new Date(event.event_time).toLocaleString()}</p></div>)}</div>
+      <div className="mt-6 grid gap-3 md:grid-cols-2">{selectedMetrics.slice(0, 12).map((metric: any) => { const definition: any = metricDefinitions.find((item) => item.code === metric.metric_type); return <div key={metric.id} className="rounded border border-slate-200 px-3 py-2 text-sm"><strong>{isZh ? definition?.label_zh || definition?.labelZh || metric.metric_type : definition?.label_en || definition?.labelEn || metric.metric_type}</strong><span className="ml-2">{metric.metric_value} {metric.unit}</span><p className="mt-1 text-xs text-slate-500">{new Date(metric.measured_at).toLocaleString()} · {metric.data_source}{metric.source_device ? ` · ${metric.source_device}` : ""}</p></div>; })}{workspace.lifecycleEvents?.filter((event: any) => !selectedItemId || event.battery_item_id === selectedItemId).slice(0, 8).map((event: any) => <div key={event.id} className="rounded border border-slate-200 px-3 py-2 text-sm"><strong>{event.event_type}</strong><p className="mt-1 text-xs text-slate-500">{new Date(event.event_time).toLocaleString()}</p></div>)}</div>
     </> : <p className="mt-5 text-sm font-semibold text-slate-500">{t.noItems}</p>}
   </div>;
 }

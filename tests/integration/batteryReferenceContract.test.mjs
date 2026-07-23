@@ -55,3 +55,37 @@ test("portable and SLI applicability stays explicitly undecided in the reference
     assert.equal(field.categoryRequirementStatus["battery.sli"], "TBD");
   }
 });
+
+test("public DPP rendering cannot return item operating telemetry", async () => {
+  const page = await readFile("app/p/[slug]/page.tsx", "utf8");
+  assert.doesNotMatch(page, /battery_operating_metric/);
+  assert.match(page, /\["state_of_health", "state_of_charge"\]/);
+  assert.match(page, /safeSectorFieldValues/);
+
+  const publicClient = await readFile("components/PublicDppClient.tsx", "utf8");
+  assert.match(publicClient, /returns no item telemetry or operating values/);
+  assert.match(publicClient, /不返回任何单体遥测或运行数值/);
+});
+
+test("legacy battery templates keep SoH and SoC outside public visibility", async () => {
+  const manager = await readFile("components/SectorFieldManager.tsx", "utf8");
+  for (const fieldKey of ["state_of_health", "state_of_charge"]) {
+    const definition = manager.match(new RegExp(`field_key: "${fieldKey}"[^\\n]+`))?.[0] || "";
+    assert.match(definition, /visibility_level: "professional"/);
+    assert.match(definition, /legitimate-interest users only/);
+  }
+});
+
+test("complete battery workspaces and exports require explicit internal access", async () => {
+  const repository = await readFile("lib/server/batteryRepository.ts", "utf8");
+  assert.match(repository, /granted !== "INTERNAL"/);
+  assert.match(repository, /BATTERY_INTERNAL_ACCESS_REQUIRED/);
+
+  for (const route of [
+    "app/api/battery-dpp/[productId]/route.ts",
+    "app/api/battery-dpp/[productId]/batterypass-export/route.ts",
+  ]) {
+    const source = await readFile(route, "utf8");
+    assert.match(source, /requireBatteryInternalUser\(user\)/, `${route} does not enforce internal access`);
+  }
+});

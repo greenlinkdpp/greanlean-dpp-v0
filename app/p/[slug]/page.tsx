@@ -144,7 +144,10 @@ async function getData(identifier: string, includeDraft = false) {
     safeSelect(supabase, "dpp_blockchain_anchors", product.id),
     safeSelect(supabase, "product_sector_field_values", product.id),
   ]);
-  let data = { product: normalizeProductImage(product), materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance, registrySubmissions, registrationProofs, evidenceLinks, blockchainAnchors, sectorFieldValues };
+  const safeSectorFieldValues = sectorFieldValues.filter((row: any) =>
+    !["state_of_health", "state_of_charge"].includes(String(row.field_key || "").toLowerCase()),
+  );
+  let data = { product: normalizeProductImage(product), materials, certificates, esg, bom, traceability, circularity, consumerTransparency, digitalIdentity, documents, governance, registrySubmissions, registrationProofs, evidenceLinks, blockchainAnchors, sectorFieldValues: safeSectorFieldValues };
   if (product.sector_code === "battery") {
     data = projectBatteryValuesIntoLegacyDpp(data, await publicBatteryValues(supabase, product.id));
   }

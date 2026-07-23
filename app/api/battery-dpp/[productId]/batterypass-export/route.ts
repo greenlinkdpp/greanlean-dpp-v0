@@ -1,11 +1,13 @@
 import { withApiRoute } from "@/lib/server/apiRoute";
 import { createBatteryPassLmtExport } from "@/lib/server/batteryPassRepository";
+import { requireBatteryInternalUser } from "@/lib/server/batteryRepository";
 import { createSupabaseAdminClient, requireAuthenticatedUser } from "@/lib/server/supabase";
 
 type RouteContext = { params: { productId: string } };
 
 export const GET = withApiRoute<RouteContext>(async (request, _context, route) => {
-  await requireAuthenticatedUser(request);
+  const { user } = await requireAuthenticatedUser(request);
+  requireBatteryInternalUser(user);
   const requestUrl = new URL(request.url);
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin;
   const result = await createBatteryPassLmtExport(

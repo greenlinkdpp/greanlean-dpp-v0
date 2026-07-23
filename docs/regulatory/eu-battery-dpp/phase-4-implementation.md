@@ -41,6 +41,28 @@ Restricted projections require an authenticated user with an explicit
 `dpp_access_level` application-metadata claim. Client-side hiding is not used as
 an access-control mechanism.
 
+The complete battery workspace, operating-data append operations and
+BatteryPass export require `dpp_access_level=INTERNAL`. A normal authenticated
+session is not sufficient. Public rendering also strips legacy SoH and SoC
+sector fields before serializing page data.
+
+## Operating Data Policy
+
+The DPP stores periodic or event-driven item snapshots; it is not a public
+real-time BMS dashboard.
+
+- EV, LMT and stationary industrial batteries use BMS snapshots at least daily
+  and after material status or safety events.
+- Other industrial batteries above 2 kWh use a device gateway where available,
+  with verified service snapshots as the fallback.
+- Industrial batteries without BMS record signed commissioning, inspection,
+  repair, repurposing and end-of-life snapshots. The system must not fabricate
+  live telemetry.
+- Portable and SLI operating data remains voluntary because those categories
+  do not automatically enter the Article 77 battery-passport scope.
+- SoH, SoC, temperature, cycle, throughput and exception data always remains
+  item-level, append-only and limited to approved legitimate-interest access.
+
 ## Workflow And Readiness
 
 The editor has 11 steps: identity, economic operator, manufacturing, materials

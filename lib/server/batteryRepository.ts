@@ -8,6 +8,10 @@ import {
   type BatterySchemaCode,
 } from "../battery/catalog.ts";
 import { batteryDynamicValuesForWorkspace } from "../battery/batteryPass.ts";
+import {
+  operatingDataPolicyForBattery,
+  validateOperatingMetricValue,
+} from "../battery/operatingDataPolicy.ts";
 import { calculateBatteryReadiness } from "../battery/readiness.ts";
 import { projectBatteryFields, projectionAccessForAudience } from "../battery/projection.ts";
 import type { AccessLevel } from "../schemaRegistry.ts";
@@ -124,34 +128,43 @@ export async function loadBatteryWorkspace(admin: AdminClient, productId: string
       product,
       profile: null,
       classification,
+      operatingPolicy: operatingDataPolicyForBattery(classification),
       values: {},
       readiness: calculateBatteryReadiness(classification, {}),
       batches: [],
       items: [],
       metrics: [],
+      metricTypes: [],
       lifecycleEvents: [],
       catalog: BATTERY_CATALOG_METADATA,
     };
   }
 
   const { fields } = await longlistFieldDefinitions(admin);
-  const [fieldResult, batchResult, itemResult, metricResult, eventResult] = await Promise.all([
+  const [fieldResult, batchResult, itemResult, metricResult, metricTypeResult, eventResult] = await Promise.all([
     admin.from("battery_field_value").select("*").eq("battery_model_profile_id", profile.id).is("battery_batch_id", null).is("battery_item_id", null),
     admin.from("battery_batch").select("*").eq("battery_model_profile_id", profile.id).order("created_at", { ascending: false }),
     admin.from("battery_item").select("*").eq("battery_model_profile_id", profile.id).order("created_at", { ascending: false }),
     admin.from("battery_operating_metric_latest").select("*").eq("product_id", productId).order("measured_at", { ascending: false }),
+    admin.from("battery_metric_type").select("code,label_en,label_zh,default_unit,access_level_code").eq("status", "active").order("label_en"),
     admin.from("battery_lifecycle_event").select("*").eq("product_id", productId).order("event_time", { ascending: false }),
   ]);
-  [fieldResult, batchResult, itemResult, metricResult, eventResult].forEach((result) => databaseError(result.error));
+  [fieldResult, batchResult, itemResult, metricResult, metricTypeResult, eventResult].forEach((result) => databaseError(result.error));
   const values = valuesByFieldCode(fieldResult.data || [], fields);
   const workspaceData = {
     product,
     profile,
     classification: { ...classification, applicability: profile.passport_applicability, reasonZh: profile.applicability_reason || classification.reasonZh },
+    operatingPolicy: operatingDataPolicyForBattery({
+      ...classification,
+      applicability: profile.passport_applicability,
+      reasonZh: profile.applicability_reason || classification.reasonZh,
+    }),
     values,
     batches: batchResult.data || [],
     items: itemResult.data || [],
     metrics: metricResult.data || [],
+    metricTypes: metricTypeResult.data || [],
     lifecycleEvents: eventResult.data || [],
   };
   const dynamicValues = batteryDynamicValuesForWorkspace(workspaceData, process.env.NEXT_PUBLIC_SITE_URL || "https://greanlean.com");
@@ -285,20 +298,39 @@ export async function appendBatteryMetric(admin: AdminClient, productId: string,
   const { data: item, error: itemError } = await admin.from("battery_item").select("id").eq("id", batteryItemId).eq("product_id", productId).maybeSingle();
   databaseError(itemError);
   if (!item) throw new ApiError(404, "BATTERY_ITEM_NOT_FOUND", "The battery item was not found for this product.");
+  const workspace = await loadBatteryWorkspace(admin, productId);
+  if (!validateOperatingMetricValue(metricType, metricValue)) {
+    throw new ApiError(400, "BATTERY_METRIC_OUT_OF_RANGE", "The battery metric value is outside the accepted range.", { metricType });
+  }
   const { data: metricDefinition, error: metricDefinitionError } = await admin.from("battery_metric_type").select("code,default_unit,access_level_code").eq("code", metricType).eq("status", "active").maybeSingle();
   databaseError(metricDefinitionError);
   if (!metricDefinition) throw new ApiError(400, "UNKNOWN_METRIC_TYPE", "The battery metric type is not active.");
+  const measuredAt = new Date(String(input.measuredAt || new Date().toISOString()));
+  if (Number.isNaN(measuredAt.getTime()) || measuredAt.getTime() > Date.now() + 5 * 60_000) {
+    throw new ApiError(400, "INVALID_MEASUREMENT_TIME", "The measurement timestamp is invalid or too far in the future.");
+  }
+  const dataSource = String(input.dataSource || "manual");
+  if (!["manual", "bms", "bms_gateway", "service", "import"].includes(dataSource)) {
+    throw new ApiError(400, "INVALID_BATTERY_DATA_SOURCE", "The battery operating-data source is not supported.");
+  }
+  const sourceDevice = String(input.sourceDevice || "").trim();
+  if (["bms", "bms_gateway"].includes(dataSource) && !sourceDevice) {
+    throw new ApiError(400, "BATTERY_SOURCE_DEVICE_REQUIRED", "A source-device identifier is required for BMS measurements.");
+  }
+  if (!workspace.operatingPolicy.passportOperatingDataApplies && dataSource !== "manual" && dataSource !== "service") {
+    throw new ApiError(409, "BATTERY_OPERATING_DATA_NOT_APPLICABLE", "Confirm the battery-passport classification before enabling automated operating-data ingestion.");
+  }
   const { error } = await admin.from("battery_operating_metric").insert({
     product_id: productId,
     battery_item_id: batteryItemId,
     metric_type: metricType,
     metric_value: metricValue,
-    unit: input.unit || metricDefinition.default_unit,
-    measured_at: input.measuredAt || new Date().toISOString(),
-    data_source: input.dataSource || "manual",
-    source_device: input.sourceDevice || null,
+    unit: metricDefinition.default_unit,
+    measured_at: measuredAt.toISOString(),
+    data_source: dataSource,
+    source_device: sourceDevice || null,
     verification_status: input.verificationStatus || "unverified",
-    access_level_code: metricDefinition.access_level_code,
+    access_level_code: "LEGITIMATE_INTEREST",
     ingestion_key: input.ingestionKey || null,
   });
   databaseError(error);
@@ -335,6 +367,13 @@ export function viewerAccessFromUser(user: User | null, requested: string | null
   const projected = projectionAccessForAudience(requested, granted);
   if (!projected) throw new ApiError(403, "BATTERY_AUDIENCE_ACCESS_REQUIRED", "The requested battery DPP audience is not available to this account.");
   return projected;
+}
+
+export function requireBatteryInternalUser(user: User) {
+  const granted = String(user.app_metadata?.dpp_access_level || "").toUpperCase();
+  if (granted !== "INTERNAL") {
+    throw new ApiError(403, "BATTERY_INTERNAL_ACCESS_REQUIRED", "Internal battery DPP access is required for this operation.");
+  }
 }
 
 export async function loadBatteryProjection(admin: AdminClient, identifier: string, viewerAccess: AccessLevel) {

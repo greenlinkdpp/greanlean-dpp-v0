@@ -1826,6 +1826,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     ["#materials", t.materialSource, "layers"],
     ["#chemicals", t.chemicalRestricted, "file"],
     ["#performance", t.productPerformance, "shield"],
+    ...(isBattery ? [["#operating-data", locale === "zh" ? "受限运行数据" : "Restricted operating data", "route"] as [string, string, IconName]] : []),
     ["#traceability", t.traceability, "route"],
     ["#esg", t.esg, "leaf"],
     ["#certificates", t.certificates, "certificate"],
@@ -1843,6 +1844,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   ];
   const auditNavItems: Array<[string, string, IconName]> = [
     ["#identity", t.productIdentity, "box"],
+    ...(isBattery ? [["#operating-data", locale === "zh" ? "受限运行数据" : "Restricted operating data", "route"] as [string, string, IconName]] : []),
     ["#evidence", t.auditLayer, "file"],
   ];
   const currentNavItems = viewMode === "consumer" ? consumerNavItems : viewMode === "audit" ? auditNavItems : professionalNavItems;
@@ -2148,6 +2150,20 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ) : (
             <Empty text={t.pendingData} />
           )}
+        </Section>}
+
+        {isBattery && viewMode !== "consumer" && <Section id="operating-data" title={locale === "zh" ? "受限运行数据" : "Restricted operating data"} icon="route">
+          <DataCard title={locale === "zh" ? "单体运行记录访问边界" : "Item operating-record access boundary"} icon="shield" surface="soft">
+            <InfoGrid
+              items={[
+                [locale === "zh" ? "访问级别" : "Access level", locale === "zh" ? "仅限经批准的正当利益主体" : "Approved legitimate-interest users only"],
+                [locale === "zh" ? "数据范围" : "Data scope", locale === "zh" ? "健康状态、荷电状态、温度、循环次数、能量吞吐量与异常事件" : "State of health, state of charge, temperature, cycle count, throughput and exception events"],
+                [locale === "zh" ? "更新方式" : "Update method", locale === "zh" ? "BMS 或设备网关定期快照；无 BMS 时按维保和状态事件追加" : "Periodic BMS or gateway snapshots; service and status-event records where no BMS is available"],
+                [locale === "zh" ? "当前页面" : "This page", locale === "zh" ? "仅显示访问规则，不返回任何单体遥测或运行数值" : "Shows the access rule only and returns no item telemetry or operating values"],
+              ]}
+              locale={locale}
+            />
+          </DataCard>
         </Section>}
 
         {viewMode === "professional" && <Section id="traceability" title={t.traceability} icon="route">
