@@ -97,6 +97,21 @@ export function BatteryDppWorkspace({ productId }: Props) {
     return { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
   }
 
+  function localizedApiError(payload: any, status: number) {
+    if (!isZh) return payload?.error?.message || String(status);
+    const messages: Record<string, string> = {
+      BATTERY_PROFILE_REQUIRED: "尚未保存电池型号档案，请先保存分类和型号信息。",
+      BATTERY_CLASSIFICATION_REQUIRED: "请先选择法定电池类别。",
+      SERIAL_IDENTIFIER_REQUIRED: "请填写电池单体序列号。",
+      BATTERY_ITEM_NOT_FOUND: "没有找到对应的电池单体。",
+      INVALID_BATTERY_METRIC: "请完整填写电池单体、动态指标和数值。",
+      INVALID_BATTERY_EVENT: "请完整填写电池单体和生命周期事件。",
+      BATTERY_SCHEMA_NOT_INSTALLED: "电池字段目录尚未安装。",
+      BATTERY_SCHEMA_NOT_PUBLISHED: "电池字段目录尚未发布。",
+    };
+    return messages[payload?.error?.code] || "电池 DPP 请求未完成，请检查填写内容后重试。";
+  }
+
   async function request(method: string, body?: unknown) {
     const response = await fetch(`/api/battery-dpp/${encodeURIComponent(productId)}`, {
       method,
@@ -104,7 +119,7 @@ export function BatteryDppWorkspace({ productId }: Props) {
       body: body === undefined ? undefined : JSON.stringify(body),
     });
     const payload = await response.json().catch(() => null);
-    if (!response.ok) throw new Error(payload?.error?.message || `${response.status}`);
+    if (!response.ok) throw new Error(localizedApiError(payload, response.status));
     return payload;
   }
 
@@ -162,21 +177,20 @@ export function BatteryDppWorkspace({ productId }: Props) {
     setValues((current) => ({ ...current, [fieldCode]: { ...current[fieldCode], ...patch, value: patch.value ?? current[fieldCode]?.value ?? "" } }));
   }
 
-  async function save() {
-    setSaving(true);
-    setMessage("");
-    try {
-      const staticValues = Object.fromEntries(Object.entries(values).filter(([fieldCode]) => {
-        const field = fieldsForBattery(classification, { includeNotApplicable: true }).find((item) => item.fieldCode === fieldCode);
-        return field?.dataBehavior === "STATIC";
-      }));
-      for (const field of currentFields) {
-        const derived = derivedValue(field.fieldCode);
-        if (derived !== undefined && staticValues[field.fieldCode] === undefined) {
-          staticValues[field.fieldCode] = { value: derived, sourceType: "system_derived", verificationStatus: "unverified", evidenceStatus: "not_applicable" };
-        }
+  function workspacePayload() {
+    const staticValues = Object.fromEntries(Object.entries(values).filter(([fieldCode]) => {
+      const field = fieldsForBattery(classification, { includeNotApplicable: true }).find((item) => item.fieldCode === fieldCode);
+      return field?.dataBehavior === "STATIC";
+    }));
+    for (const field of currentFields) {
+      const derived = derivedValue(field.fieldCode);
+      if (derived !== undefined && staticValues[field.fieldCode] === undefined) {
+        staticValues[field.fieldCode] = { value: derived, sourceType: "system_derived", verificationStatus: "unverified", evidenceStatus: "not_applicable" };
       }
-      const profile = {
+    }
+    return {
+      classification: { legalCategory: category, capacityKwh: capacityKwh === "" ? null : Number(capacityKwh), stationary, bmsPresent },
+      profile: {
         battery_model_identifier: displayedValue("battery.battery_model_identifier") || null,
         battery_mass_kg: Number(displayedValue("battery.battery_mass")) || null,
         battery_chemistry_code: displayedValue("battery.battery_chemistry") || null,
@@ -184,14 +198,23 @@ export function BatteryDppWorkspace({ productId }: Props) {
         manufacturer_name: displayedValue("battery.manufacturer_information") || null,
         manufacturing_place: displayedValue("battery.manufacturing_place") || null,
         warranty_description: displayedValue("battery.warranty_period_of_the_battery") || null,
-      };
-      const data = await request("PUT", {
-        classification: { legalCategory: category, capacityKwh: capacityKwh === "" ? null : Number(capacityKwh), stationary, bmsPresent },
-        profile,
-        values: staticValues,
-      });
-      setWorkspace(data);
-      setValues(data.values || {});
+      },
+      values: staticValues,
+    };
+  }
+
+  async function persistWorkspace() {
+    const data = await request("PUT", workspacePayload());
+    setWorkspace(data);
+    setValues(data.values || {});
+    return data;
+  }
+
+  async function save() {
+    setSaving(true);
+    setMessage("");
+    try {
+      await persistWorkspace();
       setMessage(t.saved);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error));
@@ -204,6 +227,7 @@ export function BatteryDppWorkspace({ productId }: Props) {
     setSaving(true);
     setMessage("");
     try {
+      if (body.action === "createItem" && !workspace?.profile) await persistWorkspace();
       const data = await request("POST", body);
       setWorkspace(data);
       setValues(data.values || {});
@@ -251,7 +275,7 @@ export function BatteryDppWorkspace({ productId }: Props) {
       <div className="grid gap-6 p-6 xl:grid-cols-[minmax(0,1fr)_300px]">
         <div>
           <div className="flex flex-wrap items-end justify-between gap-3">
-            <div><p className="text-xs font-black uppercase text-emerald-700">{currentStep.number}</p><h3 className="mt-1 text-lg font-black text-slate-950">{isZh ? currentStep.labelZh : currentStep.labelEn}</h3><p className="mt-1 text-sm text-slate-500">{currentFields.length} {t.fieldCount}</p></div>
+            <div><p className="text-xs font-black uppercase text-emerald-700">{currentStep.number}</p><h3 className="mt-1 text-lg font-black text-slate-950">{isZh ? currentStep.labelZh : currentStep.labelEn}</h3>{!["item_operation", "preview_publish", "registry_readiness"].includes(activeStep) ? <p className="mt-1 text-sm text-slate-500">{currentFields.length} {t.fieldCount}</p> : null}</div>
             {activeStep !== "item_operation" && activeStep !== "preview_publish" && activeStep !== "registry_readiness" ? <button className="btn-primary" disabled={saving} onClick={save} type="button">{saving ? t.saving : t.save}</button> : null}
           </div>
 

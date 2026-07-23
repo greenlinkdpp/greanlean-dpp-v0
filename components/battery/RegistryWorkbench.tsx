@@ -50,6 +50,9 @@ const statusEn: Record<string, string> = {
   REJECTED: "Rejected in TEST", FAILED: "Failed", ACCEPTED: "Accepted",
 };
 
+const severityZh: Record<ValidationRow["severity"], string> = { INFO: "提示", WARNING: "警告", ERROR: "错误", BLOCKER: "阻断项" };
+const granularityZh: Record<string, string> = { MODEL: "型号级", BATCH: "批次级", ITEM: "单体级" };
+
 export function RegistryWorkbench({ productId, isZh }: Props) {
   const supabase = useMemo(() => createSupabaseClient(), []);
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
@@ -66,14 +69,14 @@ export function RegistryWorkbench({ productId, isZh }: Props) {
     generate: "生成测试映射文件", generating: "正在生成...", history: "测试记录", empty: "尚未生成测试记录。", download: "下载映射文件",
     checks: "预校验", passed: "通过", failed: "未通过", warnings: "警告或限制", retryAction: "按当前数据重试", result: "记录人工测试结果",
     submission: "测试记录", outcome: "结果", response: "Registry 返回内容", record: "保存测试结果", submitted: "已人工提交", rejected: "测试环境拒绝", failedOutcome: "提交失败",
-    saved: "测试结果已保存。", generated: "测试映射文件已生成。", noResponse: "记录拒绝或失败时，请填写 Registry 返回的错误内容。",
+    saved: "测试结果已保存。", generated: "测试映射文件已生成。", generatedFailed: "测试映射文件已生成，但预校验未通过。请按展开的错误项补齐数据后重试。", noResponse: "记录拒绝或失败时，请填写 Registry 返回的错误内容。",
   } : {
     loading: "Loading Registry TEST records...", retry: "Retry", environment: "Registry environment", mapping: "Mapping version", rules: "Operational rule version",
     semantic: "Battery semantic catalogue", unavailable: "Official catalogue unavailable", notice: "This workbench only generates TEST mapping files and records manual test outcomes. A successful battery registration cannot be reported until the official battery semantic catalogue is available.",
     generate: "Generate TEST mapping file", generating: "Generating...", history: "TEST history", empty: "No TEST record has been generated.", download: "Download mapping file",
     checks: "Pre-validation", passed: "Passed", failed: "Not passed", warnings: "Warnings or limitations", retryAction: "Retry with current data", result: "Record manual TEST result",
     submission: "TEST record", outcome: "Outcome", response: "Registry response", record: "Save TEST result", submitted: "Manually submitted", rejected: "Rejected in TEST", failedOutcome: "Submission failed",
-    saved: "TEST result saved.", generated: "TEST mapping file generated.", noResponse: "Enter the Registry error response for rejected or failed outcomes.",
+    saved: "TEST result saved.", generated: "TEST mapping file generated.", generatedFailed: "The TEST mapping file was generated, but local pre-validation failed. Correct the expanded errors and retry.", noResponse: "Enter the Registry error response for rejected or failed outcomes.",
   };
 
   async function authorizationHeaders(json = true) {
@@ -133,7 +136,7 @@ export function RegistryWorkbench({ productId, isZh }: Props) {
       const result = await api("POST", { action: "generateMapping", retryOfSubmissionId });
       await load();
       setResultSubmissionId(result.submission.id);
-      setMessage(t.generated);
+      setMessage(result.submission.submission_status === "FAILED" ? t.generatedFailed : t.generated);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error));
     } finally {
@@ -202,9 +205,9 @@ export function RegistryWorkbench({ productId, isZh }: Props) {
     </div>
 
     <dl className="grid border-y border-slate-200 md:grid-cols-2 xl:grid-cols-4">
-      <div className="px-3 py-4"><dt className="text-xs font-bold text-slate-500">{t.environment}</dt><dd className="mt-1 font-black text-slate-950">TEST</dd></div>
+      <div className="px-3 py-4"><dt className="text-xs font-bold text-slate-500">{t.environment}</dt><dd className="mt-1 font-black text-slate-950">{isZh ? "测试环境" : "TEST"}</dd></div>
       <div className="px-3 py-4"><dt className="text-xs font-bold text-slate-500">{t.mapping}</dt><dd className="mt-1 break-words text-sm font-black text-slate-950">{workspace.mapping.version}</dd></div>
-      <div className="px-3 py-4"><dt className="text-xs font-bold text-slate-500">{t.rules}</dt><dd className="mt-1 break-words text-sm font-black text-slate-950">{workspace.mapping.operationalRuleVersion}</dd></div>
+      <div className="px-3 py-4"><dt className="text-xs font-bold text-slate-500">{t.rules}</dt><dd className="mt-1 break-words text-sm font-black text-slate-950">{isZh ? "DPP Registry 运营者指南 v1.0" : workspace.mapping.operationalRuleVersion}</dd></div>
       <div className="px-3 py-4"><dt className="text-xs font-bold text-slate-500">{t.semantic}</dt><dd className="mt-1 text-sm font-black text-amber-800">{t.unavailable}</dd></div>
     </dl>
 
@@ -221,7 +224,7 @@ export function RegistryWorkbench({ productId, isZh }: Props) {
         return <article className="py-5" key={submission.id}>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <div className="flex flex-wrap items-center gap-2"><span className="rounded-md bg-slate-950 px-2 py-1 text-xs font-black text-white">TEST</span><span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-black text-slate-700">{submission.granularity}</span><span className="text-sm font-black text-slate-950">{(isZh ? statusZh : statusEn)[submission.submission_status] || submission.submission_status}</span></div>
+              <div className="flex flex-wrap items-center gap-2"><span className="rounded-md bg-slate-950 px-2 py-1 text-xs font-black text-white">{isZh ? "测试环境" : "TEST"}</span><span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-black text-slate-700">{isZh ? granularityZh[submission.granularity] || submission.granularity : submission.granularity}</span><span className="text-sm font-black text-slate-950">{(isZh ? statusZh : statusEn)[submission.submission_status] || submission.submission_status}</span></div>
               <p className="mt-2 text-xs font-semibold text-slate-500">{new Date(submission.created_at).toLocaleString(isZh ? "zh-CN" : "en-US")}</p>
               <p className="mt-1 break-all text-xs text-slate-500">SHA-256: {submission.request_hash}</p>
             </div>
@@ -232,7 +235,7 @@ export function RegistryWorkbench({ productId, isZh }: Props) {
             <div className="border-l-4 border-red-500 px-3"><p className="text-xs font-bold text-slate-500">{t.failed}</p><p className="mt-1 text-xl font-black text-slate-950">{errors.length}</p></div>
             <div className="border-l-4 border-amber-500 px-3"><p className="text-xs font-bold text-slate-500">{t.warnings}</p><p className="mt-1 text-xl font-black text-slate-950">{warnings.length}</p></div>
           </div>
-          {failed.length ? <details className="mt-4 border-t border-slate-200 pt-3"><summary className="cursor-pointer text-sm font-bold text-slate-700">{t.checks} ({failed.length})</summary><ul className="mt-3 space-y-2">{failed.map((row) => <li className="text-sm leading-6 text-slate-700" key={row.id}><span className="mr-2 font-black text-slate-950">{row.severity}</span>{isZh ? row.message_zh : row.message_en}</li>)}</ul></details> : null}
+          {failed.length ? <details className="mt-4 border-t border-slate-200 pt-3" open={errors.length > 0}><summary className="cursor-pointer text-sm font-bold text-slate-700">{t.checks} ({failed.length})</summary><ul className="mt-3 space-y-2">{failed.map((row) => <li className="text-sm leading-6 text-slate-700" key={row.id}><span className="mr-2 font-black text-slate-950">{isZh ? severityZh[row.severity] : row.severity}</span>{isZh ? row.message_zh : row.message_en}</li>)}</ul></details> : null}
           {submission.errors.map((error) => <p className="mt-3 border-l-4 border-red-500 pl-3 text-sm font-semibold text-red-800" key={error.id}>{error.error_code ? `${error.error_code}: ` : ""}{error.redacted_message}</p>)}
         </article>;
       })}
