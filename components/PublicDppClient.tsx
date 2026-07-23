@@ -284,10 +284,14 @@ const COMMON_ZH_VALUE: Record<string, string> = {
   "Trim": "辅料",
   Truck: "卡车运输",
   "Textile & Apparel": "纺织与服装",
+  "T-Shirt": "T 恤",
   "UN38.3 transport test summary - pending upload": "UN38.3 运输测试摘要 - 待上传",
   "UN38.3 / IEC 62133 evidence pending": "UN38.3 / IEC 62133 证据待补充",
   "UN-rated lithium battery transport packaging evidence pending.": "符合联合国危险货物运输要求的锂电池包装证据待补充。",
   "WEEE electronics stream after dismantling": "拆解后进入 WEEE 电子元件回收流",
+  "Wireless Earbuds": "真无线耳机",
+  "Outdoor WPC Decking": "户外 WPC 地板",
+  "Office Chair": "办公椅",
   "WPC PLANK": "WPC 户外地板",
   "WPC PLANK MS140K25B": "WPC 户外地板 MS140K25B",
   "Core tube for fabric rolling": "卷布纸管",
@@ -1161,14 +1165,47 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     [t.serial, firstIdentity?.serial_id],
     [t.digitalLink, qrTargetUrl],
   ];
+  const heroProductHighlights: Array<[string, any]> = isBattery
+    ? [
+        [
+          locale === "zh" ? "额定容量" : "Rated capacity",
+          hasNumber(batteryPresentation.ratedCapacityAh)
+            ? `${batteryPresentation.ratedCapacityAh} Ah`
+            : t.pendingData,
+        ],
+        [
+          locale === "zh" ? "标称电压" : "Nominal voltage",
+          hasNumber(batteryPresentation.nominalVoltageV)
+            ? `${batteryPresentation.nominalVoltageV} V`
+            : t.pendingData,
+        ],
+      ]
+    : [
+        [t.brandLabel, product.brand],
+        [t.subcategory, pick(product, locale, "subcategory")],
+      ];
   const heroDetails: Array<[string, any]> = [
     [t.sku, product.sku],
     [t.gtin, firstIdentity?.gtin],
     [t.sgtin, sgtin],
     [t.batch, firstIdentity?.batch_id],
-    [t.certificatesVerified, certificates.length ? `${verifiedCertificates} / ${certificates.length}` : t.pendingData],
-    [t.dataVersionLabel, product.current_version || t.pendingData],
+    ...heroProductHighlights,
   ];
+  const lifecycleHighlight: [string, any, IconName] = isBattery
+    ? [
+        locale === "zh" ? "设计循环寿命" : "Expected cycle life",
+        hasNumber(batteryPresentation.expectedCycles)
+          ? `${batteryPresentation.expectedCycles} ${locale === "zh" ? "次" : "cycles"}`
+          : t.pendingData,
+        "check",
+      ]
+    : [
+        t.recyclability,
+        hasNumber(firstCircularity?.recyclability_score)
+          ? `${firstCircularity.recyclability_score} / 100`
+          : t.pendingData,
+        "recycle",
+      ];
   const heroFocusCards: Array<[string, any, IconName]> = (isDemoProduct
     ? isElectronics
       ? [
@@ -1190,12 +1227,12 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ]
           : [
               [t.materialProfile, materialProfileFromData, "layers"],
-              [t.certificatesVerified, `${verifiedCertificates} / ${certificates.length}`, "shield"],
+              lifecycleHighlight,
               [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : t.noData, "carbon"],
             ]
     : [
         [t.materialProfile, materialProfileFromData, "layers"],
-        [t.certificatesVerified, certificates.length ? `${verifiedCertificates} / ${certificates.length}` : t.pendingData, "shield"],
+        lifecycleHighlight,
         [t.carbon, hasCarbonData ? `${carbonCurrent} kg CO2e` : t.pendingData, "carbon"],
       ]
   ).map(([label, value, icon]) => [label, value === t.noData ? t.pendingData : value, icon]) as Array<[string, any, IconName]>;
