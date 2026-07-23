@@ -50,6 +50,17 @@ async function publicBatteryValues(
     .is("battery_batch_id", null)
     .is("battery_item_id", null)
     .in("field_definition.field_code", [
+      "battery.battery_model_identifier",
+      "battery.battery_mass",
+      "battery.battery_chemistry",
+      "battery.rated_capacity",
+      "battery.nominal_voltage",
+      "battery.maximum_permitted_battery_power",
+      "battery.initial_round_trip_energy_efficiency",
+      "battery.expected_lifetime_in_calendar_years",
+      "battery.expected_lifetime_number_of_charge_discharge_cycles",
+      "battery.temperature_range_idle_state_lower_boundary",
+      "battery.temperature_range_idle_state_upper_boundary",
       "battery.battery_carbon_footprint_per_functional_unit",
       "battery.battery_serial_number",
     ]);

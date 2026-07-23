@@ -8,8 +8,6 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/components/LanguageProvider";
 import { buildGs1DigitalLink } from "@/lib/dppCompliance";
-import { BatteryPublicProjection } from "@/components/battery/BatteryPublicProjection";
-import { publicFeatureFlags } from "@/lib/featureFlags";
 
 type Locale = "en" | "zh";
 type Props = { data: any; dppUrl: string };
@@ -251,6 +249,7 @@ const COMMON_ZH_VALUE: Record<string, string> = {
   "Inside pack": "电池包内部",
   "Internal transfer": "内部转运",
   "Lockable aluminium housing": "可锁止铝合金外壳",
+  "Light means of transport battery": "轻型交通工具电池",
   "LMT Battery Pack": "轻型交通工具电池包",
   "Main product": "产品主体",
   "Manufacturing": "制造",
@@ -286,6 +285,8 @@ const COMMON_ZH_VALUE: Record<string, string> = {
   Truck: "卡车运输",
   "Textile & Apparel": "纺织与服装",
   "UN38.3 transport test summary - pending upload": "UN38.3 运输测试摘要 - 待上传",
+  "UN38.3 / IEC 62133 evidence pending": "UN38.3 / IEC 62133 证据待补充",
+  "UN-rated lithium battery transport packaging evidence pending.": "符合联合国危险货物运输要求的锂电池包装证据待补充。",
   "WEEE electronics stream after dismantling": "拆解后进入 WEEE 电子元件回收流",
   "WPC PLANK": "WPC 户外地板",
   "WPC PLANK MS140K25B": "WPC 户外地板 MS140K25B",
@@ -317,6 +318,9 @@ const COMMON_ZH_VALUE: Record<string, string> = {
   professional: "专业客户可见",
   public: "公开",
   "zh/en": "中文 / 英文",
+  "Contains lithium-ion battery cells; hazardous-substance and battery material declaration required.": "含锂离子电芯，须提供有害物质及电池材料声明。",
+  "Do not dispose with household waste. Handle as lithium-ion battery waste under applicable collection and transport rules.": "请勿作为生活垃圾丢弃，应按照适用的收集和运输规则作为锂离子电池废弃物处理。",
+  "E-bike down tube / rear rack mount": "电动自行车下管 / 后货架安装位置",
 };
 
 function localizeCommonValue(value: string, locale: Locale) {
@@ -329,6 +333,7 @@ function localizeCommonValue(value: string, locale: Locale) {
   if (/laboratory to provide/i.test(trimmed)) return "检测机构待提供";
   if (/certification body to provide/i.test(trimmed)) return "认证机构待提供";
   if (/economic operator to provide/i.test(trimmed)) return "经济运营者待提供";
+  if (/^\d+(?:\.\d+)?,\s*pack$/i.test(trimmed)) return trimmed.replace(/,\s*pack$/i, " 个电池包");
   return trimmed;
 }
 
@@ -446,6 +451,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
     evidenceLinks = [],
     blockchainAnchors = [],
     sectorFieldValues = [],
+    batteryPresentation = {},
   } = data;
 
   const t =
@@ -1259,7 +1265,38 @@ export function PublicDppClient({ data, dppUrl }: Props) {
   })?.file_url;
   const firstChemicalCertificateUrl = chemicalEvidenceCertificates.map((certificate: any) => certificate.certificate_url).find(hasDisplayValue);
   const firstChemicalDocumentUrl = chemicalEvidenceDocuments.map((document: any) => document.file_url).find(hasDisplayValue);
-  const performanceItems: Array<[string, any]> = isDemoProduct ? (isElectronics
+  const batteryChemistryLabel = batteryPresentation.chemistry === "Li-ion NMC"
+    ? (locale === "zh" ? "NMC 锂离子电池" : "NMC lithium-ion")
+    : batteryPresentation.chemistry;
+  const batteryTemperatureRange =
+    hasNumber(batteryPresentation.idleTemperatureMinC) && hasNumber(batteryPresentation.idleTemperatureMaxC)
+      ? `${batteryPresentation.idleTemperatureMinC} °C ${locale === "zh" ? "至" : "to"} ${batteryPresentation.idleTemperatureMaxC} °C`
+      : null;
+  const batteryConsumerSpecs: Array<[string, any]> = isBattery
+    ? [
+        [locale === "zh" ? "额定容量" : "Rated capacity", hasNumber(batteryPresentation.ratedCapacityAh) ? `${batteryPresentation.ratedCapacityAh} Ah` : null],
+        [locale === "zh" ? "标称电压" : "Nominal voltage", hasNumber(batteryPresentation.nominalVoltageV) ? `${batteryPresentation.nominalVoltageV} V` : null],
+        [locale === "zh" ? "电池化学体系" : "Battery chemistry", batteryChemistryLabel],
+        [locale === "zh" ? "电池质量" : "Battery mass", hasNumber(batteryPresentation.massKg) ? `${batteryPresentation.massKg} kg` : null],
+      ]
+    : [];
+  const performanceItems: Array<[string, any]> = isBattery
+    ? ([
+        [locale === "zh" ? "额定容量" : "Rated capacity", hasNumber(batteryPresentation.ratedCapacityAh) ? `${batteryPresentation.ratedCapacityAh} Ah` : null],
+        [locale === "zh" ? "标称电压" : "Nominal voltage", hasNumber(batteryPresentation.nominalVoltageV) ? `${batteryPresentation.nominalVoltageV} V` : null],
+        [locale === "zh" ? "允许最大功率" : "Maximum permitted power", hasNumber(batteryPresentation.maximumPowerW) ? `${batteryPresentation.maximumPowerW} W` : null],
+        [locale === "zh" ? "初始往返能量效率" : "Initial round-trip energy efficiency", hasNumber(batteryPresentation.initialEfficiencyPercent) ? `${batteryPresentation.initialEfficiencyPercent}%` : null],
+        [locale === "zh" ? "设计循环寿命" : "Expected cycle life", hasNumber(batteryPresentation.expectedCycles) ? `${batteryPresentation.expectedCycles} ${locale === "zh" ? "次" : "cycles"}` : null],
+        [locale === "zh" ? "设计日历寿命" : "Expected calendar life", hasNumber(batteryPresentation.expectedCalendarYears) ? `${batteryPresentation.expectedCalendarYears} ${locale === "zh" ? "年" : "years"}` : null],
+        [locale === "zh" ? "闲置温度范围" : "Idle temperature range", batteryTemperatureRange],
+        [
+          t.testBasis,
+          locale === "zh"
+            ? "数据按 BatteryPass-Ready LMT 1.3 字段模型映射至产品性能模块；当前为测试数据，正式发布前须以制造商声明和检测证据完成验证。"
+            : "Data mapped to the product-performance module from the BatteryPass-Ready LMT 1.3 field model. Current values are test data and require manufacturer declarations and test evidence before formal release.",
+        ],
+      ] as Array<[string, any]>).filter(([, value]) => hasDisplayValue(value))
+    : isDemoProduct ? (isElectronics
     ? [
         [locale === "zh" ? "单次续航" : "Battery life", locale === "zh" ? "8 小时" : "8 hours"],
         [locale === "zh" ? "充电循环寿命" : "Charge-cycle life", "≥ 500"],
@@ -1954,14 +1991,6 @@ export function PublicDppClient({ data, dppUrl }: Props) {
           ))}
         </nav>
 
-        {isBattery && publicFeatureFlags.batteryDppV2 && (
-          <BatteryPublicProjection
-            identifier={String(dppProductRef)}
-            audience={viewMode === "consumer" ? "public" : viewMode === "audit" ? "authority" : "professional"}
-            locale={locale}
-          />
-        )}
-
         {viewMode === "consumer" && (
           <div className="space-y-6">
             <Section id="identity" title={t.productIdentity} eyebrow={t.overview} icon="box">
@@ -1974,6 +2003,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
                     [t.category, product.category],
                     [t.gtin, firstIdentity?.gtin],
                     [t.sgtin, sgtin],
+                    ...batteryConsumerSpecs,
                   ]}
                   locale={locale}
                 />
