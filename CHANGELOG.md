@@ -5,7 +5,40 @@ semantic versioning once the first stable release is declared.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-24
+
 ### Added
+
+- Battery Passport positioning and capability content on the public homepage.
+- GreenVault ESS-14.3 stationary industrial battery demo above 2 kWh.
+- Stable product, demo and passport aliases, QR access and structured JSON.
+- Reusable grouped battery presentation with public and restricted data states.
+- Synthetic operating-metric history and non-404 document placeholders.
+- Idempotent industrial battery database seed and targeted rollback.
+- Battery demo impact analysis, contract tests and release notes.
+
+### Changed
+
+- Featured cases now prioritise LMT and industrial battery passports while
+  retaining textile and consumer-electronics examples.
+- Battery data is presented as product information instead of a raw regulatory
+  field catalogue.
+- Product Hub demo sync includes the industrial battery and labels demo records.
+
+### Preserved
+
+- Existing LMT battery, textile, consumer-electronics, construction-material
+  and furniture data and routes.
+
+### Known limitations
+
+- Demonstration data only; no official conformity assessment.
+- No live BMS connection.
+- No automated EU DPP Registry registration.
+- Placeholder documents contain no laboratory identity, certificate number or
+  signature.
+
+### Foundation
 
 - Phase 1 current-system architecture audit.
 - Phase 2 product specification, target architecture, database design, EU
@@ -18,7 +51,7 @@ semantic versioning once the first stable release is declared.
   append-only operating metrics, an 11-step editor, readiness dimensions, and
   server-side audience projections.
 
-### Changed
+### Engineering
 
 - Expanded local development, environment, testing, migration, and deployment
   documentation.

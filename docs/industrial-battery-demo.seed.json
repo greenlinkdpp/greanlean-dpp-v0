@@ -1,0 +1,293 @@
+{
+  "schemaVersion": "eu-battery-demo-0.1",
+  "batteryAttributeReference": "BatteryPass-Ready-Longlist-v1.3",
+  "passportVersion": "1.0.0-demo",
+  "passportMetadata": {
+    "title": "GreenVault ESS-14.3 Digital Battery Passport",
+    "status": "DEMO",
+    "upi": "https://www.greanlean.com/passports/green-vault-ess-14-3-demo-000001",
+    "productGroup": "BATTERIES",
+    "granularity": "ITEM",
+    "modelIdentifier": "GV-ESS-14K3-2026",
+    "batchIdentifier": "BATCH-202606-DEMO",
+    "itemIdentifier": "GV14K3-DEMO-000001",
+    "dataSource": "SYNTHETIC_DEMO",
+    "disclaimer": "Synthetic demonstration data. Not for regulatory submission."
+  },
+  "productIdentity": {
+    "nameEn": "GreenVault ESS-14.3 Industrial Battery Module",
+    "nameZh": "GreenVault ESS-14.3 工业储能电池模块",
+    "batteryCategory": "RECHARGEABLE_INDUSTRIAL_BATTERY_ABOVE_2_KWH",
+    "application": [
+      "Stationary energy storage",
+      "Commercial and industrial energy storage",
+      "Battery cabinet and rack integration"
+    ],
+    "manufacturingDate": "2026-06-15",
+    "manufacturingPlace": "Hamburg, Germany",
+    "productStatus": "ORIGINAL"
+  },
+  "manufacturer": {
+    "name": "GreenVault Demo Energy Systems GmbH",
+    "isFictional": true,
+    "economicOperator": "GreenVault Demo Energy Systems GmbH"
+  },
+  "technicalSpecifications": {
+    "chemistry": "Lithium iron phosphate / graphite",
+    "cellForm": "Prismatic LFP cell",
+    "configuration": "16S1P",
+    "ratedEnergyKWh": 14.336,
+    "ratedCapacityAh": 280,
+    "nominalVoltageV": 51.2,
+    "minimumVoltageV": 44.8,
+    "maximumVoltageV": 58.4,
+    "weightKg": 115,
+    "dimensionsMm": {
+      "length": 780,
+      "width": 480,
+      "height": 260
+    },
+    "ipRating": "IP54",
+    "cooling": "Natural air cooling",
+    "communication": [
+      "CAN 2.0",
+      "RS485"
+    ],
+    "bms": "Integrated battery management system",
+    "continuousPowerKW": 10,
+    "peakPower": {
+      "valueKW": 15,
+      "durationSeconds": 10
+    },
+    "roundTripEfficiencyPct": 95,
+    "cycleLife": {
+      "cycles": 6000,
+      "depthOfDischargePct": 80,
+      "temperatureC": 25
+    },
+    "calendarLifeYears": 15,
+    "warranty": {
+      "years": 10,
+      "cycles": 6000
+    },
+    "chargeTemperatureC": {
+      "min": 0,
+      "max": 55
+    },
+    "dischargeTemperatureC": {
+      "min": -20,
+      "max": 55
+    },
+    "storageTemperatureC": {
+      "min": -20,
+      "max": 45
+    },
+    "selfDischargePctPerMonth": 3
+  },
+  "materials": [
+    {
+      "component": "Cells and active materials",
+      "massSharePct": 78,
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "component": "Metal enclosure and structural parts",
+      "massSharePct": 10,
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "component": "BMS and electronic components",
+      "massSharePct": 4,
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "component": "Copper/aluminium connectors and wiring",
+      "massSharePct": 3,
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "component": "Insulation, sealing and thermal materials",
+      "massSharePct": 5,
+      "verificationStatus": "SYNTHETIC_DEMO"
+    }
+  ],
+  "carbonFootprint": {
+    "totalKgCO2e": 1032,
+    "intensityKgCO2ePerKWh": 72,
+    "verificationStatus": "SYNTHETIC_DEMO",
+    "performanceClass": "TBD",
+    "stages": [
+      {
+        "stage": "Raw materials and upstream supply chain",
+        "kgCO2e": 720
+      },
+      {
+        "stage": "Cell and battery manufacturing",
+        "kgCO2e": 240
+      },
+      {
+        "stage": "Distribution",
+        "kgCO2e": 36
+      },
+      {
+        "stage": "End-of-life treatment",
+        "kgCO2e": 36
+      }
+    ]
+  },
+  "recycledContent": [
+    {
+      "material": "Lithium",
+      "percentage": 6,
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "material": "Cobalt",
+      "status": "NOT_APPLICABLE_DECLARED_LFP"
+    },
+    {
+      "material": "Nickel",
+      "status": "NOT_APPLICABLE_DECLARED_LFP"
+    },
+    {
+      "material": "Lead",
+      "status": "NOT_INTENTIONALLY_USED"
+    },
+    {
+      "material": "Aluminium enclosure",
+      "percentage": 35,
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "material": "Copper conductors",
+      "percentage": 20,
+      "verificationStatus": "SYNTHETIC_DEMO"
+    }
+  ],
+  "dueDiligence": {
+    "policyStatus": "DEMO_POLICY_RECORD",
+    "thirdPartyVerification": false,
+    "verificationStatus": "SYNTHETIC_DEMO"
+  },
+  "performanceAndDurability": {
+    "initialInternalResistanceMilliOhm": 18,
+    "expectedCycleLife": 6000,
+    "referenceDepthOfDischargePct": 80,
+    "referenceTemperatureC": 25,
+    "expectedCalendarLifeYears": 15
+  },
+  "conformityDocuments": [
+    {
+      "type": "EU_DECLARATION_OF_CONFORMITY",
+      "file": "demo-eu-declaration-of-conformity.pdf",
+      "status": "DEMO_PLACEHOLDER"
+    },
+    {
+      "type": "UN38_3_TEST_SUMMARY",
+      "file": "demo-un38-3-test-summary.pdf",
+      "status": "DEMO_PLACEHOLDER"
+    },
+    {
+      "type": "IEC_62619_TEST_REPORT",
+      "file": "demo-iec-62619-report.pdf",
+      "status": "DEMO_PLACEHOLDER"
+    },
+    {
+      "type": "SAFETY_DATA_SHEET",
+      "file": "demo-safety-data-sheet.pdf",
+      "status": "DEMO_PLACEHOLDER"
+    },
+    {
+      "type": "CARBON_FOOTPRINT_DECLARATION",
+      "file": "demo-carbon-footprint-declaration.pdf",
+      "status": "DEMO_PLACEHOLDER"
+    }
+  ],
+  "lifecycle": {
+    "currentStatus": "ORIGINAL",
+    "placedOnMarket": "DEMO_ONLY",
+    "safetyIncidentCount": 0,
+    "repairEventCount": 0,
+    "repurposingEventCount": 0
+  },
+  "operatingMetrics": [
+    {
+      "metric": "SOC",
+      "value": 74,
+      "unit": "%",
+      "measuredAt": "2026-07-20T10:30:00Z",
+      "source": "Demo BMS simulator",
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "metric": "SOH",
+      "value": 98.7,
+      "unit": "%",
+      "measuredAt": "2026-07-20T10:30:00Z",
+      "source": "Demo BMS simulator",
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "metric": "FULL_CHARGE_CAPACITY",
+      "value": 276.4,
+      "unit": "Ah",
+      "measuredAt": "2026-07-20T10:30:00Z",
+      "source": "Demo BMS simulator",
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "metric": "FULL_EQUIVALENT_CYCLES",
+      "value": 42,
+      "unit": "cycles",
+      "measuredAt": "2026-07-20T10:30:00Z",
+      "source": "Demo BMS simulator",
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "metric": "TEMPERATURE",
+      "value": 26.4,
+      "unit": "°C",
+      "measuredAt": "2026-07-20T10:30:00Z",
+      "source": "Demo BMS simulator",
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "metric": "INTERNAL_RESISTANCE",
+      "value": 18.6,
+      "unit": "mΩ",
+      "measuredAt": "2026-07-20T10:30:00Z",
+      "source": "Demo BMS simulator",
+      "verificationStatus": "SYNTHETIC_DEMO"
+    },
+    {
+      "metric": "ENERGY_THROUGHPUT",
+      "value": 1.08,
+      "unit": "MWh",
+      "measuredAt": "2026-07-20T10:30:00Z",
+      "source": "Demo BMS simulator",
+      "verificationStatus": "SYNTHETIC_DEMO"
+    }
+  ],
+  "accessPolicies": [
+    {
+      "level": "PUBLIC",
+      "description": "Public product, sustainability and basic lifecycle information"
+    },
+    {
+      "level": "LEGITIMATE_INTEREST",
+      "description": "Detailed composition, repair, dismantling and safety information"
+    },
+    {
+      "level": "AUTHORITY_ONLY",
+      "description": "Full conformity evidence and regulatory verification records"
+    },
+    {
+      "level": "INTERNAL",
+      "description": "Internal workflow and unpublished source data"
+    }
+  ],
+  "demoDisclaimer": {
+    "zh": "本页面及全部数据仅用于 Greanlean 产品演示，不构成真实产品声明、检测结论、法规认证或法律意见。",
+    "en": "This page and all data are for Greanlean product demonstration only and do not constitute a real product declaration, test result, regulatory certification or legal advice."
+  }
+}

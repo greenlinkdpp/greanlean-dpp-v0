@@ -68,6 +68,7 @@ export function ProductManager() {
         prev: "上一页",
         next: "下一页",
         refresh: "刷新",
+        demo: "演示",
       }
     : {
         create: "Create DPP",
@@ -100,6 +101,7 @@ export function ProductManager() {
         prev: "Previous",
         next: "Next",
         refresh: "Refresh",
+        demo: "Demo",
       };
   const defaultProfile = DPP_SECTOR_PROFILES[0];
   const [products, setProducts] = useState<Product[]>([]);
@@ -283,10 +285,14 @@ export function ProductManager() {
             {rows.map((p) => {
               const dppPath = encodeURIComponent(p.dpp_id || p.public_slug || "");
               const rowProfile = findDppSectorProfile(p.dpp_profile_key);
+              const isDemo = /demo/i.test([p.dpp_id, p.public_slug, p.description, p.description_zh].filter(Boolean).join(" "));
               return (
                 <div key={p.id} className="flex flex-wrap items-center justify-between gap-4 py-4">
                   <div>
-                    <p className="font-semibold">{locale === "zh" && p.name_zh ? p.name_zh : p.name}</p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="font-semibold">{locale === "zh" && p.name_zh ? p.name_zh : p.name}</p>
+                      {isDemo && <span className="rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-black text-amber-900">{t.demo}</span>}
+                    </div>
                     <p className="text-sm text-slate-500">{p.sku || t.noSku} · {statusLabel(p.status, locale)} · {p.brand || "—"}</p>
                     <p className="mt-1 text-xs font-semibold text-slate-400">
                       {rowProfile ? (locale === "zh" ? rowProfile.nameZh : rowProfile.name) : p.dpp_profile_key || "—"}

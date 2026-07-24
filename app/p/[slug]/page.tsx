@@ -3,6 +3,12 @@ import type { Metadata } from "next";
 import { createSupabaseClient } from "@/lib/supabase";
 import { PublicDppClient } from "@/components/PublicDppClient";
 import { PublicDppPreviewLoader } from "@/components/PublicDppPreviewLoader";
+import { BatteryDemoPassport } from "@/components/battery/BatteryDemoPassport";
+import {
+  industrialDemoLegacyData,
+  isIndustrialDemoIdentifier,
+  type DemoAudience,
+} from "@/lib/battery/industrialDemo";
 import { projectBatteryValuesIntoLegacyDpp } from "@/lib/battery/legacyProjection";
 
 export const dynamic = "force-dynamic";
@@ -109,12 +115,21 @@ async function getData(identifier: string, includeDraft = false) {
     : await productBySlugQuery.maybeSingle();
   const product = productByDpp || productBySlug;
   if (!product) {
+    if (isIndustrialDemoIdentifier(identifier)) return industrialDemoLegacyData();
     const demo = demoByIdentifier[identifier];
     if (demo === "electronics") return withElectronicsDppData();
     if (demo === "flooring") return withFlooringDppData();
     if (demo === "furniture") return withFurnitureDppData();
     if (demo === "tshirt") return withDemoDppData({ product: { id: "demo-product" }, materials: [], certificates: [], esg: [], bom: [], traceability: [], circularity: [], consumerTransparency: [], digitalIdentity: [], documents: [], governance: [] });
     return null;
+  }
+
+  if (
+    isIndustrialDemoIdentifier(identifier) ||
+    isIndustrialDemoIdentifier(product.dpp_id) ||
+    isIndustrialDemoIdentifier(product.public_slug)
+  ) {
+    return industrialDemoLegacyData(product);
   }
 
   if (product.public_slug === "demo-wpc-flooring" || product.dpp_id === "DPP-WPC-MS140K25B") {
@@ -1600,5 +1615,19 @@ export default async function PublicDppPage({ params, searchParams }: { params: 
   if (isPreview) query.set("preview", "1");
   const publicId = encodeURIComponent(data.product.dpp_id || data.product.public_slug);
   const dppUrl = `${site}/p/${publicId}${query.toString() ? `?${query.toString()}` : ""}`;
+  if ("industrialBatteryDemo" in data && data.industrialBatteryDemo) {
+    const audience: DemoAudience = searchParams?.view === "audit"
+      ? "audit"
+      : searchParams?.view === "professional" || searchParams?.view === "detail"
+        ? "professional"
+        : "consumer";
+    const locale = searchParams?.lang === "en" ? "en" : "zh";
+    return (
+      <BatteryDemoPassport
+        locale={locale}
+        audience={audience}
+      />
+    );
+  }
   return <PublicDppClient data={data} dppUrl={dppUrl} />;
 }

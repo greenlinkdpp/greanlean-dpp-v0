@@ -21,9 +21,25 @@ behind feature flags.
 - `/p/DPP-AUDIO-DEMO-001` consumer electronics demo
 - `/p/DPP-WPC-MS140K25B` construction-material demo
 - `/p/DPP-FURN-DEMO-001` furniture demo
+- `/demos/lmt-battery` LMT battery demo
+- `/demos/industrial-battery` GreenVault ESS-14.3 industrial battery demo
+- `/passports/green-vault-ess-14-3-demo-000001` stable industrial battery passport URL
 
 Public DPP pages support `lang=zh|en` and audience views selected by the
 application. JSON/PDF export is available through `/api/dpp-export`.
+
+The GreenVault industrial battery record is synthetic demonstration data. It
+does not represent certification, live BMS telemetry, third-party verification,
+or a formal EU DPP Registry submission. Apply the idempotent database seed after
+the battery migrations:
+
+```text
+supabase/seeds/industrial_battery_demo.sql
+```
+
+The public route also has a static fallback, so the demo remains available
+before the seed is applied. The authenticated Product Hub requires the database
+record.
 
 ## Local Development
 
@@ -82,6 +98,7 @@ or demo records.
 - [Target architecture](docs/architecture/target-architecture.md)
 - [Database design](docs/architecture/database-design.md)
 - [Current-system audit](docs/architecture/current-system-audit.md)
+- [Battery demo impact analysis](docs/requirements/battery-demo/current-impact-analysis.md)
 - [Battery migration mapping](docs/regulatory/eu-battery-dpp/migration-mapping.md)
 - [Known regulatory uncertainties](docs/regulatory/eu-battery-dpp/known-uncertainties.md)
 - [Engineering documentation index](docs/engineering/README.md)

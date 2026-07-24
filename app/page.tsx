@@ -32,7 +32,12 @@ export default function Home() {
       const { data } = await createSupabaseClient()
         .from("products")
         .select("public_slug, dpp_id, main_image")
-        .in("public_slug", ["demo-organic-cotton-tshirt", "demo-wireless-earbuds", "demo-wpc-flooring", "demo-office-chair"]);
+        .in("public_slug", [
+          "demo-organic-cotton-tshirt",
+          "demo-wireless-earbuds",
+          "lmt-48v15ah-battery",
+          "green-vault-ess-14-3-demo-000001",
+        ]);
 
       if (!active) return;
 
@@ -51,37 +56,48 @@ export default function Home() {
   const t =
     locale === "zh"
       ? {
-          badge: "面向欧盟市场的 DPP 合规数据服务",
-          titleLine1: "数字产品护照 DPP",
-          titleLine2: "欧盟合规解决方案",
-          subtitle1: "帮助中国制造企业应对欧盟 DPP 逐步强制落地要求，提前建立产品身份、供应链证据、环境数据和证书链。",
-          subtitle2: "快速生成、验证、更新产品电子护照，让欧洲买家、监管方和消费者看懂产品全生命周期。",
-          primaryCta: "立即查看示例 DPP",
-          secondaryCta: "了解 2027 年要求",
-          metric1: "适配品类",
-          metric1Value: "多行业",
-          metric1Desc: "纺织、家具、地板、消费电子",
-          metric2: "DPP 模块",
-          metric2Value: "13 项",
-          metric2Desc: "身份、材料、追溯、ESG、证据链等",
-          metric3: "交付形式",
-          metric3Value: "中英双语",
-          metric3Desc: "网页护照、二维码、PDF / JSON 导出",
-          metric4: "当前阶段",
-          metric4Value: "示例",
-          metric4Desc: "可按真实产品资料定制试点",
-          showroomTitle: "DPP 用例展厅",
-          showroomSubtitle: "不是概念介绍，而是可以直接扫码、查看、下载的产品护照示例。",
-          case1: "有机棉 T 恤",
-          case1Desc: "展示材料来源、GTIN/SGTIN、证书、REACH/RSL、碳足迹和生命周期结束指南。",
-          case2: "无线蓝牙耳机",
-          case2Desc: "展示 CE、RoHS、REACH、WEEE、电池 MSDS、性能指标和电子废弃物回收路径。",
-          case3: "WPC 户外地板",
-          case3Desc: "展示 MS140K25B 户外板材的材料配方、VOC/REACH/FSC/ISO9001 证据、供应链追溯和机械回收路径。",
-          case4: "可拆解办公椅",
-          case4Desc: "展示家具材料组成、耐久性、可维修性、可拆解设计、再生成分和回收路径。",
+          badge: "面向欧盟市场的数字电池护照数据服务",
+          titleLine1: "电池护照数据准备、",
+          titleLine2: "发布与持续更新",
+          subtitle1: "面向 LMT、电动汽车和额定容量超过 2 kWh 的工业电池，组织产品身份、材料、碳足迹、性能、耐久性和生命周期数据。",
+          subtitle2: "使用型号、批次和单体分层数据生成可扫码的数字电池护照，并为后续 BMS 数据和 EU DPP Registry 对接保留接口。",
+          primaryCta: "查看工业电池护照演示",
+          secondaryCta: "了解电池护照能力",
+          metric1: "法定适用类别",
+          metric1Value: "3 类",
+          metric1Desc: "LMT、EV、工业电池（大于 2 kWh）",
+          metric2: "电池字段目录",
+          metric2Value: "100 项",
+          metric2Desc: "BatteryPass-Ready v1.3 实施参考",
+          metric3: "数据粒度",
+          metric3Value: "型号 / 批次 / 单体",
+          metric3Desc: "静态参数与动态历史分开管理",
+          metric4: "当前演示状态",
+          metric4Value: "演示",
+          metric4Desc: "无实时 BMS、无正式 Registry 提交",
+          showroomTitle: "重点 DPP 案例",
+          showroomSubtitle: "优先展示两类电池护照，同时保留纺织和消费电子示例；所有演示数据均有明确来源与状态。",
+          case1: "48V 15Ah LMT 电动自行车电池包",
+          case1Desc: "展示轻型交通工具电池的型号、单体标识、化学体系、性能、寿命、材料和二维码访问。",
+          case2: "GreenVault ESS-14.3 工业储能电池模块",
+          case2Desc: "展示固定式 14.336 kWh LFP 工业电池的批次、单体、碳足迹、循环性、动态历史和访问分层。",
+          case3: "有机棉基础 T 恤",
+          case3Desc: "展示纺织品材料来源、GTIN/SGTIN、REACH/RSL、碳足迹和生命周期结束指南。",
+          case4: "无线蓝牙耳机",
+          case4Desc: "展示消费电子产品的 RoHS、REACH、WEEE、电池信息、性能指标和电子废弃物回收路径。",
           viewPassport: "查看完整 DPP 护照",
           comingSoon: "样例准备中",
+          batteryCapabilityTitle: "从法规字段到可维护的电池护照",
+          batteryCapabilitySubtitle: "电池护照不是一张静态网页。Greanlean 把法规基线、企业资料和运行记录组织成可追溯的数据对象。",
+          batteryCapability1: "法规与字段映射",
+          batteryCapability1Desc: "区分法规强制、条件要求、实施参考和待确认字段，保留条款与版本来源。",
+          batteryCapability2: "结构化数据采集",
+          batteryCapability2Desc: "按型号、批次、单体、事件和动态指标采集，并保留单位、来源、时间和验证状态。",
+          batteryCapability3: "数字护照发布",
+          batteryCapability3Desc: "生成中英文网页、GS1 标识、二维码、PDF 和结构化 JSON，并按受众投影字段。",
+          batteryCapability4: "托管与持续更新",
+          batteryCapability4Desc: "证据、生命周期事件和 BMS 指标保留历史，避免用新值覆盖旧记录。",
+          batteryDisclaimer: "当前页面为能力演示，不构成法规认证或法律意见。工业电池数据为合成数据，没有实时 BMS 连接、第三方验证或 EU DPP Registry 正式提交。",
           comparisonTitle: "从静态资料到可验证 DPP 数据底座",
           comparisonSubtitle: "ESPR 下的数字产品护照不是宣传页，而是把产品身份、合规证据、可持续信息和循环利用说明组织成可读取、可更新、可核验的数据结构。",
           traditional: "传统资料管理",
@@ -132,37 +148,48 @@ export default function Home() {
           footerCopyright: "© 2026 greanlean. 保留所有权利。",
         }
       : {
-          badge: "DPP compliance data service for the EU market",
-          titleLine1: "EU compliance solutions",
-          titleLine2: "for Digital Product Passports",
-          subtitle1: "Help Chinese manufacturers prepare for phased EU DPP requirements by structuring product identity, supply-chain evidence, environmental data and certificate chains.",
-          subtitle2: "Generate, verify and update electronic product passports so European buyers, regulators and consumers can understand the full product lifecycle.",
-          primaryCta: "View Demo DPP now",
-          secondaryCta: "Learn 2027 requirements",
-          metric1: "Product scope",
-          metric1Value: "Multi-sector",
-          metric1Desc: "textiles, furniture, flooring and electronics",
-          metric2: "DPP modules",
-          metric2Value: "13",
-          metric2Desc: "identity, materials, traceability, ESG and evidence",
-          metric3: "Delivery format",
-          metric3Value: "EN / ZH",
-          metric3Desc: "web passport, QR code, PDF / JSON export",
-          metric4: "Current stage",
+          badge: "Digital battery passport data services for the EU market",
+          titleLine1: "Prepare, publish and maintain",
+          titleLine2: "Digital Battery Passports",
+          subtitle1: "Organise identity, materials, carbon footprint, performance, durability and lifecycle data for LMT, EV and industrial batteries above 2 kWh.",
+          subtitle2: "Publish scannable passports with model, batch and item data while keeping interfaces ready for future BMS data and EU DPP Registry integration.",
+          primaryCta: "View industrial battery demo",
+          secondaryCta: "Explore battery passport capabilities",
+          metric1: "Passport-scope categories",
+          metric1Value: "3",
+          metric1Desc: "LMT, EV and industrial batteries above 2 kWh",
+          metric2: "Battery field catalogue",
+          metric2Value: "100",
+          metric2Desc: "BatteryPass-Ready v1.3 implementation reference",
+          metric3: "Data granularity",
+          metric3Value: "Model / batch / item",
+          metric3Desc: "Static specifications and dynamic history kept separate",
+          metric4: "Current demo status",
           metric4Value: "Demo",
-          metric4Desc: "pilot setup based on real product files",
-          showroomTitle: "DPP use-case showroom",
-          showroomSubtitle: "Not a concept page, but product passport examples that can be scanned, reviewed and downloaded.",
-          case1: "Organic cotton T-shirt",
-          case1Desc: "Shows material origin, GTIN/SGTIN, certificates, REACH/RSL, carbon footprint and End of Life guidance.",
-          case2: "Wireless Bluetooth earbuds",
-          case2Desc: "Shows CE, RoHS, REACH, WEEE, battery MSDS, performance indicators and e-waste recovery paths.",
-          case3: "WPC PLANK",
-          case3Desc: "Shows MS140K25B outdoor decking formula, VOC/REACH/FSC/ISO9001 evidence, traceability and mechanical-recycling path.",
-          case4: "Disassemblable office chair",
-          case4Desc: "Shows furniture materials, durability, repairability, disassembly design, recycled content and recovery paths.",
+          metric4Desc: "No live BMS and no formal Registry submission",
+          showroomTitle: "Featured DPP cases",
+          showroomSubtitle: "Two battery passports are featured alongside textile and consumer-electronics examples. Every demo value carries an explicit source and status.",
+          case1: "48V 15Ah LMT e-bike battery pack",
+          case1Desc: "Shows model and item identity, chemistry, performance, lifetime, materials and QR access for a light-means-of-transport battery.",
+          case2: "GreenVault ESS-14.3 industrial battery module",
+          case2Desc: "Shows batch, item, carbon, circularity, operating history and access tiers for a stationary 14.336 kWh LFP industrial battery.",
+          case3: "Organic cotton T-shirt",
+          case3Desc: "Shows textile material origin, GTIN/SGTIN, REACH/RSL, carbon footprint and end-of-life guidance.",
+          case4: "Wireless Bluetooth earbuds",
+          case4Desc: "Shows RoHS, REACH, WEEE, battery information, performance and e-waste recovery paths for consumer electronics.",
           viewPassport: "View full DPP passport",
           comingSoon: "Sample in preparation",
+          batteryCapabilityTitle: "From regulatory fields to a maintainable battery passport",
+          batteryCapabilitySubtitle: "A battery passport is not a static web page. Greanlean organises the legal baseline, product evidence and operating records as traceable data objects.",
+          batteryCapability1: "Regulation and field mapping",
+          batteryCapability1Desc: "Separate mandatory, conditional, implementation-reference and pending fields while retaining article and version sources.",
+          batteryCapability2: "Structured data collection",
+          batteryCapability2Desc: "Capture model, batch, item, event and metric data with units, source, timestamp and verification status.",
+          batteryCapability3: "Digital passport publishing",
+          batteryCapability3Desc: "Generate bilingual pages, GS1 identifiers, QR codes, PDF and structured JSON with audience-based projections.",
+          batteryCapability4: "Hosting and continuous updates",
+          batteryCapability4Desc: "Preserve evidence, lifecycle events and BMS metrics as history instead of overwriting prior records.",
+          batteryDisclaimer: "This capability page is a demonstration, not regulatory certification or legal advice. Industrial-battery values are synthetic, with no live BMS connection, third-party verification or formal EU DPP Registry submission.",
           comparisonTitle: "From static files to a verifiable DPP data layer",
           comparisonSubtitle: "Under ESPR, a Digital Product Passport is not a campaign page. It structures product identity, compliance evidence, sustainability data and circularity guidance into information that can be read, updated and verified.",
           traditional: "Traditional file management",
@@ -225,36 +252,36 @@ export default function Home() {
       {
         title: t.case1,
         desc: t.case1Desc,
-        image: demoProducts["demo-organic-cotton-tshirt"]?.main_image || "/images/demo-organic-cotton-tshirt.png",
-        href: `/p/${encodeURIComponent(demoProducts["demo-organic-cotton-tshirt"]?.dpp_id || "DPP-DEMO-001")}?lang=zh`,
+        image: demoProducts["lmt-48v15ah-battery"]?.main_image || "/images/lmt-ebike-battery-48v15ah.png",
+        href: `/demos/lmt-battery?lang=${locale}`,
         ready: true,
       },
       {
         title: t.case2,
         desc: t.case2Desc,
-        image:
-          demoProducts["demo-wireless-earbuds"]?.main_image && !demoProducts["demo-wireless-earbuds"]?.main_image?.endsWith(".svg")
-            ? demoProducts["demo-wireless-earbuds"]?.main_image
-            : "/images/demo-wireless-earbuds.png",
-        href: `/p/${encodeURIComponent(demoProducts["demo-wireless-earbuds"]?.dpp_id || "DPP-AUDIO-DEMO-001")}?lang=zh`,
+        image: demoProducts["green-vault-ess-14-3-demo-000001"]?.main_image || "/images/green-vault-ess-14-3.png",
+        href: `/demos/industrial-battery?lang=${locale}`,
         ready: true,
       },
       {
         title: t.case3,
         desc: t.case3Desc,
-        image: demoProducts["demo-wpc-flooring"]?.main_image || "/images/demo-wpc-flooring.svg",
-        href: `/p/${encodeURIComponent(demoProducts["demo-wpc-flooring"]?.dpp_id || "DPP-WPC-MS140K25B")}?lang=zh`,
+        image: demoProducts["demo-organic-cotton-tshirt"]?.main_image || "/images/demo-organic-cotton-tshirt.png",
+        href: `/p/${encodeURIComponent(demoProducts["demo-organic-cotton-tshirt"]?.dpp_id || "DPP-DEMO-001")}?lang=${locale}`,
         ready: true,
       },
       {
         title: t.case4,
         desc: t.case4Desc,
-        image: demoProducts["demo-office-chair"]?.main_image || "/images/demo-office-chair.svg",
-        href: `/p/${encodeURIComponent(demoProducts["demo-office-chair"]?.dpp_id || "DPP-FURN-DEMO-001")}?lang=zh`,
+        image:
+          demoProducts["demo-wireless-earbuds"]?.main_image && !demoProducts["demo-wireless-earbuds"]?.main_image?.endsWith(".svg")
+            ? demoProducts["demo-wireless-earbuds"]?.main_image
+            : "/images/demo-wireless-earbuds.png",
+        href: `/p/${encodeURIComponent(demoProducts["demo-wireless-earbuds"]?.dpp_id || "DPP-AUDIO-DEMO-001")}?lang=${locale}`,
         ready: true,
       },
     ],
-    [demoProducts, t.case1, t.case1Desc, t.case2, t.case2Desc, t.case3, t.case3Desc, t.case4, t.case4Desc]
+    [demoProducts, locale, t.case1, t.case1Desc, t.case2, t.case2Desc, t.case3, t.case3Desc, t.case4, t.case4Desc]
   );
 
   const guide = [
@@ -300,11 +327,11 @@ export default function Home() {
               </div>
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link href="/p/DPP-DEMO-001?lang=zh" className="btn-primary">
+                <Link href={`/demos/industrial-battery?lang=${locale}`} className="btn-primary">
                   {t.primaryCta}
                 </Link>
 
-                <a href="#guide" className="btn-secondary">
+                <a href="#battery-capabilities" className="btn-secondary">
                   {t.secondaryCta}
                 </a>
               </div>
@@ -319,6 +346,32 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section id="battery-capabilities" className="border-b border-slate-200 bg-white py-16 lg:py-20">
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="max-w-4xl">
+              <h2 className="text-4xl font-black text-slate-950">{t.batteryCapabilityTitle}</h2>
+              <p className="mt-4 text-lg leading-8 text-slate-600">{t.batteryCapabilitySubtitle}</p>
+            </div>
+            <div className="mt-10 grid gap-px overflow-hidden rounded-lg border border-slate-200 bg-slate-200 md:grid-cols-2 xl:grid-cols-4">
+              {[
+                [t.batteryCapability1, t.batteryCapability1Desc],
+                [t.batteryCapability2, t.batteryCapability2Desc],
+                [t.batteryCapability3, t.batteryCapability3Desc],
+                [t.batteryCapability4, t.batteryCapability4Desc],
+              ].map(([title, desc], index) => (
+                <div key={title} className="bg-white p-6">
+                  <span className="text-sm font-black text-emerald-700">{String(index + 1).padStart(2, "0")}</span>
+                  <h3 className="mt-4 text-lg font-black text-slate-950">{title}</h3>
+                  <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">{desc}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-6 border-l-4 border-amber-500 bg-amber-50 px-5 py-4 text-sm font-bold leading-6 text-amber-950">
+              {t.batteryDisclaimer}
+            </p>
           </div>
         </section>
 
@@ -422,7 +475,7 @@ export default function Home() {
                   <img src="/images/dpp-hero.png" alt="" className="h-full w-full object-cover opacity-75" />
                   <div className="absolute inset-0 bg-gradient-to-br from-slate-950/80 to-emerald-950/30" />
                   <div className="absolute bottom-5 left-5 rounded-lg border border-white/15 bg-white/10 px-4 py-3 text-sm font-black text-white backdrop-blur">
-                    DPP readiness
+                    {locale === "zh" ? "DPP 准备度" : "DPP readiness"}
                   </div>
                 </div>
                 <div className="p-6">

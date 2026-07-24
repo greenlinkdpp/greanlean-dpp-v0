@@ -116,6 +116,37 @@ const furnitureProduct: ProductPayload = {
   end_of_life_instructions_zh: "回收前尽量拆分金属框架、塑料件、网布和海绵。完好部件优先进入家具翻新或再使用渠道。",
 };
 
+const industrialBatteryProduct: ProductPayload = {
+  name: "GreenVault ESS-14.3 Industrial Battery Module",
+  name_zh: "GreenVault ESS-14.3 工业储能电池模块",
+  sku: "GV-ESS-14K3-2026",
+  brand: "GreenVault Demo",
+  category: "Industrial Battery",
+  subcategory: "Stationary Industrial Battery Above 2 kWh",
+  sector_code: "battery",
+  category_code: "industrial_battery",
+  subcategory_code: "stationary_above_2kwh",
+  dpp_profile_key: "battery.industrial.stationary_above_2kwh.v1",
+  season: "2026 Battery Passport Demo",
+  description:
+    "Synthetic digital battery passport demo for a 14.336 kWh stationary LFP industrial energy-storage module. No live BMS, certification or Registry submission.",
+  description_zh:
+    "14.336 kWh 固定式磷酸铁锂工业储能模块的合成数字电池护照演示。没有实时 BMS、法规认证或正式注册库提交。",
+  status: "published",
+  dpp_id: "DPP-GV-ESS-14K3-000001",
+  public_slug: "green-vault-ess-14-3-demo-000001",
+  main_image: "/images/green-vault-ess-14-3.png",
+  care_instructions:
+    "Keep the module within the declared temperature and voltage range. Maintain ventilation and inspect terminals and BMS alarms according to the service plan.",
+  care_instructions_zh: "电池模块应在声明的温度和电压范围内运行，保持通风，并按维护计划检查端子与 BMS 告警。",
+  repair_instructions:
+    "Only trained and authorised personnel may isolate, diagnose, open or repair the module.",
+  repair_instructions_zh: "只有经过培训并获得授权的人员才可以隔离、诊断、打开或维修该电池模块。",
+  end_of_life_instructions:
+    "Isolate the module, reduce SOC to the required transport range and deliver it to an authorised industrial-battery collection or treatment operator.",
+  end_of_life_instructions_zh: "隔离电池模块，将 SOC 降至要求的运输范围，并交付有资质的工业电池收集或处理机构。",
+};
+
 async function upsertProduct(supabase: ReturnType<typeof createSupabaseClient>, payload: ProductPayload, preferSku = false) {
   const { data: bySkuRows } = preferSku
     ? await supabase.from("products").select("id, public_slug, main_image").eq("sku", payload.sku).limit(1)
@@ -187,6 +218,7 @@ export function DemoDataSyncButton() {
       const earbudsId = await upsertProduct(supabase, earbudsProduct);
       const flooringId = await upsertProduct(supabase, flooringProduct, true);
       const furnitureId = await upsertProduct(supabase, furnitureProduct);
+      await upsertProduct(supabase, industrialBatteryProduct, true);
       await resetRelated(supabase, [earbudsId, flooringId, furnitureId]);
 
       await insertRows(supabase, "product_materials", [
@@ -468,7 +500,7 @@ export function DemoDataSyncButton() {
         { product_id: furnitureId, data_source: "Supplier declarations, recycled-content statements, durability reports, production batch records, packaging data and logistics documents.", data_owner: "greanlean admin", audit_status: "Demo review completed\nVerifier: Demo Furniture Testing Institute\nCertificate: DPP-FURN-2026-021\nValid until: 2027-06-03\nLast updated: 2026-06-06", data_quality_score: 89 },
       ]);
 
-      setMessage(isZh ? "示例数据已同步。请刷新产品列表查看耳机、WPC 地板和办公椅。" : "Demo data synced. Refresh the product list to view earbuds, WPC flooring and office chair.");
+      setMessage(isZh ? "示例数据已同步。请刷新产品列表查看工业储能电池、耳机、WPC 地板和办公椅。" : "Demo data synced. Refresh the product list to view the industrial battery, earbuds, WPC flooring and office chair.");
     } catch (error) {
       const rawMessage = error instanceof Error ? error.message : typeof error === "object" && error && "message" in error ? String(error.message) : String(error);
       setMessage(
@@ -490,8 +522,8 @@ export function DemoDataSyncButton() {
           <p className="font-black text-slate-950">{isZh ? "示例数据同步" : "Demo data sync"}</p>
           <p className="mt-1 text-sm leading-6 text-slate-600">
             {isZh
-              ? "补齐 MS140K25B WPC 地板，并把无线耳机和办公椅写入产品中心。"
-              : "Complete MS140K25B WPC flooring and add wireless earbuds plus office chair to Product Hub."}
+              ? "补齐工业储能电池、MS140K25B WPC 地板、无线耳机和办公椅，并保留原有演示数据。"
+              : "Add the industrial battery, complete MS140K25B WPC flooring, and preserve the existing earbuds and office-chair demos."}
           </p>
         </div>
         <button className="btn-primary" disabled={syncing} onClick={syncDemoData} type="button">

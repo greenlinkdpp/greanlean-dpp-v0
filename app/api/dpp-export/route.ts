@@ -1,4 +1,9 @@
 import { createSupabaseClient } from "@/lib/supabase";
+import {
+  INDUSTRIAL_DEMO,
+  industrialDemoStructuredPayload,
+  isIndustrialDemoIdentifier,
+} from "@/lib/battery/industrialDemo";
 
 function escapePdfText(value: string) {
   return value.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
@@ -406,10 +411,57 @@ function pdfLines(payload: any) {
   ];
 }
 
+function industrialDemoPdfLines() {
+  const payload = industrialDemoStructuredPayload();
+  const spec = payload.technicalSpecifications;
+  return [
+    "GreenVault ESS-14.3 Digital Battery Passport",
+    "SYNTHETIC DEMONSTRATION DATA - NOT FOR REGULATORY SUBMISSION",
+    "",
+    `DPP ID: ${INDUSTRIAL_DEMO.dppId}`,
+    `UPI: ${INDUSTRIAL_DEMO.upi}`,
+    `Model: ${payload.passportMetadata.modelIdentifier}`,
+    `Batch: ${payload.passportMetadata.batchIdentifier}`,
+    `Item: ${payload.passportMetadata.itemIdentifier}`,
+    `GTIN (demo): ${INDUSTRIAL_DEMO.gtin}`,
+    `Category: Rechargeable stationary industrial battery above 2 kWh`,
+    "",
+    `Chemistry: Lithium iron phosphate / graphite`,
+    `Rated energy: ${spec.ratedEnergyKWh} kWh`,
+    `Rated capacity: ${spec.ratedCapacityAh} Ah`,
+    `Nominal voltage: ${spec.nominalVoltageV} V`,
+    `Operating voltage: ${spec.minimumVoltageV}-${spec.maximumVoltageV} V`,
+    `Mass: ${spec.weightKg} kg`,
+    `Continuous / peak power: ${spec.continuousPowerKW} kW / ${spec.peakPower.valueKW} kW for ${spec.peakPower.durationSeconds} s`,
+    `Expected cycle life: ${spec.cycleLife.cycles} cycles at ${spec.cycleLife.depthOfDischargePct}% DoD and ${spec.cycleLife.temperatureC} C`,
+    `Carbon footprint demo: ${payload.carbonFootprint.totalKgCO2e} kg CO2e total; ${payload.carbonFootprint.intensityKgCO2ePerKWh} kg CO2e/kWh`,
+    "",
+    "Verification: SYNTHETIC_DEMO",
+    "No live BMS connection. No third-party verification. No formal EU DPP Registry submission.",
+  ];
+}
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const format = url.searchParams.get("format") || "json";
   const product = url.searchParams.get("product") || "demo-organic-cotton-tshirt";
+  if (isIndustrialDemoIdentifier(product)) {
+    if (format === "pdf") {
+      return new Response(buildPdf(industrialDemoPdfLines()), {
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `inline; filename="dpp-${INDUSTRIAL_DEMO.slug}.pdf"`,
+          "Cache-Control": "no-store",
+        },
+      });
+    }
+    return Response.json(industrialDemoStructuredPayload(), {
+      headers: {
+        "Content-Disposition": `attachment; filename="dpp-${INDUSTRIAL_DEMO.slug}.json"`,
+        "Cache-Control": "no-store",
+      },
+    });
+  }
   const mappedDemoKey = demoKey(product);
   const payload =
     mappedDemoKey === "demo-wpc-flooring"
