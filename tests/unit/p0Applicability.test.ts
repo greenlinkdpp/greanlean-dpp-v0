@@ -62,6 +62,7 @@ test("public applicability presentation localizes results, reasons, tasks and pr
   assert.equal(zh.tasks[0].displayPriority, "高");
   assert.equal(en.result, "Preliminarily applicable");
   assert.equal(en.tasks[0].displayTitle, assessment.tasks[0].title);
+  assert.doesNotMatch(en.tasks[0].displayDescription, /missing: BOM/);
 });
 
 test("P0 technical rules cover energy consistency, negative values and material totals", () => {

@@ -7,6 +7,8 @@ const repository = await readFile("lib/server/p0Repository.ts", "utf8");
 const shell = await readFile("components/DashboardShell.tsx", "utf8");
 const editor = await readFile("components/ProductEditor.tsx", "utf8");
 const workflow = await readFile("lib/server/dppPublicationWorkflow.ts", "utf8");
+const publicAssessment = await readFile("components/p0/PublicApplicabilityAssessment.tsx", "utf8");
+const leadForm = await readFile("components/LeadForm.tsx", "utf8");
 
 test("P0 tenant resources are organisation-scoped, RLS protected and server-written", () => {
   for (const table of [
@@ -49,6 +51,16 @@ test("applicability and operator profile writes are transactional, versioned and
   assert.match(migration, /APPLICABILITY_ASSESSMENT_APPEND_ONLY/i);
   assert.match(migration, /greanlean_p0_save_economic_operator_profile/i);
   assert.match(migration, /ECONOMIC_OPERATOR_PROFILE_VERSION_IMMUTABLE/i);
+});
+
+test("public assessment gives a detailed anonymous result and routes visitors to a pilot application", () => {
+  assert.match(publicAssessment, /本次评估输入/);
+  assert.match(publicAssessment, /建议实施路径/);
+  assert.match(publicAssessment, /mode="pilot"/);
+  assert.match(publicAssessment, /source="battery-applicability"/);
+  assert.doesNotMatch(publicAssessment, /href=\{`\/login\?lang=/);
+  assert.match(leadForm, /pilotSuccess/);
+  assert.match(leadForm, /source,/);
 });
 
 test("backoffice exposes projects, organisation governance and the product hierarchy", () => {

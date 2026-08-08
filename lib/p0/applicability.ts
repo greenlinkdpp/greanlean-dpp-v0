@@ -77,6 +77,17 @@ const zhTaskCopy: Record<string, { title: string; description: string }> = {
   },
 };
 
+const enTaskDescriptions: Record<string, string> = {
+  "Confirm the legal battery category.": "Confirm the legal battery category before relying on the preliminary scope result.",
+  "Confirm the battery intended use.": "Describe the target equipment, use environment and primary battery purpose.",
+  "Confirm the rated energy in kWh.": "Provide and verify the product's rated energy in kilowatt-hours.",
+  "Confirm whether the product will be placed on the EU market.": "Confirm whether the product is already placed or planned for placement on the EU market.",
+  "Confirm the economic operator placing the product on the market.": "Identify the economic operator responsible for placing the product on the market.",
+  "Provide the model BOM and material composition": "Provide the model-level bill of materials, material names and composition percentages.",
+  "Provide the rated technical specification": "Provide rated voltage, capacity, energy and other applicable technical parameters.",
+  "Complete the economic operator profile": "Provide the responsible operator's legal name, role, registered address and contact details.",
+};
+
 function localizedCategory(category: string, locale: "zh" | "en") {
   const labels = locale === "zh"
     ? {
@@ -146,7 +157,7 @@ export function presentBatteryApplicability(
         displayTitle: locale === "zh" && translated ? translated.title : task.title,
         displayDescription: locale === "zh" && translated
           ? translated.description
-          : task.description,
+          : enTaskDescriptions[task.title] || task.description,
         displayPriority: locale === "zh"
           ? { CRITICAL: "紧急", HIGH: "高", MEDIUM: "中" }[task.priority]
           : { CRITICAL: "Critical", HIGH: "High", MEDIUM: "Medium" }[task.priority],

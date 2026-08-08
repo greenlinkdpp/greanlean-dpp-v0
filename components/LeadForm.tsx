@@ -4,7 +4,19 @@ import { useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase";
 import { useLanguage } from "@/components/LanguageProvider";
 
-export function LeadForm() {
+type LeadFormProps = {
+  mode?: "consultation" | "pilot";
+  source?: string;
+  initialIndustry?: "apparel" | "electronics" | "battery" | "furniture" | "metal" | "other";
+  initialMessage?: string;
+};
+
+export function LeadForm({
+  mode = "consultation",
+  source = "greanlean.com",
+  initialIndustry = "apparel",
+  initialMessage = "",
+}: LeadFormProps = {}) {
   const { locale } = useLanguage();
 
   const t =
@@ -26,9 +38,11 @@ export function LeadForm() {
           message: "需求说明",
           messagePlaceholder: "说说你的产品、出口市场、已有数据情况。",
           submit: "提交免费咨询",
+          submitPilot: "提交试点申请",
           submitting: "提交中...",
           required: "请填写姓名和联系方式。",
           success: "提交成功，我们会尽快联系你。",
+          pilotSuccess: "试点申请已提交，我们会联系你确认产品范围和下一步资料。",
           failed: "提交失败：",
           timeout: "提交超时，请稍后重试或直接联系我们。",
         }
@@ -50,9 +64,11 @@ export function LeadForm() {
           messagePlaceholder:
             "Tell us about your products, export markets and current data readiness.",
           submit: "Submit free consultation",
+          submitPilot: "Submit pilot application",
           submitting: "Submitting...",
           required: "Please enter your name and contact information.",
           success: "Submitted. We will contact you soon.",
+          pilotSuccess: "Your pilot application has been submitted. We will contact you to confirm scope and next inputs.",
           failed: "Submission failed: ",
           timeout: "Submission timed out. Please try again or contact us directly.",
         };
@@ -79,7 +95,7 @@ export function LeadForm() {
       contact: String(form.get("contact") || "").trim(),
       industry: String(form.get("industry") || "").trim(),
       message: String(form.get("message") || "").trim(),
-      source: "greanlean.com",
+      source,
     };
 
     if (!payload.name || !payload.contact) {
@@ -112,7 +128,7 @@ export function LeadForm() {
 
         setMsg({
           type: "ok",
-          text: t.success,
+          text: mode === "pilot" ? t.pilotSuccess : t.success,
         });
       }
     } catch (error) {
@@ -164,7 +180,7 @@ export function LeadForm() {
       <div>
         <label className="label">{t.industry}</label>
 
-        <select className="input mt-1" name="industry" defaultValue={t.apparel}>
+        <select className="input mt-1" name="industry" defaultValue={t[initialIndustry]}>
           <option>{t.apparel}</option>
           <option>{t.electronics}</option>
           <option>{t.battery}</option>
@@ -180,6 +196,7 @@ export function LeadForm() {
         <textarea
           className="input mt-1 min-h-28"
           name="message"
+          defaultValue={initialMessage}
           placeholder={t.messagePlaceholder}
         />
       </div>
@@ -187,7 +204,7 @@ export function LeadForm() {
       <input className="hidden" tabIndex={-1} autoComplete="off" name="website" />
 
       <button disabled={loading} className="btn-primary w-full" type="submit">
-        {loading ? t.submitting : t.submit}
+        {loading ? t.submitting : mode === "pilot" ? t.submitPilot : t.submit}
       </button>
 
       {msg && (
