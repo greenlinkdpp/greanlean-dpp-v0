@@ -56,10 +56,55 @@ async function latestPublishedVersion(admin: AdminClient, productId: string) {
   return data;
 }
 
-async function sourceForProduct(admin: AdminClient, productId: string): Promise<BatteryRegistrySource & { productVersionId: string | null }> {
+async function currentPublication(admin: AdminClient, productId: string) {
+  const { data: pointer, error: pointerError } = await admin
+    .from("dpp_product_publication_pointer")
+    .select("publication_id")
+    .eq("product_id", productId)
+    .maybeSingle();
+  if (pointerError) {
+    const message = String(pointerError.message || "").toLowerCase();
+    if (
+      pointerError.code === "42P01"
+      || pointerError.code === "PGRST205"
+      || message.includes("does not exist")
+      || message.includes("could not find the table")
+    ) return null;
+    databaseError(pointerError);
+  }
+  if (!pointer?.publication_id) return null;
+  const { data, error } = await admin
+    .from("dpp_publication")
+    .select("id,version_number,status,snapshot_hash,hash_algorithm,published_at")
+    .eq("id", pointer.publication_id)
+    .eq("product_id", productId)
+    .eq("status", "PUBLISHED")
+    .maybeSingle();
+  databaseError(error);
+  return data;
+}
+
+async function sourceForProduct(
+  admin: AdminClient,
+  productId: string,
+): Promise<
+  BatteryRegistrySource & {
+    productVersionId: string | null;
+    publicationId: string | null;
+  }
+> {
   const product = await requireBatteryProduct(admin, productId);
-  const [mapping, versionResult, profileResult, batchResult, itemResult, enrolmentResult] = await Promise.all([
+  const [
+    mapping,
+    publicationResult,
+    versionResult,
+    profileResult,
+    batchResult,
+    itemResult,
+    enrolmentResult,
+  ] = await Promise.all([
     registryMapping(admin),
+    currentPublication(admin, productId),
     latestPublishedVersion(admin, productId),
     admin.from("battery_model_profile").select("id,battery_model_identifier").eq("product_id", productId).maybeSingle(),
     admin.from("battery_batch").select("id,batch_identifier").eq("product_id", productId).order("created_at", { ascending: false }).limit(1).maybeSingle(),
@@ -75,7 +120,8 @@ async function sourceForProduct(admin: AdminClient, productId: string): Promise<
     ? itemResult.data?.unique_product_identifier || product.unique_product_identifier
     : product.unique_product_identifier;
   return {
-    productVersionId: versionResult?.id || null,
+    productVersionId: publicationResult ? null : versionResult?.id || null,
+    publicationId: publicationResult?.id || null,
     environment: "TEST",
     mappingVersion: mapping.mapping_version,
     operationalRuleVersion: mapping.operational_rule_version,
@@ -91,8 +137,12 @@ async function sourceForProduct(admin: AdminClient, productId: string): Promise<
     commodityCode: product.commodity_code,
     dppUri,
     backupReference: null,
-    dppVersion: versionResult?.version || null,
-    dppVersionHash: versionResult?.data_hash || null,
+    dppVersion: publicationResult
+      ? `v${publicationResult.version_number}`
+      : versionResult?.version || null,
+    dppVersionHash: publicationResult?.snapshot_hash
+      || versionResult?.data_hash
+      || null,
     enrolmentVerified: enrolmentResult.data?.verification_status === "VERIFIED",
     declarationPresent: Boolean(enrolmentResult.data?.declaration_document_reference),
   };
@@ -140,7 +190,13 @@ export async function generateRegistryMapping(admin: AdminClient, productId: str
   requireRegistryAdapter();
   const product = await requireBatteryProduct(admin, productId);
   const source = await sourceForProduct(admin, productId);
-  if (!source.productVersionId) throw new ApiError(409, "PUBLISHED_DPP_VERSION_REQUIRED", "Publish a hashed DPP version before generating a Registry mapping.");
+  if (!source.productVersionId && !source.publicationId) {
+    throw new ApiError(
+      409,
+      "PUBLISHED_DPP_VERSION_REQUIRED",
+      "Publish a hashed DPP version before generating a Registry mapping.",
+    );
+  }
   if (retryOfSubmissionId) {
     const { data: prior, error } = await admin.from("registry_submission").select("id,product_id,environment").eq("id", retryOfSubmissionId).maybeSingle();
     databaseError(error);
@@ -153,6 +209,7 @@ export async function generateRegistryMapping(admin: AdminClient, productId: str
   const { data: submission, error: submissionError } = await admin.from("registry_submission").insert({
     product_id: productId,
     product_version_id: source.productVersionId,
+    publication_id: source.publicationId,
     environment: "TEST",
     product_group: "battery",
     granularity: source.granularity,

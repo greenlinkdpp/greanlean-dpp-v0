@@ -10664,7 +10664,7 @@ commit;
 
 -- ============================================================================
 -- SOURCE: supabase/migrations/0011_registry_adapter.sql
--- SHA256: e88c87f66a769db65d30b2ac5dc2e99c27a7a1f06dc1a22cdb48ce65920af826
+-- SHA256: 1defb24ca3cb05e937b93263770a4ffe2194c44affde7b31226e5364f164b695
 -- ============================================================================
 begin;
 
@@ -10898,7 +10898,7 @@ select
     }
   }'::jsonb,
   'published',
-  encode(digest('battery-test-file-1.0.0|DPP Registry User Guide v1.0|TEST_MANUAL_FILE_ONLY', 'sha256'), 'hex'),
+  encode(extensions.digest('battery-test-file-1.0.0|DPP Registry User Guide v1.0|TEST_MANUAL_FILE_ONLY', 'sha256'), 'hex'),
   now()
 from public.schema_version sv
 join public.schema_definition sd on sd.id = sv.schema_definition_id

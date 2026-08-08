@@ -29,6 +29,7 @@ export type BatteryOperatingDataPolicy = {
 };
 
 export const BATTERY_OPERATING_METRICS: BatteryOperatingMetricDefinition[] = [
+  { code: "FULL_CHARGE_CAPACITY", labelEn: "Full charge capacity", labelZh: "满充容量", defaultUnit: "Ah", updateMode: "DAILY_SNAPSHOT" },
   { code: "REMAINING_CAPACITY", labelEn: "Remaining capacity", labelZh: "剩余容量", defaultUnit: "Ah", updateMode: "DAILY_SNAPSHOT" },
   { code: "CAPACITY_FADE", labelEn: "Capacity fade", labelZh: "容量衰减", defaultUnit: "%", updateMode: "DAILY_SNAPSHOT" },
   { code: "REMAINING_USABLE_ENERGY", labelEn: "Remaining usable energy", labelZh: "剩余可用能量", defaultUnit: "kWh", updateMode: "DAILY_SNAPSHOT" },
@@ -41,6 +42,7 @@ export const BATTERY_OPERATING_METRICS: BatteryOperatingMetricDefinition[] = [
   { code: "CURRENT_SELF_DISCHARGE_RATE", labelEn: "Current self-discharge rate", labelZh: "当前自放电率", defaultUnit: "%/month", updateMode: "DAILY_SNAPSHOT" },
   { code: "SELF_DISCHARGE_EVOLUTION", labelEn: "Self-discharge evolution", labelZh: "自放电率变化", defaultUnit: "%", updateMode: "DAILY_SNAPSHOT" },
   { code: "INTERNAL_RESISTANCE_INCREASE", labelEn: "Internal resistance increase", labelZh: "内阻增长", defaultUnit: "%", updateMode: "DAILY_SNAPSHOT" },
+  { code: "CURRENT_INTERNAL_RESISTANCE", labelEn: "Current internal resistance", labelZh: "当前内阻", defaultUnit: "mOhm", updateMode: "DAILY_SNAPSHOT" },
   { code: "FULL_CYCLE_COUNT", labelEn: "Full charge-discharge cycles", labelZh: "完整充放电循环次数", defaultUnit: "cycle", updateMode: "CUMULATIVE_SNAPSHOT" },
   { code: "ENERGY_THROUGHPUT", labelEn: "Energy throughput", labelZh: "能量吞吐量", defaultUnit: "kWh", updateMode: "CUMULATIVE_SNAPSHOT" },
   { code: "CAPACITY_THROUGHPUT", labelEn: "Capacity throughput", labelZh: "容量吞吐量", defaultUnit: "Ah", updateMode: "CUMULATIVE_SNAPSHOT" },
@@ -208,7 +210,8 @@ export function validateOperatingMetricValue(metricType: string, value: number) 
   if (
     ["FULL_CYCLE_COUNT", "ENERGY_THROUGHPUT", "CAPACITY_THROUGHPUT", "HIGH_TEMPERATURE_DURATION", "LOW_TEMPERATURE_DURATION",
       "HIGH_TEMPERATURE_CHARGING_DURATION", "LOW_TEMPERATURE_CHARGING_DURATION", "DEEP_DISCHARGE_EVENT_COUNT",
-      "OVERCHARGE_EVENT_COUNT", "REMAINING_CAPACITY", "REMAINING_USABLE_ENERGY", "REMAINING_POWER_CAPABILITY"].includes(metricType)
+      "OVERCHARGE_EVENT_COUNT", "FULL_CHARGE_CAPACITY", "CURRENT_INTERNAL_RESISTANCE", "REMAINING_CAPACITY",
+      "REMAINING_USABLE_ENERGY", "REMAINING_POWER_CAPABILITY"].includes(metricType)
     && value < 0
   ) return false;
   return true;

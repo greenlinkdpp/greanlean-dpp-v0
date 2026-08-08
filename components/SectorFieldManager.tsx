@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase";
 import { useLanguage } from "@/components/LanguageProvider";
+import { internalDataWrite } from "@/lib/client/internalDataWrite";
 
 type FieldTemplate = {
   id: string;
@@ -465,7 +466,12 @@ export function SectorFieldManager({ productId, profileKey, title }: Props) {
 
     setSaving(true);
     setMessage("");
-    const { error } = await supabase.from("product_sector_field_values").upsert(rows, { onConflict: "product_id,field_key" });
+    const { error } = await internalDataWrite({
+      table: "product_sector_field_values",
+      operation: "upsert",
+      values: rows,
+      onConflict: "product_id,field_key",
+    });
     if (error) setMessage(error.message);
     else {
       setMessage(t.saved);

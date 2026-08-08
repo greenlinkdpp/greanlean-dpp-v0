@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
-import { INDUSTRIAL_DEMO } from "@/lib/battery/industrialDemo";
 
 export default function GreenVaultProductPage({ searchParams }: { searchParams?: { lang?: string } }) {
   const lang = searchParams?.lang === "en" ? "en" : "zh";
-  redirect(`/p/${encodeURIComponent(INDUSTRIAL_DEMO.dppId)}?view=consumer&lang=${lang}`);
+  redirect(`/p/DPP-GV-ESS-14K3-000001?lang=${lang}`);
 }

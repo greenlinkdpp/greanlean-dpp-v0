@@ -58,9 +58,11 @@ test("portable and SLI applicability stays explicitly undecided in the reference
 
 test("public DPP rendering cannot return item operating telemetry", async () => {
   const page = await readFile("app/p/[slug]/page.tsx", "utf8");
+  const publicRepository = await readFile("lib/dpp/publicDppRepository.ts", "utf8");
   assert.doesNotMatch(page, /battery_operating_metric/);
-  assert.match(page, /\["state_of_health", "state_of_charge"\]/);
-  assert.match(page, /safeSectorFieldValues/);
+  assert.doesNotMatch(publicRepository, /battery_operating_metric/);
+  assert.match(publicRepository, /\["state_of_health", "state_of_charge"\]/);
+  assert.match(publicRepository, /sectorFieldValues\.filter/);
 
   const publicClient = await readFile("components/PublicDppClient.tsx", "utf8");
   assert.match(publicClient, /returns no item telemetry or operating values/);
@@ -76,16 +78,37 @@ test("legacy battery templates keep SoH and SoC outside public visibility", asyn
   }
 });
 
-test("complete battery workspaces and exports require explicit internal access", async () => {
-  const repository = await readFile("lib/server/batteryRepository.ts", "utf8");
-  assert.match(repository, /granted !== "INTERNAL"/);
-  assert.match(repository, /BATTERY_INTERNAL_ACCESS_REQUIRED/);
+test("battery workspaces require product-scoped editor access and exports remain platform-controlled", async () => {
+  const accessRepository = await readFile("lib/server/dppAccess.ts", "utf8");
+  assert.match(accessRepository, /requireDppInternalUser/);
+  assert.match(accessRepository, /requireProductEditorAccess/);
+  assert.match(accessRepository, /DPP_INTERNAL_ACCESS_REQUIRED/);
+  assert.match(accessRepository, /greanlean_get_my_identity/);
 
-  for (const route of [
-    "app/api/battery-dpp/[productId]/route.ts",
-    "app/api/battery-dpp/[productId]/batterypass-export/route.ts",
+  const workspaceRoute = await readFile("app/api/battery-dpp/[productId]/route.ts", "utf8");
+  assert.match(workspaceRoute, /requireProductEditorAccess/);
+  assert.match(workspaceRoute, /route\.params\.productId/);
+  assert.match(workspaceRoute, /createServerAuthClient\(accessToken\)/);
+
+  const exportRoute = await readFile("app/api/battery-dpp/[productId]/batterypass-export/route.ts", "utf8");
+  assert.match(exportRoute, /requireDppInternalUser/);
+  assert.match(exportRoute, /createServerAuthClient\(accessToken\)/);
+});
+
+test("BatteryPass export is offered only to categories with imported validation Schemas", async () => {
+  const workspace = await readFile("components/battery/BatteryDppWorkspace.tsx", "utf8");
+  const registryWorkbench = await readFile("components/battery/RegistryWorkbench.tsx", "utf8");
+  const repository = await readFile("lib/server/batteryPassRepository.ts", "utf8");
+
+  assert.match(workspace, /hasBatteryPassSchema=\{\["ev", "lmt", "industrial"\]\.includes\(category\)\}/);
+  assert.match(registryWorkbench, /hasBatteryPassSchema \? <button[\s\S]*downloadBatteryPass/);
+  for (const schema of [
+    "EV.json",
+    "LMT.json",
+    "Industrial_Without_BMS.json",
+    "Other_Industrial_Above_2kWh.json",
+    "Stationary_Industrial_Above_2kWh.json",
   ]) {
-    const source = await readFile(route, "utf8");
-    assert.match(source, /requireBatteryInternalUser\(user\)/, `${route} does not enforce internal access`);
+    assert.match(repository, new RegExp(schema.replace(".", "\\.")));
   }
 });

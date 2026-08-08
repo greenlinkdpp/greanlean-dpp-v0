@@ -1,11 +1,13 @@
 import { withApiRoute } from "@/lib/server/apiRoute";
 import { registryMappingDownload } from "@/lib/server/registryRepository";
-import { createSupabaseAdminClient, requireAuthenticatedUser } from "@/lib/server/supabase";
+import { requireDppInternalUser } from "@/lib/server/dppAccess";
+import { createServerAuthClient, createSupabaseAdminClient, requireAuthenticatedUser } from "@/lib/server/supabase";
 
 type RouteContext = { params: { productId: string; submissionId: string } };
 
 export const GET = withApiRoute<RouteContext>(async (request, _context, route) => {
-  await requireAuthenticatedUser(request);
+  const { user, accessToken } = await requireAuthenticatedUser(request);
+  await requireDppInternalUser(createServerAuthClient(accessToken), user);
   const result = await registryMappingDownload(createSupabaseAdminClient(), route.params.productId, route.params.submissionId);
   return new Response(`${JSON.stringify(result.payload, null, 2)}\n`, {
     headers: {

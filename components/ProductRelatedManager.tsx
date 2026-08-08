@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase";
 import { useLanguage } from "@/components/LanguageProvider";
+import { internalDataWrite } from "@/lib/client/internalDataWrite";
 
 export type RelatedField = {
   name: string;
@@ -102,7 +103,11 @@ export function ProductRelatedManager({ productId, title, titleZh, description, 
     const payload = preparePayload ? await preparePayload(getPayloadFromForm(form, fields, productId)) : getPayloadFromForm(form, fields, productId);
     setSaving(true);
     setMessage("");
-    const { error } = await supabase.from(table).insert(payload);
+    const { error } = await internalDataWrite({
+      table,
+      operation: "insert",
+      values: payload,
+    });
     if (error) setMessage(error.message);
     else {
       setMessage(`${shownTitle} ${t.saved}`);
@@ -118,7 +123,15 @@ export function ProductRelatedManager({ productId, title, titleZh, description, 
     const payload = preparePayload ? await preparePayload(getPayloadFromForm(form, fields)) : getPayloadFromForm(form, fields);
     setSaving(true);
     setMessage("");
-    const { error } = await supabase.from(table).update(payload).eq("id", id).eq("product_id", productId);
+    const { error } = await internalDataWrite({
+      table,
+      operation: "update",
+      values: payload,
+      filters: [
+        { column: "id", operator: "eq", value: id },
+        { column: "product_id", operator: "eq", value: productId },
+      ],
+    });
     if (error) setMessage(error.message);
     else {
       setMessage(`${shownTitle} ${t.updated}`);
@@ -130,7 +143,11 @@ export function ProductRelatedManager({ productId, title, titleZh, description, 
 
   async function remove(id: string) {
     if (!window.confirm(t.confirmDelete)) return;
-    const { error } = await supabase.from(table).delete().eq("id", id);
+    const { error } = await internalDataWrite({
+      table,
+      operation: "delete",
+      filters: [{ column: "id", operator: "eq", value: id }],
+    });
     if (error) setMessage(error.message);
     else await load();
   }

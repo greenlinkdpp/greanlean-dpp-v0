@@ -1,15 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/LanguageProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { createSupabaseClient } from "@/lib/supabase";
 import { BrandLogo } from "@/components/BrandLogo";
 
+function safeNextPath(locale: string) {
+  const requestedNext = new URLSearchParams(window.location.search).get("next");
+  return requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
+    ? requestedNext
+    : `/dashboard?lang=${locale}`;
+}
+
+function normalizeLoginIdentifier(value: string) {
+  const identifier = value.trim().toLowerCase();
+  return identifier.includes("@") ? identifier : `${identifier}@greanlean.com`;
+}
+
 export default function LoginPage() {
   const { locale } = useLanguage();
-  const router = useRouter();
 
   const t =
     locale === "zh"
@@ -17,7 +27,7 @@ export default function LoginPage() {
           badge: "greanlean DPP",
           title: "登录 DPP 工作台",
           subtitle: "管理产品护照、批量导入数据、发布公开 DPP 页面。",
-          email: "邮箱",
+          identifier: "账号或邮箱",
           password: "密码",
           submit: "登录",
           submitting: "登录中...",
@@ -31,7 +41,7 @@ export default function LoginPage() {
           badge: "greanlean DPP",
           title: "Login to DPP Workspace",
           subtitle: "Manage product passports, bulk import data and publish public DPP pages.",
-          email: "Email",
+          identifier: "Username or email",
           password: "Password",
           submit: "Login",
           submitting: "Logging in...",
@@ -49,6 +59,18 @@ export default function LoginPage() {
     document.title = locale === "zh" ? "登录 DPP 工作台 | GREANLEAN DPP" : "Login | GREANLEAN DPP";
   }, [locale]);
 
+  useEffect(() => {
+    let active = true;
+    createSupabaseClient().auth.getSession().then(({ data }) => {
+      if (active && data.session) {
+        window.location.replace(safeNextPath(locale));
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [locale]);
+
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -57,7 +79,7 @@ export default function LoginPage() {
 
     const form = new FormData(e.currentTarget);
 
-    const email = String(form.get("email") || "").trim();
+    const email = normalizeLoginIdentifier(String(form.get("identifier") || ""));
     const password = String(form.get("password") || "").trim();
 
     try {
@@ -71,8 +93,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push(`/dashboard?lang=${locale}`);
-      router.refresh();
+      window.location.assign(safeNextPath(locale));
     } catch (error) {
       setMsg(
         t.failed +
@@ -95,7 +116,7 @@ export default function LoginPage() {
       <main className="relative grid min-h-screen place-items-center px-6 py-20">
         <div className="grid w-full max-w-5xl overflow-hidden rounded-lg border border-white/10 bg-white shadow-2xl lg:grid-cols-[0.95fr_1.05fr]">
           <section className="bg-slate-950 p-8 text-white lg:p-10">
-            <BrandLogo href={`/?lang=${locale}`} size="lg" markClassName="shadow-brand-500/20" />
+            <BrandLogo href={`/?lang=${locale}`} size="lg" variant="light" markClassName="shadow-brand-500/20" />
             <h1 className="mt-6 text-4xl font-black leading-tight">{t.title}</h1>
             <p className="mt-4 leading-7 text-slate-300">{t.subtitle}</p>
 
@@ -113,8 +134,17 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="label">{t.email}</label>
-              <input name="email" type="email" required className="input mt-1" />
+              <label className="label">{t.identifier}</label>
+              <input
+                name="identifier"
+                type="text"
+                autoCapitalize="none"
+                autoComplete="username"
+                spellCheck={false}
+                placeholder={locale === "zh" ? "例如：orintent" : "e.g. orintent"}
+                required
+                className="input mt-1"
+              />
             </div>
 
             <div>

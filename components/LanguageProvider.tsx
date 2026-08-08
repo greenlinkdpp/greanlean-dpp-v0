@@ -24,18 +24,7 @@ export function LanguageProvider({
   children: React.ReactNode;
 }) {
   const [locale, setLocaleState] =
-    useState<Locale>(() => {
-      if (typeof window === "undefined") return "zh";
-
-      try {
-        const queryLocale = new URLSearchParams(window.location.search).get("lang");
-        if (queryLocale === "zh" || queryLocale === "en") return queryLocale;
-      } catch {
-        return "zh";
-      }
-
-      return "zh";
-    });
+    useState<Locale>("zh");
 
   useEffect(() => {
     let saved: string | null = null;

@@ -230,7 +230,7 @@ select
     }
   }'::jsonb,
   'published',
-  encode(digest('battery-test-file-1.0.0|DPP Registry User Guide v1.0|TEST_MANUAL_FILE_ONLY', 'sha256'), 'hex'),
+  encode(extensions.digest('battery-test-file-1.0.0|DPP Registry User Guide v1.0|TEST_MANUAL_FILE_ONLY', 'sha256'), 'hex'),
   now()
 from public.schema_version sv
 join public.schema_definition sd on sd.id = sv.schema_definition_id

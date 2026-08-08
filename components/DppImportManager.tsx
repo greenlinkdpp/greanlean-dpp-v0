@@ -6,6 +6,7 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { createSupabaseClient } from "@/lib/supabase";
 import { buildGs1DigitalLink, buildUniqueProductIdentifier, normalizeGtin, sha256Hex } from "@/lib/dppCompliance";
 import { slugify } from "@/lib/slugify";
+import { internalDataWrite } from "@/lib/client/internalDataWrite";
 
 type ModuleKey =
   | "Products"
@@ -384,7 +385,7 @@ const modules: ImportModule[] = [
       certificate_name: "EU Declaration of Conformity",
       certificate_type: "DoC",
       certificate_number: "CE-DOC-AUDIO-2026-001",
-      issuer: "Greanlean Electronics Demo Manufacturer",
+      issuer: "GreanLean Electronics Manufacturer",
       issue_date: "2026-06-04",
       expiry_date: "2027-06-03",
       certificate_url: "/api/declaration?product=DPP-AUDIO-DEMO-001",
@@ -1048,7 +1049,6 @@ function rowsFor(uploads: ParsedUpload[], moduleKey: ModuleKey) {
 }
 
 async function clearExistingRows(
-  supabase: ReturnType<typeof createSupabaseClient>,
   uploads: ParsedUpload[],
   productIds: Map<string, string>
 ) {
@@ -1080,7 +1080,11 @@ async function clearExistingRows(
   }
 
   for (const table of Array.from(tablesToClear)) {
-    const { error } = await supabase.from(table).delete().in("product_id", affectedProductIds);
+    const { error } = await internalDataWrite({
+      table,
+      operation: "delete",
+      filters: [{ column: "product_id", operator: "in", value: affectedProductIds }],
+    });
     if (error) throw error;
   }
 }
@@ -1226,14 +1230,15 @@ async function findOrCreateSupplierId(supabase: ReturnType<typeof createSupabase
 
   if (existing?.id) return existing.id;
 
-  const { data, error } = await supabase
-    .from("product_suppliers")
-    .insert({ supplier_name: supplierName })
-    .select("id")
-    .single();
+  const { data, error } = await internalDataWrite<{ id: string }>({
+    table: "product_suppliers",
+    operation: "insert",
+    values: { supplier_name: supplierName },
+    returning: "single",
+  });
 
   if (error) throw error;
-  return data.id as string;
+  return data?.id || null;
 }
 
 async function ensureProducts(
@@ -1272,21 +1277,30 @@ async function ensureProducts(
       granularity_level: clean(row.granularity_level) || "model",
       commodity_code: clean(row.commodity_code),
       unique_product_identifier: clean(row.unique_product_identifier),
-      eu_registration_status: clean(row.eu_registration_status) || "not_registered",
-      status: clean(row.status) || "published",
       public_slug: existing?.public_slug || slugify(`${name}-${sku}`),
       dpp_id: existing?.dpp_id || makeDppId(sku),
       updated_at: new Date().toISOString(),
     };
 
     if (existing?.id) {
-      const { error } = await supabase.from("products").update(payload).eq("id", existing.id);
+      const { error } = await internalDataWrite({
+        table: "products",
+        operation: "update",
+        values: payload,
+        filters: [{ column: "id", operator: "eq", value: existing.id }],
+      });
       if (error) throw error;
       productIds.set(sku, existing.id);
     } else {
-      const { data, error } = await supabase.from("products").insert(payload).select("id").single();
+      const { data, error } = await internalDataWrite<{ id: string }>({
+        table: "products",
+        operation: "insert",
+        values: payload,
+        returning: "single",
+      });
       if (error) throw error;
-      productIds.set(sku, data.id as string);
+      if (!data?.id) throw new Error("The imported product could not be identified.");
+      productIds.set(sku, data.id);
     }
 
     stats.products += 1;
@@ -1323,7 +1337,7 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
   };
 
   const productIds = await ensureProducts(supabase, uploads, stats);
-  await clearExistingRows(supabase, uploads, productIds);
+  await clearExistingRows(uploads, productIds);
 
   for (const row of rowsFor(uploads, "DigitalIdentity")) {
     const productId = row.sku ? productIds.get(row.sku) : null;
@@ -1338,19 +1352,23 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
       baseUrl: typeof window !== "undefined" ? window.location.origin : null,
     });
 
-    const { error } = await supabase.from("product_digital_identity").insert({
-      product_id: productId,
-      product_uuid: clean(row.product_uuid) || buildUniqueProductIdentifier({ gtin, batchId, serialId }),
-      gtin,
-      style_id: clean(row.style_id),
-      batch_id: batchId,
-      serial_id: serialId,
-      digital_link_url: clean(row.digital_link_url) || gs1DigitalLink,
-      data_carrier_type: clean(row.data_carrier_type) || "qr",
-      data_carrier_url: clean(row.data_carrier_url) || clean(row.digital_link_url) || gs1DigitalLink,
-      qr_code_id: clean(row.qr_code_id),
-      nfc_id: clean(row.nfc_id),
-      rfid_epc: clean(row.rfid_epc),
+    const { error } = await internalDataWrite({
+      table: "product_digital_identity",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        product_uuid: clean(row.product_uuid) || buildUniqueProductIdentifier({ gtin, batchId, serialId }),
+        gtin,
+        style_id: clean(row.style_id),
+        batch_id: batchId,
+        serial_id: serialId,
+        digital_link_url: clean(row.digital_link_url) || gs1DigitalLink,
+        data_carrier_type: clean(row.data_carrier_type) || "qr",
+        data_carrier_url: clean(row.data_carrier_url) || clean(row.digital_link_url) || gs1DigitalLink,
+        qr_code_id: clean(row.qr_code_id),
+        nfc_id: clean(row.nfc_id),
+        rfid_epc: clean(row.rfid_epc),
+      },
     });
 
     if (error) throw error;
@@ -1361,15 +1379,19 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
     const productId = row.sku ? productIds.get(row.sku) : null;
     if (!productId) continue;
 
-    const { error } = await supabase.from("product_bom").insert({
-      product_id: productId,
-      component_name: clean(row.component_name_en),
-      component_name_zh: clean(row.component_name_zh),
-      component_type: clean(row.component_type_en),
-      component_type_zh: clean(row.component_type_zh),
-      quantity: numberOrNull(row.quantity),
-      unit: clean(row.unit),
-      position: clean(row.position),
+    const { error } = await internalDataWrite({
+      table: "product_bom",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        component_name: clean(row.component_name_en),
+        component_name_zh: clean(row.component_name_zh),
+        component_type: clean(row.component_type_en),
+        component_type_zh: clean(row.component_type_zh),
+        quantity: numberOrNull(row.quantity),
+        unit: clean(row.unit),
+        position: clean(row.position),
+      },
     });
 
     if (error) throw error;
@@ -1381,18 +1403,22 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
     if (!productId) continue;
     const supplierId = await findOrCreateSupplierId(supabase, clean(row.supplier_name));
 
-    const { error } = await supabase.from("product_materials").insert({
-      product_id: productId,
-      supplier_id: supplierId,
-      material_name: clean(row.material_name_en),
-      material_name_zh: clean(row.material_name_zh),
-      material_type: clean(row.material_type),
-      percentage: numberOrNull(row.percentage),
-      recycled_content: numberOrNull(row.recycled_content),
-      origin_country: clean(row.origin_country),
-      chemical_info: clean(row.chemical_info),
-      recyclability: clean(row.recyclability),
-      certification: clean(row.certification),
+    const { error } = await internalDataWrite({
+      table: "product_materials",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        supplier_id: supplierId,
+        material_name: clean(row.material_name_en),
+        material_name_zh: clean(row.material_name_zh),
+        material_type: clean(row.material_type),
+        percentage: numberOrNull(row.percentage),
+        recycled_content: numberOrNull(row.recycled_content),
+        origin_country: clean(row.origin_country),
+        chemical_info: clean(row.chemical_info),
+        recyclability: clean(row.recyclability),
+        certification: clean(row.certification),
+      },
     });
 
     if (error) throw error;
@@ -1403,15 +1429,19 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
     const productId = row.sku ? productIds.get(row.sku) : null;
     if (!productId) continue;
 
-    const { error } = await supabase.from("product_documents").insert({
-      product_id: productId,
-      document_name: clean(row.test_item),
-      document_type: clean(row.regulation) || "Chemical compliance",
-      file_url: clean(row.report_url),
-      file_size: null,
-      language: "EN / ZH",
-      uploaded_by: clean(row.verification_status) || "uploaded",
-      version: clean(row.last_updated),
+    const { error } = await internalDataWrite({
+      table: "product_documents",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        document_name: clean(row.test_item),
+        document_type: clean(row.regulation) || "Chemical compliance",
+        file_url: clean(row.report_url),
+        file_size: null,
+        language: "EN / ZH",
+        uploaded_by: clean(row.verification_status) || "uploaded",
+        version: clean(row.last_updated),
+      },
     });
 
     if (error) throw error;
@@ -1422,15 +1452,19 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
     const productId = row.sku ? productIds.get(row.sku) : null;
     if (!productId) continue;
 
-    const { error } = await supabase.from("product_documents").insert({
-      product_id: productId,
-      document_name: [row.metric_name, row.metric_value, row.unit].filter(Boolean).join(" "),
-      document_type: clean(row.test_method) || "Product performance",
-      file_url: clean(row.report_url),
-      file_size: null,
-      language: "EN / ZH",
-      uploaded_by: clean(row.verification_status) || "uploaded",
-      version: clean(row.last_updated),
+    const { error } = await internalDataWrite({
+      table: "product_documents",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        document_name: [row.metric_name, row.metric_value, row.unit].filter(Boolean).join(" "),
+        document_type: clean(row.test_method) || "Product performance",
+        file_url: clean(row.report_url),
+        file_size: null,
+        language: "EN / ZH",
+        uploaded_by: clean(row.verification_status) || "uploaded",
+        version: clean(row.last_updated),
+      },
     });
 
     if (error) throw error;
@@ -1441,18 +1475,22 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
     const productId = row.sku ? productIds.get(row.sku) : null;
     if (!productId) continue;
 
-    const { error } = await supabase.from("product_traceability").insert({
-      product_id: productId,
-      event_type: clean(row.event_type),
-      event_name: clean(row.event_name_en),
-      event_name_zh: clean(row.event_name_zh),
-      event_date: clean(row.event_date),
-      country: clean(row.country),
-      city: clean(row.city),
-      facility_name: clean(row.facility_name),
-      transport_method: clean(row.transport_method),
-      verification_status: clean(row.verification_status),
-      notes: [row.notes, row.supplier_name ? `Supplier: ${row.supplier_name}` : ""].filter(Boolean).join("\n") || null,
+    const { error } = await internalDataWrite({
+      table: "product_traceability",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        event_type: clean(row.event_type),
+        event_name: clean(row.event_name_en),
+        event_name_zh: clean(row.event_name_zh),
+        event_date: clean(row.event_date),
+        country: clean(row.country),
+        city: clean(row.city),
+        facility_name: clean(row.facility_name),
+        transport_method: clean(row.transport_method),
+        verification_status: clean(row.verification_status),
+        notes: [row.notes, row.supplier_name ? `Supplier: ${row.supplier_name}` : ""].filter(Boolean).join("\n") || null,
+      },
     });
 
     if (error) throw error;
@@ -1463,25 +1501,33 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
     const productId = row.sku ? productIds.get(row.sku) : null;
     if (!productId) continue;
 
-    const { error } = await supabase.from("product_esg_metrics").insert({
-      product_id: productId,
-      carbon_footprint: numberOrNull(row.carbon_footprint),
-      water_usage: numberOrNull(row.water_usage),
-      energy_consumption: numberOrNull(row.energy_consumption),
-      waste_generation: numberOrNull(row.waste_generation),
-      recycled_content: numberOrNull(row.recycled_content),
-      methodology: clean(row.methodology) || clean(row.carbon_unit),
-      verified_by: clean(row.verified_by),
+    const { error } = await internalDataWrite({
+      table: "product_esg_metrics",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        carbon_footprint: numberOrNull(row.carbon_footprint),
+        water_usage: numberOrNull(row.water_usage),
+        energy_consumption: numberOrNull(row.energy_consumption),
+        waste_generation: numberOrNull(row.waste_generation),
+        recycled_content: numberOrNull(row.recycled_content),
+        methodology: clean(row.methodology) || clean(row.carbon_unit),
+        verified_by: clean(row.verified_by),
+      },
     });
 
     if (error) throw error;
     stats.esg += 1;
 
     if (row.recyclability_score || row.repairability_score) {
-      const { error: circularityError } = await supabase.from("product_circularity").insert({
-        product_id: productId,
-        repairability_score: numberOrNull(row.repairability_score),
-        recyclability_score: numberOrNull(row.recyclability_score),
+      const { error: circularityError } = await internalDataWrite({
+        table: "product_circularity",
+        operation: "insert",
+        values: {
+          product_id: productId,
+          repairability_score: numberOrNull(row.repairability_score),
+          recyclability_score: numberOrNull(row.recyclability_score),
+        },
       });
 
       if (circularityError) throw circularityError;
@@ -1493,16 +1539,20 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
     const productId = row.sku ? productIds.get(row.sku) : null;
     if (!productId) continue;
 
-    const { error } = await supabase.from("product_circularity").insert({
-      product_id: productId,
-      repairability_score: numberOrNull(row.repairability_score),
-      recyclability_score: numberOrNull(row.recyclability_score),
-      take_back_program: clean(row.take_back_program),
-      resale_supported: booleanValue(row.resale_supported),
-      remanufacturing_supported: booleanValue(row.remanufacturing_supported),
-      disassembly_guide: clean(row.disassembly_guide),
-      recycling_instructions: clean(row.recycling_instructions),
-      end_of_life_info: clean(row.end_of_life_info),
+    const { error } = await internalDataWrite({
+      table: "product_circularity",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        repairability_score: numberOrNull(row.repairability_score),
+        recyclability_score: numberOrNull(row.recyclability_score),
+        take_back_program: clean(row.take_back_program),
+        resale_supported: booleanValue(row.resale_supported),
+        remanufacturing_supported: booleanValue(row.remanufacturing_supported),
+        disassembly_guide: clean(row.disassembly_guide),
+        recycling_instructions: clean(row.recycling_instructions),
+        end_of_life_info: clean(row.end_of_life_info),
+      },
     });
 
     if (error) throw error;
@@ -1525,10 +1575,14 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
       visibility_level: clean(row.visibility_level) || "public",
     };
 
-    const { error } = await supabase.from("product_certificates").insert({
-      product_id: productId,
-      ...certificatePayload,
-      evidence_hash: clean(row.evidence_hash) || await sha256Hex(certificatePayload),
+    const { error } = await internalDataWrite({
+      table: "product_certificates",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        ...certificatePayload,
+        evidence_hash: clean(row.evidence_hash) || await sha256Hex(certificatePayload),
+      },
     });
 
     if (error) throw error;
@@ -1539,30 +1593,36 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
     const productId = row.sku ? productIds.get(row.sku) : null;
     if (!productId) continue;
 
-    const { error: productError } = await supabase
-      .from("products")
-      .update({
+    const { error: productError } = await internalDataWrite({
+      table: "products",
+      operation: "update",
+      values: {
         care_instructions: clean(row.care_instructions_en),
         care_instructions_zh: clean(row.care_instructions_zh),
         repair_instructions: clean(row.repair_guide_en),
         repair_instructions_zh: clean(row.repair_guide_zh),
         end_of_life_instructions: clean(row.end_of_life_info),
         updated_at: new Date().toISOString(),
-      })
-      .eq("id", productId);
+      },
+      filters: [{ column: "id", operator: "eq", value: productId }],
+    });
 
     if (productError) throw productError;
 
-    const { error } = await supabase.from("product_consumer_transparency").insert({
-      product_id: productId,
-      brand_story: clean(row.brand_story_en),
-      brand_story_zh: clean(row.brand_story_zh),
-      sustainability_story: clean(row.sustainability_story_en),
-      sustainability_story_zh: clean(row.sustainability_story_zh),
-      consumer_notice: [row.consumer_notice_en, row.packaging_info ? `Packaging: ${row.packaging_info}` : ""]
-        .filter(Boolean)
-        .join("\n") || null,
-      consumer_notice_zh: clean(row.consumer_notice_zh),
+    const { error } = await internalDataWrite({
+      table: "product_consumer_transparency",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        brand_story: clean(row.brand_story_en),
+        brand_story_zh: clean(row.brand_story_zh),
+        sustainability_story: clean(row.sustainability_story_en),
+        sustainability_story_zh: clean(row.sustainability_story_zh),
+        consumer_notice: [row.consumer_notice_en, row.packaging_info ? `Packaging: ${row.packaging_info}` : ""]
+          .filter(Boolean)
+          .join("\n") || null,
+        consumer_notice_zh: clean(row.consumer_notice_zh),
+      },
     });
 
     if (error) throw error;
@@ -1584,10 +1644,14 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
       visibility_level: clean(row.visibility_level) || "public",
     };
 
-    const { error } = await supabase.from("product_documents").insert({
-      product_id: productId,
-      ...documentPayload,
-      evidence_hash: clean(row.evidence_hash) || await sha256Hex(documentPayload),
+    const { error } = await internalDataWrite({
+      table: "product_documents",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        ...documentPayload,
+        evidence_hash: clean(row.evidence_hash) || await sha256Hex(documentPayload),
+      },
     });
 
     if (error) throw error;
@@ -1607,12 +1671,16 @@ async function importUploadsToSupabase(uploads: ParsedUpload[]) {
       .filter(Boolean)
       .join("\n");
 
-    const { error } = await supabase.from("product_data_governance").insert({
-      product_id: productId,
-      data_source: clean(row.data_source),
-      data_owner: clean(row.data_owner),
-      audit_status: clean(auditStatus),
-      data_quality_score: numberOrNull(row.data_quality_score),
+    const { error } = await internalDataWrite({
+      table: "product_data_governance",
+      operation: "insert",
+      values: {
+        product_id: productId,
+        data_source: clean(row.data_source),
+        data_owner: clean(row.data_owner),
+        audit_status: clean(auditStatus),
+        data_quality_score: numberOrNull(row.data_quality_score),
+      },
     });
 
     if (error) throw error;

@@ -1,0 +1,2 @@
+﻿entity,field,logical_type,actual_type,required,default,unique,foreign_key,index,enum_or_validation,tenant_scope,source,migration,notes
+BatteryItem,serial_number,string,,yes,,organisation scoped,,yes,non-empty,organisation_id,requirement,,example row; replace with actual

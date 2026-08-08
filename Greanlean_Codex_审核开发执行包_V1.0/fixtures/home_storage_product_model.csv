@@ -1,0 +1,2 @@
+﻿demo_marker,model_code,product_name_zh,product_name_en,battery_category,intended_use,nominal_voltage_v,rated_capacity_ah,rated_energy_kwh,max_continuous_power_kw,chemistry_code
+SYNTHETIC,HS-DEMO-51V280,合成户用储能电池,Synthetic Home Storage Battery,INDUSTRIAL,home energy storage,51.2,280,14.336,7.0,LFP

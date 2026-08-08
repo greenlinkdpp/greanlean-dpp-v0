@@ -5,6 +5,85 @@ semantic versioning once the first stable release is declared.
 
 ## [Unreleased]
 
+### Added
+
+- Unified evidence file centre with immutable versions, SHA-256 checksums,
+  multi-field evidence links, access-controlled downloads, and battery
+  readiness integration.
+- Registry and blockchain integration status for every product workspace.
+
+### Changed
+
+- Publication-review submission is idempotent for repeated requests.
+- Battery readiness now includes server-derived dynamic values consistently.
+- Evidence and verification state is derived from uploaded files and review
+  records instead of editable status selectors.
+
+### Security
+
+- A file checksum no longer marks compliance evidence as verified.
+- Blockchain anchoring is disabled without a verified external connector and
+  never generates a local transaction hash.
+
+### Validation
+
+- 84 business and integration tests, TypeScript, and the Next.js production
+  build pass.
+
+## [0.5.0] - 2026-07-25
+
+### Added
+
+- Unified public DPP page system for LMT batteries, stationary industrial
+  batteries, textiles, and consumer electronics.
+- Versioned publication snapshots used by public pages and export endpoints.
+- Organisation membership, role approval, product grants, access requests, and
+  append-only access audit records.
+- Server-authorized public, professional, regulatory, and internal projections.
+- Battery operating-data credentials and ingestion APIs with idempotency,
+  validation, append-only logs, and lifecycle events.
+- Restricted battery snapshots, history, and lifecycle-event presentation.
+- Chinese and English public content for the homepage and all four primary
+  passport cases.
+
+### Changed
+
+- Reframed the homepage as a cross-industry DPP platform with a dedicated
+  Battery Passport section.
+- Removed the stationary industrial battery's separate public presentation and
+  routed all primary cases through the same page components.
+- Consolidated online product presentation around database publication
+  snapshots instead of full static fallback records.
+- Login now performs a full navigation before resolving the authorized DPP
+  projection.
+
+### Security
+
+- URL audience parameters no longer elevate access.
+- Public battery APIs exclude item telemetry and restricted lifecycle data.
+- Integration secrets are stored as hashes and checked before privileged
+  database clients are initialized.
+- Direct anonymous and broad authenticated access policies were removed from
+  restricted identity, publication, and operating-data tables.
+
+### Validation
+
+- Repository hygiene, TypeScript, 56 business tests, 11 migration tests, and
+  the Next.js production build pass.
+- Four primary passports pass Chinese/English desktop regression checks.
+- Homepage and four passports pass 390 px, 768 px, 1280 px, and 1440 px
+  responsive checks without horizontal overflow or broken images.
+- Vercel Preview and authorized battery operating-data access were manually
+  verified.
+
+### Known limitations
+
+- No production BMS, EMS, gateway, or maintenance-system vendor is connected.
+- Initial battery operating records remain clearly identified in backend data
+  provenance as unverified initial data.
+- EU DPP Registry production submission remains disabled pending final official
+  battery semantics and production credentials.
+
 ## [0.4.0] - 2026-07-24
 
 ### Added

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase";
 import { useLanguage } from "@/components/LanguageProvider";
+import { internalDataWrite } from "@/lib/client/internalDataWrite";
 
 type Field = {
   name: string;
@@ -21,6 +22,12 @@ type Props = {
   filterValue?: string;
   pageSize?: number;
 };
+
+const PRODUCT_SCOPED_TABLES = new Set([
+  "product_materials",
+  "product_esg_metrics",
+  "product_certificates",
+]);
 
 function getPrimaryText(row: any) {
   return (
@@ -105,6 +112,8 @@ export function SimpleInsertManager({
           next: "下一页",
           page: "页",
           errorPrefix: "错误：",
+          product: "所属产品",
+          selectProduct: "请选择产品",
         }
       : {
           add: "Add",
@@ -125,6 +134,8 @@ export function SimpleInsertManager({
           next: "Next",
           page: "Page",
           errorPrefix: "Error: ",
+          product: "Product",
+          selectProduct: "Select a product",
         };
 
   const [rows, setRows] = useState<any[]>([]);
@@ -132,6 +143,7 @@ export function SimpleInsertManager({
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [products, setProducts] = useState<Array<{ id: string; name: string; name_zh?: string | null; sku?: string | null }>>([]);
 
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
@@ -182,6 +194,19 @@ export function SimpleInsertManager({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table, filterColumn, filterValue, query, locale]);
 
+  useEffect(() => {
+    if (!PRODUCT_SCOPED_TABLES.has(table)) {
+      setProducts([]);
+      return;
+    }
+    createSupabaseClient()
+      .from("products")
+      .select("id,name,name_zh,sku")
+      .order("created_at", { ascending: false })
+      .limit(200)
+      .then(({ data }) => setProducts(data || []));
+  }, [table]);
+
   const filteredRows = useMemo(() => rows, [rows]);
 
   async function create(e: React.FormEvent<HTMLFormElement>) {
@@ -190,6 +215,9 @@ export function SimpleInsertManager({
     const formEl = e.currentTarget;
     const form = new FormData(formEl);
     const payload: Record<string, any> = { ...fixedValues };
+    if (PRODUCT_SCOPED_TABLES.has(table)) {
+      payload.product_id = String(form.get("product_id") || "");
+    }
 
     fields.forEach((field) => {
       const value = String(form.get(field.name) || "").trim();
@@ -206,7 +234,11 @@ export function SimpleInsertManager({
     setSaving(true);
     setMsg(null);
 
-    const { error } = await createSupabaseClient().from(table).insert(payload);
+    const { error } = await internalDataWrite({
+      table,
+      operation: "insert",
+      values: payload,
+    });
 
     if (error) {
       setMsg({ type: "err", text: t.errorPrefix + error.message });
@@ -225,7 +257,11 @@ export function SimpleInsertManager({
 
     setMsg(null);
 
-    const { error } = await createSupabaseClient().from(table).delete().eq("id", id);
+    const { error } = await internalDataWrite({
+      table,
+      operation: "delete",
+      filters: [{ column: "id", operator: "eq", value: id }],
+    });
 
     if (error) {
       setMsg({ type: "err", text: t.errorPrefix + error.message });
@@ -255,6 +291,20 @@ export function SimpleInsertManager({
           </h2>
           <p className="mt-1 text-sm text-slate-500">{t.createNew}</p>
         </div>
+
+        {PRODUCT_SCOPED_TABLES.has(table) && (
+          <label>
+            <span className="label">{t.product}</span>
+            <select className="input mt-1" name="product_id" required defaultValue="">
+              <option value="" disabled>{t.selectProduct}</option>
+              {products.map((product) => (
+                <option key={product.id} value={product.id}>
+                  {(locale === "zh" && product.name_zh ? product.name_zh : product.name) + (product.sku ? ` · ${product.sku}` : "")}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
 
         {fields.map((field) => {
           const placeholder = locale === "zh" && field.placeholderZh ? field.placeholderZh : field.placeholder;

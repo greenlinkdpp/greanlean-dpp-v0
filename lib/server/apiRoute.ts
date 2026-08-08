@@ -43,6 +43,9 @@ function errorResponse(error: unknown, context: RequestContext) {
     ...requestLogFields(context),
     status,
     error_code: code,
+    ...(known && error.details !== undefined
+      ? { error_details: error.details }
+      : {}),
     error,
   });
   return NextResponse.json(body, {

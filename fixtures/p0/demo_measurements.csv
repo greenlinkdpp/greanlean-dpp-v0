@@ -1,0 +1,4 @@
+demo_marker,serial_number,metric_code,measured_at,value,unit,source_system,quality_code,idempotency_key
+SYNTHETIC,HS-DEMO-2026-0001,SOC,2026-08-01T08:00:00Z,78.4,percent,DEMO_BMS,GOOD,demo-001-soc
+SYNTHETIC,HS-DEMO-2026-0001,SOH,2026-08-01T08:00:00Z,99.1,percent,DEMO_BMS,GOOD,demo-001-soh
+SYNTHETIC,HS-DEMO-2026-0001,CYCLE_COUNT,2026-08-01T08:00:00Z,42,count,DEMO_BMS,GOOD,demo-001-cycle

@@ -1,0 +1,2 @@
+﻿resource,operation,platform_admin,support,tenant_admin,project_manager,data_editor,reviewer,publisher,viewer,professional,regulator,public,server_enforcement,tests
+passport,read_public,,,,,,,,,,,yes,,

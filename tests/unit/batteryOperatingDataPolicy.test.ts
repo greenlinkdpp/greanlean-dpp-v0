@@ -57,9 +57,11 @@ test("turns sub-2kWh and unconfirmed industrial profiles into voluntary or revie
 });
 
 test("defines the complete restricted operating metric catalog", () => {
-  assert.equal(BATTERY_OPERATING_METRICS.length, 23);
-  assert.equal(new Set(BATTERY_OPERATING_METRICS.map((metric) => metric.code)).size, 23);
+  assert.equal(BATTERY_OPERATING_METRICS.length, 25);
+  assert.equal(new Set(BATTERY_OPERATING_METRICS.map((metric) => metric.code)).size, 25);
   assert.ok(BATTERY_OPERATING_METRICS.every((metric) => metric.labelZh && metric.labelEn && metric.defaultUnit));
+  assert.ok(BATTERY_OPERATING_METRICS.some((metric) => metric.code === "FULL_CHARGE_CAPACITY"));
+  assert.ok(BATTERY_OPERATING_METRICS.some((metric) => metric.code === "CURRENT_INTERNAL_RESISTANCE"));
 });
 
 test("calculates daily snapshot freshness without treating the DPP as a real-time dashboard", () => {
@@ -75,6 +77,7 @@ test("rejects impossible percentages, temperatures and cumulative values", () =>
   assert.equal(validateOperatingMetricValue("SOC", 76), true);
   assert.equal(validateOperatingMetricValue("SOC", 101), false);
   assert.equal(validateOperatingMetricValue("TEMPERATURE", -101), false);
+  assert.equal(validateOperatingMetricValue("CURRENT_INTERNAL_RESISTANCE", -0.1), false);
   assert.equal(validateOperatingMetricValue("FULL_CYCLE_COUNT", -1), false);
   assert.equal(validateOperatingMetricValue("ENERGY_THROUGHPUT", 1200), true);
 });

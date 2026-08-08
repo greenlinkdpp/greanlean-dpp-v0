@@ -13,7 +13,7 @@ import {
   validateOperatingMetricValue,
 } from "../battery/operatingDataPolicy.ts";
 import { calculateBatteryReadiness } from "../battery/readiness.ts";
-import { projectBatteryFields, projectionAccessForAudience } from "../battery/projection.ts";
+import { projectBatteryFields } from "../battery/projection.ts";
 import type { AccessLevel } from "../schemaRegistry.ts";
 import { ApiError } from "./apiRoute";
 
@@ -108,6 +108,29 @@ function valuesByFieldCode(rows: any[], definitions: any[]) {
   }));
 }
 
+function applyEvidenceLinks(
+  values: Record<string, BatteryFieldValue>,
+  links: any[],
+) {
+  const linkedValues = { ...values };
+  for (const link of links) {
+    const fieldCode = String(link.field_code || "");
+    const current = linkedValues[fieldCode];
+    if (!current) continue;
+    const verified = ["VERIFIED", "MANUALLY_VERIFIED"].includes(
+      String(link.verification_status || "").toUpperCase(),
+    );
+    linkedValues[fieldCode] = {
+      ...current,
+      evidenceStatus: verified ? "verified" : "uploaded",
+      verificationStatus: verified
+        ? "verified"
+        : current.verificationStatus || "unverified",
+    };
+  }
+  return linkedValues;
+}
+
 export async function loadBatteryWorkspace(admin: AdminClient, productId: string) {
   const product = await requireBatteryProduct(admin, productId);
   const { data: profile, error: profileError } = await admin
@@ -141,16 +164,20 @@ export async function loadBatteryWorkspace(admin: AdminClient, productId: string
   }
 
   const { fields } = await longlistFieldDefinitions(admin);
-  const [fieldResult, batchResult, itemResult, metricResult, metricTypeResult, eventResult] = await Promise.all([
+  const [fieldResult, batchResult, itemResult, metricResult, metricTypeResult, eventResult, evidenceLinkResult] = await Promise.all([
     admin.from("battery_field_value").select("*").eq("battery_model_profile_id", profile.id).is("battery_batch_id", null).is("battery_item_id", null),
     admin.from("battery_batch").select("*").eq("battery_model_profile_id", profile.id).order("created_at", { ascending: false }),
     admin.from("battery_item").select("*").eq("battery_model_profile_id", profile.id).order("created_at", { ascending: false }),
     admin.from("battery_operating_metric_latest").select("*").eq("product_id", productId).order("measured_at", { ascending: false }),
     admin.from("battery_metric_type").select("code,label_en,label_zh,default_unit,access_level_code").eq("status", "active").order("label_en"),
     admin.from("battery_lifecycle_event").select("*").eq("product_id", productId).order("event_time", { ascending: false }),
+    admin.from("dpp_field_evidence_link").select("field_code,verification_status,created_at").eq("product_id", productId).order("created_at", { ascending: false }),
   ]);
-  [fieldResult, batchResult, itemResult, metricResult, metricTypeResult, eventResult].forEach((result) => databaseError(result.error));
-  const values = valuesByFieldCode(fieldResult.data || [], fields);
+  [fieldResult, batchResult, itemResult, metricResult, metricTypeResult, eventResult, evidenceLinkResult].forEach((result) => databaseError(result.error));
+  const values = applyEvidenceLinks(
+    valuesByFieldCode(fieldResult.data || [], fields),
+    evidenceLinkResult.data || [],
+  );
   const workspaceData = {
     product,
     profile,
@@ -235,12 +262,12 @@ export async function saveBatteryWorkspace(
     const definitionByCode = new Map(fields.map((field) => [field.field_code, field]));
     const { data: existing, error: existingError } = await admin
       .from("battery_field_value")
-      .select("id,field_definition_id")
+      .select("id,field_definition_id,evidence_status,verification_status")
       .eq("battery_model_profile_id", profile.id)
       .is("battery_batch_id", null)
       .is("battery_item_id", null);
     databaseError(existingError);
-    const existingByDefinition = new Map((existing || []).map((row) => [row.field_definition_id, row.id]));
+    const existingByDefinition = new Map((existing || []).map((row) => [row.field_definition_id, row]));
 
     for (const [fieldCode, value] of Object.entries(submittedValues)) {
       const definition = definitionByCode.get(fieldCode);
@@ -252,14 +279,14 @@ export async function saveBatteryWorkspace(
         value_json: value.value,
         unit_code: catalogByCode.get(fieldCode)?.unit || null,
         data_source: value.sourceType || "manual",
-        evidence_status: value.evidenceStatus || "missing",
-        verification_status: value.verificationStatus || "unverified",
+        evidence_status: existingByDefinition.get(definition.id)?.evidence_status || "missing",
+        verification_status: existingByDefinition.get(definition.id)?.verification_status || "unverified",
         observed_at: value.observedAt || null,
         created_by: user.id,
       };
-      const existingId = existingByDefinition.get(definition.id);
-      const result = existingId
-        ? await admin.from("battery_field_value").update(payload).eq("id", existingId)
+      const existingRow = existingByDefinition.get(definition.id);
+      const result = existingRow
+        ? await admin.from("battery_field_value").update(payload).eq("id", existingRow.id)
         : await admin.from("battery_field_value").insert(payload);
       databaseError(result.error);
     }
@@ -356,24 +383,6 @@ export async function appendBatteryLifecycleEvent(admin: AdminClient, productId:
   });
   databaseError(error);
   return loadBatteryWorkspace(admin, productId);
-}
-
-export function viewerAccessFromUser(user: User | null, requested: string | null): AccessLevel {
-  if (!requested || requested === "public") return "PUBLIC";
-  if (!user) throw new ApiError(401, "AUTH_REQUIRED", "Authentication is required for restricted battery fields.");
-  const granted = String(user.app_metadata?.dpp_access_level || "").toUpperCase() as AccessLevel;
-  const valid: AccessLevel[] = ["LEGITIMATE_INTEREST", "AUTHORITY_ONLY", "INTERNAL"];
-  if (!valid.includes(granted)) throw new ApiError(403, "BATTERY_ACCESS_NOT_GRANTED", "This account has no approved battery DPP access level.");
-  const projected = projectionAccessForAudience(requested, granted);
-  if (!projected) throw new ApiError(403, "BATTERY_AUDIENCE_ACCESS_REQUIRED", "The requested battery DPP audience is not available to this account.");
-  return projected;
-}
-
-export function requireBatteryInternalUser(user: User) {
-  const granted = String(user.app_metadata?.dpp_access_level || "").toUpperCase();
-  if (granted !== "INTERNAL") {
-    throw new ApiError(403, "BATTERY_INTERNAL_ACCESS_REQUIRED", "Internal battery DPP access is required for this operation.");
-  }
 }
 
 export async function loadBatteryProjection(admin: AdminClient, identifier: string, viewerAccess: AccessLevel) {

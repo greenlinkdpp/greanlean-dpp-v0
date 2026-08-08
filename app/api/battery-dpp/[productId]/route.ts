@@ -4,24 +4,25 @@ import {
   appendBatteryMetric,
   createBatteryItem,
   loadBatteryWorkspace,
-  requireBatteryInternalUser,
   saveBatteryWorkspace,
 } from "@/lib/server/batteryRepository";
-import { createSupabaseAdminClient, requireAuthenticatedUser } from "@/lib/server/supabase";
+import { requireProductEditorAccess } from "@/lib/server/dppAccess";
+import { createServerAuthClient, createSupabaseAdminClient, requireAuthenticatedUser } from "@/lib/server/supabase";
 
 type RouteContext = { params: { productId: string } };
 
 export const GET = withApiRoute<RouteContext>(async (request, _context, route) => {
-  const { user } = await requireAuthenticatedUser(request);
-  requireBatteryInternalUser(user);
-  return Response.json(await loadBatteryWorkspace(createSupabaseAdminClient(), route.params.productId), {
+  const { user, accessToken } = await requireAuthenticatedUser(request);
+  const authClient = createServerAuthClient(accessToken);
+  await requireProductEditorAccess(authClient, user, route.params.productId);
+  return Response.json(await loadBatteryWorkspace(authClient, route.params.productId), {
     headers: { "Cache-Control": "no-store" },
   });
 });
 
 export const PUT = withApiRoute<RouteContext>(async (request, _context, route) => {
-  const { user } = await requireAuthenticatedUser(request);
-  requireBatteryInternalUser(user);
+  const { user, accessToken } = await requireAuthenticatedUser(request);
+  await requireProductEditorAccess(createServerAuthClient(accessToken), user, route.params.productId);
   const body = await request.json().catch(() => null);
   if (!body || typeof body !== "object") throw new ApiError(400, "INVALID_JSON", "A JSON request body is required.");
   const result = await saveBatteryWorkspace(createSupabaseAdminClient(), route.params.productId, user, body);
@@ -29,8 +30,8 @@ export const PUT = withApiRoute<RouteContext>(async (request, _context, route) =
 });
 
 export const POST = withApiRoute<RouteContext>(async (request, _context, route) => {
-  const { user } = await requireAuthenticatedUser(request);
-  requireBatteryInternalUser(user);
+  const { user, accessToken } = await requireAuthenticatedUser(request);
+  await requireProductEditorAccess(createServerAuthClient(accessToken), user, route.params.productId);
   const body = await request.json().catch(() => null);
   if (!body || typeof body !== "object") throw new ApiError(400, "INVALID_JSON", "A JSON request body is required.");
   const admin = createSupabaseAdminClient();

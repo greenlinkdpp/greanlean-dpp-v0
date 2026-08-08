@@ -1,0 +1,2 @@
+﻿id,date,status,question,repository_fact,options,decision,reason,impact,rollback,owner
+D01,,OPEN,Current auth model,,,,,,,

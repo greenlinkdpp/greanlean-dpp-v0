@@ -152,6 +152,24 @@ export function setJsonPointer(target: Record<string, any>, pointer: string, val
   node[segments[segments.length - 1]] = value;
 }
 
+export function buildBatteryPassPayload(
+  workspace: BatteryWorkspaceForExport,
+  baseUrl: string,
+) {
+  const values = {
+    ...workspace.values,
+    ...batteryDynamicValuesForWorkspace(workspace, baseUrl),
+  };
+  const payload: Record<string, any> = {};
+  for (const field of BATTERY_FIELD_CATALOG) {
+    const pointer = field.jsonPointers[workspace.classification.schemaCode];
+    const value = values[field.fieldCode]?.value;
+    if (!pointer || value === undefined || value === null || value === "") continue;
+    setJsonPointer(payload, pointer, value);
+  }
+  return payload;
+}
+
 export function buildBatteryPassLmtPayload(
   workspace: BatteryWorkspaceForExport,
   baseUrl: string,
@@ -159,16 +177,5 @@ export function buildBatteryPassLmtPayload(
   if (workspace.classification.schemaCode !== "battery.lmt") {
     throw new Error("BatteryPass LMT export requires an LMT battery workspace.");
   }
-  const values = {
-    ...workspace.values,
-    ...batteryDynamicValuesForWorkspace(workspace, baseUrl),
-  };
-  const payload: Record<string, any> = {};
-  for (const field of BATTERY_FIELD_CATALOG) {
-    const pointer = field.jsonPointers["battery.lmt"];
-    const value = values[field.fieldCode]?.value;
-    if (!pointer || value === undefined || value === null || value === "") continue;
-    setJsonPointer(payload, pointer, value);
-  }
-  return payload;
+  return buildBatteryPassPayload(workspace, baseUrl);
 }

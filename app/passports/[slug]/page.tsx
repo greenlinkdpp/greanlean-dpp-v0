@@ -1,5 +1,11 @@
 import { notFound, redirect } from "next/navigation";
-import { INDUSTRIAL_DEMO, isIndustrialDemoIdentifier } from "@/lib/battery/industrialDemo";
+
+const INDUSTRIAL_BATTERY_ALIASES = new Set([
+  "DPP-GV-ESS-14K3-000001",
+  "DPP-BAT-IND-ESS-14336-001",
+  "green-vault-ess-14-3-000001",
+  "green-vault-ess-14-3-demo-000001",
+]);
 
 export default function PassportAliasPage({
   params,
@@ -8,7 +14,7 @@ export default function PassportAliasPage({
   params: { slug: string };
   searchParams?: { lang?: string; view?: string };
 }) {
-  if (!isIndustrialDemoIdentifier(decodeURIComponent(params.slug))) notFound();
+  if (!INDUSTRIAL_BATTERY_ALIASES.has(decodeURIComponent(params.slug))) notFound();
   const query = new URLSearchParams();
   query.set("lang", searchParams?.lang === "en" ? "en" : "zh");
   query.set(
@@ -19,5 +25,5 @@ export default function PassportAliasPage({
         ? "professional"
         : "consumer",
   );
-  redirect(`/p/${encodeURIComponent(INDUSTRIAL_DEMO.dppId)}?${query.toString()}`);
+  redirect(`/p/DPP-GV-ESS-14K3-000001?${query.toString()}`);
 }

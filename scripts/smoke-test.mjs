@@ -8,11 +8,14 @@ if (!baseUrl) {
 
 const checks = [
   { path: "/", contentType: "text/html" },
-  { path: "/p/DPP-DEMO-001?lang=zh&view=consumer", contentType: "text/html" },
-  { path: "/p/DPP-AUDIO-DEMO-001?lang=en&view=detail", contentType: "text/html" },
-  { path: "/api/dpp-export?format=json&product=DPP-DEMO-001", contentType: "application/json" },
+  { path: "/p/DPP-LMT-BAT-48V15AH?lang=zh&showcase=1", contentType: "text/html" },
+  { path: "/p/DPP-GV-ESS-14K3-000001?lang=en&showcase=1", contentType: "text/html" },
+  { path: "/p/DPP-SFJK-31-1-REC?lang=zh&showcase=1", contentType: "text/html" },
+  { path: "/p/DPP-CE-EARBUDS-001?lang=en&showcase=1", contentType: "text/html" },
+  { path: "/api/dpp-export?format=json&product=DPP-LMT-BAT-48V15AH", contentType: "application/json" },
+  { path: "/api/dpp-export?format=json&product=DPP-GV-ESS-14K3-000001", contentType: "application/json" },
   {
-    path: `/api/qr?url=${encodeURIComponent(`${baseUrl}/p/DPP-DEMO-001`)}`,
+    path: `/api/qr?url=${encodeURIComponent(`${baseUrl}/p/DPP-LMT-BAT-48V15AH`)}`,
     contentType: "image/png",
     correlationId: "greanlean-smoke-qr",
   },

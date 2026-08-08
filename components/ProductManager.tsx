@@ -6,6 +6,7 @@ import { createSupabaseClient } from "@/lib/supabase";
 import { slugify } from "@/lib/slugify";
 import { DPP_SECTOR_PROFILES, findDppSectorProfile, uniqueByCode } from "@/lib/dppSectorProfiles";
 import { useLanguage } from "@/components/LanguageProvider";
+import { internalDataWrite } from "@/lib/client/internalDataWrite";
 
 type Product = {
   id: string;
@@ -26,6 +27,12 @@ type Product = {
 };
 const PAGE_SIZE = 8;
 const LIFECYCLE_STATUSES = ["draft", "review", "published", "updated", "archived", "expired"];
+const SHOWCASE_DPP_IDS = new Set([
+  "DPP-LMT-BAT-48V15AH",
+  "DPP-GV-ESS-14K3-000001",
+  "DPP-SFJK-31-1-REC",
+  "DPP-CE-EARBUDS-001",
+]);
 
 function statusLabel(status: string | null | undefined, locale: string) {
   const zh: Record<string, string> = { draft: "草稿", review: "待审核", published: "已发布", updated: "已更新", archived: "已归档", expired: "证书过期" };
@@ -56,9 +63,7 @@ export function ProductManager() {
         list: "产品列表",
         noSku: "无 SKU",
 	        edit: "编辑",
-	        simple: "消费者版 DPP",
-	        detail: "专业版 DPP",
-	        audit: "审计版 DPP",
+	        viewDpp: "查看产品护照",
 	        del: "删除",
         confirm: "确定删除这个产品吗？",
         empty: "暂无产品。",
@@ -89,9 +94,7 @@ export function ProductManager() {
         list: "Products",
         noSku: "No SKU",
 	        edit: "Edit",
-	        simple: "Consumer DPP",
-	        detail: "Professional DPP",
-	        audit: "Audit DPP",
+	        viewDpp: "Open product passport",
 	        del: "Delete",
         confirm: "Delete this product?",
         empty: "No products yet.",
@@ -114,9 +117,30 @@ export function ProductManager() {
   const [sectorCode, setSectorCode] = useState(defaultProfile?.sectorCode || "");
   const [categoryCode, setCategoryCode] = useState(defaultProfile?.categoryCode || "");
   const [profileKey, setProfileKey] = useState(defaultProfile?.profileKey || "");
+  const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
 
-  async function load(){ setLoading(true); const {data,error}=await supabase.from("products").select("*").order("created_at",{ascending:false}); if(error)setMsg(error.message); else setProducts(data||[]); setLoading(false); }
-  useEffect(()=>{load();/* eslint-disable-next-line */},[]);
+  async function load(){
+    setLoading(true);
+    const {data,error}=await supabase.from("products").select("*").order("created_at",{ascending:false});
+    if(error)setMsg(error.message); else setProducts(data||[]);
+    setLoading(false);
+  }
+  useEffect(()=>{
+    void (async () => {
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      if (token) {
+        const response = await fetch("/api/access-context", {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        });
+        const identity = await response.json().catch(() => null);
+        setIsPlatformAdmin(Boolean(identity?.isPlatformAdmin));
+      }
+      await load();
+    })();
+    /* eslint-disable-next-line */
+  },[]);
   const filtered=useMemo(()=>products.filter(p=>(status==="all"||p.status===status)&&(!q.trim()||[p.name,p.name_zh,p.sku,p.brand,p.category,p.public_slug,p.dpp_id].filter(Boolean).join(" ").toLowerCase().includes(q.toLowerCase()))),[products,q,status]);
   const total=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE)); const rows=filtered.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE); useEffect(()=>setPage(1),[q,status]);
   const selectedProfile = findDppSectorProfile(profileKey) || defaultProfile;
@@ -139,7 +163,10 @@ export function ProductManager() {
 
     setSaving(true);
     setMsg("");
-    const { error } = await supabase.from("products").insert({
+    const { error } = await internalDataWrite({
+      table: "products",
+      operation: "insert",
+      values: {
       name,
       name_zh: String(f.get("name_zh") || "").trim() || null,
       sku,
@@ -155,9 +182,7 @@ export function ProductManager() {
       description_zh: String(f.get("description_zh") || "").trim() || null,
       public_slug: slugify(name + "-" + (sku || Date.now())),
       dpp_id: "DPP-" + Math.random().toString(36).slice(2, 10).toUpperCase(),
-      status: "draft",
-      current_version: "v1.0",
-      eu_registration_status: "not_registered",
+      },
     });
     if (error) setMsg(error.message);
     else {
@@ -170,10 +195,10 @@ export function ProductManager() {
     }
     setSaving(false);
   }
-  async function remove(id:string){ if(!window.confirm(t.confirm))return; const {error}=await supabase.from("products").delete().eq("id",id); if(error)setMsg(error.message); else await load(); }
+  async function remove(id:string){ if(!window.confirm(t.confirm))return; const {error}=await internalDataWrite({ table: "products", operation: "delete", filters: [{ column: "id", operator: "eq", value: id }] }); if(error)setMsg(error.message); else await load(); }
   return (
-    <div className="grid gap-8 xl:grid-cols-[420px_1fr]">
-      <form onSubmit={createProduct} className="card h-fit space-y-5">
+    <div className={isPlatformAdmin ? "grid gap-8 xl:grid-cols-[420px_1fr]" : "space-y-5"}>
+      {isPlatformAdmin && <form onSubmit={createProduct} className="card h-fit space-y-5">
         <h2 className="text-xl font-bold">{t.create}</h2>
 
         <div className="rounded-2xl border border-brand-100 bg-brand-50/40 p-4">
@@ -259,7 +284,7 @@ export function ProductManager() {
           {saving ? t.creating : t.submit}
         </button>
         {msg && <p className="text-sm text-slate-600">{msg}</p>}
-      </form>
+      </form>}
 
       <div className="card">
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -286,6 +311,7 @@ export function ProductManager() {
               const dppPath = encodeURIComponent(p.dpp_id || p.public_slug || "");
               const rowProfile = findDppSectorProfile(p.dpp_profile_key);
               const isDemo = /demo/i.test([p.dpp_id, p.public_slug, p.description, p.description_zh].filter(Boolean).join(" "));
+              const showcaseQuery = p.dpp_id && SHOWCASE_DPP_IDS.has(p.dpp_id) ? "&showcase=1" : "";
               return (
                 <div key={p.id} className="flex flex-wrap items-center justify-between gap-4 py-4">
                   <div>
@@ -300,10 +326,8 @@ export function ProductManager() {
                   </div>
                   <div className="flex flex-wrap gap-2">
 	                    <Link className="btn-secondary py-2" href={`/dashboard/products/${p.id}`}>{t.edit}</Link>
-	                    {dppPath && <Link className="btn-secondary py-2" href={`/p/${dppPath}?view=consumer&lang=${locale}&preview=1`} target="_blank">{t.simple}</Link>}
-	                    {dppPath && <Link className="btn-primary py-2" href={`/p/${dppPath}?view=professional&lang=${locale}&preview=1`} target="_blank">{t.detail}</Link>}
-	                    {dppPath && <Link className="btn-secondary py-2" href={`/p/${dppPath}?view=audit&lang=${locale}&preview=1`} target="_blank">{t.audit}</Link>}
-	                    <button onClick={() => remove(p.id)} className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700" type="button">{t.del}</button>
+	                    {dppPath && <Link className="btn-primary py-2" href={`/p/${dppPath}?lang=${locale}${showcaseQuery}`} target="_blank">{t.viewDpp}</Link>}
+	                    {isPlatformAdmin && <button onClick={() => remove(p.id)} className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700" type="button">{t.del}</button>}
                   </div>
                 </div>
               );

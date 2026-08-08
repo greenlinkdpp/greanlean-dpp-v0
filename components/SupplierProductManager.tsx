@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase";
 import { useLanguage } from "@/components/LanguageProvider";
+import { internalDataWrite } from "@/lib/client/internalDataWrite";
 
 type Supplier = {
   id: string;
@@ -160,16 +161,18 @@ export function SupplierProductManager() {
 
     setSaving(true);
     setMessage(null);
-    const { error } = await supabase.from("supplier_products").upsert(
-      {
+    const { error } = await internalDataWrite({
+      table: "supplier_products",
+      operation: "upsert",
+      values: {
         supplier_id: supplierId,
         product_id: productId,
         supplier_role: String(form.get("supplier_role") || "").trim() || null,
         relationship_status: String(form.get("relationship_status") || "active"),
         notes: String(form.get("notes") || "").trim() || null,
       },
-      { onConflict: "supplier_id,product_id" }
-    );
+      onConflict: "supplier_id,product_id",
+    });
 
     if (error) {
       setMessage({ type: "err", text: t.errorPrefix + error.message });
@@ -184,7 +187,11 @@ export function SupplierProductManager() {
   }
 
   async function remove(id: string) {
-    const { error } = await supabase.from("supplier_products").delete().eq("id", id);
+    const { error } = await internalDataWrite({
+      table: "supplier_products",
+      operation: "delete",
+      filters: [{ column: "id", operator: "eq", value: id }],
+    });
     if (error) {
       setMessage({ type: "err", text: t.errorPrefix + error.message });
     } else {

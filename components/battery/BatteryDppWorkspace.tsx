@@ -23,7 +23,13 @@ import { calculateBatteryReadiness } from "@/lib/battery/readiness";
 import { createSupabaseClient } from "@/lib/supabase";
 import { RegistryWorkbench } from "./RegistryWorkbench";
 
-type Props = { productId: string };
+type Props = {
+  productId: string;
+  canManageRegistry?: boolean;
+  initialStep?: BatteryWorkflowStepCode;
+  allowedSteps?: BatteryWorkflowStepCode[];
+  showClassificationControls?: boolean;
+};
 
 const accessLabels = {
   zh: { PUBLIC: "公开", LEGITIMATE_INTEREST: "正当利益访问", AUTHORITY_ONLY: "主管机关访问", INTERNAL: "内部访问" },
@@ -47,7 +53,27 @@ function percentBar(value: number) {
   return `${Math.max(0, Math.min(100, value))}%`;
 }
 
-export function BatteryDppWorkspace({ productId }: Props) {
+function optionLabel(value: string, isZh: boolean) {
+  const labels: Record<string, [string, string]> = {
+    missing: ["缺失", "Missing"],
+    declared: ["已声明", "Declared"],
+    uploaded: ["已上传", "Uploaded"],
+    verified: ["已核验", "Verified"],
+    rejected: ["已驳回", "Rejected"],
+    not_applicable: ["不适用", "Not applicable"],
+    unverified: ["未核验", "Unverified"],
+    in_review: ["核验中", "In review"],
+  };
+  return labels[value]?.[isZh ? 0 : 1] || value;
+}
+
+export function BatteryDppWorkspace({
+  productId,
+  canManageRegistry = true,
+  initialStep = "identity",
+  allowedSteps,
+  showClassificationControls = true,
+}: Props) {
   const { locale } = useLanguage();
   const isZh = locale === "zh";
   const t = isZh
@@ -93,7 +119,7 @@ export function BatteryDppWorkspace({ productId }: Props) {
   const [capacityKwh, setCapacityKwh] = useState("");
   const [stationary, setStationary] = useState(false);
   const [bmsPresent, setBmsPresent] = useState(true);
-  const [activeStep, setActiveStep] = useState<BatteryWorkflowStepCode>("identity");
+  const [activeStep, setActiveStep] = useState<BatteryWorkflowStepCode>(initialStep);
   const [values, setValues] = useState<Record<string, BatteryFieldValue>>({});
   const [guideOpen, setGuideOpen] = useState<Record<string, boolean>>({});
 
@@ -159,18 +185,29 @@ export function BatteryDppWorkspace({ productId }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
+  useEffect(() => {
+    setActiveStep(initialStep);
+  }, [initialStep, productId]);
+
   const classification = classifyBattery({
     legalCategory: category,
     capacityKwh: capacityKwh === "" ? null : Number(capacityKwh),
     stationary,
     bmsPresent,
   });
-  const readiness = calculateBatteryReadiness(classification, values);
+  const readiness = calculateBatteryReadiness(classification, {
+    ...values,
+    ...(workspace?.dynamicValues || {}),
+  });
   const currentStep = BATTERY_WORKFLOW_STEPS.find((step) => step.code === activeStep) || BATTERY_WORKFLOW_STEPS[0];
   const currentFields = fieldsForBattery(classification, { workflowStep: activeStep })
     .filter((field) => field.dataBehavior === "STATIC");
   const publicIdentifier = workspace?.product?.dpp_id || workspace?.product?.public_slug;
   const operatingPolicy = operatingDataPolicyForBattery(classification);
+  const visibleSteps = BATTERY_WORKFLOW_STEPS.filter((step) => (
+    (canManageRegistry || step.code !== "registry_readiness")
+    && (!allowedSteps || allowedSteps.includes(step.code))
+  ));
 
   function derivedValue(fieldCode: string) {
     const derived: Record<string, unknown> = {
@@ -269,7 +306,7 @@ export function BatteryDppWorkspace({ productId }: Props) {
         <p className="mt-1 text-sm leading-6 text-slate-600">{t.subtitle}</p>
       </header>
 
-      <div className="grid gap-4 border-b border-slate-200 bg-slate-50 px-6 py-5 md:grid-cols-4">
+      {showClassificationControls ? <div className="grid gap-4 border-b border-slate-200 bg-slate-50 px-6 py-5 md:grid-cols-4">
         <label><span className="label">{t.category}</span><select className="input mt-1" value={category} onChange={(event) => setCategory(event.target.value as BatteryLegalCategory)}>{BATTERY_CATEGORIES.map((item) => <option key={item.code} value={item.code}>{isZh ? item.labelZh : item.labelEn}</option>)}</select></label>
         <label><span className="label">{t.energy}</span><input className="input mt-1" min="0" step="0.01" type="number" value={capacityKwh} onChange={(event) => setCapacityKwh(event.target.value)} /></label>
         {category === "industrial" ? <label className="flex items-center gap-3 pt-6"><input checked={stationary} onChange={(event) => setStationary(event.target.checked)} type="checkbox" /><span className="text-sm font-bold text-slate-800">{t.stationary}</span></label> : <div />}
@@ -280,11 +317,15 @@ export function BatteryDppWorkspace({ productId }: Props) {
           <span className="text-sm font-semibold text-slate-600">{isZh ? classification.reasonZh : classification.reasonEn}</span>
           <span className="ml-auto text-xs font-bold text-slate-500">{t.schema}: {classification.schemaCode}</span>
         </div>
-      </div>
+      </div> : <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 bg-slate-50 px-6 py-4">
+        <span className="text-xs font-black uppercase text-slate-500">{t.applicability}</span>
+        <span className="rounded-md bg-slate-950 px-3 py-1.5 text-sm font-bold text-white">{applicabilityLabel}</span>
+        <span className="text-sm font-semibold text-slate-600">{isZh ? classification.reasonZh : classification.reasonEn}</span>
+      </div>}
 
-      <nav className="flex overflow-x-auto border-b border-slate-200 px-4" aria-label={t.title}>
-        {BATTERY_WORKFLOW_STEPS.map((step) => <button key={`${step.number}-${step.code}`} className={`min-w-36 border-b-2 px-3 py-4 text-left text-sm font-bold ${activeStep === step.code ? "border-emerald-600 text-emerald-700" : "border-transparent text-slate-500"}`} onClick={() => setActiveStep(step.code)} type="button"><span className="block text-xs">{step.number}</span>{isZh ? step.labelZh : step.labelEn}</button>)}
-      </nav>
+      {visibleSteps.length > 1 ? <nav className="flex overflow-x-auto border-b border-slate-200 px-4" aria-label={t.title}>
+        {visibleSteps.map((step) => <button key={`${step.number}-${step.code}`} className={`min-w-36 border-b-2 px-3 py-4 text-left text-sm font-bold ${activeStep === step.code ? "border-emerald-600 text-emerald-700" : "border-transparent text-slate-500"}`} onClick={() => setActiveStep(step.code)} type="button"><span className="block text-xs">{step.number}</span>{isZh ? step.labelZh : step.labelEn}</button>)}
+      </nav> : null}
 
       <div className="grid gap-6 p-6 xl:grid-cols-[minmax(0,1fr)_300px]">
         <div>
@@ -308,8 +349,8 @@ export function BatteryDppWorkspace({ productId }: Props) {
                 {guideOpen[field.fieldCode] ? <div className="mt-4 grid gap-3 border-l-2 border-emerald-500 pl-4 text-sm leading-6 text-slate-600 md:grid-cols-2"><p>{isZh ? field.instructionZh : field.descriptionEn}</p><dl className="grid gap-1"><div><dt className="inline font-bold text-slate-800">{t.source}: </dt><dd className="inline">{isZh ? field.sourceSuggestionZh : "Use the authoritative source named in the field definition and retain provenance."}</dd></div><div><dt className="inline font-bold text-slate-800">{t.evidence}: </dt><dd className="inline">{field.evidenceRequired ? t.evidenceRequired : t.evidenceOptional}</dd></div><div><dt className="inline font-bold text-slate-800">{t.regulation}: </dt><dd className="inline">{field.regulatoryReference || "-"}</dd></div></dl></div> : null}
                 <div className="mt-4 grid gap-3 md:grid-cols-[minmax(0,1fr)_180px_180px]">
                   <label><span className="label">{t.value}</span>{field.dataType === "string" && inputValue.length > 80 ? <textarea className="input mt-1 min-h-24" disabled={isDerived} value={inputValue} onChange={(event) => changeValue(field.fieldCode, { value: event.target.value })} /> : <input className="input mt-1" disabled={isDerived} type={["integer", "decimal"].includes(field.dataType) ? "number" : field.dataType === "date" ? "date" : field.dataType === "datetime" ? "datetime-local" : field.dataType === "uri" ? "url" : "text"} value={inputValue} onChange={(event) => changeValue(field.fieldCode, { value: event.target.value })} />}</label>
-                  <label><span className="label">{t.evidenceStatus}</span><select className="input mt-1" value={current?.evidenceStatus || "missing"} onChange={(event) => changeValue(field.fieldCode, { evidenceStatus: event.target.value as BatteryFieldValue["evidenceStatus"] })}><option value="missing">{isZh ? "缺失" : "Missing"}</option><option value="declared">{isZh ? "已声明" : "Declared"}</option><option value="uploaded">{isZh ? "已上传" : "Uploaded"}</option><option value="verified">{isZh ? "已核验证据" : "Verified"}</option><option value="rejected">{isZh ? "已驳回" : "Rejected"}</option><option value="not_applicable">{isZh ? "不适用" : "Not applicable"}</option></select></label>
-                  <label><span className="label">{t.verificationStatus}</span><select className="input mt-1" value={current?.verificationStatus || "unverified"} onChange={(event) => changeValue(field.fieldCode, { verificationStatus: event.target.value as BatteryFieldValue["verificationStatus"] })}><option value="unverified">{isZh ? "未核验" : "Unverified"}</option><option value="in_review">{isZh ? "核验中" : "In review"}</option><option value="verified">{isZh ? "已核验" : "Verified"}</option><option value="rejected">{isZh ? "已驳回" : "Rejected"}</option></select></label>
+                  <div><span className="label">{t.evidenceStatus}</span><p className="input mt-1 flex items-center bg-slate-50 font-semibold">{optionLabel(current?.evidenceStatus || "missing", isZh)}</p></div>
+                  <div><span className="label">{t.verificationStatus}</span><p className="input mt-1 flex items-center bg-slate-50 font-semibold">{optionLabel(current?.verificationStatus || "unverified", isZh)}</p></div>
                 </div>
               </div>;
             })}
@@ -317,8 +358,8 @@ export function BatteryDppWorkspace({ productId }: Props) {
 
           {currentFields.length === 0 && !["item_operation", "preview_publish", "registry_readiness"].includes(activeStep) ? <p className="mt-5 border-y border-slate-200 py-8 text-center text-sm font-semibold text-slate-500">{t.noFields}</p> : null}
           {activeStep === "item_operation" ? <ItemOperation workspace={workspace} operatingPolicy={operatingPolicy} isZh={isZh} saving={saving} t={t} onAction={performAction} /> : null}
-          {activeStep === "preview_publish" ? <div className="mt-5 border-y border-slate-200 py-6"><h4 className="font-black text-slate-950">{t.previewTitle}</h4><p className="mt-2 text-sm text-slate-600">{t.publishNote}</p><div className="mt-4 flex flex-wrap gap-3">{publicIdentifier ? <><Link className="btn-secondary" href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=consumer`} target="_blank">{t.consumer}</Link><Link className="btn-primary" href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=professional`} target="_blank">{t.professional}</Link><Link className="btn-secondary" href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=audit`} target="_blank">{t.audit}</Link></> : null}</div></div> : null}
-          {activeStep === "registry_readiness" ? <div className="mt-5"><h4 className="font-black text-slate-950">{t.registryTitle}</h4><p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-amber-800">{t.registryNotice}</p><RegistryWorkbench productId={productId} isZh={isZh} /></div> : null}
+          {activeStep === "preview_publish" ? <div className="mt-5 border-y border-slate-200 py-6"><h4 className="font-black text-slate-950">{t.previewTitle}</h4><p className="mt-2 text-sm text-slate-600">{t.publishNote}</p><div className="mt-4 flex flex-wrap gap-3">{publicIdentifier ? <Link className="btn-primary" href={`/p/${encodeURIComponent(publicIdentifier)}?lang=${locale}`} target="_blank">{isZh ? "查看产品护照" : "Open product passport"}</Link> : null}</div></div> : null}
+          {activeStep === "registry_readiness" && canManageRegistry ? <div className="mt-5"><h4 className="font-black text-slate-950">{t.registryTitle}</h4><p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-amber-800">{t.registryNotice}</p><RegistryWorkbench productId={productId} isZh={isZh} hasBatteryPassSchema={["ev", "lmt", "industrial"].includes(category)} /></div> : null}
           {message ? <p className={`mt-4 text-sm font-semibold ${message === t.saved ? "text-emerald-700" : "text-red-700"}`}>{message}</p> : null}
         </div>
 

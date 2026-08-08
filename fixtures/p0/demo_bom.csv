@@ -1,0 +1,5 @@
+demo_marker,model_code,component_code,component_name,component_type,mass_kg,mass_percentage,supplier_code,evidence_ref
+SYNTHETIC,HS-DEMO-51V280,CELL,LFP cells,CELL,92.0,76.0,SUP-DEMO-01,EVD-DEMO-BOM
+SYNTHETIC,HS-DEMO-51V280,BMS,Battery management system,BMS,2.5,2.1,SUP-DEMO-02,EVD-DEMO-BOM
+SYNTHETIC,HS-DEMO-51V280,CASE,Metal enclosure,ENCLOSURE,22.0,18.2,SUP-DEMO-03,EVD-DEMO-BOM
+SYNTHETIC,HS-DEMO-51V280,OTHER,Other components,OTHER,4.5,3.7,SUP-DEMO-04,EVD-DEMO-BOM

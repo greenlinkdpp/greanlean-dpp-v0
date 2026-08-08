@@ -1,0 +1,2 @@
+﻿demo_marker,model_code,product_name_zh,product_name_en,battery_category,intended_use,nominal_voltage_v,rated_capacity_ah,rated_energy_kwh,max_continuous_power_kw,chemistry_code
+SYNTHETIC,LMT-DEMO-48V15,合成LMT电池,Synthetic LMT Battery,LMT,electric bicycle,48,15,0.72,1.2,NMC

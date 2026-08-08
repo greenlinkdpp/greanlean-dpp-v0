@@ -3,20 +3,23 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createSupabaseClient } from "@/lib/supabase";
-import { buildGs1DigitalLink, buildUniqueProductIdentifier, normalizeGtin, sha256Hex } from "@/lib/dppCompliance";
+import { buildGs1DigitalLink, buildUniqueProductIdentifier, normalizeGtin } from "@/lib/dppCompliance";
 import { DPP_SECTOR_PROFILES, findDppSectorProfile, uniqueByCode } from "@/lib/dppSectorProfiles";
 import { useLanguage } from "@/components/LanguageProvider";
 import { ProductRelatedManager, type RelatedField } from "@/components/ProductRelatedManager";
 import { SectorFieldManager } from "@/components/SectorFieldManager";
 import { BatteryDppWorkspace } from "@/components/battery/BatteryDppWorkspace";
-import { publicFeatureFlags } from "@/lib/featureFlags";
+import { internalDataWrite } from "@/lib/client/internalDataWrite";
+import { PublicationWorkflowManager } from "@/components/PublicationWorkflowManager";
+import { EvidenceFileManager } from "@/components/EvidenceFileManager";
+import { DppIntegrationManager } from "@/components/DppIntegrationManager";
+import { DppOutputPanel } from "@/components/DppOutputPanel";
+import { P0BatteryHierarchy } from "@/components/p0/P0BatteryHierarchy";
 
 type Product = Record<string, any>;
+type EditorStage = "identity" | "data" | "operations" | "traceability" | "evidence" | "publish";
 
-const LIFECYCLE_STATUSES = ["draft", "review", "published", "updated", "archived", "expired"] as const;
-const CHANGE_TYPES = ["initial_publish", "certificate_update", "carbon_update", "batch_change", "data_correction", "status_change"] as const;
 const GRANULARITY_LEVELS = ["model", "batch", "item"] as const;
-const REGISTRATION_STATUSES = ["not_registered", "ready", "submitted", "accepted", "rejected", "corrected", "withdrawn", "expired"] as const;
 
 type SourceModuleConfig = {
   description: string;
@@ -316,12 +319,6 @@ function getSourceDataConfig(sectorCode?: string | null) {
   return SOURCE_DATA_FIELDS[sectorCode || ""] || SOURCE_DATA_FIELDS.textile;
 }
 
-function nextPatchVersion(version: string | null | undefined) {
-  const match = String(version || "v1.0").match(/^v(\d+)\.(\d+)$/);
-  if (!match) return "v1.1";
-  return `v${match[1]}.${Number(match[2]) + 1}`;
-}
-
 function statusLabel(status: string, locale: string) {
   const zh: Record<string, string> = {
     draft: "草稿",
@@ -340,26 +337,6 @@ function statusLabel(status: string, locale: string) {
     expired: "Certificate expired",
   };
   return (locale === "zh" ? zh : en)[status] || status;
-}
-
-function changeTypeLabel(type: string, locale: string) {
-  const zh: Record<string, string> = {
-    initial_publish: "v1.0 初始发布",
-    certificate_update: "更新证书",
-    carbon_update: "更新碳足迹",
-    batch_change: "产品批次变更",
-    data_correction: "数据修正",
-    status_change: "状态变更",
-  };
-  const en: Record<string, string> = {
-    initial_publish: "Initial publish",
-    certificate_update: "Certificate update",
-    carbon_update: "Carbon footprint update",
-    batch_change: "Product batch change",
-    data_correction: "Data correction",
-    status_change: "Status change",
-  };
-  return (locale === "zh" ? zh : en)[type] || type;
 }
 
 function optionLabel(value: string, locale: string) {
@@ -392,16 +369,6 @@ function optionLabel(value: string, locale: string) {
   return (locale === "zh" ? zh : en)[value] || value;
 }
 
-function parseJsonField(value: any) {
-  if (value === null || value === undefined || value === "") return null;
-  if (typeof value !== "string") return value;
-  try {
-    return JSON.parse(value);
-  } catch {
-    return { raw: value };
-  }
-}
-
 export function ProductEditor({ productId }: { productId: string }) {
   const { locale } = useLanguage();
   const supabase = createSupabaseClient();
@@ -411,11 +378,9 @@ export function ProductEditor({ productId }: { productId: string }) {
 	          loading: "加载产品中...",
 	          notFound: "未找到产品。",
 	          back: "返回产品列表",
-	          consumerView: "消费者版 DPP",
-	          professionalView: "专业版 DPP",
-	          auditView: "审计版 DPP",
+	          viewDpp: "查看产品护照",
           basic: "1. 产品核心信息与行业选择",
-          publish: "保存草稿与发布状态",
+          publish: "草稿与系统状态",
           registryReadiness: "中央注册库对接字段",
           publicContent: "公开 DPP 展示内容",
           name: "产品名称（英文）",
@@ -446,9 +411,6 @@ export function ProductEditor({ productId }: { productId: string }) {
           eolZh: "生命周期结束说明（中文）",
           status: "生命周期状态",
           currentVersion: "当前版本",
-          nextVersion: "本次保存版本号",
-          changeType: "变更类型",
-          changeSummary: "变更说明",
           publicSlug: "公开 Slug",
           dppId: "DPP ID",
           granularity: "DPP 粒度",
@@ -456,10 +418,9 @@ export function ProductEditor({ productId }: { productId: string }) {
           uniqueProductIdentifier: "唯一产品标识",
           euRegistrationStatus: "中央注册库状态",
           versionHash: "版本 Hash",
-          save: "保存产品并记录版本",
+          save: "保存产品草稿",
           saving: "保存中...",
-          saved: "产品已保存，并已记录版本。",
-          versionNote: "示例：v1.0 初始发布、v1.1 更新证书、v1.2 更新碳足迹、v2.0 产品批次变更。",
+          saved: "产品草稿已保存。",
           components: "组件 / BOM",
           materials: "材料",
           esg: "ESG 指标",
@@ -475,6 +436,8 @@ export function ProductEditor({ productId }: { productId: string }) {
           evidenceLinks: "证据字段映射",
           auditLogs: "审计日志",
           blockchainAnchors: "区块链锚定",
+          systemRecords: "系统生成记录",
+          systemRecordsDesc: "发布版本、注册回执、审计日志和区块链回执由受控服务生成，此处只读展示。",
           flowIdentity: "2. 数字身份与二维码",
           flowIdentityDesc: "维护 GTIN、批次、序列号、GS1 Digital Link、二维码和其他数据载体。",
           flowSource: "3. 数据源录入",
@@ -482,7 +445,7 @@ export function ProductEditor({ productId }: { productId: string }) {
           flowChecklist: "4. 法规字段清单",
           flowChecklistDesc: "根据行业模板检查披露字段、建议数据源、证据状态和缺失项。",
           flowPublish: "5. 发布、版本与注册库",
-          flowPublishDesc: "保存版本、生成 Hash，并记录中央注册库提交、注册证明和发布状态。",
+          flowPublishDesc: "校验输出、保存不可变版本，并记录审核、发布、中央注册库和系统集成状态。",
           flowIntegrity: "6. 证据治理与不可篡改记录",
           flowIntegrityDesc: "把字段证据映射、审计日志和区块链锚定组织成可验证证据链。",
         }
@@ -490,11 +453,9 @@ export function ProductEditor({ productId }: { productId: string }) {
 	          loading: "Loading product...",
 	          notFound: "Product not found.",
 	          back: "Back to products",
-	          consumerView: "Consumer DPP",
-	          professionalView: "Professional DPP",
-	          auditView: "Audit DPP",
+	          viewDpp: "Open product passport",
           basic: "1. Product core and sector selection",
-          publish: "Draft and publication status",
+          publish: "Draft and system status",
           registryReadiness: "Central registry fields",
           publicContent: "Public DPP display content",
           name: "Product name (English)",
@@ -525,9 +486,6 @@ export function ProductEditor({ productId }: { productId: string }) {
           eolZh: "End-of-life instructions (Chinese)",
           status: "Lifecycle status",
           currentVersion: "Current version",
-          nextVersion: "Version for this save",
-          changeType: "Change type",
-          changeSummary: "Change summary",
           publicSlug: "Public Slug",
           dppId: "DPP ID",
           granularity: "DPP granularity",
@@ -535,10 +493,9 @@ export function ProductEditor({ productId }: { productId: string }) {
           uniqueProductIdentifier: "Unique product identifier",
           euRegistrationStatus: "EU registry status",
           versionHash: "Version hash",
-          save: "Save Product and Record Version",
+          save: "Save product draft",
           saving: "Saving...",
-          saved: "Product saved and version recorded.",
-          versionNote: "Examples: v1.0 initial publish, v1.1 certificate update, v1.2 carbon update, v2.0 product batch change.",
+          saved: "Product draft saved.",
           components: "Components / BOM",
           materials: "Materials",
           esg: "ESG Metrics",
@@ -554,6 +511,8 @@ export function ProductEditor({ productId }: { productId: string }) {
           evidenceLinks: "Evidence Field Links",
           auditLogs: "Audit Logs",
           blockchainAnchors: "Blockchain Anchors",
+          systemRecords: "System-generated records",
+          systemRecordsDesc: "Published versions, registry receipts, audit logs and blockchain receipts are generated by controlled services and are read-only here.",
           flowIdentity: "2. Digital identity and QR code",
           flowIdentityDesc: "Maintain GTIN, batch, serial number, GS1 Digital Link, QR code and other data carriers.",
           flowSource: "3. Source data entry",
@@ -561,7 +520,7 @@ export function ProductEditor({ productId }: { productId: string }) {
           flowChecklist: "4. Regulatory field checklist",
           flowChecklistDesc: "Check disclosure fields, suggested source modules, evidence status and missing items by sector profile.",
           flowPublish: "5. Publication, versioning and registry",
-          flowPublishDesc: "Save versions, generate hashes, and record central registry submissions, proofs and lifecycle status.",
+          flowPublishDesc: "Validate output, save an immutable version, and record review, publication, Registry, and integration status.",
           flowIntegrity: "6. Evidence governance and immutable records",
           flowIntegrityDesc: "Organize field evidence links, audit logs and blockchain anchors into a verifiable evidence chain.",
         };
@@ -570,10 +529,11 @@ export function ProductEditor({ productId }: { productId: string }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
-  const [versionRefreshKey, setVersionRefreshKey] = useState(0);
   const [profileKey, setProfileKey] = useState("");
   const [sectorCode, setSectorCode] = useState("");
   const [categoryCode, setCategoryCode] = useState("");
+  const [activeStage, setActiveStage] = useState<EditorStage>("identity");
+  const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
 
   async function loadProduct() {
     setLoading(true);
@@ -590,7 +550,19 @@ export function ProductEditor({ productId }: { productId: string }) {
   }
 
   useEffect(() => {
-    loadProduct();
+    void (async () => {
+      const { data } = await supabase.auth.getSession();
+      const accessToken = data.session?.access_token;
+      if (accessToken) {
+        const response = await fetch("/api/access-context", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          cache: "no-store",
+        });
+        const identity = await response.json().catch(() => null);
+        setIsPlatformAdmin(Boolean(identity?.isPlatformAdmin));
+      }
+      await loadProduct();
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
@@ -625,18 +597,12 @@ export function ProductEditor({ productId }: { productId: string }) {
       "granularity_level",
       "commodity_code",
       "unique_product_identifier",
-      "eu_registration_status",
       "dpp_id",
       "public_slug",
-      "status",
-      "current_version",
     ].forEach((key) => {
       payload[key] = String(form.get(key) || "").trim() || null;
     });
-    payload.status = payload.status || "draft";
-    payload.current_version = payload.current_version || "v1.0";
     payload.granularity_level = payload.granularity_level || "model";
-    payload.eu_registration_status = payload.eu_registration_status || "not_registered";
     const selectedProfile = findDppSectorProfile(payload.dpp_profile_key);
     if (selectedProfile) {
       payload.sector_code = selectedProfile.sectorCode;
@@ -645,19 +611,16 @@ export function ProductEditor({ productId }: { productId: string }) {
     }
     payload.updated_at = now;
 
-    const version = String(form.get("version") || payload.current_version || "v1.0").trim();
-    const changeType = String(form.get("change_type") || "data_correction").trim();
-    const changeSummary = String(form.get("change_summary") || "").trim();
-
     setSaving(true);
     setMessage("");
 
-    const { data: updatedProduct, error } = await supabase
-      .from("products")
-      .update(payload)
-      .eq("id", product.id)
-      .select("*")
-      .single();
+    const { error } = await internalDataWrite<Product>({
+      table: "products",
+      operation: "update",
+      values: payload,
+      filters: [{ column: "id", operator: "eq", value: product.id }],
+      returning: "single",
+    });
 
     if (error) {
       setMessage(error.message);
@@ -665,32 +628,9 @@ export function ProductEditor({ productId }: { productId: string }) {
       return;
     }
 
-    const snapshot = {
-      product: updatedProduct,
-      saved_at: now,
-    };
-    const dataHash = await sha256Hex(snapshot);
-
-    const { error: versionError } = await supabase.from("product_versions").upsert(
-      {
-        product_id: product.id,
-        version,
-        lifecycle_status: payload.status,
-        change_type: changeType,
-        change_summary: changeSummary || changeTypeLabel(changeType, locale),
-        changed_by: "greanlean admin",
-        snapshot,
-        data_hash: dataHash,
-        hash_algorithm: "SHA-256",
-      },
-      { onConflict: "product_id,version" },
-    );
-
-    if (versionError) setMessage(versionError.message);
-    else setMessage(t.saved);
+    setMessage(t.saved);
 
     await loadProduct();
-    setVersionRefreshKey((key) => key + 1);
     setSaving(false);
   }
 
@@ -698,11 +638,13 @@ export function ProductEditor({ productId }: { productId: string }) {
   if (!product) return <p className="text-red-600">{t.notFound}</p>;
 
   const publicIdentifier = product.dpp_id || product.public_slug;
-  const suggestedVersion = product.current_version ? nextPatchVersion(product.current_version) : "v1.0";
   const selectedProfile = findDppSectorProfile(profileKey || product.dpp_profile_key);
   const sourceDataConfig = getSourceDataConfig(selectedProfile?.sectorCode || sectorCode || product.sector_code);
-  const useBatteryDppV2 = publicFeatureFlags.batteryDppV2
-    && (selectedProfile?.sectorCode || sectorCode || product.sector_code) === "battery";
+  const useBatteryDppV2 = (
+    selectedProfile?.sectorCode
+    || sectorCode
+    || product.sector_code
+  ) === "battery";
   const sectorOptions = uniqueByCode(DPP_SECTOR_PROFILES, "sectorCode");
   const categoryOptions = uniqueByCode(
     DPP_SECTOR_PROFILES.filter((profile) => !sectorCode || profile.sectorCode === sectorCode),
@@ -711,30 +653,6 @@ export function ProductEditor({ productId }: { productId: string }) {
   const profileOptions = DPP_SECTOR_PROFILES.filter(
     (profile) => (!sectorCode || profile.sectorCode === sectorCode) && (!categoryCode || profile.categoryCode === categoryCode),
   );
-  const prepareEvidencePayload = async (payload: Record<string, any>) => ({
-    ...payload,
-    evidence_hash: payload.evidence_hash || (await sha256Hex(payload)),
-    hash_algorithm: payload.hash_algorithm || "SHA-256",
-    visibility_level: payload.visibility_level || "public",
-  });
-  const prepareRegistryPayload = (payload: Record<string, any>) => ({
-    ...payload,
-    submitted_payload: parseJsonField(payload.submitted_payload),
-    registry_response: parseJsonField(payload.registry_response),
-    visibility_level: payload.visibility_level || "internal",
-  });
-  const prepareBlockchainPayload = async (payload: Record<string, any>) => {
-    const anchoredHash = payload.anchored_hash || (await sha256Hex({ product_id: productId, version: payload.version, created_at: new Date().toISOString() }));
-    const txHash = payload.transaction_hash || `0x${await sha256Hex({ anchoredHash, chain: payload.chain_name, network: payload.network })}`;
-    return {
-      ...payload,
-      anchored_hash: anchoredHash,
-      hash_algorithm: payload.hash_algorithm || "SHA-256",
-      transaction_hash: txHash,
-      anchor_status: payload.anchor_status || "pending",
-      visibility_level: payload.visibility_level || "public",
-    };
-  };
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -749,20 +667,25 @@ export function ProductEditor({ productId }: { productId: string }) {
         </div>
 	        {publicIdentifier && (
 	          <div className="flex flex-wrap gap-2">
-	            <Link href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=consumer`} target="_blank" className="btn-secondary">
-	              {t.consumerView}
-	            </Link>
-	            <Link href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=professional`} target="_blank" className="btn-primary">
-	              {t.professionalView}
-	            </Link>
-	            <Link href={`/p/${encodeURIComponent(publicIdentifier)}?preview=1&lang=${locale}&view=audit`} target="_blank" className="btn-secondary">
-	              {t.auditView}
+	            <Link href={`/p/${encodeURIComponent(publicIdentifier)}?lang=${locale}`} target="_blank" className="btn-primary">
+	              {t.viewDpp}
 	            </Link>
 	          </div>
-	        )}
+			        )}
       </div>
 
-      <form onSubmit={saveProduct} className="grid gap-8 xl:grid-cols-[1fr_380px]">
+      <EditorWorkflowNav
+        activeStage={activeStage}
+        isBattery={useBatteryDppV2}
+        isPlatformAdmin={isPlatformAdmin}
+        onChange={setActiveStage}
+      />
+
+      <form
+        id="editor-identity"
+        onSubmit={saveProduct}
+        className={`${activeStage === "identity" ? "grid" : "hidden"} gap-8 xl:grid-cols-[1fr_380px]`}
+      >
         <section className="card space-y-5">
           <h2 className="text-xl font-bold">{t.basic}</h2>
           <input className="input" name="name" defaultValue={product.name || ""} placeholder={t.name} required />
@@ -888,50 +811,22 @@ export function ProductEditor({ productId }: { productId: string }) {
               </label>
               <input className="input" name="commodity_code" defaultValue={product.commodity_code || ""} placeholder={t.commodityCode} />
               <input className="input" name="unique_product_identifier" defaultValue={product.unique_product_identifier || ""} placeholder={t.uniqueProductIdentifier} />
-              <label>
-                <span className="label">{t.euRegistrationStatus}</span>
-                <select className="input mt-1" name="eu_registration_status" defaultValue={product.eu_registration_status || "not_registered"}>
-                  {REGISTRATION_STATUSES.map((status) => (
-                    <option key={status} value={status}>
-                      {optionLabel(status, locale)}
-                    </option>
-                  ))}
-                </select>
-              </label>
             </div>
           </div>
-          <label>
-            <span className="label">{t.status}</span>
-            <select className="input mt-1" name="status" defaultValue={product.status || "draft"}>
-              {LIFECYCLE_STATUSES.map((status) => (
-                <option key={status} value={status}>
-                  {statusLabel(status, locale)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <span className="label">{t.currentVersion}</span>
-            <input className="input mt-1" name="current_version" defaultValue={product.current_version || "v1.0"} placeholder="v1.0" />
-          </label>
-          <label>
-            <span className="label">{t.nextVersion}</span>
-            <input className="input mt-1" name="version" defaultValue={suggestedVersion} placeholder="v1.1" />
-          </label>
-          <label>
-            <span className="label">{t.changeType}</span>
-            <select className="input mt-1" name="change_type" defaultValue="data_correction">
-              {CHANGE_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {changeTypeLabel(type, locale)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <span className="label">{t.changeSummary}</span>
-            <textarea className="input mt-1 min-h-24" name="change_summary" placeholder={t.versionNote} />
-          </label>
+          <dl className="grid grid-cols-2 gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm">
+            <div>
+              <dt className="font-semibold text-slate-500">{t.status}</dt>
+              <dd className="mt-1 font-black text-slate-950">{statusLabel(product.status || "draft", locale)}</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-slate-500">{t.currentVersion}</dt>
+              <dd className="mt-1 font-black text-slate-950">{product.current_version || "v1.0"}</dd>
+            </div>
+            <div className="col-span-2">
+              <dt className="font-semibold text-slate-500">{t.euRegistrationStatus}</dt>
+              <dd className="mt-1 font-black text-slate-950">{optionLabel(product.eu_registration_status || "not_registered", locale)}</dd>
+            </div>
+          </dl>
           <button disabled={saving} className="btn-primary w-full">
             {saving ? t.saving : t.save}
           </button>
@@ -941,13 +836,85 @@ export function ProductEditor({ productId }: { productId: string }) {
 
       {useBatteryDppV2 ? (
         <>
-          <BatteryDppWorkspace productId={productId} />
-          <SectionHeading title={t.flowPublish} description={t.flowPublishDesc} />
-          <ProductVersionHistory productId={productId} refreshKey={versionRefreshKey} title={t.versions} />
+          {activeStage === "data" && <section id="editor-sector" className="space-y-5">
+            <EditorSectionHeading
+              index={locale === "zh" ? "对应 DPP 模块 01–04、07–08" : "DPP modules 01–04 and 07–08"}
+              title={locale === "zh" ? "电池行业专项数据" : "Battery sector data"}
+              description={locale === "zh"
+                ? "材料与组成、环境与可持续性、性能耐久及电池专项字段统一在电池工作区维护；字段会映射到最终护照对应模块。"
+                : "Materials, sustainability, performance, durability and battery-specific fields are maintained in one workspace and mapped to the matching passport modules."}
+            />
+            <span id="editor-materials" className="block scroll-mt-28" />
+            <span id="editor-environment" className="block scroll-mt-28" />
+            <span id="editor-performance" className="block scroll-mt-28" />
+            <BatteryDppWorkspace
+              productId={productId}
+              canManageRegistry={isPlatformAdmin}
+              allowedSteps={[
+                "identity",
+                "economic_operator",
+                "manufacturing",
+                "materials",
+                "sustainability",
+                "performance",
+                "documents",
+                "circularity_safety",
+              ]}
+            />
+          </section>}
+          {activeStage === "operations" && <section id="editor-operations" className="space-y-5">
+            <EditorSectionHeading
+              index={locale === "zh" ? "对应 DPP 模块 05、09" : "DPP modules 05 and 09"}
+              title={locale === "zh" ? "运行状态与生命周期" : "Operating status and lifecycle"}
+              description={locale === "zh"
+                ? "维护电池单体、BMS 或网关采集指标和生命周期事件。数据采用只追加方式保存，并依据账号授权展示。"
+                : "Maintain battery items, BMS or gateway metrics, and lifecycle events. Records are append-only and projected by account authorisation."}
+            />
+            <P0BatteryHierarchy productId={productId} />
+            <BatteryDppWorkspace
+              productId={productId}
+              canManageRegistry={false}
+              initialStep="item_operation"
+              allowedSteps={["item_operation"]}
+              showClassificationControls={false}
+            />
+          </section>}
+          {activeStage === "evidence" && <section id="editor-evidence" className="space-y-5">
+            <EditorSectionHeading
+              index={locale === "zh" ? "对应 DPP 模块 07" : "DPP module 07"}
+              title={locale === "zh" ? "合规声明与证据文件" : "Compliance and evidence"}
+              description={locale === "zh"
+                ? "上传真实声明、测试报告和证明文件，并维护文件版本、有效期、访问级别和核验状态。"
+                : "Upload declarations, test reports and evidence while maintaining versions, validity, access and verification state."}
+            />
+            <EvidenceFileManager productId={productId} />
+          </section>}
+          {activeStage === "publish" && <section id="editor-publish" className="space-y-6">
+            <EditorSectionHeading
+              index={locale === "zh" ? "流程阶段 05" : "Workflow stage 05"}
+              title={t.flowPublish}
+              description={t.flowPublishDesc}
+            />
+            {isPlatformAdmin ? (
+              <>
+                <DppOutputPanel
+                  productId={productId}
+                  identifier={publicIdentifier || null}
+                  hasBatteryPassSchema={["ev", "lmt", "industrial"].includes(selectedProfile?.legalCategoryCode || "")}
+                />
+                <PublicationWorkflowManager productId={productId} />
+                <DppIntegrationManager productId={productId} />
+                <SystemRecordSummary productId={productId} title={t.systemRecords} description={t.systemRecordsDesc} />
+              </>
+            ) : (
+              <PartnerPreviewPanel identifier={publicIdentifier || null} />
+            )}
+          </section>}
         </>
       ) : (
         <>
-      <SectionHeading title={t.flowIdentity} description={t.flowIdentityDesc} />
+      {activeStage === "identity" && <section className="space-y-5">
+      <EditorSectionHeading index={locale === "zh" ? "对应 DPP 模块 01" : "DPP module 01"} title={t.flowIdentity} description={t.flowIdentityDesc} />
       <ProductRelatedManager productId={productId} title="Digital Identity" titleZh={t.identity} table="product_digital_identity" displayFields={["gtin", "batch_id", "serial_id", "digital_link_url"]} preparePayload={(payload) => {
         const gtin = normalizeGtin(payload.gtin);
         const baseUrl = typeof window !== "undefined" ? window.location.origin : null;
@@ -961,95 +928,230 @@ export function ProductEditor({ productId }: { productId: string }) {
           product_uuid: payload.product_uuid || buildUniqueProductIdentifier({ gtin, batchId: payload.batch_id, serialId: payload.serial_id }),
         };
       }} fields={[{ name: "product_uuid", label: "Product UUID / UPI", labelZh: "产品 UUID / UPI" }, { name: "gtin", label: "GTIN", labelZh: "GTIN" }, { name: "style_id", label: "Style ID", labelZh: "款式 ID" }, { name: "batch_id", label: "Batch ID", labelZh: "批次 ID" }, { name: "serial_id", label: "Serial ID", labelZh: "序列号" }, { name: "digital_link_url", label: "GS1 Digital Link URL", labelZh: "GS1 数字链接 URL", type: "url" }, { name: "data_carrier_type", label: "Data Carrier Type", labelZh: "数据载体类型" }, { name: "data_carrier_url", label: "Data Carrier URL", labelZh: "数据载体 URL", type: "url" }, { name: "qr_code_id", label: "QR Code ID", labelZh: "二维码 ID" }, { name: "nfc_id", label: "NFC ID", labelZh: "NFC ID" }, { name: "rfid_epc", label: "RFID EPC", labelZh: "RFID EPC" }]} />
+      </section>}
 
-      <SectionHeading title={t.flowSource} description={t.flowSourceDesc} />
+      {activeStage === "data" && <section id="editor-materials" className="space-y-5">
+      <EditorSectionHeading index={locale === "zh" ? "对应 DPP 模块 02" : "DPP module 02"} title={locale === "zh" ? "材料与组成" : "Materials and composition"} description={sourceDataConfig.materials.descriptionZh && locale === "zh" ? sourceDataConfig.materials.descriptionZh : sourceDataConfig.materials.description} />
       <ProductRelatedManager productId={productId} title="Materials" titleZh={t.materials} description={sourceDataConfig.materials.description} descriptionZh={sourceDataConfig.materials.descriptionZh} table="product_materials" displayFields={sourceDataConfig.materials.displayFields} fields={sourceDataConfig.materials.fields} />
       <ProductRelatedManager productId={productId} title="Components / BOM" titleZh={t.components} description={sourceDataConfig.bom.description} descriptionZh={sourceDataConfig.bom.descriptionZh} table="product_bom" displayFields={sourceDataConfig.bom.displayFields} fields={sourceDataConfig.bom.fields} />
+      <div id="editor-environment" className="space-y-5">
+      <EditorSectionHeading index={locale === "zh" ? "对应 DPP 模块 03" : "DPP module 03"} title={locale === "zh" ? "环境与可持续性" : "Environment and sustainability"} description={sourceDataConfig.esg.descriptionZh && locale === "zh" ? sourceDataConfig.esg.descriptionZh : sourceDataConfig.esg.description} />
       <ProductRelatedManager productId={productId} title="ESG Metrics" titleZh={t.esg} description={sourceDataConfig.esg.description} descriptionZh={sourceDataConfig.esg.descriptionZh} table="product_esg_metrics" displayFields={sourceDataConfig.esg.displayFields} fields={sourceDataConfig.esg.fields} />
+      </div>
+      <div id="editor-sector" className="space-y-5">
+      <span id="editor-performance" className="block scroll-mt-28" />
+      <EditorSectionHeading index={locale === "zh" ? "对应 DPP 模块 04–05" : "DPP modules 04–05"} title={t.flowChecklist} description={t.flowChecklistDesc} />
+      <SectorFieldManager productId={productId} profileKey={selectedProfile?.profileKey || product.dpp_profile_key} title={t.sectorFields} />
+      </div>
+      </section>}
+      {activeStage === "traceability" && <section id="editor-traceability" className="space-y-5">
+      <EditorSectionHeading index={locale === "zh" ? "对应 DPP 模块 06" : "DPP module 06"} title={locale === "zh" ? "供应链与生产追溯" : "Supply chain and traceability"} description={locale === "zh" ? "维护关键生产、运输和交付事件及其地点、时间和核验状态。" : "Maintain key production, transport and delivery events with place, time and verification state."} />
       <ProductRelatedManager productId={productId} title="Traceability Events" titleZh={t.traceability} table="product_traceability" orderBy="event_date" displayFields={["event_name", "country", "city", "facility_name", "verification_status"]} fields={[{ name: "event_type", label: "Event Type", labelZh: "事件类型" }, { name: "event_name", label: "Event Name", labelZh: "事件名称", required: true }, { name: "event_name_zh", label: "Event Name Chinese", labelZh: "事件名称中文" }, { name: "event_date", label: "Event Date", labelZh: "事件日期", type: "datetime-local" }, { name: "country", label: "Country", labelZh: "国家" }, { name: "city", label: "City", labelZh: "城市" }, { name: "facility_name", label: "Facility Name", labelZh: "设施名称" }, { name: "facility_name_zh", label: "Facility Name Chinese", labelZh: "设施名称中文" }, { name: "transport_method", label: "Transport Method", labelZh: "运输方式" }, { name: "verification_status", label: "Verification Status", labelZh: "验证状态" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "notes_zh", label: "Notes Chinese", labelZh: "备注中文", type: "textarea" }]} />
+      <div id="editor-circularity" className="space-y-5">
+      <EditorSectionHeading index={locale === "zh" ? "对应 DPP 模块 08–09" : "DPP modules 08–09"} title={locale === "zh" ? "维修、循环利用与生命周期结束" : "Repair, circularity and end of life"} description={sourceDataConfig.circularity.descriptionZh && locale === "zh" ? sourceDataConfig.circularity.descriptionZh : sourceDataConfig.circularity.description} />
       <ProductRelatedManager productId={productId} title="Circularity" titleZh={t.circularity} description={sourceDataConfig.circularity.description} descriptionZh={sourceDataConfig.circularity.descriptionZh} table="product_circularity" displayFields={sourceDataConfig.circularity.displayFields} fields={sourceDataConfig.circularity.fields} />
       <ProductRelatedManager productId={productId} title="Consumer Transparency" titleZh={t.transparency} table="product_consumer_transparency" displayFields={["brand_story", "sustainability_story", "consumer_notice"]} fields={[{ name: "brand_story", label: "Brand Story", labelZh: "品牌故事", type: "textarea" }, { name: "brand_story_zh", label: "Brand Story Chinese", labelZh: "品牌故事中文", type: "textarea" }, { name: "sustainability_story", label: "Sustainability Story", labelZh: "可持续故事", type: "textarea" }, { name: "sustainability_story_zh", label: "Sustainability Story Chinese", labelZh: "可持续故事中文", type: "textarea" }, { name: "consumer_notice", label: "Consumer Notice", labelZh: "消费者提示", type: "textarea" }, { name: "consumer_notice_zh", label: "Consumer Notice Chinese", labelZh: "消费者提示中文", type: "textarea" }, { name: "marketing_content", label: "Marketing Content", labelZh: "营销内容", type: "textarea" }, { name: "marketing_content_zh", label: "Marketing Content Chinese", labelZh: "营销内容中文", type: "textarea" }]} />
-      <ProductRelatedManager productId={productId} title="Certificates" titleZh={t.certificates} table="product_certificates" displayFields={["certificate_name", "certificate_type", "issuer", "verification_status"]} preparePayload={prepareEvidencePayload} fields={[{ name: "certificate_name", label: "Certificate Name", labelZh: "证书名称", required: true }, { name: "certificate_name_zh", label: "Certificate Name Chinese", labelZh: "证书名称中文" }, { name: "certificate_type", label: "Certificate Type", labelZh: "证书类型" }, { name: "certificate_type_zh", label: "Certificate Type Chinese", labelZh: "证书类型中文" }, { name: "certificate_number", label: "Certificate Number", labelZh: "证书编号" }, { name: "issuer", label: "Issuer", labelZh: "签发机构" }, { name: "issue_date", label: "Issue Date", labelZh: "签发日期", type: "date" }, { name: "expiry_date", label: "Expiry Date", labelZh: "到期日期", type: "date" }, { name: "certificate_url", label: "Certificate URL", labelZh: "证书 URL", type: "url" }, { name: "verification_status", label: "Verification Status", labelZh: "验证状态" }, { name: "evidence_hash", label: "Evidence Hash", labelZh: "证据 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-      <ProductRelatedManager productId={productId} title="Documents" titleZh={t.documents} table="product_documents" displayFields={["document_name", "document_type", "language", "version"]} preparePayload={prepareEvidencePayload} fields={[{ name: "document_name", label: "Document Name", labelZh: "文档名称", required: true }, { name: "document_type", label: "Document Type", labelZh: "文档类型" }, { name: "file_url", label: "File URL", labelZh: "文件 URL", type: "url" }, { name: "file_size", label: "File Size", labelZh: "文件大小" }, { name: "language", label: "Language", labelZh: "语言" }, { name: "uploaded_by", label: "Uploaded By", labelZh: "上传者" }, { name: "version", label: "Version", labelZh: "版本" }, { name: "evidence_hash", label: "Evidence Hash", labelZh: "证据 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
+      </div>
+      </section>}
+      {activeStage === "evidence" && <section id="editor-evidence" className="space-y-5">
+      <EditorSectionHeading index={locale === "zh" ? "对应 DPP 模块 07" : "DPP module 07"} title={locale === "zh" ? "合规声明与证据文件" : "Compliance and evidence"} description={locale === "zh" ? "证书、声明和文件在这里维护，并关联核验状态和访问级别。" : "Maintain certificates, declarations and files with verification and access state."} />
+      <ProductRelatedManager productId={productId} title="Certificates" titleZh={t.certificates} table="product_certificates" displayFields={["certificate_name", "certificate_type", "issuer", "verification_status"]} fields={[{ name: "certificate_name", label: "Certificate Name", labelZh: "证书名称", required: true }, { name: "certificate_name_zh", label: "Certificate Name Chinese", labelZh: "证书名称中文" }, { name: "certificate_type", label: "Certificate Type", labelZh: "证书类型" }, { name: "certificate_type_zh", label: "Certificate Type Chinese", labelZh: "证书类型中文" }, { name: "certificate_number", label: "Certificate Number", labelZh: "证书编号" }, { name: "issuer", label: "Issuer", labelZh: "签发机构" }, { name: "issue_date", label: "Issue Date", labelZh: "签发日期", type: "date" }, { name: "expiry_date", label: "Expiry Date", labelZh: "到期日期", type: "date" }, { name: "certificate_url", label: "Certificate URL", labelZh: "证书 URL", type: "url" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
+      <EvidenceFileManager productId={productId} />
+      </section>}
 
-      <SectionHeading title={t.flowChecklist} description={t.flowChecklistDesc} />
-      <SectorFieldManager productId={productId} profileKey={selectedProfile?.profileKey || product.dpp_profile_key} title={t.sectorFields} />
-
-      <SectionHeading title={t.flowPublish} description={t.flowPublishDesc} />
-      <ProductVersionHistory productId={productId} refreshKey={versionRefreshKey} title={t.versions} />
-      <ProductRelatedManager productId={productId} title="EU Registry Submissions" titleZh={t.registrySubmissions} table="dpp_registry_submissions" displayFields={["submission_status", "eu_registration_identifier", "submitted_version", "submitted_hash"]} preparePayload={prepareRegistryPayload} fields={[{ name: "submission_status", label: "Submission Status", labelZh: "提交状态" }, { name: "registry_environment", label: "Registry Environment", labelZh: "注册库环境" }, { name: "eu_registration_identifier", label: "EU Registration Identifier", labelZh: "欧盟注册 ID" }, { name: "commodity_code", label: "Commodity Code", labelZh: "商品编码" }, { name: "submitted_version", label: "Submitted Version", labelZh: "提交版本" }, { name: "submitted_hash", label: "Submitted Hash", labelZh: "提交 Hash" }, { name: "semantic_model_version", label: "Semantic Model Version", labelZh: "语义模型版本" }, { name: "submitted_payload", label: "Submitted Payload JSON", labelZh: "提交载荷 JSON", type: "textarea" }, { name: "registry_response", label: "Registry Response JSON", labelZh: "注册库响应 JSON", type: "textarea" }, { name: "submitted_at", label: "Submitted At", labelZh: "提交时间", type: "datetime-local" }, { name: "accepted_at", label: "Accepted At", labelZh: "接受时间", type: "datetime-local" }, { name: "rejected_reason", label: "Rejected Reason", labelZh: "驳回原因", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-      <ProductRelatedManager productId={productId} title="Registration Proofs" titleZh={t.registrationProofs} table="dpp_registration_proofs" displayFields={["proof_type", "proof_hash", "qualified_seal_status", "expires_at"]} preparePayload={prepareEvidencePayload} fields={[{ name: "proof_type", label: "Proof Type", labelZh: "证明类型" }, { name: "submission_id", label: "Submission ID", labelZh: "提交记录 ID" }, { name: "proof_url", label: "Proof URL", labelZh: "证明文件 URL", type: "url" }, { name: "proof_hash", label: "Proof Hash", labelZh: "证明文件 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "qualified_seal_status", label: "Qualified Seal Status", labelZh: "合格电子签章状态" }, { name: "qualified_timestamp", label: "Qualified Timestamp", labelZh: "合格时间戳" }, { name: "generated_at", label: "Generated At", labelZh: "生成时间", type: "datetime-local" }, { name: "expires_at", label: "Expires At", labelZh: "过期时间", type: "datetime-local" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-
-      <SectionHeading title={t.flowIntegrity} description={t.flowIntegrityDesc} />
-      <ProductRelatedManager productId={productId} title="Evidence Field Links" titleZh={t.evidenceLinks} table="dpp_evidence_links" displayFields={["evidence_type", "supported_field", "verification_status", "visibility_level"]} fields={[{ name: "evidence_type", label: "Evidence Type", labelZh: "证据类型", required: true }, { name: "evidence_ref_id", label: "Evidence Ref ID", labelZh: "证据记录 ID" }, { name: "supported_field", label: "Supported Field", labelZh: "支持字段", required: true }, { name: "supported_module", label: "Supported Module", labelZh: "支持模块" }, { name: "claim_value", label: "Claim Value", labelZh: "声明值", type: "textarea" }, { name: "verification_status", label: "Verification Status", labelZh: "验证状态" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-      <ProductRelatedManager productId={productId} title="Audit Logs" titleZh={t.auditLogs} table="dpp_audit_logs" displayFields={["action_type", "actor_name", "target_table", "new_hash"]} fields={[{ name: "actor_name", label: "Actor Name", labelZh: "操作人" }, { name: "actor_role", label: "Actor Role", labelZh: "操作角色" }, { name: "action_type", label: "Action Type", labelZh: "操作类型", required: true }, { name: "target_table", label: "Target Table", labelZh: "目标表" }, { name: "target_id", label: "Target ID", labelZh: "目标记录 ID" }, { name: "previous_hash", label: "Previous Hash", labelZh: "前 Hash" }, { name: "new_hash", label: "New Hash", labelZh: "新 Hash" }, { name: "ip_context", label: "IP / Context", labelZh: "IP / 上下文" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
-      <ProductRelatedManager productId={productId} title="Blockchain Anchors" titleZh={t.blockchainAnchors} table="dpp_blockchain_anchors" displayFields={["version", "chain_name", "anchor_status", "transaction_hash"]} preparePayload={prepareBlockchainPayload} fields={[{ name: "version", label: "DPP Version", labelZh: "DPP 版本" }, { name: "anchored_hash", label: "Anchored Hash", labelZh: "锚定 Hash" }, { name: "hash_algorithm", label: "Hash Algorithm", labelZh: "Hash 算法" }, { name: "chain_name", label: "Chain Name", labelZh: "区块链名称" }, { name: "chain_id", label: "Chain ID", labelZh: "链 ID" }, { name: "network", label: "Network", labelZh: "网络" }, { name: "contract_address", label: "Contract Address", labelZh: "合约地址" }, { name: "transaction_hash", label: "Transaction Hash", labelZh: "交易 Hash" }, { name: "block_number", label: "Block Number", labelZh: "区块高度" }, { name: "anchor_status", label: "Anchor Status", labelZh: "锚定状态" }, { name: "anchored_at", label: "Anchored At", labelZh: "锚定时间", type: "datetime-local" }, { name: "explorer_url", label: "Explorer URL", labelZh: "区块浏览器 URL", type: "url" }, { name: "notes", label: "Notes", labelZh: "备注", type: "textarea" }, { name: "visibility_level", label: "Visibility Level", labelZh: "可见性等级" }]} />
+      {activeStage === "publish" && <section id="editor-publish" className="space-y-6">
+      <EditorSectionHeading
+        index={locale === "zh" ? "流程阶段 05" : "Workflow stage 05"}
+        title={t.flowPublish}
+        description={t.flowPublishDesc}
+      />
+      {isPlatformAdmin ? (
+        <>
+          <DppOutputPanel
+            productId={productId}
+            identifier={publicIdentifier || null}
+            hasBatteryPassSchema={false}
+          />
+          <PublicationWorkflowManager productId={productId} />
+          <DppIntegrationManager productId={productId} />
+          <SystemRecordSummary productId={productId} title={t.systemRecords} description={t.systemRecordsDesc} />
+        </>
+      ) : (
+        <PartnerPreviewPanel identifier={publicIdentifier || null} />
+      )}
+      </section>}
         </>
       )}
     </div>
   );
 }
 
-function ProductVersionHistory({ productId, refreshKey, title }: { productId: string; refreshKey: number; title: string }) {
+function EditorWorkflowNav({
+  activeStage,
+  isBattery,
+  isPlatformAdmin,
+  onChange,
+}: {
+  activeStage: EditorStage;
+  isBattery: boolean;
+  isPlatformAdmin: boolean;
+  onChange: (stage: EditorStage) => void;
+}) {
   const { locale } = useLanguage();
-  const supabase = createSupabaseClient();
-  const [rows, setRows] = useState<any[]>([]);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    async function load() {
-      const { data, error } = await supabase
-        .from("product_versions")
-        .select("*")
-        .eq("product_id", productId)
-        .order("created_at", { ascending: false });
-      if (error) setMessage(error.message);
-      else setRows(data || []);
-    }
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productId, refreshKey]);
-
-  const emptyText = locale === "zh" ? "暂无版本记录。保存产品后会自动生成。" : "No version records yet. Saving the product will create one.";
+  const items = locale === "zh"
+    ? [
+        ["阶段 01", "基础身份", "产品、行业模板、公开内容和数字身份", "identity"],
+        ["阶段 02", isBattery ? "电池法规数据" : "行业数据", isBattery ? "分类、材料、碳足迹、性能与法规字段" : "材料、环境、性能与行业字段", "data"],
+        ["阶段 03", isBattery ? "运行与生命周期" : "追溯与循环", isBattery ? "单体状态、BMS 数据与生命周期事件" : "生产追溯、维修、回收和消费者信息", isBattery ? "operations" : "traceability"],
+        ["阶段 04", "合规证据", "证书、声明和不可变文件版本", "evidence"],
+        ["阶段 05", isPlatformAdmin ? "校验与发布" : "护照检查", isPlatformAdmin ? "输出校验、审核发布与系统集成" : "按当前账号授权检查产品护照", "publish"],
+      ]
+    : [
+        ["Stage 01", "Identity", "Product, profile, public content and identifiers", "identity"],
+        ["Stage 02", isBattery ? "Battery regulatory data" : "Sector data", isBattery ? "Classification, materials, footprint, performance and regulatory fields" : "Materials, environment, performance and sector fields", "data"],
+        ["Stage 03", isBattery ? "Operation and lifecycle" : "Traceability", isBattery ? "Item status, BMS data and lifecycle events" : "Production, repair, recovery and consumer information", isBattery ? "operations" : "traceability"],
+        ["Stage 04", "Evidence", "Certificates, declarations and immutable files", "evidence"],
+        ["Stage 05", isPlatformAdmin ? "Validate and publish" : "Passport review", isPlatformAdmin ? "Output validation, publication and integration" : "Review the passport resolved for this account", "publish"],
+      ];
 
   return (
-    <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-black text-slate-950">{title}</h2>
-          <p className="mt-1 text-sm text-slate-500">{rows.length} records</p>
-        </div>
-      </div>
-      {message && <p className="mt-4 text-sm text-red-600">{message}</p>}
-      <div className="mt-5 grid gap-3">
-        {rows.map((row) => (
-          <article key={row.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <p className="text-lg font-black text-slate-950">{row.version}</p>
-                <p className="mt-1 text-sm text-slate-500">{new Date(row.created_at).toLocaleString(locale === "zh" ? "zh-CN" : "en-US")}</p>
-              </div>
-              <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-slate-700 shadow-sm">
-                {statusLabel(row.lifecycle_status || "draft", locale)}
-              </span>
-            </div>
-            <p className="mt-3 text-sm font-bold text-slate-700">{changeTypeLabel(row.change_type || "data_correction", locale)}</p>
-            {row.change_summary && <p className="mt-2 text-sm leading-6 text-slate-600">{row.change_summary}</p>}
-            {row.data_hash && <p className="mt-3 break-all rounded-xl bg-white px-3 py-2 text-xs font-semibold text-slate-500">SHA-256: {row.data_hash}</p>}
-          </article>
+    <nav className="sticky top-0 z-20 overflow-x-auto border border-slate-200 bg-white/95 p-2 shadow-sm backdrop-blur" aria-label={locale === "zh" ? "产品护照编辑流程" : "Product passport editing workflow"}>
+      <div className="grid min-w-[760px] grid-flow-col auto-cols-fr gap-2">
+        {items.map(([index, label, description, stage]) => (
+          <button
+            key={stage}
+            type="button"
+            onClick={() => onChange(stage as EditorStage)}
+            className={`min-h-20 border-l-4 px-4 py-3 text-left transition ${
+              activeStage === stage
+                ? "border-emerald-600 bg-emerald-50 text-emerald-950"
+                : "border-slate-200 bg-slate-50 text-slate-600 hover:border-emerald-300 hover:bg-emerald-50/50"
+            }`}
+          >
+            <span className="block text-xs font-black text-emerald-700">{index}</span>
+            <span className="mt-1 block text-sm font-black">{label}</span>
+            <span className="mt-1 block text-xs font-semibold leading-4 text-slate-500">{description}</span>
+          </button>
         ))}
-        {!rows.length && <p className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500">{emptyText}</p>}
       </div>
+    </nav>
+  );
+}
+
+function PartnerPreviewPanel({ identifier }: { identifier: string | null }) {
+  const { locale } = useLanguage();
+  const zh = locale === "zh";
+  return (
+    <section className="card">
+      <p className="text-xs font-black text-emerald-700">
+        {zh ? "合作伙伴权限" : "Partner access"}
+      </p>
+      <h3 className="mt-1 text-xl font-black text-slate-950">
+        {zh ? "预览并检查产品护照" : "Preview and review the product passport"}
+      </h3>
+      <p className="mt-2 max-w-3xl text-sm font-semibold leading-6 text-slate-600">
+        {zh
+          ? "产品护照只有一个访问入口，系统会按当前账号的组织、角色和产品授权自动返回可见字段。审核发布、注册库提交、区块链存证和系统集成仍由 GreanLean 平台管理员执行。"
+          : "The product passport has one access point. Visible fields are resolved from the current account's organisation, role, and product grant. Publication, Registry submission, blockchain anchoring, and integrations remain controlled by GreanLean platform administrators."}
+      </p>
+      {identifier ? (
+        <div className="mt-5 flex flex-wrap gap-3">
+          <Link className="btn-primary" href={`/p/${encodeURIComponent(identifier)}?lang=${locale}`} target="_blank">
+            {zh ? "查看产品护照" : "Open product passport"}
+          </Link>
+        </div>
+      ) : (
+        <p className="mt-5 text-sm font-semibold text-amber-700">
+          {zh ? "请先保存产品护照标识。" : "Save a passport identifier before opening previews."}
+        </p>
+      )}
     </section>
   );
 }
 
-function SectionHeading({ title, description }: { title: string; description: string }) {
+function EditorSectionHeading({
+  index,
+  title,
+  description,
+}: {
+  index: string;
+  title: string;
+  description: string;
+}) {
   return (
-    <section className="rounded-[2rem] border border-slate-200 bg-slate-950 p-6 text-white shadow-sm">
-      <p className="text-xs font-black uppercase text-brand-200">DPP Backoffice Layer</p>
-      <h2 className="mt-2 text-2xl font-black">{title}</h2>
-      <p className="mt-2 max-w-3xl text-sm font-semibold leading-6 text-slate-300">{description}</p>
+    <header className="border-l-4 border-emerald-600 bg-white px-5 py-4 shadow-sm">
+      <p className="text-xs font-black text-emerald-700">{index}</p>
+      <h2 className="mt-1 text-xl font-black text-slate-950">{title}</h2>
+      <p className="mt-2 max-w-4xl text-sm font-semibold leading-6 text-slate-600">{description}</p>
+    </header>
+  );
+}
+
+function SystemRecordSummary({
+  productId,
+  title,
+  description,
+}: {
+  productId: string;
+  title: string;
+  description: string;
+}) {
+  const { locale } = useLanguage();
+  const [counts, setCounts] = useState({
+    versions: 0,
+    registry: 0,
+    audits: 0,
+    anchors: 0,
+  });
+
+  useEffect(() => {
+    let active = true;
+    const supabase = createSupabaseClient();
+    Promise.all([
+      supabase.from("dpp_publication").select("id", { count: "exact", head: true }).eq("product_id", productId),
+      supabase.from("registry_submission").select("id", { count: "exact", head: true }).eq("product_id", productId),
+      supabase.from("dpp_audit_logs").select("id", { count: "exact", head: true }).eq("product_id", productId),
+      supabase.from("dpp_blockchain_anchors").select("id", { count: "exact", head: true }).eq("product_id", productId),
+    ]).then(([versions, registry, audits, anchors]) => {
+      if (!active) return;
+      setCounts({
+        versions: versions.count || 0,
+        registry: registry.count || 0,
+        audits: audits.count || 0,
+        anchors: anchors.count || 0,
+      });
+    });
+    return () => {
+      active = false;
+    };
+  }, [productId]);
+
+  const items = locale === "zh"
+    ? [
+        ["发布版本", counts.versions],
+        ["注册提交", counts.registry],
+        ["审计记录", counts.audits],
+        ["区块链回执", counts.anchors],
+      ]
+    : [
+        ["Published versions", counts.versions],
+        ["Registry submissions", counts.registry],
+        ["Audit records", counts.audits],
+        ["Blockchain receipts", counts.anchors],
+      ];
+
+  return (
+    <section className="card">
+      <h3 className="text-xl font-black text-slate-950">{title}</h3>
+      <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">{description}</p>
+      <dl className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {items.map(([label, value]) => (
+          <div key={String(label)} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <dt className="text-sm font-semibold text-slate-500">{label}</dt>
+            <dd className="mt-2 text-2xl font-black text-slate-950">{value}</dd>
+          </div>
+        ))}
+      </dl>
     </section>
   );
 }

@@ -1,0 +1,2 @@
+﻿method,path,handler,auth,tenant_check,request_schema,response_schema,errors,idempotency,audit,tests,requirement,status
+GET,/example,,required,required,,,,no,no,,M00,replace

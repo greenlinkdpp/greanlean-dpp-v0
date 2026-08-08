@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase";
 
-type Props = { productId: string; isZh: boolean };
+type Props = { productId: string; isZh: boolean; hasBatteryPassSchema: boolean };
 
 type ValidationRow = {
   id: string;
@@ -53,7 +53,7 @@ const statusEn: Record<string, string> = {
 const severityZh: Record<ValidationRow["severity"], string> = { INFO: "提示", WARNING: "警告", ERROR: "错误", BLOCKER: "阻断项" };
 const granularityZh: Record<string, string> = { MODEL: "型号级", BATCH: "批次级", ITEM: "单体级" };
 
-export function RegistryWorkbench({ productId, isZh }: Props) {
+export function RegistryWorkbench({ productId, isZh, hasBatteryPassSchema }: Props) {
   const supabase = useMemo(() => createSupabaseClient(), []);
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [loading, setLoading] = useState(true);
@@ -69,7 +69,7 @@ export function RegistryWorkbench({ productId, isZh }: Props) {
     generate: "生成测试映射文件", generating: "正在生成...", history: "测试记录", empty: "尚未生成测试记录。", download: "下载映射文件",
     checks: "预校验", passed: "通过", failed: "未通过", warnings: "警告或限制", retryAction: "按当前数据重试", result: "记录人工测试结果",
     submission: "测试记录", outcome: "结果", response: "Registry 返回内容", record: "保存测试结果", submitted: "已人工提交", rejected: "测试环境拒绝", failedOutcome: "提交失败",
-    batteryPassDownload: "下载 BatteryPass LMT JSON", batteryPassDownloaded: "BatteryPass LMT JSON 已通过本地 Schema 校验并下载。数据状态为测试、未验证。",
+    batteryPassDownload: "下载 BatteryPass JSON", batteryPassDownloaded: "BatteryPass JSON 已通过当前分类的本地 Schema 校验并下载。数据状态为未验证。",
     saved: "测试结果已保存。", generated: "测试映射文件已生成。", generatedFailed: "测试映射文件已生成，但预校验未通过。请按展开的错误项补齐数据后重试。", noResponse: "记录拒绝或失败时，请填写 Registry 返回的错误内容。",
   } : {
     loading: "Loading Registry TEST records...", retry: "Retry", environment: "Registry environment", mapping: "Mapping version", rules: "Operational rule version",
@@ -77,7 +77,7 @@ export function RegistryWorkbench({ productId, isZh }: Props) {
     generate: "Generate TEST mapping file", generating: "Generating...", history: "TEST history", empty: "No TEST record has been generated.", download: "Download mapping file",
     checks: "Pre-validation", passed: "Passed", failed: "Not passed", warnings: "Warnings or limitations", retryAction: "Retry with current data", result: "Record manual TEST result",
     submission: "TEST record", outcome: "Outcome", response: "Registry response", record: "Save TEST result", submitted: "Manually submitted", rejected: "Rejected in TEST", failedOutcome: "Submission failed",
-    batteryPassDownload: "Download BatteryPass LMT JSON", batteryPassDownloaded: "BatteryPass LMT JSON passed local Schema validation and was downloaded. Its data status is test and unverified.",
+    batteryPassDownload: "Download BatteryPass JSON", batteryPassDownloaded: "The BatteryPass JSON passed the local Schema selected for this category and was downloaded. Its data status is unverified.",
     saved: "TEST result saved.", generated: "TEST mapping file generated.", generatedFailed: "The TEST mapping file was generated, but local pre-validation failed. Correct the expanded errors and retry.", noResponse: "Enter the Registry error response for rejected or failed outcomes.",
   };
 
@@ -97,8 +97,9 @@ export function RegistryWorkbench({ productId, isZh }: Props) {
       PUBLISHED_DPP_VERSION_REQUIRED: "请先发布包含 SHA-256 哈希的 DPP 版本，再生成测试映射。",
       REGISTRY_MAPPING_NOT_PUBLISHED: "数据库中没有已发布的电池 Registry 映射。",
       BATTERYPASS_ITEM_REQUIRED: "请先保存电池型号并创建一个电池单体。",
-      BATTERYPASS_LMT_REQUIRED: "该下载仅适用于 LMT 轻型交通工具电池。",
-      BATTERYPASS_EXPORT_INVALID: "当前数据尚未通过 BatteryPass LMT Schema 校验，请先运行产品补全 SQL。",
+      BATTERYPASS_LMT_REQUIRED: "当前分类不是 LMT 电池。",
+      BATTERYPASS_SCHEMA_UNAVAILABLE: "当前电池类别没有可用的 BatteryPass-Ready 校验 Schema。",
+      BATTERYPASS_EXPORT_INVALID: "当前数据尚未通过对应的 BatteryPass-Ready Schema 校验，请根据错误项补齐数据。",
     };
     return messages[code] || "Registry 请求未完成，请稍后重试。";
   }
@@ -189,7 +190,7 @@ export function RegistryWorkbench({ productId, isZh }: Props) {
       }
       const blob = await response.blob();
       const disposition = response.headers.get("Content-Disposition") || "";
-      const filename = disposition.match(/filename="([^"]+)"/)?.[1] || `batterypass-lmt-${productId}.json`;
+      const filename = disposition.match(/filename="([^"]+)"/)?.[1] || `batterypass-${productId}.json`;
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = url;
@@ -247,7 +248,7 @@ export function RegistryWorkbench({ productId, isZh }: Props) {
     <div className="flex flex-wrap items-center justify-between gap-3">
       <h4 className="font-black text-slate-950">{t.history}</h4>
       <div className="flex flex-wrap gap-2">
-        <button className="btn-secondary" disabled={busy} onClick={downloadBatteryPass} type="button">{t.batteryPassDownload}</button>
+        {hasBatteryPassSchema ? <button className="btn-secondary" disabled={busy} onClick={downloadBatteryPass} type="button">{t.batteryPassDownload}</button> : null}
         <button className="btn-primary" disabled={busy} onClick={() => generate()} type="button">{busy ? t.generating : t.generate}</button>
       </div>
     </div>
