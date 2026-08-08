@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   P0_APPLICABILITY_RULE_VERSION,
   assessBatteryApplicability,
+  presentBatteryApplicability,
   validateBatteryTechnicalValues,
 } from "../../lib/p0/applicability.ts";
 
@@ -41,6 +42,26 @@ test("portable and incomplete records remain pending instead of inventing a lega
   assert.equal(incomplete.result, "INSUFFICIENT");
   assert.ok(incomplete.pendingQuestions.length >= 3);
   assert.ok(incomplete.tasks.some((task) => task.priority === "CRITICAL"));
+});
+
+test("public applicability presentation localizes results, reasons, tasks and priorities", () => {
+  const assessment = assessBatteryApplicability({
+    batteryCategory: "LMT",
+    intendedUse: "electric bicycle",
+    ratedEnergyKwh: 0.72,
+    euMarketStatus: "PLANNED",
+    placingOperatorRole: "MANUFACTURER",
+    disclaimerAcknowledged: true,
+  });
+  const zh = presentBatteryApplicability(assessment, "zh");
+  const en = presentBatteryApplicability(assessment, "en");
+
+  assert.equal(zh.result, "初步判断适用");
+  assert.match(zh.reason, /轻型交通工具电池/);
+  assert.equal(zh.tasks[0].displayTitle, "提供型号物料清单和材料组成");
+  assert.equal(zh.tasks[0].displayPriority, "高");
+  assert.equal(en.result, "Preliminarily applicable");
+  assert.equal(en.tasks[0].displayTitle, assessment.tasks[0].title);
 });
 
 test("P0 technical rules cover energy consistency, negative values and material totals", () => {

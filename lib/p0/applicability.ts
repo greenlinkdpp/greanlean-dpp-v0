@@ -31,6 +31,130 @@ export type ApplicabilityResult = {
   tasks: ApplicabilityTask[];
 };
 
+export type ApplicabilityPresentation = {
+  ruleVersion: string;
+  result: string;
+  reason: string;
+  tasks: Array<ApplicabilityTask & {
+    displayTitle: string;
+    displayDescription: string;
+    displayPriority: string;
+  }>;
+};
+
+const zhTaskCopy: Record<string, { title: string; description: string }> = {
+  "Confirm the legal battery category.": {
+    title: "确认法定电池类别",
+    description: "在采用初步适用性结果前，请确认产品所属的法定电池类别。",
+  },
+  "Confirm the battery intended use.": {
+    title: "确认电池预期用途",
+    description: "请补充电池的目标设备、使用场景及主要用途。",
+  },
+  "Confirm the rated energy in kWh.": {
+    title: "确认额定能量",
+    description: "请按千瓦时补充并核实产品的额定能量。",
+  },
+  "Confirm whether the product will be placed on the EU market.": {
+    title: "确认欧盟市场投放状态",
+    description: "请确认产品是否已经或计划投放欧盟市场。",
+  },
+  "Confirm the economic operator placing the product on the market.": {
+    title: "确认市场投放责任主体",
+    description: "请确认负责将产品投放市场的经济运营者身份。",
+  },
+  "Provide the model BOM and material composition": {
+    title: "提供型号物料清单和材料组成",
+    description: "请提供型号级物料清单、材料名称及组成比例。",
+  },
+  "Provide the rated technical specification": {
+    title: "提供额定技术规格",
+    description: "请提供额定电压、容量、能量及其他适用技术参数。",
+  },
+  "Complete the economic operator profile": {
+    title: "完善经济运营者档案",
+    description: "请补充责任主体的法定名称、角色、注册地址和联系方式。",
+  },
+};
+
+function localizedCategory(category: string, locale: "zh" | "en") {
+  const labels = locale === "zh"
+    ? {
+        LMT: "轻型交通工具电池（LMT）",
+        EV: "电动汽车电池（EV）",
+        INDUSTRIAL: "工业电池",
+        PORTABLE: "便携式电池",
+        SLI: "启动、照明和点火电池（SLI）",
+      }
+    : {
+        LMT: "Light means of transport (LMT)",
+        EV: "Electric vehicle (EV)",
+        INDUSTRIAL: "Industrial",
+        PORTABLE: "Portable",
+        SLI: "Starting, lighting and ignition (SLI)",
+      };
+  return labels[category as keyof typeof labels] || category;
+}
+
+export function presentBatteryApplicability(
+  assessment: ApplicabilityResult,
+  locale: "zh" | "en",
+): ApplicabilityPresentation {
+  const category = normalizedCategory(assessment.input.batteryCategory);
+  const categoryLabel = localizedCategory(category, locale);
+  const status = locale === "zh"
+    ? {
+        PRELIMINARY_APPLICABLE: "初步判断适用",
+        NOT_APPLICABLE: "初步判断不适用",
+        PENDING: "待进一步确认",
+        INSUFFICIENT: "信息不足",
+      }
+    : {
+        PRELIMINARY_APPLICABLE: "Preliminarily applicable",
+        NOT_APPLICABLE: "Preliminarily not applicable",
+        PENDING: "Further confirmation required",
+        INSUFFICIENT: "Insufficient information",
+      };
+
+  let reason = assessment.reason;
+  if (locale === "zh") {
+    if (assessment.result === "NOT_APPLICABLE") {
+      reason = "根据已填写的信息，该产品不投放欧盟市场，因此本次初步判断为不适用。";
+    } else if (assessment.result === "INSUFFICIENT") {
+      reason = "当前产品信息不足，暂时无法形成适用性初步判断。";
+    } else if (assessment.result === "PRELIMINARY_APPLICABLE" && category === "INDUSTRIAL") {
+      reason = "该工业电池的额定能量超过 2 千瓦时，初步纳入电池护照适用范围。";
+    } else if (assessment.result === "PRELIMINARY_APPLICABLE") {
+      reason = `${categoryLabel}面向欧盟市场投放，初步纳入电池护照适用范围。`;
+    } else if (category === "INDUSTRIAL") {
+      reason = "额定能量不超过 2 千瓦时的工业电池仍需进一步确认，平台不会自动认定其承担强制护照义务。";
+    } else {
+      reason = "便携式电池、启动照明和点火电池及其他类别，在当前规则版本下仍需进一步确认。";
+    }
+  }
+
+  return {
+    ruleVersion: locale === "zh"
+      ? "规则版本：2026.08（电池适用性初评）"
+      : "Rule version: 2026.08 (battery applicability assessment)",
+    result: status[assessment.result],
+    reason,
+    tasks: assessment.tasks.map((task) => {
+      const translated = zhTaskCopy[task.title];
+      return {
+        ...task,
+        displayTitle: locale === "zh" && translated ? translated.title : task.title,
+        displayDescription: locale === "zh" && translated
+          ? translated.description
+          : task.description,
+        displayPriority: locale === "zh"
+          ? { CRITICAL: "紧急", HIGH: "高", MEDIUM: "中" }[task.priority]
+          : { CRITICAL: "Critical", HIGH: "High", MEDIUM: "Medium" }[task.priority],
+      };
+    }),
+  };
+}
+
 function normalizedCategory(value?: string) {
   return String(value || "").trim().toUpperCase();
 }
