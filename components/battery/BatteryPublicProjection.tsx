@@ -97,22 +97,32 @@ export function BatteryPublicProjection({ identifier, audience, locale, showcase
     return groups;
   }, {})) as Array<{ code: string; label: string; fields: any[] }>;
 
+  const groupAnchor = (code: string) => `battery-${code.replace(/[^a-z0-9_-]/gi, "-")}`;
+
   return (
-    <section id="battery-regulatory-data" className="border-t border-slate-200 bg-[#f5f7f6]" aria-labelledby="battery-regulatory-title">
-      <div className="mx-auto max-w-[1440px] px-4 py-8 sm:px-6 md:py-10 lg:px-10">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200 pb-5">
-        <div>
-          <p className="text-xs font-black text-emerald-700">10</p>
-          <h2 id="battery-regulatory-title" className="mt-1 text-2xl font-black text-slate-950 sm:text-3xl">{locale === "zh" ? "电池护照标准字段" : "Battery passport standard fields"}</h2>
-          <p className="mt-2 text-sm font-semibold text-slate-500">{locale === "zh" ? `按电池类别展示当前护照中的适用信息 · 字段目录 ${data.catalogVersion}` : `Applicable passport information for this battery category · catalog ${data.catalogVersion}`}</p>
-        </div>
-        <span className="rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-black text-emerald-800">{locale === "zh" ? "分类适用字段" : "Category-scoped fields"}</span>
-      </div>
+    <section id="battery-passport-content" className="border-t border-slate-200 bg-[#f5f7f6]" aria-label={locale === "zh" ? "电池护照信息" : "Battery passport information"}>
+      {grouped.length ? (
+        <nav className="sticky top-16 z-40 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur" aria-label={locale === "zh" ? "电池护照章节" : "Battery passport sections"}>
+          <div className="mx-auto flex max-w-[1440px] gap-1 overflow-x-auto px-4 py-2 sm:px-6 lg:px-10">
+            {grouped.map((group, index) => (
+              <a
+                key={group.code}
+                href={`#${groupAnchor(group.code)}`}
+                className="inline-flex h-10 shrink-0 items-center gap-2 rounded-md px-3 text-sm font-bold text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-800"
+              >
+                <span className="text-xs font-black text-emerald-700">{String(index + 1).padStart(2, "0")}</span>
+                {group.label}
+              </a>
+            ))}
+          </div>
+        </nav>
+      ) : null}
+      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 lg:px-10">
       {grouped.length ? (
         <div className="divide-y divide-slate-200">
           {grouped.map((group, index) => (
-            <div key={group.code} className="py-6">
-              <h3 className="text-sm font-black text-slate-900"><span className="mr-2 text-emerald-700">{String(index + 1).padStart(2, "0")}</span>{group.label}</h3>
+            <section key={group.code} id={groupAnchor(group.code)} className="scroll-mt-32 py-7" aria-labelledby={`${groupAnchor(group.code)}-title`}>
+              <h2 id={`${groupAnchor(group.code)}-title`} className="text-xl font-black text-slate-950 sm:text-2xl"><span className="mr-3 text-sm text-emerald-700">{String(index + 1).padStart(2, "0")}</span>{group.label}</h2>
               <dl className="mt-3 grid gap-x-6 gap-y-4 sm:grid-cols-2 xl:grid-cols-3">
                 {group.fields.map((field) => (
                   <div key={field.id || `${field.fieldCode}-${field.number}`} className="border-t border-slate-100 pt-3">
@@ -122,7 +132,7 @@ export function BatteryPublicProjection({ identifier, audience, locale, showcase
                   </div>
                 ))}
               </dl>
-            </div>
+            </section>
           ))}
         </div>
       ) : <p className="mt-5 text-sm font-semibold text-slate-500">{locale === "zh" ? "当前权限层暂无已发布字段。" : "No published fields are available at this access level."}</p>}

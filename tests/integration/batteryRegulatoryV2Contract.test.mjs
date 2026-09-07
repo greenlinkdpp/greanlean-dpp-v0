@@ -37,3 +37,14 @@ test("back office and public projections use the regulatory catalog while Batter
   assert.match(exportRoute, /loadBatteryProjection/);
   assert.match(exportRoute, /batteryPassport/);
 });
+
+test("battery passports render one regulatory chapter structure instead of appending it to legacy sections", async () => {
+  const unifiedPage = await readFile("components/UnifiedDppPage.tsx", "utf8");
+  const batteryProjection = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
+
+  assert.equal((unifiedPage.match(/!isBatteryProduct \? \(/g) || []).length, 2);
+  assert.match(unifiedPage, /<BatteryPublicProjection/);
+  assert.match(batteryProjection, /battery-passport-content/);
+  assert.match(batteryProjection, /battery passport sections/i);
+  assert.doesNotMatch(batteryProjection, /电池护照标准字段|Battery passport standard fields/);
+});

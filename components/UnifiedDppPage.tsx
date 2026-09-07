@@ -297,20 +297,22 @@ export function UnifiedDppPage({
         </div>
       </section>
 
-      <nav className="sticky top-16 z-40 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur" aria-label={t.navigation}>
-        <div className="mx-auto flex max-w-[1440px] gap-1 overflow-x-auto px-4 py-2 sm:px-6 lg:px-10">
-          {viewModel.sections.map((section) => (
-            <a
-              key={section.id}
-              href={`#${section.id}`}
-              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-md px-3 text-sm font-bold text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-800"
-            >
-              <span className="text-xs font-black text-emerald-700">{section.index}</span>
-              {section.title}
-            </a>
-          ))}
-        </div>
-      </nav>
+      {!isBatteryProduct ? (
+        <nav className="sticky top-16 z-40 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur" aria-label={t.navigation}>
+          <div className="mx-auto flex max-w-[1440px] gap-1 overflow-x-auto px-4 py-2 sm:px-6 lg:px-10">
+            {viewModel.sections.map((section) => (
+              <a
+                key={section.id}
+                href={`#${section.id}`}
+                className="inline-flex h-10 shrink-0 items-center gap-2 rounded-md px-3 text-sm font-bold text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-800"
+              >
+                <span className="text-xs font-black text-emerald-700">{section.index}</span>
+                {section.title}
+              </a>
+            ))}
+          </div>
+        </nav>
+      ) : null}
 
       <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-10">
         <div className={`border-l-4 px-4 py-4 ${isPreview ? "border-amber-500 bg-amber-50" : "border-emerald-600 bg-emerald-50"}`}>
@@ -337,18 +339,20 @@ export function UnifiedDppPage({
       </div>
       {accessControl}
 
-      <div className="border-t border-slate-200 bg-white">
-        {viewModel.sections.map((section) => (
-          <DppSection
-            key={section.id}
-            section={section}
-            collapsed={Boolean(collapsed[section.id])}
-            onToggle={() => toggleSection(section.id)}
-            locale={locale}
-            showAccessLabels={showcase}
-          />
-        ))}
-      </div>
+      {!isBatteryProduct ? (
+        <div className="border-t border-slate-200 bg-white">
+          {viewModel.sections.map((section) => (
+            <DppSection
+              key={section.id}
+              section={section}
+              collapsed={Boolean(collapsed[section.id])}
+              onToggle={() => toggleSection(section.id)}
+              locale={locale}
+              showAccessLabels={showcase}
+            />
+          ))}
+        </div>
+      ) : null}
 
       {isBatteryProduct && exportIdentifier ? (
         <BatteryPublicProjection
