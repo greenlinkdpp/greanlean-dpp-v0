@@ -1,12 +1,15 @@
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 import {
-  BATTERY_CATALOG_METADATA,
-  BATTERY_FIELD_CATALOG,
   classifyBattery,
   type BatteryClassificationInput,
   type BatteryFieldValue,
   type BatterySchemaCode,
 } from "../battery/catalog.ts";
+import {
+  EU_BATTERY_PASSPORT_FIELDS,
+  EU_BATTERY_PASSPORT_METADATA,
+  fieldForCanonicalCode,
+} from "../battery/regulatoryCatalog.ts";
 import { batteryDynamicValuesForWorkspace } from "../battery/batteryPass.ts";
 import {
   operatingDataPolicyForBattery,
@@ -63,34 +66,33 @@ export async function requireBatteryProduct(admin: AdminClient, productId: strin
   return data;
 }
 
-async function longlistFieldDefinitions(admin: AdminClient, fieldCodes?: string[]) {
-  const { data: definition, error: definitionError } = await admin
+async function batteryFieldDefinitions(admin: AdminClient, fieldCodes?: string[]) {
+  const { data: definitions, error: definitionError } = await admin
     .from("schema_definition")
-    .select("id")
-    .eq("code", "battery.longlist")
-    .maybeSingle();
+    .select("id,code")
+    .in("code", ["battery.longlist", "battery.eu_guidance"]);
   databaseError(definitionError);
-  if (!definition) throw new ApiError(503, "BATTERY_SCHEMA_NOT_INSTALLED", "The battery field catalog migration has not been applied.");
+  if (!definitions?.some((definition) => definition.code === "battery.longlist")) {
+    throw new ApiError(503, "BATTERY_SCHEMA_NOT_INSTALLED", "The battery field catalog migration has not been applied.");
+  }
 
-  const { data: version, error: versionError } = await admin
+  const { data: versions, error: versionError } = await admin
     .from("schema_version")
-    .select("id,version")
-    .eq("schema_definition_id", definition.id)
+    .select("id,version,schema_definition_id")
+    .in("schema_definition_id", definitions.map((definition) => definition.id))
     .eq("status", "published")
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .order("created_at", { ascending: false });
   databaseError(versionError);
-  if (!version) throw new ApiError(503, "BATTERY_SCHEMA_NOT_PUBLISHED", "The battery field catalog is not published.");
+  if (!versions?.length) throw new ApiError(503, "BATTERY_SCHEMA_NOT_PUBLISHED", "The battery field catalog is not published.");
 
   let query = admin
     .from("field_definition")
     .select("id,field_code,access_level_code,data_behavior,data_granularity,unit_code")
-    .eq("schema_version_id", version.id);
+    .in("schema_version_id", versions.map((version) => version.id));
   if (fieldCodes?.length) query = query.in("field_code", fieldCodes);
   const { data, error } = await query;
   databaseError(error);
-  return { version, fields: data || [] };
+  return { versions, fields: data || [] };
 }
 
 function valuesByFieldCode(rows: any[], definitions: any[]) {
@@ -100,10 +102,16 @@ function valuesByFieldCode(rows: any[], definitions: any[]) {
     if (!fieldCode) return [];
     return [[fieldCode, {
       value: row.value_json,
+      dataStatus: row.data_status || (row.verification_status === "verified" ? "verified" : "declared"),
       evidenceStatus: row.evidence_status,
       verificationStatus: row.verification_status,
+      expertReviewStatus: row.expert_review_status || "pending",
+      expertReviewNote: row.expert_review_note,
       sourceType: row.data_source,
+      sourceReference: row.source_reference,
       observedAt: row.observed_at,
+      lastUpdated: row.updated_at,
+      fieldOrigin: row.field_origin || "legacy",
     } satisfies BatteryFieldValue]];
   }));
 }
@@ -122,6 +130,7 @@ function applyEvidenceLinks(
     );
     linkedValues[fieldCode] = {
       ...current,
+      evidenceCount: (current.evidenceCount || 0) + 1,
       evidenceStatus: verified ? "verified" : "uploaded",
       verificationStatus: verified
         ? "verified"
@@ -159,11 +168,11 @@ export async function loadBatteryWorkspace(admin: AdminClient, productId: string
       metrics: [],
       metricTypes: [],
       lifecycleEvents: [],
-      catalog: BATTERY_CATALOG_METADATA,
+      catalog: EU_BATTERY_PASSPORT_METADATA,
     };
   }
 
-  const { fields } = await longlistFieldDefinitions(admin);
+  const { fields } = await batteryFieldDefinitions(admin);
   const [fieldResult, batchResult, itemResult, metricResult, metricTypeResult, eventResult, evidenceLinkResult] = await Promise.all([
     admin.from("battery_field_value").select("*").eq("battery_model_profile_id", profile.id).is("battery_batch_id", null).is("battery_item_id", null),
     admin.from("battery_batch").select("*").eq("battery_model_profile_id", profile.id).order("created_at", { ascending: false }),
@@ -200,7 +209,7 @@ export async function loadBatteryWorkspace(admin: AdminClient, productId: string
     values,
     dynamicValues,
     readiness: calculateBatteryReadiness(classification, { ...values, ...dynamicValues }),
-    catalog: BATTERY_CATALOG_METADATA,
+    catalog: EU_BATTERY_PASSPORT_METADATA,
   };
 }
 
@@ -251,14 +260,14 @@ export async function saveBatteryWorkspace(
   databaseError(profileError);
 
   const submittedValues = input.values || {};
-  const catalogByCode = new Map(BATTERY_FIELD_CATALOG.map((field) => [field.fieldCode, field]));
+  const catalogByCode = new Map(EU_BATTERY_PASSPORT_FIELDS.map((field) => [field.canonicalFieldCode, field]));
   const unknown = Object.keys(submittedValues).filter((fieldCode) => !catalogByCode.has(fieldCode));
   if (unknown.length) throw new ApiError(400, "UNKNOWN_BATTERY_FIELDS", "One or more battery fields are not defined by the active catalog.", { fieldCodes: unknown });
-  const dynamic = Object.keys(submittedValues).filter((fieldCode) => catalogByCode.get(fieldCode)?.dataBehavior === "DYNAMIC");
+  const dynamic = Object.keys(submittedValues).filter((fieldCode) => catalogByCode.get(fieldCode)?.dynamic);
   if (dynamic.length) throw new ApiError(400, "DYNAMIC_FIELDS_APPEND_ONLY", "Dynamic values must be appended through metric or lifecycle event operations.", { fieldCodes: dynamic });
 
   if (Object.keys(submittedValues).length) {
-    const { fields } = await longlistFieldDefinitions(admin, Object.keys(submittedValues));
+    const { fields } = await batteryFieldDefinitions(admin, Object.keys(submittedValues));
     const definitionByCode = new Map(fields.map((field) => [field.field_code, field]));
     const { data: existing, error: existingError } = await admin
       .from("battery_field_value")
@@ -279,8 +288,13 @@ export async function saveBatteryWorkspace(
         value_json: value.value,
         unit_code: catalogByCode.get(fieldCode)?.unit || null,
         data_source: value.sourceType || "manual",
+        source_reference: value.sourceReference || null,
+        data_status: value.dataStatus || (value.verificationStatus === "verified" ? "verified" : "declared"),
         evidence_status: existingByDefinition.get(definition.id)?.evidence_status || "missing",
         verification_status: existingByDefinition.get(definition.id)?.verification_status || "unverified",
+        expert_review_status: value.expertReviewStatus || fieldForCanonicalCode(fieldCode)?.expertReviewStatus || "pending",
+        expert_review_note: value.expertReviewNote || null,
+        field_origin: value.fieldOrigin || "eu_guidance_v2",
         observed_at: value.observedAt || null,
         created_by: user.id,
       };
@@ -385,10 +399,15 @@ export async function appendBatteryLifecycleEvent(admin: AdminClient, productId:
   return loadBatteryWorkspace(admin, productId);
 }
 
-export async function loadBatteryProjection(admin: AdminClient, identifier: string, viewerAccess: AccessLevel) {
+export async function loadBatteryProjection(
+  admin: AdminClient,
+  identifier: string,
+  viewerAccess: AccessLevel,
+  options: { includeMissing?: boolean } = {},
+) {
   const { data: productByDpp, error: dppError } = await admin
     .from("products")
-    .select("id,name,name_zh,dpp_id,public_slug,status,commodity_code,unique_product_identifier")
+    .select("id,name,name_zh,dpp_id,public_slug,status,commodity_code,unique_product_identifier,updated_at")
     .eq("dpp_id", identifier)
     .in("status", ["published", "updated", "expired"])
     .maybeSingle();
@@ -397,7 +416,7 @@ export async function loadBatteryProjection(admin: AdminClient, identifier: stri
     ? { data: null, error: null }
     : await admin
       .from("products")
-      .select("id,name,name_zh,dpp_id,public_slug,status,commodity_code,unique_product_identifier")
+      .select("id,name,name_zh,dpp_id,public_slug,status,commodity_code,unique_product_identifier,updated_at")
       .eq("public_slug", identifier)
       .in("status", ["published", "updated", "expired"])
       .maybeSingle();
@@ -408,10 +427,37 @@ export async function loadBatteryProjection(admin: AdminClient, identifier: stri
   databaseError(profileError);
   if (!profile) throw new ApiError(404, "BATTERY_PROFILE_NOT_FOUND", "The battery profile was not found.");
   const classification = classifyBattery({ legalCategory: profile.legal_category_code, capacityKwh: profile.rated_energy_kwh, stationary: profile.stationary, bmsPresent: profile.bms_present });
-  const { fields } = await longlistFieldDefinitions(admin);
-  const { data: rows, error: rowError } = await admin.from("battery_field_value").select("*").eq("battery_model_profile_id", profile.id).is("battery_batch_id", null).is("battery_item_id", null);
+  const { fields } = await batteryFieldDefinitions(admin);
+  const { data: rows, error: rowError } = await admin.from("battery_field_value").select("*").eq("battery_model_profile_id", profile.id);
   databaseError(rowError);
-  const values = valuesByFieldCode(rows || [], fields);
+  const operating = viewerAccess === "PUBLIC"
+    ? { items: [] as any[], metrics: [] as any[], lifecycleEvents: [] as any[] }
+    : await (async () => {
+      const [itemsResult, metricsResult, eventsResult] = await Promise.all([
+        admin.from("battery_item").select("*").eq("battery_model_profile_id", profile.id).order("created_at", { ascending: true }),
+        admin.from("battery_operating_metric_latest").select("*").eq("product_id", product.id).order("measured_at", { ascending: false }),
+        admin.from("battery_lifecycle_event").select("*").eq("product_id", product.id).order("event_time", { ascending: false }),
+      ]);
+      [itemsResult, metricsResult, eventsResult].forEach((result) => databaseError(result.error));
+      return { items: itemsResult.data || [], metrics: metricsResult.data || [], lifecycleEvents: eventsResult.data || [] };
+    })();
+  const subjectItem = operating.items[0];
+  const scopedRows = (rows || [])
+    .filter((row) => !row.battery_batch_id && !row.battery_item_id
+      || subjectItem && (row.battery_item_id === subjectItem.id || row.battery_batch_id === subjectItem.battery_batch_id))
+    .sort((left, right) => Number(Boolean(left.battery_batch_id)) + Number(Boolean(left.battery_item_id)) * 2
+      - Number(Boolean(right.battery_batch_id)) - Number(Boolean(right.battery_item_id)) * 2);
+  const staticValues = valuesByFieldCode(scopedRows, fields);
+  const dynamicValues = viewerAccess === "PUBLIC" ? {} : batteryDynamicValuesForWorkspace({
+    product,
+    profile,
+    classification,
+    values: staticValues,
+    items: operating.items,
+    metrics: operating.metrics,
+    lifecycleEvents: operating.lifecycleEvents,
+  }, process.env.NEXT_PUBLIC_SITE_URL || "https://greanlean.com");
+  const values = { ...staticValues, ...dynamicValues };
   return {
     product,
     profile: {
@@ -423,9 +469,9 @@ export async function loadBatteryProjection(admin: AdminClient, identifier: stri
       batteryMassKg: profile.battery_mass_kg,
       chemistry: profile.battery_chemistry_code,
     },
-    fields: projectBatteryFields(classification, values, viewerAccess),
+    fields: projectBatteryFields(classification, values, viewerAccess, options),
     readiness: calculateBatteryReadiness(classification, values),
-    catalogVersion: BATTERY_CATALOG_METADATA.catalogVersion,
+    catalogVersion: EU_BATTERY_PASSPORT_METADATA.catalogVersion,
     accessLevel: viewerAccess,
   };
 }

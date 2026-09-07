@@ -96,12 +96,13 @@ test("battery workspaces require product-scoped editor access and exports remain
 });
 
 test("BatteryPass export is offered only to categories with imported validation Schemas", async () => {
-  const workspace = await readFile("components/battery/BatteryDppWorkspace.tsx", "utf8");
-  const registryWorkbench = await readFile("components/battery/RegistryWorkbench.tsx", "utf8");
+  const productEditor = await readFile("components/ProductEditor.tsx", "utf8");
+  const outputPanel = await readFile("components/DppOutputPanel.tsx", "utf8");
   const repository = await readFile("lib/server/batteryPassRepository.ts", "utf8");
 
-  assert.match(workspace, /hasBatteryPassSchema=\{\["ev", "lmt", "industrial"\]\.includes\(category\)\}/);
-  assert.match(registryWorkbench, /hasBatteryPassSchema \? <button[\s\S]*downloadBatteryPass/);
+  assert.match(productEditor, /hasBatteryPassSchema=\{\["ev", "lmt", "industrial"\]\.includes/);
+  assert.match(outputPanel, /hasBatteryPassSchema \? \(/);
+  assert.match(outputPanel, /downloadBatteryPass/);
   for (const schema of [
     "EV.json",
     "LMT.json",

@@ -838,7 +838,7 @@ export function ProductEditor({ productId }: { productId: string }) {
         <>
           {activeStage === "data" && <section id="editor-sector" className="space-y-5">
             <EditorSectionHeading
-              index={locale === "zh" ? "对应 DPP 模块 01–04、07–08" : "DPP modules 01–04 and 07–08"}
+              index={locale === "zh" ? "对应电池护照章节 01–07" : "Battery passport chapters 01–07"}
               title={locale === "zh" ? "电池行业专项数据" : "Battery sector data"}
               description={locale === "zh"
                 ? "材料与组成、环境与可持续性、性能耐久及电池专项字段统一在电池工作区维护；字段会映射到最终护照对应模块。"
@@ -852,19 +852,18 @@ export function ProductEditor({ productId }: { productId: string }) {
               canManageRegistry={isPlatformAdmin}
               allowedSteps={[
                 "identity",
-                "economic_operator",
                 "manufacturing",
                 "materials",
                 "sustainability",
                 "performance",
-                "documents",
-                "circularity_safety",
+                "safety",
+                "repair",
               ]}
             />
           </section>}
           {activeStage === "operations" && <section id="editor-operations" className="space-y-5">
             <EditorSectionHeading
-              index={locale === "zh" ? "对应 DPP 模块 05、09" : "DPP modules 05 and 09"}
+              index={locale === "zh" ? "对应电池护照章节 08–09" : "Battery passport chapters 08–09"}
               title={locale === "zh" ? "运行状态与生命周期" : "Operating status and lifecycle"}
               description={locale === "zh"
                 ? "维护电池单体、BMS 或网关采集指标和生命周期事件。数据采用只追加方式保存，并依据账号授权展示。"
@@ -874,20 +873,27 @@ export function ProductEditor({ productId }: { productId: string }) {
             <BatteryDppWorkspace
               productId={productId}
               canManageRegistry={false}
-              initialStep="item_operation"
-              allowedSteps={["item_operation"]}
+              initialStep="health"
+              allowedSteps={["health", "lifecycle"]}
               showClassificationControls={false}
             />
           </section>}
           {activeStage === "evidence" && <section id="editor-evidence" className="space-y-5">
             <EditorSectionHeading
-              index={locale === "zh" ? "对应 DPP 模块 07" : "DPP module 07"}
+              index={locale === "zh" ? "对应电池护照章节 10" : "Battery passport chapter 10"}
               title={locale === "zh" ? "合规声明与证据文件" : "Compliance and evidence"}
               description={locale === "zh"
                 ? "上传真实声明、测试报告和证明文件，并维护文件版本、有效期、访问级别和核验状态。"
                 : "Upload declarations, test reports and evidence while maintaining versions, validity, access and verification state."}
             />
             <EvidenceFileManager productId={productId} />
+            <BatteryDppWorkspace
+              productId={productId}
+              canManageRegistry={false}
+              initialStep="evidence"
+              allowedSteps={["evidence"]}
+              showClassificationControls={false}
+            />
           </section>}
           {activeStage === "publish" && <section id="editor-publish" className="space-y-6">
             <EditorSectionHeading

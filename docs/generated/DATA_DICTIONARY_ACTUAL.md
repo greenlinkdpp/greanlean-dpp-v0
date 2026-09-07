@@ -65,3 +65,26 @@ Job 保存 organisation/project、类型、模板版本、幂等键、状态、�
 - 新 API 不允许创建 organisation 为空的资源。
 - 现有 `products.unique_product_identifier` 继续兼容；P0 item UPI 以 `dpp_identifier` 为权威并同步 `battery_item.unique_product_identifier`。
 - 现有 product publication 的 subject 为 `PRODUCT`；新 item publication 为 `BATTERY_ITEM`。
+
+## 4. 电池法规目录 v2.0（迁移 0026）
+
+### `battery_regulatory_catalog`
+
+保存目录版本、来源名称/版本/日期、法规引用、源文件 SHA-256、双语免责声明和当前启用状态。目录版本不可覆盖为另一份来源内容。
+
+### `battery_regulatory_data_point`
+
+每个目录固定保存 71 个数据点：编号、代码、中英文名称、法规来源、章节、原始注记、数据层级、类型、单位、访问级别、静态/动态、规范字段代码、旧字段别名、A-E 映射质量、字段来源、证据要求及默认专家复核状态。
+
+### `battery_regulatory_applicability`
+
+每个数据点分别保存 `ev`、`lmt`、`industrial` 三条适用性记录，状态限定为 `mandatory`、`conditional`、`optional`、`future`、`duplicate`、`not_applicable`。共 213 条，不以一个电池类别推断另一个类别。
+
+### `battery_field_value` 扩展
+
+- `data_status`: `missing/pending/declared/verified/not_applicable`
+- `expert_review_status`: `not_required/pending/confirmed/questioned`
+- `expert_review_note`: 专家判断及争议说明
+- `field_origin`: `eu_guidance_v2/batterypass_ready_v1_3/greanlean_extension/legacy`
+
+动态数据仍写入现有 append-only 运行指标与生命周期表；不覆盖静态声明值。`battery.eu_guidance` 仅补 12 个 BatteryPass-Ready v1.3 中不存在的存储字段，避免建立第二套字段值系统。

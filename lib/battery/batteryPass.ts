@@ -15,12 +15,18 @@ type BatteryWorkspaceForExport = {
 };
 
 const metricByFieldCode: Record<string, string> = {
+  "battery.dynamic_rated_capacity": "FULL_CHARGE_CAPACITY",
   "battery.remaining_capacity": "REMAINING_CAPACITY",
+  "battery.capacity_fade": "CAPACITY_FADE",
   "battery.state_of_charge_soc": "SOC",
   "battery.remaining_power_capability": "REMAINING_POWER_CAPABILITY",
+  "battery.power_fade": "POWER_FADE",
   "battery.remaining_round_trip_energy_efficiency": "REMAINING_ROUND_TRIP_EFFICIENCY",
+  "battery.energy_round_trip_efficiency_fade": "ROUND_TRIP_EFFICIENCY_FADE",
   "battery.current_self_discharge_rate": "CURRENT_SELF_DISCHARGE_RATE",
   "battery.evolution_of_self_discharge_rates": "SELF_DISCHARGE_EVOLUTION",
+  "battery.current_internal_resistance": "CURRENT_INTERNAL_RESISTANCE",
+  "battery.internal_resistance_increase_of_pack_cell_and_module_recommended": "INTERNAL_RESISTANCE_INCREASE",
   "battery.number_of_full_charging_and_discharging_cycles": "FULL_CYCLE_COUNT",
   "battery.energy_throughput": "ENERGY_THROUGHPUT",
   "battery.capacity_throughput": "CAPACITY_THROUGHPUT",
@@ -88,22 +94,28 @@ export function batteryDynamicValuesForWorkspace(
   };
 
   const converters: Record<string, (value: number) => unknown> = {
+    "battery.dynamic_rated_capacity": (value) => value,
     "battery.remaining_capacity": (value) => ({
       amperehourMiliamperehourValue: Math.round(value),
       ampereHourMiliamperehour: "Ah",
     }),
+    "battery.capacity_fade": percent,
     "battery.state_of_charge_soc": percent,
     "battery.remaining_power_capability": (value) => ({
       wattValueAt80SoC: Math.round(value),
       wattValueAt20SoC: Math.round(value * 0.8056),
       watt: "W",
     }),
+    "battery.power_fade": percent,
     "battery.remaining_round_trip_energy_efficiency": percent,
+    "battery.energy_round_trip_efficiency_fade": percent,
     "battery.current_self_discharge_rate": (value) => ({
       percentMonth: "%/month",
       percentMonthValue: value,
     }),
     "battery.evolution_of_self_discharge_rates": percent,
+    "battery.current_internal_resistance": (value) => value,
+    "battery.internal_resistance_increase_of_pack_cell_and_module_recommended": percent,
     "battery.number_of_full_charging_and_discharging_cycles": Math.round,
     "battery.energy_throughput": (value) => ({ kilowattHourValue: value, kilowattHour: "kWh" }),
     "battery.capacity_throughput": (value) => ({
@@ -123,9 +135,12 @@ export function batteryDynamicValuesForWorkspace(
   };
 
   for (const [fieldCode, converter] of Object.entries(converters)) {
-    const value = metricValue(workspace, fieldCode);
+    let value = metricValue(workspace, fieldCode);
     if (value === null || !Number.isFinite(value)) continue;
     const metric = workspace.metrics.find((row) => row.metric_type === metricByFieldCode[fieldCode]);
+    if (fieldCode === "battery.current_internal_resistance" && String(metric?.unit || "").toLowerCase() === "mohm") {
+      value /= 1000;
+    }
     values[fieldCode] = {
       value: converter(value),
       sourceType: metric?.data_source || "operating_metric",

@@ -1,36 +1,65 @@
 import { canReadField, type AccessLevel } from "../schemaRegistry.ts";
+import type { BatteryClassificationResult, BatteryFieldValue } from "./catalog.ts";
 import {
-  fieldsForBattery,
-  requirementStatusForField,
-  type BatteryClassificationResult,
-  type BatteryFieldValue,
-} from "./catalog.ts";
+  EU_BATTERY_PASSPORT_CHAPTERS,
+  accessLevelForRegulatoryAccess,
+  dataGranularityForLevel,
+  fieldValueForRegulatoryField,
+  localizedRegulatorySourceNote,
+  regulatoryFieldsForBattery,
+  regulatoryStatusForField,
+  requirementStatusForRegulatoryStatus,
+} from "./regulatoryCatalog.ts";
 
 export function projectBatteryFields(
   classification: BatteryClassificationResult,
   values: Record<string, BatteryFieldValue>,
   viewerAccess: AccessLevel,
+  options: { includeMissing?: boolean } = {},
 ) {
-  return fieldsForBattery(classification)
-    .filter((field) => canReadField(viewerAccess, field.accessLevel))
-    .filter((field) => values[field.fieldCode] !== undefined)
-    .map((field) => ({
-      fieldCode: field.fieldCode,
-      groupCode: field.groupCode,
-      groupLabelEn: field.groupLabelEn,
-      groupLabelZh: field.groupLabelZh,
-      labelEn: field.labelEn,
-      labelZh: field.labelZh,
-      value: values[field.fieldCode]?.value,
+  return regulatoryFieldsForBattery(classification)
+    .filter((field) => canReadField(viewerAccess, accessLevelForRegulatoryAccess(field.access)))
+    .map((field) => ({ field, resolved: fieldValueForRegulatoryField(field, values) }))
+    .filter(({ resolved }) => options.includeMissing || resolved.value !== undefined)
+    .map(({ field, resolved }) => {
+      const chapter = EU_BATTERY_PASSPORT_CHAPTERS.find((item) => item.code === field.chapter);
+      const value = resolved.value || { value: null, dataStatus: "missing" } satisfies BatteryFieldValue;
+      const status = regulatoryStatusForField(field, classification);
+      return {
+      id: field.id,
+      number: field.number,
+      fieldCode: field.canonicalFieldCode,
+      valueFieldCode: resolved.fieldCode,
+      groupCode: field.chapter,
+      groupLabelEn: chapter?.labelEn || field.chapter,
+      groupLabelZh: chapter?.labelZh || field.chapter,
+      labelEn: field.nameEn,
+      labelZh: field.nameZh,
+      legalSource: field.legalSource,
+      sourceNote: field.sourceNote,
+      sourceNoteZh: localizedRegulatorySourceNote(field, "zh"),
+      value: value.value,
       unit: field.unit,
-      dataBehavior: field.dataBehavior,
-      dataGranularity: field.dataGranularity,
-      accessLevel: field.accessLevel,
-      requirementStatus: requirementStatusForField(field, classification),
-      evidenceStatus: values[field.fieldCode]?.evidenceStatus || "missing",
-      verificationStatus: values[field.fieldCode]?.verificationStatus || "unverified",
-      observedAt: values[field.fieldCode]?.observedAt || null,
-    }));
+      dataBehavior: field.dynamic ? "DYNAMIC" : "STATIC",
+      dataLevel: field.dataLevel,
+      dataGranularity: dataGranularityForLevel(field.dataLevel),
+      accessLevel: accessLevelForRegulatoryAccess(field.access),
+      applicabilityStatus: status,
+      requirementStatus: requirementStatusForRegulatoryStatus(status),
+      dataStatus: value.dataStatus || (value.verificationStatus === "verified" ? "verified" : "declared"),
+      evidenceStatus: value.evidenceStatus || "missing",
+      evidenceCount: value.evidenceCount || 0,
+      verificationStatus: value.verificationStatus || "unverified",
+      expertReviewStatus: value.expertReviewStatus || field.expertReviewStatus,
+      expertReviewNote: value.expertReviewNote ?? field.expertReviewNote,
+      sourceType: value.sourceType || null,
+      sourceReference: value.sourceReference || null,
+      observedAt: value.observedAt || null,
+      lastUpdated: value.lastUpdated || null,
+      fieldOrigin: value.fieldOrigin || field.fieldOrigin,
+      mappingQuality: field.mappingQuality,
+    };
+    });
 }
 
 export function projectionAccessForAudience(

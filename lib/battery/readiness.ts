@@ -1,10 +1,13 @@
 import {
-  fieldsForBattery,
   hasBatteryFieldValue,
-  requirementStatusForField,
   type BatteryClassificationResult,
   type BatteryFieldValue,
 } from "./catalog.ts";
+import {
+  fieldValueForRegulatoryField,
+  regulatoryFieldsForBattery,
+  regulatoryStatusForField,
+} from "./regulatoryCatalog.ts";
 
 export type ReadinessMetric = {
   complete: number;
@@ -15,10 +18,14 @@ export type ReadinessMetric = {
 export type BatteryReadiness = {
   confirmedMandatory: ReadinessMetric;
   conditionalMandatory: ReadinessMetric;
+  optional: ReadinessMetric;
   evidence: ReadinessMetric;
   verification: ReadinessMetric;
   registry: ReadinessMetric;
   tbdFieldCount: number;
+  futureFieldCount: number;
+  duplicateFieldCount: number;
+  notApplicableFieldCount: number;
 };
 
 const registryFieldCodes = new Set([
@@ -36,19 +43,28 @@ export function calculateBatteryReadiness(
   classification: BatteryClassificationResult,
   values: Record<string, BatteryFieldValue>,
 ): BatteryReadiness {
-  const fields = fieldsForBattery(classification);
-  const confirmed = fields.filter((field) => requirementStatusForField(field, classification) === "CONFIRMED_MANDATORY");
-  const conditional = fields.filter((field) => requirementStatusForField(field, classification) === "CONDITIONAL_MANDATORY");
-  const evidenceFields = fields.filter((field) => field.evidenceRequired && hasBatteryFieldValue(values[field.fieldCode]));
-  const filledFields = fields.filter((field) => hasBatteryFieldValue(values[field.fieldCode]));
-  const registryFields = fields.filter((field) => registryFieldCodes.has(field.fieldCode));
+  const allFields = regulatoryFieldsForBattery(classification, { includeExcluded: true });
+  const fields = allFields.filter((field) => !["future", "duplicate", "not_applicable"].includes(regulatoryStatusForField(field, classification)));
+  const resolved = (field: (typeof fields)[number]) => fieldValueForRegulatoryField(field, values).value;
+  const isExplicitlyNotApplicable = (field: (typeof fields)[number]) => resolved(field)?.dataStatus === "not_applicable";
+  const complete = (field: (typeof fields)[number]) => hasBatteryFieldValue(resolved(field));
+  const confirmed = fields.filter((field) => regulatoryStatusForField(field, classification) === "mandatory");
+  const conditional = fields.filter((field) => regulatoryStatusForField(field, classification) === "conditional" && !isExplicitlyNotApplicable(field));
+  const optional = fields.filter((field) => regulatoryStatusForField(field, classification) === "optional");
+  const evidenceFields = fields.filter((field) => field.evidenceRequired && !isExplicitlyNotApplicable(field));
+  const filledFields = fields.filter((field) => complete(field) && !isExplicitlyNotApplicable(field));
+  const registryFields = fields.filter((field) => registryFieldCodes.has(field.canonicalFieldCode));
 
   return {
-    confirmedMandatory: metric(confirmed.filter((field) => hasBatteryFieldValue(values[field.fieldCode])).length, confirmed.length),
-    conditionalMandatory: metric(conditional.filter((field) => hasBatteryFieldValue(values[field.fieldCode])).length, conditional.length),
-    evidence: metric(evidenceFields.filter((field) => ["uploaded", "verified"].includes(values[field.fieldCode]?.evidenceStatus || "")).length, evidenceFields.length),
-    verification: metric(filledFields.filter((field) => values[field.fieldCode]?.verificationStatus === "verified").length, filledFields.length),
-    registry: metric(registryFields.filter((field) => hasBatteryFieldValue(values[field.fieldCode])).length, registryFields.length),
-    tbdFieldCount: fields.filter((field) => requirementStatusForField(field, classification) === "TBD").length,
+    confirmedMandatory: metric(confirmed.filter(complete).length, confirmed.length),
+    conditionalMandatory: metric(conditional.filter(complete).length, conditional.length),
+    optional: metric(optional.filter(complete).length, optional.length),
+    evidence: metric(evidenceFields.filter((field) => ["uploaded", "verified"].includes(resolved(field)?.evidenceStatus || "") || (resolved(field)?.evidenceCount || 0) > 0).length, evidenceFields.length),
+    verification: metric(filledFields.filter((field) => resolved(field)?.verificationStatus === "verified" || resolved(field)?.dataStatus === "verified").length, filledFields.length),
+    registry: metric(registryFields.filter(complete).length, registryFields.length),
+    tbdFieldCount: 0,
+    futureFieldCount: allFields.filter((field) => regulatoryStatusForField(field, classification) === "future").length,
+    duplicateFieldCount: allFields.filter((field) => regulatoryStatusForField(field, classification) === "duplicate").length,
+    notApplicableFieldCount: allFields.filter((field) => regulatoryStatusForField(field, classification) === "not_applicable").length,
   };
 }

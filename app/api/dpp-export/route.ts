@@ -4,6 +4,8 @@ import {
   showcaseStructuredPayload,
 } from "@/lib/server/dppShowcase";
 import { buildBatteryPassShowcaseExport } from "@/lib/server/batteryPassShowcase";
+import { loadBatteryProjection } from "@/lib/server/batteryRepository";
+import { createSupabaseAdminClient, createSupabasePublicServerClient } from "@/lib/server/supabase";
 import { createSupabaseClient } from "@/lib/supabase";
 
 function escapePdfText(value: string) {
@@ -54,6 +56,16 @@ function value(value: unknown) {
   return value === null || value === undefined || value === "" ? "-" : String(value);
 }
 
+function pdfValue(input: unknown): string {
+  if (input === null || input === undefined || input === "") return "-";
+  if (typeof input !== "object") return String(input);
+  const values = Object.values(input as Record<string, unknown>)
+    .flatMap((item) => Array.isArray(item) ? item : [item])
+    .map(pdfValue)
+    .filter((item, index, all) => item !== "-" && all.indexOf(item) === index);
+  return values.join(" / ") || "-";
+}
+
 function pdfLines(payload: any) {
   const product = payload.product || {};
   const identity = payload.digitalIdentity?.[0] || {};
@@ -61,6 +73,7 @@ function pdfLines(payload: any) {
   const battery = payload.batteryPresentation || {};
   const name = product.name || product.name_zh || "Digital Product Passport";
   const chineseName = product.name_zh || "";
+  const batteryFields = (payload.batteryPassport?.fields || []).slice(0, 14);
   return [
     "Digital Product Passport",
     "",
@@ -84,7 +97,35 @@ function pdfLines(payload: any) {
     `Recycled content: ${value(esg.recycled_content)}%`,
     `Evidence records: ${(payload.certificates || []).length + (payload.documents || []).length}`,
     `Last updated: ${value(product.updated_at || product.created_at)}`,
+    ...(payload.batteryPassport ? [
+      "",
+      `Battery regulatory catalog: ${value(payload.batteryPassport.catalogVersion)}`,
+      `Battery legal category: ${value(payload.batteryPassport.profile?.legalCategory)}`,
+      ...batteryFields.map((field: any) => `${field.id} ${field.labelEn}: ${pdfValue(field.value)}${field.unit ? ` ${field.unit}` : ""}`),
+      batteryFields.length < (payload.batteryPassport.fields || []).length
+        ? `Additional public battery fields: ${(payload.batteryPassport.fields || []).length - batteryFields.length} (see online passport or JSON export)`
+        : "",
+    ] : []),
   ];
+}
+
+const BATTERY_SHOWCASE_IDS = new Set([
+  "DPP-LMT-BAT-48V15AH",
+  "DPP-GV-ESS-14K3-000001",
+]);
+
+async function publicBatteryPassport(identifier: string, showcase: boolean) {
+  try {
+    const showcaseProjection = showcase && BATTERY_SHOWCASE_IDS.has(identifier);
+    return await loadBatteryProjection(
+      showcaseProjection ? createSupabaseAdminClient() : createSupabasePublicServerClient(),
+      identifier,
+      showcaseProjection ? "INTERNAL" : "PUBLIC",
+      { includeMissing: showcaseProjection },
+    );
+  } catch {
+    return null;
+  }
 }
 
 export async function GET(request: Request) {
@@ -122,12 +163,16 @@ export async function GET(request: Request) {
     });
   }
 
-  const payload = showcase
+  const basePayload = showcase
     ? await loadShowcaseDppData(identifier)
     : await loadPublicDppData(createSupabaseClient(), identifier, false);
-  if (!payload) {
+  if (!basePayload) {
     return Response.json({ error: "DPP not found." }, { status: 404 });
   }
+  const batteryPassport = await publicBatteryPassport(identifier, showcase);
+  const payload = batteryPassport
+    ? { ...basePayload, batteryPassport }
+    : basePayload;
 
   const filename = String(payload.product?.dpp_id || identifier)
     .replace(/[^a-zA-Z0-9._-]/g, "-");
@@ -150,7 +195,10 @@ export async function GET(request: Request) {
   const structuredPayload = format === "canonical"
     ? showcaseStructuredPayload(payload)
     : payload;
-  return Response.json(structuredPayload, {
+  const exportPayload = batteryPassport && format === "canonical"
+    ? { ...structuredPayload, batteryPassport }
+    : structuredPayload;
+  return Response.json(exportPayload, {
     headers: {
       "Content-Disposition": `attachment; filename="dpp-${filename}.json"`,
       "Cache-Control": "no-store",

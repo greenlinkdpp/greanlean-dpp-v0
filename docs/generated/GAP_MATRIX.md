@@ -23,6 +23,16 @@
 | M17 导入/导出 | P0 部分实现 | preflight/commit、行字段错误、组织导出、公开 JSON/PDF；unit/integration tests | 通用 job GET、XLSX 上传、批次/字段值 commit 留 P1 |
 | M18 支持运营 | 暂不实施 | 保持既有平台管理边界 | 支持工单、受控代操作和 SLA 留 P2 |
 
+## 2026-09-06 电池法规 v2.0 增量
+
+| 模块 | 新状态 | 实际证据 | 剩余事项 |
+| --- | --- | --- | --- |
+| M05 Schema/字段值 | 71 点目录已实现 | `eu-battery-passport-datapoints-v2.0.json`、0026 三张目录表、A-E 映射 CSV、schema-driven workspace | 64 个专家复核项仍为 pending；目标库待执行 0026 |
+| M08 性能/安全 | 分类适用性已实现 | EV/LMT/工业三列独立状态；工业为 32 必填、26 条件、1 可选 | 条件项需按具体产品和证据确认，不自动宣称适用 |
+| M09 拆卸/维修 | 数据录入基础已实现 | 十章中的 repair 章节、证据引用、访问和核验元数据 | 结构化维修任务协同仍属后续工作流 |
+| M10 循环/回收 | 生命周期字段已实现 | DP67-DP71 与既有 lifecycle/metric 表分离；护照发布状态不再充当电池生命周期状态 | 真实运营事件和数据源待接入 |
+| M15 页面/PDF/JSON | 法规投影同源 | 页面和通用导出调用 `loadBatteryProjection`；BatteryPass 保持独立验证适配器 | publication 快照内嵌 71 点投影仍建议作为后续不可变版本增强 |
+
 ## T01-T10 结果
 
 | 门禁 | 结果 | 证据与限制 |

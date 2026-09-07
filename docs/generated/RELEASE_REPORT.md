@@ -63,3 +63,22 @@
 ## P1 建议
 
 优先完成测试库迁移 E2E、通用操作审计、Batch/FieldValue 工作流、XLSX 导入、证据通知和生产 BMS 接入验收，再扩展 Registry 生产适配器。
+
+## 电池法规 v2.0 增量交付
+
+本增量将电池模块从 BatteryPass-Ready 100 字段适配器调整为“欧盟指南 71 数据点为法规工作目录、BatteryPass 为外部校验适配器”的双层结构。录入与公开投影采用十章统一结构，EV、LMT、工业电池分别计算适用性；future、duplicate、not applicable 保留配置但不制造缺失项。
+
+主要新增文件：
+
+- `config/battery/eu-battery-passport-datapoints-v2.0.json`
+- `lib/battery/regulatoryCatalog.ts`
+- `supabase/migrations/0026_battery_regulatory_datapoints_v2.sql`
+- `supabase/bundles/battery_regulatory_v2_install.sql`
+- `supabase/bundles/battery_regulatory_v2_verify.sql`
+- `supabase/bundles/battery_regulatory_v2_rollback.sql`
+- `docs/generated/BATTERY_REGULATORY_V2_MAPPING.csv`
+- `docs/generated/BATTERY_REGULATORY_V2_AUDIT.md`
+
+GreenVault 迁移策略：保留产品、URL、字段值和版本历史；仅将电池类别固定为 industrial/stationary。没有字段证据链接的值保留为声明值并标为未核验，禁止把常规行业数据补成已验证事实。
+
+当前门禁：TypeScript 与 126 项单元/集成测试通过。迁移 0026 尚未执行到目标 Supabase，因此本增量状态为“代码完成，数据库待安装验证”，不能据此宣称已取得官方合规认证。

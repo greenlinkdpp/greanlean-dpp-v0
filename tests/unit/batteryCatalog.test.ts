@@ -9,6 +9,10 @@ import {
 } from "../../lib/battery/catalog.ts";
 import { projectBatteryFields, projectionAccessForAudience } from "../../lib/battery/projection.ts";
 import { calculateBatteryReadiness } from "../../lib/battery/readiness.ts";
+import {
+  regulatoryFieldsForBattery,
+  regulatoryStatusForField,
+} from "../../lib/battery/regulatoryCatalog.ts";
 import { DPP_SECTOR_PROFILES } from "../../lib/dppSectorProfiles.ts";
 
 test("keeps legal categories separate from the five BatteryPass configurations", () => {
@@ -57,10 +61,10 @@ test("does not invent Longlist applicability for portable and SLI batteries", ()
 
 test("calculates separate readiness dimensions instead of one compliance score", () => {
   const classification = classifyBattery({ legalCategory: "lmt" });
-  const mandatory = fieldsForBattery(classification).find((field) => field.categoryRequirementStatus["battery.lmt"] === "CONFIRMED_MANDATORY");
+  const mandatory = regulatoryFieldsForBattery(classification).find((field) => regulatoryStatusForField(field, classification) === "mandatory");
   assert.ok(mandatory);
   const values: Record<string, BatteryFieldValue> = {
-    [mandatory!.fieldCode]: { value: "test", verificationStatus: "verified", evidenceStatus: "verified" },
+    [mandatory!.canonicalFieldCode]: { value: "test", verificationStatus: "verified", evidenceStatus: "verified" },
   };
   const readiness = calculateBatteryReadiness(classification, values);
   assert.equal(typeof readiness.confirmedMandatory.percent, "number");
@@ -73,11 +77,11 @@ test("calculates separate readiness dimensions instead of one compliance score",
 
 test("server projection removes fields above the viewer access level", () => {
   const classification = classifyBattery({ legalCategory: "lmt" });
-  const publicField = fieldsForBattery(classification).find((field) => field.accessLevel === "PUBLIC")!;
-  const restrictedField = fieldsForBattery(classification).find((field) => field.accessLevel === "LEGITIMATE_INTEREST")!;
+  const publicField = regulatoryFieldsForBattery(classification).find((field) => field.access === "public")!;
+  const restrictedField = regulatoryFieldsForBattery(classification).find((field) => field.access === "professional")!;
   const values = {
-    [publicField.fieldCode]: { value: "public-value" },
-    [restrictedField.fieldCode]: { value: "restricted-value" },
+    [publicField.canonicalFieldCode]: { value: "public-value" },
+    [restrictedField.canonicalFieldCode]: { value: "restricted-value" },
   };
   assert.equal(projectBatteryFields(classification, values, "PUBLIC").length, 1);
   assert.equal(projectBatteryFields(classification, values, "LEGITIMATE_INTEREST").length, 2);

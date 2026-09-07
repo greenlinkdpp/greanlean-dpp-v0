@@ -14,16 +14,15 @@ export type BatterySchemaCode =
 export type BatteryPassportApplicability = "REQUIRED" | "NOT_REQUIRED" | "CONDITIONAL" | "TBD";
 export type BatteryWorkflowStepCode =
   | "identity"
-  | "economic_operator"
   | "manufacturing"
   | "materials"
   | "sustainability"
   | "performance"
-  | "documents"
-  | "circularity_safety"
-  | "item_operation"
-  | "preview_publish"
-  | "registry_readiness";
+  | "safety"
+  | "repair"
+  | "health"
+  | "lifecycle"
+  | "evidence";
 
 export type BatteryCatalogField = {
   sequence: number;
@@ -81,10 +80,17 @@ export type BatteryClassificationResult = {
 
 export type BatteryFieldValue = {
   value: unknown;
+  dataStatus?: "missing" | "pending" | "declared" | "verified" | "not_applicable";
   evidenceStatus?: "missing" | "declared" | "uploaded" | "verified" | "rejected" | "not_applicable";
   verificationStatus?: "unverified" | "in_review" | "verified" | "rejected";
+  expertReviewStatus?: "not_required" | "pending" | "confirmed" | "questioned";
+  expertReviewNote?: string | null;
   sourceType?: string | null;
+  sourceReference?: string | null;
   observedAt?: string | null;
+  lastUpdated?: string | null;
+  evidenceCount?: number;
+  fieldOrigin?: "eu_guidance_v2" | "batterypass_ready_v1_3" | "greanlean_extension" | "legacy";
 };
 
 export const BATTERY_CATEGORIES: BatteryCategoryDefinition[] = [
@@ -103,16 +109,15 @@ export const BATTERY_WORKFLOW_STEPS: Array<{
   labelZh: string;
 }> = [
   { code: "identity", number: 1, labelEn: "Product and battery identity", labelZh: "产品及电池身份" },
-  { code: "economic_operator", number: 2, labelEn: "Economic operator", labelZh: "经济运营者" },
-  { code: "manufacturing", number: 3, labelEn: "Manufacturing information", labelZh: "制造信息" },
-  { code: "materials", number: 4, labelEn: "Materials and chemistry", labelZh: "材料和化学组成" },
-  { code: "sustainability", number: 5, labelEn: "Carbon footprint and sustainability", labelZh: "碳足迹和可持续性" },
-  { code: "performance", number: 6, labelEn: "Performance and durability", labelZh: "性能和耐久性" },
-  { code: "documents", number: 7, labelEn: "Compliance documents", labelZh: "合规文件" },
-  { code: "circularity_safety", number: 8, labelEn: "Disassembly, repair and safety", labelZh: "拆卸、维修和安全" },
-  { code: "item_operation", number: 9, labelEn: "Item operating status", labelZh: "单体运行状态" },
-  { code: "preview_publish", number: 10, labelEn: "DPP preview and publishing", labelZh: "DPP 预览和发布" },
-  { code: "registry_readiness", number: 11, labelEn: "Registry readiness", labelZh: "Registry 注册准备" },
+  { code: "manufacturing", number: 2, labelEn: "Manufacturing information", labelZh: "制造信息" },
+  { code: "materials", number: 3, labelEn: "Materials and composition", labelZh: "材料与组成" },
+  { code: "sustainability", number: 4, labelEn: "Carbon footprint and sustainability", labelZh: "碳足迹与可持续性" },
+  { code: "performance", number: 5, labelEn: "Performance and durability", labelZh: "性能与耐久性" },
+  { code: "safety", number: 6, labelEn: "Compliance and safety", labelZh: "合规与安全" },
+  { code: "repair", number: 7, labelEn: "Components, dismantling and repair", labelZh: "组件、拆解与维修" },
+  { code: "health", number: 8, labelEn: "Battery health and dynamic data", labelZh: "电池健康与动态数据" },
+  { code: "lifecycle", number: 9, labelEn: "Lifecycle status and events", labelZh: "生命周期状态与事件" },
+  { code: "evidence", number: 10, labelEn: "Data sources and evidence", labelZh: "数据来源与证据" },
 ];
 
 export const BATTERY_FIELD_CATALOG = longlist.fields as BatteryCatalogField[];

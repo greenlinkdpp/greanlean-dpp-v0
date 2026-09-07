@@ -47,6 +47,7 @@ test("operating metrics are projected into BatteryPass unit objects", () => {
     metrics: [
       { metric_type: "SOC", metric_value: 76, measured_at: "2026-07-23T14:00:00Z", verification_status: "unverified" },
       { metric_type: "REMAINING_CAPACITY", metric_value: 14.6, measured_at: "2026-07-23T14:00:00Z", verification_status: "unverified" },
+      { metric_type: "CURRENT_INTERNAL_RESISTANCE", metric_value: 18.58, unit: "mOhm", measured_at: "2026-07-23T14:00:00Z", verification_status: "unverified" },
     ],
     lifecycleEvents: [],
   };
@@ -57,6 +58,7 @@ test("operating metrics are projected into BatteryPass unit objects", () => {
     ampereHourMiliamperehour: "Ah",
   });
   assert.deepEqual(values["battery.battery_status"].value, { batteryStatusValues: "re-used" });
+  assert.equal(values["battery.current_internal_resistance"].value, 0.01858);
 });
 
 test("payload builder writes catalog values to BatteryPass JSON pointers", () => {

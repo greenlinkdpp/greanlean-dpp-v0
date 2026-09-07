@@ -30,3 +30,16 @@
 - **同源输出**：item resolver 返回 PUBLIC canonical snapshot；页面、PDF、JSON 共用 repository；导出响应头暴露同一版本/哈希/时间。
 - **合成数据**：`fixtures/p0` 每行含 `SYNTHETIC`；未复制客户证据或生产秘密。
 - **正式外部能力**：Registry 仅 TEST/Mock，BMS/EMS 未连接生产设备，区块链未连接外部网络。
+
+## 电池法规 v2.0 验收追踪
+
+| 验收要求 | 实现 | 测试状态 |
+| --- | --- | --- |
+| 71 个数据点完整保留 | 版本化 JSON 目录、迁移目录表、映射 CSV | 71 个连续唯一编号通过 |
+| EV/LMT/工业分开适用 | 每点三列状态，不互相继承 | 状态总数与 PDF 表格逐类匹配 |
+| 十章 schema-driven 表单 | workspace 按目录章节和字段配置渲染 | 静态合同与 TypeScript 通过 |
+| 必填/条件/可选/未来/重复/N/A | 状态进入配置和数据库；后三类不进入普通缺口统计 | readiness 单元测试通过 |
+| 数据来源/证据/核验/专家复核 | `battery_field_value` 元数据及字段编辑控件 | 单元与集成回归通过 |
+| 动态数据隔离 | DP51-DP66 从运行指标投影，公开层不读取受限遥测 | public projection 权限测试通过 |
+| GreenVault 仅工业电池 | 0026 校正 profile；未举证值降为未核验 | SQL verify 已生成，目标库待执行 |
+| 页面/JSON/PDF 同源 | 通用导出复用公开法规投影；BatteryPass 独立为外部适配器 | 类型检查和源码合同通过 |

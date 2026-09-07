@@ -16,7 +16,7 @@ test("backoffice exposes one product-passport entry and resolves fields by ident
   assert.match(editor, /产品护照只有一个访问入口/);
 });
 
-test("battery editor retains all five top-level workflow stages", async () => {
+test("battery editor retains five operating stages and maps the ten regulatory chapters", async () => {
   const editor = await readFile("components/ProductEditor.tsx", "utf8");
 
   assert.match(editor, /\["阶段 01",\s*"基础身份"/);
@@ -24,10 +24,12 @@ test("battery editor retains all five top-level workflow stages", async () => {
   assert.match(editor, /\["阶段 03",\s*isBattery \? "运行与生命周期"/);
   assert.match(editor, /\["阶段 04",\s*"合规证据"/);
   assert.match(editor, /\["阶段 05",\s*isPlatformAdmin \? "校验与发布"/);
-  assert.match(editor, /对应 DPP 模块 05、09/);
+  assert.match(editor, /对应 DPP 模块 08–09/);
   assert.match(editor, /流程阶段 05/);
-  assert.match(editor, /initialStep="item_operation"/);
-  assert.match(editor, /allowedSteps=\{\["item_operation"\]\}/);
+  assert.match(editor, /initialStep="health"/);
+  assert.match(editor, /allowedSteps=\{\["health", "lifecycle"\]\}/);
+  assert.match(editor, /initialStep="evidence"/);
+  assert.match(editor, /allowedSteps=\{\["evidence"\]\}/);
 });
 
 test("dashboard uses the same five-stage operating workflow as the product editor", async () => {

@@ -17,10 +17,14 @@ function batteryReadiness(
       percent: Math.round((mandatoryComplete / mandatoryTotal) * 100),
     },
     conditionalMandatory: { complete: 1, total: 1, percent: 100 },
+    optional: { complete: 0, total: 1, percent: 0 },
     evidence: { complete: 3, total: 3, percent: 100 },
     verification: { complete: 80, total: 83, percent: 96 },
     registry: { complete: 4, total: 4, percent: 100 },
     tbdFieldCount: 0,
+    futureFieldCount: 0,
+    duplicateFieldCount: 0,
+    notApplicableFieldCount: 0,
   };
 }
 

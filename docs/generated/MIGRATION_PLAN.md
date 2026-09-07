@@ -44,3 +44,14 @@
 - install/rollback bundle 已由生成器重新生成，并由 28/28 迁移合同测试校验与源文件一致。
 - verify 覆盖 9 张 P0 基础表、9 张 RLS 表、层级触发器、9 个服务器函数和遗留数据冲突。
 - 本轮未连接或修改目标 Supabase；真实 install → verify → rollback → install 演练仍是上线前硬门禁。
+
+## 7. 迁移 0026：电池法规 71 数据点
+
+- 安装：`supabase/bundles/battery_regulatory_v2_install.sql`
+- 验证：`supabase/bundles/battery_regulatory_v2_verify.sql`
+- 软回滚：`supabase/bundles/battery_regulatory_v2_rollback.sql`
+- 映射清单：`docs/generated/BATTERY_REGULATORY_V2_MAPPING.csv`
+
+执行顺序为 0025 已安装并验证后，运行 0026 install，再运行 verify 并确认十个布尔值全部为 `true`。0026 不删除旧字段、不重写 publication 快照、不改变既有公开 URL；GreenVault 仅校正为工业电池适用范围，缺少字段证据的既有值改为“声明/未核验”。回滚只停用 v2.0 目录并保留数据和审计来源，已采集值不删除。
+
+当前状态：迁移及验证包已生成并通过静态合同测试，尚未在目标 Supabase 执行。

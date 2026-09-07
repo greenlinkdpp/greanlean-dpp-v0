@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
+import { BatteryPublicProjection } from "@/components/battery/BatteryPublicProjection";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/components/LanguageProvider";
 import {
@@ -125,6 +126,12 @@ export function UnifiedDppPage({
     "DPP-LMT-BAT-48V15AH",
     "DPP-GV-ESS-14K3-000001",
   ].includes(String(exportIdentifier));
+  const isBatteryProduct = data?.product?.sector_code === "battery"
+    || String(data?.product?.dpp_profile_key || "").startsWith("battery.")
+    || Boolean(data?.batteryPresentation);
+  const batteryAudience = audience === "AUTHORITY_ONLY"
+    ? "authority"
+    : audience === "LEGITIMATE_INTEREST" ? "professional" : "public";
 
   function toggleSection(id: string) {
     setCollapsed((current) => ({ ...current, [id]: !current[id] }));
@@ -342,6 +349,15 @@ export function UnifiedDppPage({
           />
         ))}
       </div>
+
+      {isBatteryProduct && exportIdentifier ? (
+        <BatteryPublicProjection
+          identifier={String(exportIdentifier)}
+          audience={batteryAudience}
+          locale={locale}
+          showcase={showcase}
+        />
+      ) : null}
 
       <footer className="border-t border-slate-800 bg-[#07101f] text-slate-300">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-5 px-4 py-8 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-10">

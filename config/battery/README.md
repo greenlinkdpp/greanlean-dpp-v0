@@ -1,5 +1,27 @@
 # BatteryPass Reference Configuration
 
+## EU battery-passport regulatory catalog
+
+`eu-battery-passport-datapoints-v2.0.json` is the platform's category-specific
+regulatory working catalog. It preserves all 71 data points from *Digital
+Batteries Passport - data point by category*, version 2.0 dated 15 August 2026,
+including separate EV, LMT and industrial applicability statuses, bilingual
+labels, legal sources, granularity, access, dynamic/static behavior, evidence
+requirements and migration provenance.
+
+The source document is implementation guidance and does not by itself replace
+the Regulation, delegated acts, implementing acts or legal review. Future and
+duplicate points remain configured but are excluded from ordinary entry screens
+and completeness denominators.
+
+Regenerate migration 0026 and the mapping CSV after changing the catalog:
+
+```bash
+node scripts/database/build_battery_regulatory_v2_bundle.mjs
+```
+
+## BatteryPass-Ready adapter
+
 This directory contains the BatteryPass-Ready Longlist v1.3 normalization and
 five JSON Schema configurations supplied for the project.
 
