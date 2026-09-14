@@ -73,3 +73,18 @@ test("battery organisation objects are projected into their semantic contact fie
   assert.match(batteryProjection, /\["webAddress", "e-mailAddress", "emailAddress"\]/);
   assert.match(batteryProjection, /fieldTextValue\(field, locale\)/);
 });
+
+test("battery document and guidance references render as named links instead of raw URLs", async () => {
+  const batteryProjection = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
+
+  for (const label of [
+    "查看欧盟符合性声明",
+    "查看合规测试报告",
+    "查看组件及零件编号清单",
+    "查看备件来源与联系方式",
+    "查看拆卸与拆解说明",
+    "查看安全措施",
+  ]) assert.match(batteryProjection, new RegExp(label));
+  assert.match(batteryProjection, /fieldValueContent\(field, locale\)/);
+  assert.match(batteryProjection, /target="_blank"/);
+});

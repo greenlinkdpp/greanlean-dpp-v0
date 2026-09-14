@@ -87,6 +87,35 @@ function fieldTextValue(field: any, locale: "en" | "zh") {
   return textValue(field.value, locale);
 }
 
+const linkedResourceLabels: Record<string, { zh: string; en: string }> = {
+  "battery.separate_collection_symbol": { zh: "查看分类收集标识", en: "View separate-collection symbol" },
+  "battery.symbols_for_cadmium_and_lead": { zh: "查看镉、铅标识", en: "View cadmium and lead symbols" },
+  "battery.carbon_footprint_label": { zh: "查看碳足迹标签", en: "View carbon-footprint label" },
+  "battery.eu_declaration_of_conformity": { zh: "查看欧盟符合性声明", en: "View EU declaration of conformity" },
+  "battery.results_of_test_reports_proving_compliance": { zh: "查看合规测试报告", en: "View compliance test reports" },
+  "battery.web_link_to_public_carbon_footprint_study": { zh: "查看公开碳足迹研究", en: "View public carbon-footprint study" },
+  "battery.information_of_due_diligence_report": { zh: "查看供应链尽职调查报告", en: "View due-diligence report" },
+  "battery.dismantling_information_manuals_for_the_removal_and_the_disassembly_of_the_battery_pack": { zh: "查看拆卸与拆解说明", en: "View removal and disassembly instructions" },
+  "battery.part_numbers_for_components": { zh: "查看组件及零件编号清单", en: "View component part-number list" },
+  "battery.information_on_sources_of_spare_parts": { zh: "查看备件来源与联系方式", en: "View spare-part sources and contacts" },
+  "battery.safety_measures": { zh: "查看安全措施", en: "View safety measures" },
+  "battery.information_on_the_role_of_end_users_in_contributing_to_waste_prevention": { zh: "查看废旧电池预防与管理指南", en: "View waste-prevention guidance" },
+  "battery.information_on_the_role_of_end_users_in_contributing_to_the_separate_collection_of_waste_batteries": { zh: "查看废旧电池分类收集指南", en: "View waste-battery collection guidance" },
+  "battery.information_on_battery_collection_preparation_for_second_life_and_on_treatment_at_end_of_life": { zh: "查看回收、梯次利用与报废处理指南", en: "View collection, second-life and end-of-life guidance" },
+};
+
+function fieldValueContent(field: any, locale: "en" | "zh") {
+  const code = String(field?.fieldCode || "");
+  const label = linkedResourceLabels[code];
+  const href = typeof field?.value === "string" && /^https?:\/\//i.test(field.value) ? field.value : "";
+  if (!label || !href) return fieldTextValue(field, locale);
+  return (
+    <a className="text-emerald-800 underline decoration-emerald-300 underline-offset-4 hover:text-emerald-950" href={href} target="_blank" rel="noreferrer">
+      {label[locale]}
+    </a>
+  );
+}
+
 function unitLabel(unit: string, locale: "en" | "zh") {
   if (locale === "en") return unit;
   return ({ cycles: "次", years: "年", months: "个月", Ohm: "Ω", mOhm: "mΩ", count: "次" } as Record<string, string>)[unit] || unit;
@@ -169,7 +198,7 @@ export function BatteryPublicProjection({ identifier, audience, locale, showcase
                       <span>{locale === "zh" ? field.labelZh : field.labelEn}</span>
                       {showcase ? <DppAccessBadge audience={field.accessLevel || "PUBLIC"} locale={locale} /> : null}
                     </dt>
-                    <dd className="mt-1 break-words text-sm font-black text-slate-900">{field.dataStatus === "missing" ? (locale === "zh" ? "待补充" : "Pending") : fieldTextValue(field, locale)}{field.dataStatus !== "missing" && field.unit ? ` ${unitLabel(field.unit, locale)}` : ""}</dd>
+                    <dd className="mt-1 break-words text-sm font-black text-slate-900">{field.dataStatus === "missing" ? (locale === "zh" ? "待补充" : "Pending") : fieldValueContent(field, locale)}{field.dataStatus !== "missing" && field.unit ? ` ${unitLabel(field.unit, locale)}` : ""}</dd>
                     <dd className="mt-2 flex flex-wrap gap-2 text-[11px] font-bold text-slate-500"><span>{field.dataBehavior === "DYNAMIC" ? (locale === "zh" ? "动态数据" : "Dynamic") : (locale === "zh" ? "静态数据" : "Static")}</span>{field.verificationStatus === "verified" ? <><span>·</span><span className="text-emerald-700">{locale === "zh" ? "已核验" : "Verified"}</span></> : null}</dd>
                   </div>
                 ))}
