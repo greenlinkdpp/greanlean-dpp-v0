@@ -529,14 +529,15 @@ function normalizeSector(product: any): string {
 function categoryLabel(value: unknown, sector: string, locale: DppLocale): string {
   const text = cleanText(value);
   if (locale === "en") return text;
-  if (/stationary.*industrial.*2\s*kwh|industrial.*stationary/i.test(text)) return "大于 2 kWh 的固定式工业电池";
-  if (/lmt|light means of transport/i.test(text)) return "轻型交通工具电池";
-  if (/removable.*e-?bike.*battery/i.test(text)) return "可拆卸电动自行车锂离子电池包";
-  if (/wireless.*earbuds?/i.test(text)) return "无线耳机";
-  if (/t-?shirt/i.test(text)) return "T 恤";
-  if (/outdoor fabric/i.test(text)) return "户外面料";
-  if (/consumer electronics/i.test(text)) return "消费电子";
-  if (/industrial battery/i.test(text)) return "工业电池";
+  const comparable = text.replace(/[_-]+/g, " ");
+  if (/stationary.*industrial.*2\s*kwh|industrial.*stationary/i.test(comparable)) return "大于 2 kWh 的固定式工业电池";
+  if (/lmt|light means of transport/i.test(comparable)) return "轻型交通工具电池";
+  if (/removable.*e ?bike.*battery/i.test(comparable)) return "可拆卸电动自行车锂离子电池包";
+  if (/wireless.*earbuds?/i.test(comparable)) return "无线耳机";
+  if (/t ?shirt/i.test(comparable)) return "T 恤";
+  if (/outdoor fabric/i.test(comparable)) return "户外面料";
+  if (/consumer electronics/i.test(comparable)) return "消费电子";
+  if (/industrial battery/i.test(comparable)) return "工业电池";
   return text || SECTOR_LABELS[sector]?.zh || "";
 }
 

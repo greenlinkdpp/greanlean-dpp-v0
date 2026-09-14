@@ -61,3 +61,15 @@ test("Chinese battery passports localize regulatory prose while retaining techni
   ]) assert.match(batteryProjection, new RegExp(text));
   assert.match(batteryProjection, /Ohm: "Ω"/);
 });
+
+test("battery organisation objects are projected into their semantic contact fields", async () => {
+  const batteryProjection = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
+
+  assert.match(batteryProjection, /battery\.economic_operator_information/);
+  assert.match(batteryProjection, /battery\.manufacturer_information/);
+  assert.match(batteryProjection, /battery\.manufacturer_postal_address/);
+  assert.match(batteryProjection, /battery\.manufacturer_web_email/);
+  assert.match(batteryProjection, /\["postalAddress"\]/);
+  assert.match(batteryProjection, /\["webAddress", "e-mailAddress", "emailAddress"\]/);
+  assert.match(batteryProjection, /fieldTextValue\(field, locale\)/);
+});

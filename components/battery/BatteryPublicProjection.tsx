@@ -59,6 +59,34 @@ function textValue(value: unknown, locale: "en" | "zh"): string {
   return localizedScalar(String(value), locale);
 }
 
+function objectText(value: unknown, keys: string[], locale: "en" | "zh") {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return "";
+  const record = value as Record<string, unknown>;
+  return keys
+    .map((key) => record[key])
+    .filter((item) => item !== null && item !== undefined && item !== "")
+    .map((item) => localizedScalar(String(item), locale))
+    .filter((item, index, all) => all.indexOf(item) === index)
+    .join(" · ");
+}
+
+function fieldTextValue(field: any, locale: "en" | "zh") {
+  const code = String(field?.fieldCode || "");
+  if (code === "battery.economic_operator_information") {
+    return objectText(field.value, ["name", "registeredTradeNameOrRegisteredTrademark"], locale) || textValue(field.value, locale);
+  }
+  if (code === "battery.manufacturer_information") {
+    return objectText(field.value, ["name", "registeredTradeNameOrRegisteredTrademark"], locale) || textValue(field.value, locale);
+  }
+  if (code === "battery.manufacturer_postal_address") {
+    return objectText(field.value, ["postalAddress"], locale) || textValue(field.value, locale);
+  }
+  if (code === "battery.manufacturer_web_email") {
+    return objectText(field.value, ["webAddress", "e-mailAddress", "emailAddress"], locale) || textValue(field.value, locale);
+  }
+  return textValue(field.value, locale);
+}
+
 function unitLabel(unit: string, locale: "en" | "zh") {
   if (locale === "en") return unit;
   return ({ cycles: "次", years: "年", months: "个月", Ohm: "Ω", mOhm: "mΩ", count: "次" } as Record<string, string>)[unit] || unit;
@@ -141,7 +169,7 @@ export function BatteryPublicProjection({ identifier, audience, locale, showcase
                       <span>{locale === "zh" ? field.labelZh : field.labelEn}</span>
                       {showcase ? <DppAccessBadge audience={field.accessLevel || "PUBLIC"} locale={locale} /> : null}
                     </dt>
-                    <dd className="mt-1 break-words text-sm font-black text-slate-900">{field.dataStatus === "missing" ? (locale === "zh" ? "待补充" : "Pending") : textValue(field.value, locale)}{field.dataStatus !== "missing" && field.unit ? ` ${unitLabel(field.unit, locale)}` : ""}</dd>
+                    <dd className="mt-1 break-words text-sm font-black text-slate-900">{field.dataStatus === "missing" ? (locale === "zh" ? "待补充" : "Pending") : fieldTextValue(field, locale)}{field.dataStatus !== "missing" && field.unit ? ` ${unitLabel(field.unit, locale)}` : ""}</dd>
                     <dd className="mt-2 flex flex-wrap gap-2 text-[11px] font-bold text-slate-500"><span>{field.dataBehavior === "DYNAMIC" ? (locale === "zh" ? "动态数据" : "Dynamic") : (locale === "zh" ? "静态数据" : "Static")}</span>{field.verificationStatus === "verified" ? <><span>·</span><span className="text-emerald-700">{locale === "zh" ? "已核验" : "Verified"}</span></> : null}</dd>
                   </div>
                 ))}

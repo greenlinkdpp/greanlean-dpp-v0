@@ -109,6 +109,18 @@ test("builds one ordered page model and inserts the battery module at step five"
   assert.equal(model.heroMetrics.length, 4);
 });
 
+test("localizes underscore-delimited battery category codes", () => {
+  const model = buildPublicDppViewModel({
+    product: {
+      dpp_id: "DPP-BATTERY-CATEGORY",
+      sector_code: "battery",
+      subcategory: "INDUSTRIAL_BATTERY",
+    },
+  }, { locale: "zh", audience: "PUBLIC", dppUrl: "https://example.com/p/DPP-BATTERY-CATEGORY" });
+
+  assert.equal(model.identity.category, "工业电池");
+});
+
 test("public projection does not expose suppliers or item operating telemetry", () => {
   const model = buildPublicDppViewModel(batteryData, {
     locale: "en",
