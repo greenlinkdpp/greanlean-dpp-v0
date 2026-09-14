@@ -37,6 +37,15 @@ test("showcase projection removes internal provenance and keeps normal access re
   assert.match(output, /format=canonical&showcase=1/);
 });
 
+test("showcase rendering always uses the current publication snapshot", async () => {
+  const access = await readFile("components/AccessAwareDppPage.tsx", "utf8");
+  const output = await readFile("components/UnifiedDppPage.tsx", "utf8");
+
+  assert.match(access, /const effectiveData = showcase \? publicData : data/);
+  assert.match(access, /data=\{effectiveData\}/);
+  assert.doesNotMatch(output, /Boolean\(data\?\.batteryPresentation\)/);
+});
+
 test("battery showcases provide separate category-specific BatteryPass validation files", async () => {
   const output = await readFile("components/UnifiedDppPage.tsx", "utf8");
   const route = await readFile("app/api/dpp-export/route.ts", "utf8");

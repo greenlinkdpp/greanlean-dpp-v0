@@ -127,8 +127,7 @@ export function UnifiedDppPage({
     "DPP-GV-ESS-14K3-000001",
   ].includes(String(exportIdentifier));
   const isBatteryProduct = data?.product?.sector_code === "battery"
-    || String(data?.product?.dpp_profile_key || "").startsWith("battery.")
-    || Boolean(data?.batteryPresentation);
+    || String(data?.product?.dpp_profile_key || "").startsWith("battery.");
   const batteryAudience = audience === "AUTHORITY_ONLY"
     ? "authority"
     : audience === "LEGITIMATE_INTEREST" ? "professional" : "public";

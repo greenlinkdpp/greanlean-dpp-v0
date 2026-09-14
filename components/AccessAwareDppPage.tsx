@@ -125,6 +125,7 @@ export function AccessAwareDppPage({
   const [showRequest, setShowRequest] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [requestError, setRequestError] = useState("");
+  const effectiveData = showcase ? publicData : data;
 
   useEffect(() => {
     setData(publicData);
@@ -330,7 +331,7 @@ export function AccessAwareDppPage({
     </div>
   );
 
-  if (!data) {
+  if (!effectiveData) {
     return (
       <main className="grid min-h-screen place-items-center bg-slate-50 p-6">
         <div className="max-w-xl border border-slate-200 bg-white p-6 text-center shadow-sm">
@@ -345,7 +346,7 @@ export function AccessAwareDppPage({
 
   return (
     <UnifiedDppPage
-      data={data}
+      data={effectiveData}
       dppUrl={dppUrl}
       audience={audience}
       isPreview={isPreview}
