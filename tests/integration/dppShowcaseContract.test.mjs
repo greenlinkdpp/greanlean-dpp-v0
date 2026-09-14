@@ -46,6 +46,19 @@ test("showcase rendering always uses the current publication snapshot", async ()
   assert.doesNotMatch(output, /Boolean\(data\?\.batteryPresentation\)/);
 });
 
+test("showcase pages keep field-level access labels without a standalone access legend", async () => {
+  const output = await readFile("components/UnifiedDppPage.tsx", "utf8");
+  const battery = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
+  const badge = await readFile("components/DppAccessBadge.tsx", "utf8");
+
+  assert.match(output, /!showcase \? <div/);
+  assert.match(output, /showAccessLabels=\{showcase\}/);
+  assert.match(battery, /showcase \? <DppAccessBadge audience=\{field\.accessLevel \|\| "PUBLIC"\}/);
+  assert.match(badge, /公众可见/);
+  assert.match(badge, /专业授权/);
+  assert.match(badge, /监管授权/);
+});
+
 test("battery showcases provide separate category-specific BatteryPass validation files", async () => {
   const output = await readFile("components/UnifiedDppPage.tsx", "utf8");
   const route = await readFile("app/api/dpp-export/route.ts", "utf8");

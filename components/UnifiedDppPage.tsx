@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BatteryPublicProjection } from "@/components/battery/BatteryPublicProjection";
+import { DppAccessBadge } from "@/components/DppAccessBadge";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/components/LanguageProvider";
 import {
@@ -313,7 +314,7 @@ export function UnifiedDppPage({
         </nav>
       ) : null}
 
-      <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-10">
+      {!showcase ? <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-10">
         <div className={`border-l-4 px-4 py-4 ${isPreview ? "border-amber-500 bg-amber-50" : "border-emerald-600 bg-emerald-50"}`}>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className={`text-sm font-black ${isPreview ? "text-amber-900" : "text-emerald-900"}`}>
@@ -326,16 +327,8 @@ export function UnifiedDppPage({
           <p className={`mt-1 text-sm font-medium leading-6 ${isPreview ? "text-amber-800" : "text-emerald-800"}`}>
             {showcase ? t.showcaseText : isPreview ? t.previewText : audience === "PUBLIC" ? t.publicText : t.grantedText}
           </p>
-          {showcase && (
-            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-emerald-200 pt-3">
-              <span className="mr-1 text-xs font-black text-emerald-950">{t.accessLegend}</span>
-              <AccessBadge audience="PUBLIC" locale={locale} />
-              <AccessBadge audience="LEGITIMATE_INTEREST" locale={locale} />
-              <AccessBadge audience="AUTHORITY_ONLY" locale={locale} />
-            </div>
-          )}
         </div>
-      </div>
+      </div> : null}
       {accessControl}
 
       {!isBatteryProduct ? (
@@ -587,7 +580,7 @@ function BatteryOperatingPanel({
             <div className="flex items-start justify-between gap-2">
               <p className="text-xs font-bold text-slate-500">{label}</p>
               {showAccessLabels && (
-                <AccessBadge audience="LEGITIMATE_INTEREST" locale={locale} />
+                <DppAccessBadge audience="LEGITIMATE_INTEREST" locale={locale} />
               )}
             </div>
             <p className="mt-1 break-words text-sm font-black leading-6 text-slate-900">{value}</p>
@@ -611,7 +604,7 @@ function BatteryOperatingPanel({
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-xs font-bold leading-5 text-slate-500">{metric.label}</p>
                   {showAccessLabels && (
-                    <AccessBadge audience="LEGITIMATE_INTEREST" locale={locale} />
+                    <DppAccessBadge audience="LEGITIMATE_INTEREST" locale={locale} />
                   )}
                 </div>
                 <p className="mt-3 text-2xl font-black text-slate-950">
@@ -640,7 +633,7 @@ function BatteryOperatingPanel({
                   {locale === "zh" ? "历史趋势" : "History trend"}
                 </h3>
                 {showAccessLabels && (
-                  <AccessBadge audience="LEGITIMATE_INTEREST" locale={locale} />
+                  <DppAccessBadge audience="LEGITIMATE_INTEREST" locale={locale} />
                 )}
               </div>
               <p className="mt-1 text-sm leading-6 text-slate-500">
@@ -807,38 +800,6 @@ function rangeLabel(range: (typeof HISTORY_RANGES)[number], locale: "zh" | "en")
   return labels[locale][range];
 }
 
-function AccessBadge({
-  audience,
-  locale,
-}: {
-  audience: DppAudience;
-  locale: "zh" | "en";
-}) {
-  const labels = {
-    zh: {
-      PUBLIC: "公众可见",
-      LEGITIMATE_INTEREST: "专业授权",
-      AUTHORITY_ONLY: "监管授权",
-    },
-    en: {
-      PUBLIC: "Public",
-      LEGITIMATE_INTEREST: "Professional grant",
-      AUTHORITY_ONLY: "Authority grant",
-    },
-  } as const;
-  const style = audience === "AUTHORITY_ONLY"
-    ? "border-amber-300 bg-amber-50 text-amber-900"
-    : audience === "LEGITIMATE_INTEREST"
-      ? "border-blue-300 bg-blue-50 text-blue-800"
-      : "border-emerald-300 bg-emerald-50 text-emerald-800";
-
-  return (
-    <span className={`inline-flex min-h-6 shrink-0 items-center rounded border px-2 text-[11px] font-black leading-5 ${style}`}>
-      {labels[locale][audience]}
-    </span>
-  );
-}
-
 function FieldGrid({
   fields,
   locale,
@@ -854,7 +815,7 @@ function FieldGrid({
         <div key={`${item.label}-${index}`} className="min-w-0 bg-white px-4 py-4">
           <dt className="flex items-start justify-between gap-2 text-xs font-bold leading-5 text-slate-500">
             <span>{item.label}</span>
-            {showAccessLabels && <AccessBadge audience={item.access || "PUBLIC"} locale={locale} />}
+            {showAccessLabels && <DppAccessBadge audience={item.access || "PUBLIC"} locale={locale} />}
           </dt>
           <dd className="mt-1 break-words text-sm font-black leading-6 text-slate-900">
             {item.href ? (
@@ -898,7 +859,7 @@ function ItemGrid({
                 </span>
               )}
               {showAccessLabels && (
-                <AccessBadge audience={item.access || inheritedAccess} locale={locale} />
+                <DppAccessBadge audience={item.access || inheritedAccess} locale={locale} />
               )}
             </div>
           </div>
@@ -910,7 +871,7 @@ function ItemGrid({
                     {field.label}
                     {showAccessLabels && (
                       <span className="mt-1 block">
-                        <AccessBadge
+                        <DppAccessBadge
                           audience={field.access || item.access || inheritedAccess}
                           locale={locale}
                         />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { DppAccessBadge } from "@/components/DppAccessBadge";
 import { createSupabaseClient } from "@/lib/supabase";
 
 type Audience = "public" | "professional" | "authority";
@@ -136,7 +137,10 @@ export function BatteryPublicProjection({ identifier, audience, locale, showcase
               <dl className="mt-3 grid gap-x-6 gap-y-4 sm:grid-cols-2 xl:grid-cols-3">
                 {group.fields.map((field) => (
                   <div key={field.id || `${field.fieldCode}-${field.number}`} className="border-t border-slate-100 pt-3">
-                    <dt className="text-xs font-bold text-slate-500">{locale === "zh" ? field.labelZh : field.labelEn}</dt>
+                    <dt className="flex items-start justify-between gap-2 text-xs font-bold text-slate-500">
+                      <span>{locale === "zh" ? field.labelZh : field.labelEn}</span>
+                      {showcase ? <DppAccessBadge audience={field.accessLevel || "PUBLIC"} locale={locale} /> : null}
+                    </dt>
                     <dd className="mt-1 break-words text-sm font-black text-slate-900">{field.dataStatus === "missing" ? (locale === "zh" ? "待补充" : "Pending") : textValue(field.value, locale)}{field.dataStatus !== "missing" && field.unit ? ` ${unitLabel(field.unit, locale)}` : ""}</dd>
                     <dd className="mt-2 flex flex-wrap gap-2 text-[11px] font-bold text-slate-500"><span>{field.dataBehavior === "DYNAMIC" ? (locale === "zh" ? "动态数据" : "Dynamic") : (locale === "zh" ? "静态数据" : "Static")}</span>{field.verificationStatus === "verified" ? <><span>·</span><span className="text-emerald-700">{locale === "zh" ? "已核验" : "Verified"}</span></> : null}</dd>
                   </div>
