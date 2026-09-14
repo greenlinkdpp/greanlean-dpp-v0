@@ -48,3 +48,16 @@ test("battery passports render one regulatory chapter structure instead of appen
   assert.match(batteryProjection, /battery passport sections/i);
   assert.doesNotMatch(batteryProjection, /电池护照标准字段|Battery passport standard fields/);
 });
+
+test("Chinese battery passports localize regulatory prose while retaining technical identifiers", async () => {
+  const batteryProjection = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
+
+  for (const text of [
+    "镉、铅和汞声明仍需供应商及实验室验证。",
+    "采用磷酸铁锂正极、石墨负极和六氟磷酸锂电解液；供应商验证待补充。",
+    "在安全距离外采用水冷降温，并遵循制造商的应急处置程序。",
+    "中国广东省深圳市",
+    "德国汉堡",
+  ]) assert.match(batteryProjection, new RegExp(text));
+  assert.match(batteryProjection, /Ohm: "Ω"/);
+});

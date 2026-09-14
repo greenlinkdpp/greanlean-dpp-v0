@@ -17,11 +17,21 @@ function localizedScalar(value: string, locale: "en" | "zh") {
     remanufactured: "再制造",
     waste: "废弃",
     "Manufacturer cycle-life specification; laboratory verification pending.": "依据制造商循环寿命规格；实验室验证待补充。",
+    "IEC 61960-aligned manufacturer cycle-life specification; laboratory evidence pending.": "依据与 IEC 61960 一致的制造商循环寿命规格；实验室证据待补充。",
     "Electrolyte and substance declarations require supplier and laboratory verification.": "电解液与物质声明仍需供应商及实验室验证。",
+    "Cadmium, lead and mercury declarations require supplier and laboratory verification.": "镉、铅和汞声明仍需供应商及实验室验证。",
     "Cathode: lithium iron phosphate; anode: graphite; electrolyte: LiPF6 in organic carbonate solvents; supplier verification pending.": "正极为磷酸铁锂，负极为石墨，电解液为有机碳酸酯溶剂中的六氟磷酸锂；供应商验证待补充。",
+    "Cathode: NMC; anode: graphite; electrolyte: LiPF6 in organic carbonate solvents; supplier verification pending.": "正极为 NMC，负极为石墨，电解液为有机碳酸酯溶剂中的六氟磷酸锂；供应商验证待补充。",
+    "Lithium iron phosphate cathode, graphite anode and LiPF6-based electrolyte; supplier verification pending.": "采用磷酸铁锂正极、石墨负极和六氟磷酸锂电解液；供应商验证待补充。",
+    "Graphite anode and LiPF6-based electrolyte; supplier verification pending.": "采用石墨负极和六氟磷酸锂电解液；供应商验证待补充。",
     "Lithium, natural graphite, copper and aluminium; quantities pending supplier verification.": "锂、天然石墨、铜和铝；具体含量待供应商验证。",
+    "Lithium, cobalt, nickel, natural graphite and manganese; quantities pending supplier verification.": "锂、钴、镍、天然石墨和锰；具体含量待供应商验证。",
+    "Lithium-ion battery fire response": "锂离子电池火灾响应",
     "Stationary lithium-ion battery fire response": "固定式锂离子电池火灾响应",
+    "Apply water cooling from a safe distance and follow the manufacturer emergency response procedure.": "在安全距离外采用水冷降温，并遵循制造商的应急处置程序。",
     "Isolate the energy-storage enclosure, apply water cooling where safe and follow the site emergency response plan.": "隔离储能柜，在安全条件允许时采用水冷降温，并执行现场应急响应方案。",
+    "Shenzhen, Guangdong, China": "中国广东省深圳市",
+    "Hamburg, Germany": "德国汉堡",
   };
   return exact[value] || value
     .replaceAll("Hamburg, Germany", "德国汉堡")
@@ -50,7 +60,7 @@ function textValue(value: unknown, locale: "en" | "zh"): string {
 
 function unitLabel(unit: string, locale: "en" | "zh") {
   if (locale === "en") return unit;
-  return ({ cycles: "次", years: "年", months: "个月" } as Record<string, string>)[unit] || unit;
+  return ({ cycles: "次", years: "年", months: "个月", Ohm: "Ω", mOhm: "mΩ", count: "次" } as Record<string, string>)[unit] || unit;
 }
 
 export function BatteryPublicProjection({ identifier, audience, locale, showcase = false }: Props) {
