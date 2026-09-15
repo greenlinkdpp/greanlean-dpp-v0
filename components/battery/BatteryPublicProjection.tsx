@@ -160,7 +160,13 @@ export function BatteryPublicProjection({ identifier, audience, locale, showcase
 
   const grouped = Object.values((data?.fields || []).reduce((groups: Record<string, any>, field: any) => {
     const key = field.groupCode || "other";
-    groups[key] ||= { code: key, label: locale === "zh" ? field.groupLabelZh : field.groupLabelEn, fields: [] };
+    groups[key] ||= {
+      code: key,
+      label: key === "sustainability"
+        ? (locale === "zh" ? "可持续性与循环材料" : "Sustainability and circular materials")
+        : (locale === "zh" ? field.groupLabelZh : field.groupLabelEn),
+      fields: [],
+    };
     groups[key].fields.push(field);
     return groups;
   }, {})) as Array<{ code: string; label: string; fields: any[] }>;

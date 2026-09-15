@@ -88,3 +88,9 @@ test("battery document and guidance references render as named links instead of 
   assert.match(batteryProjection, /fieldValueContent\(field, locale\)/);
   assert.match(batteryProjection, /target="_blank"/);
 });
+
+test("the sustainability chapter does not imply a complete carbon-footprint report", async () => {
+  const batteryProjection = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
+  assert.match(batteryProjection, /可持续性与循环材料/);
+  assert.match(batteryProjection, /Sustainability and circular materials/);
+});
