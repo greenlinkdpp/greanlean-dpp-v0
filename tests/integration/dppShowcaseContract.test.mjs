@@ -51,12 +51,21 @@ test("showcase pages keep field-level access labels without a standalone access 
   const battery = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
   const badge = await readFile("components/DppAccessBadge.tsx", "utf8");
 
-  assert.match(output, /!showcase \? <div/);
+  assert.match(output, /!showcase && \(!accessControl \|\| isPreview\)/);
   assert.match(output, /showAccessLabels=\{showcase\}/);
   assert.match(battery, /showcase \? <DppAccessBadge audience=\{field\.accessLevel \|\| "PUBLIC"\}/);
   assert.match(badge, /公众可见/);
   assert.match(badge, /专业授权/);
   assert.match(badge, /监管授权/);
+});
+
+test("editor and partner passport links use the same allowlisted case mode", async () => {
+  const editor = await readFile("components/ProductEditor.tsx", "utf8");
+  const navigation = await readFile("lib/dppNavigation.ts", "utf8");
+  assert.match(editor, /productPassportHref\(publicIdentifier, locale\)/);
+  assert.match(editor, /productPassportHref\(identifier, locale\)/);
+  assert.match(navigation, /showcaseIdentifiers\.has\(identifier\)/);
+  assert.match(navigation, /params\.set\("showcase", "1"\)/);
 });
 
 test("battery showcases provide separate category-specific BatteryPass validation files", async () => {

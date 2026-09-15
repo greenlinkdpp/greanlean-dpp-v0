@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { productPassportHref } from "@/lib/dppNavigation";
 import { createSupabaseClient } from "@/lib/supabase";
 import { buildGs1DigitalLink, buildUniqueProductIdentifier, normalizeGtin } from "@/lib/dppCompliance";
 import { DPP_SECTOR_PROFILES, findDppSectorProfile, uniqueByCode } from "@/lib/dppSectorProfiles";
@@ -667,7 +668,7 @@ export function ProductEditor({ productId }: { productId: string }) {
         </div>
 	        {publicIdentifier && (
 	          <div className="flex flex-wrap gap-2">
-	            <Link href={`/p/${encodeURIComponent(publicIdentifier)}?lang=${locale}`} target="_blank" className="btn-primary">
+	            <Link href={productPassportHref(publicIdentifier, locale)} target="_blank" className="btn-primary">
 	              {t.viewDpp}
 	            </Link>
 	          </div>
@@ -1062,7 +1063,7 @@ function PartnerPreviewPanel({ identifier }: { identifier: string | null }) {
       </p>
       {identifier ? (
         <div className="mt-5 flex flex-wrap gap-3">
-          <Link className="btn-primary" href={`/p/${encodeURIComponent(identifier)}?lang=${locale}`} target="_blank">
+          <Link className="btn-primary" href={productPassportHref(identifier, locale)} target="_blank">
             {zh ? "查看产品护照" : "Open product passport"}
           </Link>
         </div>

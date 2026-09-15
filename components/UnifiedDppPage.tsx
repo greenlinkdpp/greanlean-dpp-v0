@@ -314,7 +314,7 @@ export function UnifiedDppPage({
         </nav>
       ) : null}
 
-      {!showcase ? <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-10">
+      {!showcase && (!accessControl || isPreview) ? <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-10">
         <div className={`border-l-4 px-4 py-4 ${isPreview ? "border-amber-500 bg-amber-50" : "border-emerald-600 bg-emerald-50"}`}>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className={`text-sm font-black ${isPreview ? "text-amber-900" : "text-emerald-900"}`}>
