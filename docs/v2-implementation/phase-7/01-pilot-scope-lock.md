@@ -5,6 +5,8 @@ PILOT_TENANT_SELECTION_RECEIVED = TRUE
 PILOT_TENANT_SELECTED = FALSE
 PILOT_SCOPE_LOCKED = FALSE
 PILOT_TENANT_PROVISIONING_REQUIRED = TRUE
+SOODOO_TENANT_PROVISIONING = FAIL
+PILOT_TENANT_ID = null
 PRODUCTION_WRITE_PERFORMED = NO
 ```
 
@@ -43,3 +45,9 @@ The check used server-side read-only REST access and searched complete bounded t
 | Production | `products` | 9 | 0 |
 
 Limits remain fixed at one Tenant, no more than 30 Models, and no more than 5,000 Passports. The five Phase 6 ambiguous legacy rows remain excluded. A separately authorised provisioning decision is required before the scope can be locked.
+
+## Provisioning authorization result
+
+The user subsequently authorised only the minimum canonical SOODOO Tenant/Organisation boundary records, while explicitly prohibiting migrations `0027`–`0035` and every V2 schema deployment. Production is still at migration head `0026`. The approved Phase 1 `tenant` and `organisation_v2` tables are created by migration `0027` and do not exist in Production (`PGRST205`).
+
+Creating the requested record would therefore first require a prohibited schema migration. Falling back to `dpp_organisation`, inventing an alternate table, or manually assigning an ID would violate the authorization. Provisioning was not attempted, no Tenant ID exists, and the scope remains unlocked. Detailed evidence is in `01a-soodoo-tenant-provisioning-evidence.md`.
