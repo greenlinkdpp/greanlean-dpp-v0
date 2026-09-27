@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-09-27T02:08:48.145Z",
+  "classification": "PREPRODUCTION_BACKEND_LOCAL_RC",
+  "rehearsals": [
+    {
+      "name": "public-read",
+      "flag": "FEATURE_V2_PUBLIC_READ",
+      "v1Status": 200,
+      "v2Status": 404,
+      "v2Code": "V2_FEATURE_DISABLED",
+      "result": "PASS"
+    },
+    {
+      "name": "tenant-api",
+      "flag": "FEATURE_V2_TENANT_API",
+      "v1Status": 200,
+      "v2Status": 404,
+      "v2Code": "V2_FEATURE_DISABLED",
+      "result": "PASS"
+    },
+    {
+      "name": "publication-write",
+      "flag": "FEATURE_V2_PUBLICATION_WRITE",
+      "v1Status": 200,
+      "v2Status": 404,
+      "v2Code": "V2_FEATURE_DISABLED",
+      "result": "PASS"
+    },
+    {
+      "name": "connector-execution",
+      "flag": "FEATURE_V2_CONNECTOR_EXECUTION",
+      "v1Status": 200,
+      "v2Status": 404,
+      "v2Code": "V2_FEATURE_DISABLED",
+      "result": "PASS"
+    }
+  ],
+  "allFailClosed": true,
+  "v1RemainedAvailable": true,
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false
+}

@@ -97,6 +97,7 @@ rollback and verification bundle.
 - [Battery demo impact analysis](docs/requirements/battery-demo/current-impact-analysis.md)
 - [Battery migration mapping](docs/regulatory/eu-battery-dpp/migration-mapping.md)
 - [Known regulatory uncertainties](docs/regulatory/eu-battery-dpp/known-uncertainties.md)
+- [EU DPP harmonised standards conformance baseline](docs/regulatory/eu-dpp/harmonised-standards-conformance.md)
 - [Engineering documentation index](docs/engineering/README.md)
 
 BatteryPass-Ready reference models are treated as versioned mapping and

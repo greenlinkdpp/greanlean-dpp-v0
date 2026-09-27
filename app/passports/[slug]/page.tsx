@@ -7,21 +7,22 @@ const INDUSTRIAL_BATTERY_ALIASES = new Set([
   "green-vault-ess-14-3-demo-000001",
 ]);
 
-export default function PassportAliasPage({
+export default async function PassportAliasPage({
   params,
   searchParams,
 }: {
-  params: { slug: string };
-  searchParams?: { lang?: string; view?: string };
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ lang?: string; view?: string }>;
 }) {
-  if (!INDUSTRIAL_BATTERY_ALIASES.has(decodeURIComponent(params.slug))) notFound();
+  const [{ slug }, requested = {}] = await Promise.all([params, searchParams]);
+  if (!INDUSTRIAL_BATTERY_ALIASES.has(decodeURIComponent(slug))) notFound();
   const query = new URLSearchParams();
-  query.set("lang", searchParams?.lang === "en" ? "en" : "zh");
+  query.set("lang", requested.lang === "en" ? "en" : "zh");
   query.set(
     "view",
-    searchParams?.view === "audit"
+    requested.view === "audit"
       ? "audit"
-      : searchParams?.view === "professional"
+      : requested.view === "professional"
         ? "professional"
         : "consumer",
   );

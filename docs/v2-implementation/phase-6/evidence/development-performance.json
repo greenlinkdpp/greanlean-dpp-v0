@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-09-26T13:52:54.571Z",
+  "classification": "DEVELOPMENT_ONLY_INDICATIVE_NOT_PREPRODUCTION",
+  "workload": {
+    "route": "/api/v2/resolver/[identifier]?format=json",
+    "requestCount": 18,
+    "concurrency": 6,
+    "warmupRequests": 1,
+    "warmupSuccessful": 1
+  },
+  "results": {
+    "successful": 18,
+    "failed": 0,
+    "errorRate": 0,
+    "latencyMs": {
+      "min": 3929.69,
+      "p50": 5472.61,
+      "p95": 7268.7,
+      "p99": 7268.7,
+      "max": 7268.7
+    }
+  },
+  "limitations": [
+    "Executed against a local Next.js development server, not an isolated Pre-Production deployment.",
+    "Uses a single Development passport and does not establish production capacity or SLO compliance.",
+    "No Production traffic or write operation was performed."
+  ]
+}

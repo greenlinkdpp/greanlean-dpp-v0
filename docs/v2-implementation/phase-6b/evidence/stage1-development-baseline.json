@@ -1,0 +1,137 @@
+{
+  "generatedAt": "2026-09-26T19:09:57.440Z",
+  "development": {
+    "projectDisplayName": "greanlean-dpp-dev",
+    "projectRefFingerprint": "7b8e1c72db01",
+    "projectHostFingerprint": "f7456a75eec7",
+    "region": "ap-southeast-1",
+    "guard": {
+      "isolated": true,
+      "environment": "development",
+      "projectRefFingerprint": "7b8e1c72db01",
+      "apiHostFingerprint": "f7456a75eec7",
+      "credentialsPresent": true
+    },
+    "openApi": {
+      "status": 200,
+      "definitionCount": 147,
+      "rpcCount": 53,
+      "definitionNameFingerprint": "171156fc1078d60c",
+      "pathFingerprint": "1c99689c735288cd"
+    },
+    "migrationLedger": {
+      "status": 200,
+      "rowCount": 7,
+      "head": "0032",
+      "fingerprint": "171b0c03f58ddf69"
+    },
+    "counts": {
+      "products": {
+        "status": 200,
+        "count": 5
+      },
+      "product_versions": {
+        "status": 200,
+        "count": 4
+      },
+      "battery_model_profile": {
+        "status": 200,
+        "count": 2
+      },
+      "battery_batch": {
+        "status": 200,
+        "count": 2
+      },
+      "battery_item": {
+        "status": 200,
+        "count": 2
+      },
+      "dpp_identifier_alias": {
+        "status": 200,
+        "count": 6
+      },
+      "tenant": {
+        "status": 200,
+        "count": 2
+      },
+      "organisation": {
+        "status": 404,
+        "count": null
+      },
+      "organisation_membership": {
+        "status": 404,
+        "count": null
+      },
+      "product_model": {
+        "status": 200,
+        "count": 53
+      },
+      "sku": {
+        "status": 200,
+        "count": 4
+      },
+      "product_batch": {
+        "status": 200,
+        "count": 4
+      },
+      "product_item": {
+        "status": 200,
+        "count": 16
+      },
+      "schema_definition": {
+        "status": 200,
+        "count": 33
+      },
+      "canonical_attribute": {
+        "status": 404,
+        "count": null
+      },
+      "provenance_record": {
+        "status": 200,
+        "count": 106
+      },
+      "dpp_passport": {
+        "status": 200,
+        "count": 9
+      },
+      "dpp_passport_version": {
+        "status": 404,
+        "count": null
+      },
+      "resolver_mapping": {
+        "status": 200,
+        "count": 35
+      },
+      "integration_registry": {
+        "status": 404,
+        "count": null
+      },
+      "external_connector": {
+        "status": 404,
+        "count": null
+      }
+    },
+    "storage": {
+      "status": 200,
+      "bucketCount": 1,
+      "publicBucketCount": 0,
+      "privateBucketCount": 1,
+      "inventoryFingerprint": "91b9a1d3924c5c4e"
+    },
+    "auth": {
+      "status": 200,
+      "settingsPresent": true,
+      "disableSignup": false,
+      "mailerAutoconfirm": false,
+      "externalProviderCount": 1
+    }
+  },
+  "safety": {
+    "methods": [
+      "GET",
+      "HEAD"
+    ],
+    "secretsWrittenToReport": false,
+    "productionRequestsPerformed": false
+  }
+}

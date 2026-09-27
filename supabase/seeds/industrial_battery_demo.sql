@@ -141,10 +141,18 @@ begin
 
   select id into v_schema_profile_id
   from public.battery_schema_profile
-  where code = 'battery.industrial.stationary';
+  where code in (
+    'battery.industrial.stationary_above_2kwh',
+    'battery.industrial.stationary'
+  )
+  order by case code
+    when 'battery.industrial.stationary_above_2kwh' then 0
+    else 1
+  end
+  limit 1;
 
   if v_schema_profile_id is null then
-    raise exception 'Schema profile battery.industrial.stationary is missing. Apply migration 0009 first.';
+    raise exception 'Stationary industrial battery schema profile is missing. Apply migration 0009 first.';
   end if;
 
   insert into public.battery_model_profile (

@@ -1,0 +1,296 @@
+{
+  "generatedAt": "2026-09-27T02:18:51.029Z",
+  "startedAt": "2026-09-27T02:17:18.338Z",
+  "target": {
+    "environment": "preproduction",
+    "projectRefFingerprint": "d465ccdd1809",
+    "apiHostFingerprint": "065813a5eb8d",
+    "protectedTarget": false
+  },
+  "initial": [
+    {
+      "ledger_exists": true,
+      "legacy_bootstrap_exists": true,
+      "public_table_count": 56
+    }
+  ],
+  "interruptedReplayRecovery": false,
+  "legacyBootstrap": null,
+  "historicalFixtures": [
+    {
+      "file": "supabase/product_category_profiles.sql",
+      "bytes": 19591,
+      "sha256": "134475617dbcd9a7b403cb99917e06d59b82d08a1ee68877f3683b9420174e42",
+      "elapsedMs": 2866,
+      "status": "APPLIED",
+      "classification": "SYNTHETIC_MIGRATION_PREREQUISITE"
+    },
+    {
+      "file": "supabase/upsert_demo_products.sql",
+      "bytes": 27560,
+      "sha256": "51c883f9ee4246ed41f9fa930007d8b3048cbc52ab9d361338a467b679776da6",
+      "elapsedMs": 2763,
+      "status": "APPLIED",
+      "classification": "SYNTHETIC_MIGRATION_PREREQUISITE"
+    },
+    {
+      "file": "supabase/seeds/v1_development_reference_products.sql",
+      "bytes": 7580,
+      "sha256": "55d36dec77163078a73071ab336a32fee298a71e53029881137b068f807eb673",
+      "elapsedMs": 2561,
+      "status": "APPLIED",
+      "classification": "SYNTHETIC_MIGRATION_PREREQUISITE"
+    },
+    {
+      "file": "supabase/seeds/industrial_battery_demo.sql",
+      "bytes": 25745,
+      "sha256": "875a5b78920006e77f0a44ecbe7ef9b3a7355bd5cfe34bf2702d37f2f35eaef1",
+      "elapsedMs": 3172,
+      "status": "APPLIED",
+      "classification": "SYNTHETIC_MIGRATION_PREREQUISITE"
+    }
+  ],
+  "applied": [
+    {
+      "file": "0001_project_migration_ledger.sql",
+      "bytes": 1200,
+      "sha256": "bde9b3d605aad8e3b28e54494a94f23a13d69691724611a2c94892228eb7259c",
+      "elapsedMs": 2476,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0006_schema_registry.sql",
+      "bytes": 13397,
+      "sha256": "45b18877ed7b7912de17e742be8ace93ec03be5665de2cc5c35e787534ae3375",
+      "elapsedMs": 2459,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0007_field_definitions_and_rules.sql",
+      "bytes": 12860,
+      "sha256": "35e21e5767f52cfa3e5682165e1f7f8e9cf9d14583e87ee87fda8d67082b533b",
+      "elapsedMs": 2556,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0009_battery_domain.sql",
+      "bytes": 563718,
+      "sha256": "a0090ef68260c8341f7b35031819be3899b297c87bded2d316461651ac2b04e9",
+      "elapsedMs": 5192,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0010_battery_dynamic_metrics.sql",
+      "bytes": 7604,
+      "sha256": "15fc8c8bbe421f74da58157042d9b1dbb04cfe9147a7ee01230eebe291fd0ec6",
+      "elapsedMs": 2278,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0011_registry_adapter.sql",
+      "bytes": 11729,
+      "sha256": "1defb24ca3cb05e937b93263770a4ffe2194c44affde7b31226e5364f164b695",
+      "elapsedMs": 2558,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0012_unified_dpp_publications.sql",
+      "bytes": 26608,
+      "sha256": "3a3be3434ad04210be5fae3e8024d4f809de5e92460bad6ea093631f59de15ac",
+      "elapsedMs": 2559,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0013_identity_and_access.sql",
+      "bytes": 37547,
+      "sha256": "e0433bff0633d7329b8dfa9cbba25d7112e6f114578f0b4b53f4ed41c3d010b0",
+      "elapsedMs": 2738,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0014_battery_operating_data_integration.sql",
+      "bytes": 19593,
+      "sha256": "a296cdc3d2722d9b848e286a7b455187a1813e2ca385a3b07111fffac55f4b2a",
+      "elapsedMs": 3125,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0015_dpp_publication_foundation.sql",
+      "bytes": 18602,
+      "sha256": "6b1590ba985cf6559bce41675fc0e533a81e7f29a12643f7efca88465198db98",
+      "elapsedMs": 2458,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0016_dpp_publication_review.sql",
+      "bytes": 27903,
+      "sha256": "2be96d052802eabc9fbc4010eb500b6bf81c691647c866bc5ab298b56da5073c",
+      "elapsedMs": 2633,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0017_publication_review_function_permissions.sql",
+      "bytes": 1863,
+      "sha256": "31ea8993b7776029200c7dd511a4f263bc01fbc8abdd345df11c5286eebe47f8",
+      "elapsedMs": 2220,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0018_canonical_publication_finalization.sql",
+      "bytes": 10826,
+      "sha256": "e53be6263b38e47b2d650e79b054c0629b528dc914d883551308235e878b1b92",
+      "elapsedMs": 2992,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0019_file_evidence_lifecycle_foundation.sql",
+      "bytes": 27172,
+      "sha256": "57574fdf21b439d98ef2292d2e1e18097979cd2656e848f529e2f60ab14f8a78",
+      "elapsedMs": 2671,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0020_system_operation_security_boundary.sql",
+      "bytes": 21188,
+      "sha256": "18878f9ba6132302444b090c1b6a1724a7b2b17a874279b23dfaa946d3150864",
+      "elapsedMs": 2867,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0021_publication_backfill_and_read_cutover.sql",
+      "bytes": 18164,
+      "sha256": "1ad4dcc431d4dce41a662c5c120231afb702bb15f1f40e33ec11d02f504ea6f7",
+      "elapsedMs": 2969,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0022_pgcrypto_runtime_search_path.sql",
+      "bytes": 642,
+      "sha256": "5840cb23b9c8c977b7a92e1bb02616032efd4b82a44e4d22c073eacf2ef76b7c",
+      "elapsedMs": 2560,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0023_canonical_public_snapshot_resolution.sql",
+      "bytes": 2187,
+      "sha256": "44391262e8ad1d1b20729f2c4a49e40ed85a6b897527dd596076ebbba09cdca8",
+      "elapsedMs": 2354,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0024_canonical_schema_identifier_compatibility.sql",
+      "bytes": 3923,
+      "sha256": "ae45cb514b1054a4ec255a1bbc00835a9742b1d52be658f9f41c4485dc0d8609",
+      "elapsedMs": 2252,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0025_p0_battery_pilot_foundation.sql",
+      "bytes": 71026,
+      "sha256": "c2dc15897a21f3d697ce4ec993d1fa38ad446444008ad13afc4c136c8b6d4f8a",
+      "elapsedMs": 3489,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0026_battery_regulatory_datapoints_v2.sql",
+      "bytes": 68618,
+      "sha256": "9c911c4f816b6ce548a0861d7fbe89958d1892bb7e065583a690a47485aee643",
+      "elapsedMs": 2961,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0027_v2_phase1_tenant_access_foundation.sql",
+      "bytes": 31579,
+      "sha256": "15a2984852d2c94517876102f673f563fdb19060df37cf569753235e6504ecc0",
+      "elapsedMs": 2971,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0028_v2_phase2_product_core.sql",
+      "bytes": 20163,
+      "sha256": "a41d7de9e22c63507d3618dcf86cf0e70c4d43d2f9304d62956d195ea6ed5672",
+      "elapsedMs": 2659,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0029_v2_phase3_schema_canonical_provenance.sql",
+      "bytes": 36117,
+      "sha256": "ea6a32617fa55412832c18ad0b809329d29c6bbbdf5fe12c943f49e5e1f27f6f",
+      "elapsedMs": 2560,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0030_v2_phase4_passport_publication_resolver.sql",
+      "bytes": 32528,
+      "sha256": "2772914292ba5e6367755b210a28a0ec6459fac183d83cf61af65e6476d4310b",
+      "elapsedMs": 3460,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0031_v2_phase5_integration_registry_connectors.sql",
+      "bytes": 35392,
+      "sha256": "b9c1c3f25f81fcbb914662cb53dc9bfcf19132d69235cb47f278050da74f32ff",
+      "elapsedMs": 2682,
+      "status": "APPLIED"
+    },
+    {
+      "file": "0032_v2_phase6_seed_trigger_compatibility_fix.sql",
+      "bytes": 2749,
+      "sha256": "624f9079e18c94f19dea0993c91759ba2fdbeb3498574479102e5acc387e4b18",
+      "elapsedMs": 2254,
+      "status": "APPLIED"
+    }
+  ],
+  "verification": {
+    "migrationFileCount": 27,
+    "ledgerRowCount": 7,
+    "ledgerHead": "0032",
+    "ledger": [
+      {
+        "migration_number": "0026",
+        "migration_name": "battery_regulatory_datapoints_v2",
+        "environment": "supabase",
+        "result": "applied"
+      },
+      {
+        "migration_number": "0027",
+        "migration_name": "v2_phase1_tenant_access_foundation",
+        "environment": "development",
+        "result": "applied"
+      },
+      {
+        "migration_number": "0028",
+        "migration_name": "v2_phase2_product_core",
+        "environment": "development",
+        "result": "applied"
+      },
+      {
+        "migration_number": "0029",
+        "migration_name": "v2_phase3_schema_canonical_provenance",
+        "environment": "development",
+        "result": "applied"
+      },
+      {
+        "migration_number": "0030",
+        "migration_name": "v2_phase4_passport_publication_resolver",
+        "environment": "development",
+        "result": "applied"
+      },
+      {
+        "migration_number": "0031",
+        "migration_name": "v2_phase5_integration_registry_connectors",
+        "environment": "development",
+        "result": "applied"
+      },
+      {
+        "migration_number": "0032",
+        "migration_name": "v2_phase6_seed_trigger_compatibility_fix",
+        "environment": "development",
+        "result": "applied"
+      }
+    ],
+    "publicTableCount": 147
+  },
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false
+}

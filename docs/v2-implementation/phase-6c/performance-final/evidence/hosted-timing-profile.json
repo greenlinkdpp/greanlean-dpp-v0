@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-09-27T16:23:25.341Z",
+  "origin": "https://greanlean-dpp-preprod.vercel.app",
+  "samplesPerPath": { "cold": 1, "warm": 5 },
+  "paths": [
+    { "label": "dpp-id", "coldMs": 2210.55, "warmClient": { "min": 939.57, "median": 1059.54, "p95": 1664.54, "max": 1664.54 }, "warmRateLimit": { "min": 260.30, "median": 283.50, "p95": 297.70, "max": 297.70 }, "warmDb": { "min": 281.70, "median": 291.90, "p95": 323.30, "max": 323.30 }, "bytes": 848, "encoding": "br", "cache": "MISS", "queryCount": 1 },
+    { "label": "gtin", "coldMs": 1229.77, "warmClient": { "min": 899.08, "median": 1470.36, "p95": 1624.58, "max": 1624.58 }, "warmRateLimit": { "min": 254.70, "median": 278.50, "p95": 867.10, "max": 867.10 }, "warmDb": { "min": 258.10, "median": 286.80, "p95": 290.70, "max": 290.70 }, "bytes": 848, "encoding": "br", "cache": "MISS", "queryCount": 1 },
+    { "label": "legacy-alias", "coldMs": 1749.80, "warmClient": { "min": 979.67, "median": 1460.03, "p95": 2089.73, "max": 2089.73 }, "warmRateLimit": { "min": 287.50, "median": 297.70, "p95": 808.60, "max": 808.60 }, "warmDb": { "min": 253.60, "median": 284.10, "p95": 806.40, "max": 806.40 }, "bytes": 848, "encoding": "br", "cache": "MISS", "queryCount": 1 },
+    { "label": "public-json", "coldMs": 889.85, "warmClient": { "min": 919.98, "median": 1489.72, "p95": 2078.80, "max": 2078.80 }, "warmRateLimit": { "min": 279.40, "median": 291.30, "p95": 838.30, "max": 838.30 }, "warmDb": { "min": 259.60, "median": 276.50, "p95": 290.00, "max": 290.00 }, "bytes": 848, "encoding": "br", "cache": "MISS", "queryCount": 1 },
+    { "label": "public-html", "coldMs": 1229.22, "warmClient": { "min": 860.92, "median": 949.51, "p95": 1516.93, "max": 1516.93 }, "warmRateLimit": { "min": 247.30, "median": 260.80, "p95": 288.70, "max": 288.70 }, "warmDb": { "min": 249.70, "median": 259.50, "p95": 284.20, "max": 284.20 }, "bytes": 730, "encoding": "br", "cache": "MISS", "queryCount": 1 }
+  ],
+  "projectionP95Ms": 0.1,
+  "serializationAndPayloadConclusion": "Not a bottleneck",
+  "cacheConclusion": "No application cache required for Pilot PASS; immutable/current-pointer correctness remains direct-read."
+}

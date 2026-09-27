@@ -4,6 +4,10 @@
   "sourceVersion": "2.0",
   "sourceDate": "2026-08-15",
   "regulation": "Regulation (EU) 2023/1542",
+  "accessPolicyStatus": "provisional",
+  "accessPolicyBasis": "Platform enforcement mapping pending the battery access-rights implementing act",
+  "accessPolicyNoteEn": "Public, professional and regulator access classes are a conservative platform mapping and are not presented as final EU battery access-rights law.",
+  "accessPolicyNoteZh": "公开、专业人员和监管访问等级属于平台审慎执行映射，不代表欧盟电池访问权实施法案的最终法律结论。",
   "disclaimerEn": "This guidance supports implementation but is not the European Commission's official position and does not add to legal obligations.",
   "disclaimerZh": "本指南用于支持实施准备，但不代表欧盟委员会正式立场，也不增加法规规定的权利义务。",
   "chapters": [

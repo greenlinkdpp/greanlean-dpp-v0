@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-09-27T06:37:30.000Z",
+  "beforeEvidence": "payment-deferred-production-before-preprod.json",
+  "afterEvidence": "payment-deferred-production-after-preprod.json",
+  "stableBaselineMatch": true,
+  "verifiedStableFields": [
+    "project display name",
+    "organization and plan",
+    "project and host fingerprints",
+    "region",
+    "migration head and ledger fingerprint",
+    "six recorded table counts",
+    "Storage bucket inventory fingerprint and counts",
+    "Auth settings summary",
+    "five public smoke status/content-type results"
+  ],
+  "productionMigrationHeadBefore": "0026",
+  "productionMigrationHeadAfter": "0026",
+  "productionWritePerformed": false,
+  "productionProjectTransferred": false,
+  "productionProjectPaused": false,
+  "productionTrafficSwitched": false,
+  "result": "PASS"
+}

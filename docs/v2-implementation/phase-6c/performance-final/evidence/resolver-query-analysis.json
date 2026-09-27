@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-09-27T15:05:03.741Z",
+  "target": "Hosted PreProd database only",
+  "rowCounts": { "identifiers": 13, "resolverMappings": 21, "passports": 4, "currentPointers": 2, "versions": 6 },
+  "currentApplicationQueryCount": { "normal": 6, "withIdentifierMapping": 7, "aliasHopAdditional": 1, "withdrawnFallbackAdditional": 1 },
+  "plans": {
+    "hostAllowlist": { "node": "Index Scan", "planningMs": 0.321, "executionMs": 1.003, "actualRows": 1 },
+    "pathMapping": { "node": "Index Scan", "planningMs": 0.662, "executionMs": 1.387, "actualRows": 1 },
+    "identifierLookup": { "node": "Index Scan", "planningMs": 0.817, "executionMs": 0.113, "actualRows": 1 },
+    "identifierMapping": { "node": "Nested Loop", "planningMs": 3.760, "executionMs": 0.739, "actualRows": 1 },
+    "passport": { "node": "Index Scan", "planningMs": 0.448, "executionMs": 1.359, "actualRows": 1 },
+    "pointerVersion": { "node": "Nested Loop", "planningMs": 2.083, "executionMs": 2.740, "actualRows": 1 }
+  },
+  "finding": "Individual SQL execution is sub-3ms, while hosted sequential Supabase HTTP segments were commonly 250-850ms each.",
+  "rootCause": ["NETWORK_ROUND_TRIP", "OTHER_EVIDENCED_MULTI_ROUND_TRIP"],
+  "nanoComputeBottleneckSupported": false
+}

@@ -2,7 +2,7 @@
 
 版本：Phase 2  
 状态：持续维护  
-日期：2026-07-22
+日期：2026-09-17
 
 本文件记录当前资料无法确认或仍处于草案阶段的事项。未关闭的不确定项不得被实现为不可配置的法规强制逻辑，也不得用于宣称产品“已经合规”。
 
@@ -11,11 +11,11 @@
 | U-002 | Registry API 的集成认证、请求/响应 Schema 和完整错误码尚未纳入项目基线 | 先实现 UI/JSON/XML 文件流程和 adapter 边界 | 官方 API 技术文档、测试集成方式和凭据可用 |
 | U-003 | Registry semantic repository 的电池语义模型和版本机制尚未发布 | `registry_schema_version` 可空，mapping 版本独立；阻止成功状态 | 官方 User Guide 更新并发布可机器读取的电池语义目录 |
 | U-004 | BatteryPass-Ready v1.0 JSON Schema 尚未实现字段粒度、更新要求和静态/动态维度 | 这些维度从 Longlist v1.3 导入并保留来源 | 上游 Schema 正式纳入这些维度并完成差异迁移 |
-| U-005 | Longlist 中 `(x)` 来自 ESPR/JTC-24 草案，不等同于已确认电池法规必填 | 映射为 `DRAFT_MANDATORY` | 对应标准/实施文件正式发布并确认适用性 |
+| U-005 | BatteryPass-Ready v1.3 仍引用 JTC-24 `prEN` 草案；首批 EN 18216/18219/18220/18221/18222/18223:2026 已发布，但尚未完成逐条差异迁移 | 继续保留原始草案来源和 `DRAFT_MANDATORY`，不得只做文字替换 | 获得正式标准内容、完成差异评估、版本迁移和一致性测试 |
 | U-006 | BatteryPass 提供的五套 JSON 未覆盖 portable 和 SLI 电池 | 平台分类可扩展，但不建立强制字段 | 提供对应法规基线和 Schema |
 | U-007 | `Industrial Without BMS` 是技术变体，Longlist 说明其将在后续版本正式纳入 | 独立 schema profile + industrial legal category | 上游长表和 Schema 对其类别规则正式对齐 |
 | U-008 | 型号 + 日历年 + 制造场所粒度是否等价于 Registry batch 粒度 | 设计为 batch-like reporting scope，不自动等价 | 官方粒度指南或接口规范确认 |
-| U-009 | UPI、operator identifier、facility identifier 和 data carrier 最终采用的协调标准/签发机构规则未确认 | 通用标识表支持多 scheme；现有 GS1 保留为一种方案 | 协调标准或产品组规则发布 |
+| U-009 | EN 18219:2026 与 EN 18220:2026 已发布，但项目尚未完成 UPI、operator/facility identifier、data carrier 和签发机构方案的一致性验证 | 通用标识表支持多 scheme；现有 GS1 保留为一种方案，正式符合性保持待确认 | 完成正式标准一致性测试并由标识方案负责人签署 |
 | U-010 | `persons with a legitimate interest` 的申请、验证、授权、撤销和审计机制未明确 | 平台使用角色 + 目的 + 有效期策略，不默认开放 | 适用法规/实施规则和业务验证流程确认 |
 | U-011 | 不同产品组和电池护照的 Registry/DPP 保存期限 | 保留策略配置化，不把草案 10 年写死 | 适用 Union law 或产品组规则确认 |
 | U-012 | 每个字段的具体生效日期和过渡安排 | `effective_from` 允许为空；不按平台经验填日期 | 正式法规、委托法案或实施法案确认 |
@@ -37,6 +37,7 @@
 |---|---|---|
 | R-001 | Registry 实施条例是否仍为草案 | Commission Implementing Regulation (EU) 2026/1778 已于 2026-07-16 通过并于 2026-07-17 发布 |
 | R-002 | Registry 和独立测试环境是否存在 | 欧盟委员会于 2026-07-20 宣布 Registry 与 testing environment 上线 |
+| R-003 | 首批六项 DPP 协调标准是否正式发布 | Commission Implementing Decision (EU) 2026/1736 已引用 EN 18216、18219、18220、18221、18222、18223:2026 |
 
 ## 复核规则
 

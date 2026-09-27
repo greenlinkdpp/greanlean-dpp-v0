@@ -52,6 +52,10 @@ export const EU_BATTERY_PASSPORT_METADATA = {
   sourceVersion: catalog.sourceVersion,
   sourceDate: catalog.sourceDate,
   regulation: catalog.regulation,
+  accessPolicyStatus: catalog.accessPolicyStatus,
+  accessPolicyBasis: catalog.accessPolicyBasis,
+  accessPolicyNoteEn: catalog.accessPolicyNoteEn,
+  accessPolicyNoteZh: catalog.accessPolicyNoteZh,
   disclaimerEn: catalog.disclaimerEn,
   disclaimerZh: catalog.disclaimerZh,
 };

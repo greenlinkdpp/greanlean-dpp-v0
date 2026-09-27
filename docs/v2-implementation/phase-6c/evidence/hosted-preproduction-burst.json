@@ -1,0 +1,8 @@
+{
+  "generatedAt": "2026-09-27T14:10:00Z",
+  "deploymentMode": "edge-middleware-final-mode",
+  "cacheHitBurst": { "requests": 20, "concurrency": 10, "status200": 20, "p50Ms": 2030.71, "p95Ms": 3124.86, "p99Ms": 3143.40, "maxMs": 3143.40, "throughputRps": 3.71 },
+  "cacheMissBurst": { "requests": 10, "concurrency": 10, "status200": 10, "p50Ms": 1759.81, "p95Ms": 2058.44, "p99Ms": 2058.44, "maxMs": 2058.44, "throughputRps": 4.86 },
+  "nodeMiddlewareExperiment": { "accepted": false, "rolledBack": true, "cacheHitP95Ms": 6486.83, "cacheMissP95Ms": 3757.26 },
+  "assessment": "BLOCKED: proposed SLO/safety margin not met and not owner-accepted"
+}

@@ -7,8 +7,19 @@ type Params = {
   segments?: string[];
 };
 
-export async function GET(request: NextRequest, { params }: { params: Params }) {
-  const identity = parseGs1DigitalLinkSegments(params.gtin, params.segments || []);
+function v2PublicResolverEnabled() {
+  return [
+    "FEATURE_V2_PUBLIC_READ",
+    "FEATURE_V2_DPP_PASSPORT",
+    "FEATURE_V2_DPP_PUBLICATION",
+    "FEATURE_V2_RESOLVER",
+    "FEATURE_V2_PUBLIC_PROJECTION",
+  ].every((flag) => process.env[flag] === "true");
+}
+
+export async function GET(request: NextRequest, { params }: { params: Promise<Params> }) {
+  const { gtin, segments = [] } = await params;
+  const identity = parseGs1DigitalLinkSegments(gtin, segments);
   if (!identity.gtin) {
     return NextResponse.json({ error: "Invalid GTIN" }, { status: 400 });
   }
@@ -24,6 +35,11 @@ export async function GET(request: NextRequest, { params }: { params: Params }) 
 
   const productIds = (identities || []).map((row) => row.product_id).filter(Boolean);
   if (!productIds.length) {
+    if (v2PublicResolverEnabled()) {
+      return NextResponse.redirect(
+        new URL(`/api/v2/resolver/${encodeURIComponent(identity.gtin)}`, request.nextUrl.origin),
+      );
+    }
     return NextResponse.json(
       {
         error: "DPP identity not found",

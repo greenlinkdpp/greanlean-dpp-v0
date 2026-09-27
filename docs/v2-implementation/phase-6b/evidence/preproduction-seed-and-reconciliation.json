@@ -1,0 +1,119 @@
+{
+  "generatedAt": "2026-09-27T02:20:11.513Z",
+  "target": {
+    "environment": "preproduction",
+    "projectRefFingerprint": "d465ccdd1809"
+  },
+  "migrationHead": "0032",
+  "appliedSeeds": [
+    {
+      "file": "supabase/seeds/v1_development_reference_products.sql",
+      "bytes": 7580,
+      "sha256": "55d36dec77163078a73071ab336a32fee298a71e53029881137b068f807eb673",
+      "elapsedMs": 2248,
+      "status": "PASS"
+    },
+    {
+      "file": "supabase/seeds/lmt_48v15ah_batterypass_test.sql",
+      "bytes": 22447,
+      "sha256": "2ed85a4bf10c46a3a9c1c0f446e11c54f2fa4f85f51130ccca83977568c56861",
+      "elapsedMs": 2595,
+      "status": "PASS"
+    },
+    {
+      "file": "supabase/seeds/industrial_battery_demo.sql",
+      "bytes": 25745,
+      "sha256": "875a5b78920006e77f0a44ecbe7ef9b3a7355bd5cfe34bf2702d37f2f35eaef1",
+      "elapsedMs": 2608,
+      "status": "PASS"
+    }
+  ],
+  "seedTrigger": {
+    "relation_safe": true,
+    "item_batch_guard_present": true,
+    "result": "PASS"
+  },
+  "idempotentReplay": {
+    "countsBeforeReplay": {
+      "products": 5,
+      "battery_models": 2,
+      "battery_batches": 2,
+      "battery_items": 2,
+      "static_test_fields": 76,
+      "dynamic_test_metrics": 16,
+      "lifecycle_test_events": 1
+    },
+    "countsAfterReplay": {
+      "products": 5,
+      "battery_models": 2,
+      "battery_batches": 2,
+      "battery_items": 2,
+      "static_test_fields": 76,
+      "dynamic_test_metrics": 16,
+      "lifecycle_test_events": 1
+    },
+    "result": "PASS"
+  },
+  "syntheticDataset": {
+    "products": 5,
+    "battery_models": 2,
+    "battery_batches": 2,
+    "battery_items": 2,
+    "static_test_fields": 76,
+    "dynamic_test_metrics": 16,
+    "lifecycle_test_events": 1,
+    "sourceRows": 5,
+    "classification": "SYNTHETIC_ONLY"
+  },
+  "legacyDryRun": {
+    "sourceRows": 5,
+    "statusCounts": {
+      "MAPPED": 0,
+      "REVIEW_REQUIRED": 5,
+      "REJECTED": 0
+    },
+    "deterministicHashRun1": "ab4d1cdec5c921e56817ece362e23822ef5679ef5d7cb297aeb14c36ac4a296c",
+    "deterministicHashRun2": "ab4d1cdec5c921e56817ece362e23822ef5679ef5d7cb297aeb14c36ac4a296c",
+    "hashesMatch": true,
+    "automaticTargetWrites": 0,
+    "reviewQueueRequired": 5,
+    "result": "PASS_WITH_QUARANTINE"
+  },
+  "knownDiffs": [
+    {
+      "id": "PREPROD-LEDGER-ENVIRONMENT-LABEL",
+      "classification": "KNOWN_DIFF",
+      "severity": "LOW",
+      "detail": "Repository migrations 0027-0032 record the historical literal environment label development; the execution target is independently guarded and evidenced as Pre-Production.",
+      "rows": [
+        {
+          "migration_number": "0027",
+          "environment": "development"
+        },
+        {
+          "migration_number": "0028",
+          "environment": "development"
+        },
+        {
+          "migration_number": "0029",
+          "environment": "development"
+        },
+        {
+          "migration_number": "0030",
+          "environment": "development"
+        },
+        {
+          "migration_number": "0031",
+          "environment": "development"
+        },
+        {
+          "migration_number": "0032",
+          "environment": "development"
+        }
+      ]
+    }
+  ],
+  "criticalUnknownDiffs": 0,
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false
+}

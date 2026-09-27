@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-09-27T14:14:00Z",
+  "hostedPreproduction": {
+    "url": "https://greanlean-dpp-preprod.vercel.app",
+    "vercelProjectId": "prj_rPT3dmT1ct9LQytAqyb0rWwm4ILs",
+    "finalDeploymentId": "dpl_4xbiw9tLqAEwobu6BHry3fQ2PJnF",
+    "supabaseProjectRef": "efhiaufukjchxqhbmpvq",
+    "migrationHead": "0034",
+    "rateLimitTablePresent": true,
+    "rateLimitFunctionPresent": true,
+    "hostAllowlistRows": 1,
+    "pilotHostedMappings": 7
+  },
+  "production": {
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "migrationHead": "0026",
+    "writePerformed": false,
+    "trafficSwitched": false,
+    "registryEnabled": false
+  }
+}

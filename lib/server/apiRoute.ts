@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requestLogFields, writeLog } from "./logger";
 import { CORRELATION_ID_HEADER, createRequestContext, type RequestContext } from "./requestContext";
+import { requestBodyLimit } from "./publicControls";
 
 export type ApiErrorBody = {
   error: {
@@ -24,6 +25,32 @@ export class ApiError extends Error {
 }
 
 type ApiHandler<RouteContext> = (request: Request, context: RequestContext, routeContext: RouteContext) => Promise<Response> | Response;
+
+type FrameworkRouteContext<RouteContext> = RouteContext extends { params: infer Params }
+  ? Omit<RouteContext, "params"> & { params: Promise<Params> }
+  : RouteContext;
+
+async function enforceRequestBodyCapacity(request: Request) {
+  if (request.method === "GET" || request.method === "HEAD") return;
+  const maximumBytes = requestBodyLimit(new URL(request.url).pathname, request.headers.get("content-type") || "");
+  if (maximumBytes === null) return;
+  const declaredBytes = Number(request.headers.get("content-length") || 0);
+  if (Number.isFinite(declaredBytes) && declaredBytes > maximumBytes) {
+    throw new ApiError(413, "REQUEST_BODY_TOO_LARGE", "The request body exceeds the route capacity limit.");
+  }
+  const reader = request.clone().body?.getReader();
+  if (!reader) return;
+  let received = 0;
+  while (true) {
+    const chunk = await reader.read();
+    if (chunk.done) break;
+    received += chunk.value.byteLength;
+    if (received > maximumBytes) {
+      await reader.cancel();
+      throw new ApiError(413, "REQUEST_BODY_TOO_LARGE", "The request body exceeds the route capacity limit.");
+    }
+  }
+}
 
 function errorResponse(error: unknown, context: RequestContext) {
   const known = error instanceof ApiError;
@@ -54,10 +81,18 @@ function errorResponse(error: unknown, context: RequestContext) {
   });
 }
 
-export function withApiRoute<RouteContext = unknown>(handler: ApiHandler<RouteContext>): (request: Request, routeContext: RouteContext) => Promise<Response> {
-  return async (request: Request, routeContext: RouteContext) => {
+export function withApiRoute<RouteContext = unknown>(handler: ApiHandler<RouteContext>): (request: Request, routeContext: FrameworkRouteContext<RouteContext>) => Promise<Response> {
+  return async (request: Request, frameworkRouteContext: FrameworkRouteContext<RouteContext>) => {
     const context = createRequestContext(request);
     try {
+      await enforceRequestBodyCapacity(request);
+      // Next.js 15 resolves dynamic route parameters asynchronously. Keep the
+      // application's handler contract synchronous so the upgrade is isolated
+      // to this trusted boundary instead of leaking framework details into all
+      // route modules.
+      const routeContext = frameworkRouteContext && typeof frameworkRouteContext === "object" && "params" in frameworkRouteContext
+        ? { ...frameworkRouteContext, params: await frameworkRouteContext.params } as RouteContext
+        : frameworkRouteContext as RouteContext;
       const response = await handler(request, context, routeContext);
       response.headers.set(CORRELATION_ID_HEADER, context.correlationId);
       writeLog("info", "api.request.completed", {

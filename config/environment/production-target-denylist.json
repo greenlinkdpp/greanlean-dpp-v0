@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "description": "SHA-256 fingerprints for Production Supabase targets that Development commands must refuse.",
+  "projectRefSha256": [
+    "3ce843a277e6ce829f3fbd78d6c5a0feaa792d915b426e46b212d75c8a40b10c"
+  ],
+  "apiHostSha256": [
+    "42c2a2958799f8a1e8c5f11cf3cf383347ebbb65617358390b6119d583ff7daf"
+  ]
+}

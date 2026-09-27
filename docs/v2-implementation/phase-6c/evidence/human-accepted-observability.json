@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-09-27T14:36:27.240Z",
+  "origin": "https://greanlean-dpp-preprod.vercel.app",
+  "checks": {
+    "hostedResolverStatus": 200,
+    "serverTimingPresent": true,
+    "platformRequestIdPresent": true,
+    "distributedRateLimitSignalPresent": true,
+    "rateCounterSignalAvailable": true,
+    "publicationAuditSignalAvailable": true,
+    "deadLetterSignalAvailable": true,
+    "structuredLoggingRehearsed": true,
+    "alertDeliveryRehearsed": true,
+    "managedBackupEvidencePresent": true
+  },
+  "databaseSignals": {
+    "rateLimitCounter": { "status": 206, "contentRange": "0-0/41" },
+    "publicationAudit": { "status": 206, "contentRange": "0-0/44" },
+    "connectorDeadLetter": { "status": 200, "contentRange": "*/0" }
+  },
+  "ownership": {
+    "application": "GreanLean Platform Owner",
+    "database": "GreanLean Platform Owner",
+    "security": "GreanLean Platform Owner",
+    "backupRestore": "GreanLean Platform Owner",
+    "cutover": "GreanLean Platform Owner",
+    "rollback": "GreanLean Platform Owner",
+    "monitoring": "GreanLean Platform Owner",
+    "customerCommunication": "GreanLean Platform Owner + Orintent business contact"
+  },
+  "notification": {
+    "primary": "GreanLean Platform Owner direct notification",
+    "businessEscalation": "GreanLean Platform Owner + Orintent business contact",
+    "technicalEvidence": "platform logs / monitoring / audit records",
+    "externalAutomatedOnCallPlatform": "NOT YET REQUIRED FOR INVITED PILOT"
+  },
+  "hostedSignalsExist": true,
+  "operationalOwnership": "PASS",
+  "observabilityGate": "PASS"
+}

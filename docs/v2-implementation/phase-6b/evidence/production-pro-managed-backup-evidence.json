@@ -1,0 +1,36 @@
+{
+  "capturedAt": "2026-09-27T07:16:53Z",
+  "production": {
+    "organization": "GreanLean",
+    "organizationId": "opniglfybhdsnlxbkobt",
+    "organizationPlan": "pro",
+    "projectDisplayName": "greanlen-dpp",
+    "projectRefFingerprint": "3ce843a277e6",
+    "region": "ap-southeast-1",
+    "status": "ACTIVE_HEALTHY",
+    "migrationHead": "0026"
+  },
+  "managedBackups": {
+    "walgEnabled": true,
+    "pitrEnabled": false,
+    "backupType": "physical",
+    "retentionDays": 7,
+    "availableBackupCount": 7,
+    "completedBackupCount": 7,
+    "latestSuccessfulBackupAt": "2026-09-26T16:54:44.205Z",
+    "oldestAvailableBackupAt": "2026-09-20T16:54:21.579Z",
+    "restoreToNewProjectAvailable": true,
+    "storageObjectLimitation": "Database backups include Storage metadata, not the binary objects stored by the Storage API."
+  },
+  "result": "PASS",
+  "evidenceMethod": [
+    "GET /v1/organizations/opniglfybhdsnlxbkobt",
+    "GET /v1/projects/lpxdbysgmdsjhxrjzhly",
+    "GET /v1/projects/lpxdbysgmdsjhxrjzhly/database/backups",
+    "read-only Supabase Dashboard billing verification"
+  ],
+  "productionWritePerformed": false,
+  "productionV2MigrationPerformed": false,
+  "productionTrafficSwitched": false,
+  "productionRegistryEnabled": false
+}

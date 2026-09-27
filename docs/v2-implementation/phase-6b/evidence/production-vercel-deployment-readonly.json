@@ -1,0 +1,27 @@
+{
+  "capturedAt": "2026-09-26T23:41:00-07:00",
+  "captureMode": "read-only Vercel API inspection",
+  "project": {
+    "id": "prj_QOvaYUTgMAto9wWDOAO3NBn9EL0A",
+    "name": "greanlean-dpp-v0",
+    "teamId": "team_vC4WxXNZB04JUKZin5KYsYWg"
+  },
+  "deployment": {
+    "id": "dpl_4UWPqEXqygwG6vSzj67Cw8pNFReL",
+    "target": "production",
+    "readyState": "READY",
+    "url": "greanlean-dpp-v0-7g62q6ny5-songweinie-1175s-projects.vercel.app",
+    "aliases": ["www.greanlean.com", "greanlean.com"],
+    "createdAt": "2026-09-15T05:13:50Z",
+    "git": {
+      "provider": "github",
+      "organisation": "greenlinkdpp",
+      "repository": "greanlean-dpp-v0",
+      "ref": "main",
+      "sha": "796a0b6367f311d94347ef17415c6c417cbdaae6",
+      "message": "fix: align editor passport links with showcase mode"
+    }
+  },
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false
+}

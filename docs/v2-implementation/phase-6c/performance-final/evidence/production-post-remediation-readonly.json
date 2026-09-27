@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-09-27T16:24:08.687Z",
+  "projectRef": "lpxdbysgmdsjhxrjzhly",
+  "migrationHead": "0026",
+  "ledgerStatus": 200,
+  "smoke": [
+    { "url": "https://www.greanlean.com/", "status": 200 },
+    { "url": "https://www.greanlean.com/p/DPP-LMT-BAT-48V15AH", "status": 200 },
+    { "url": "https://www.greanlean.com/api/battery-dpp/public/DPP-LMT-BAT-48V15AH", "status": 200 },
+    { "url": "https://www.greanlean.com/01/06900000014336", "status": 404, "expectedBaseline": true },
+    { "url": "https://dpp.greanlean.com/login", "status": 200 }
+  ],
+  "productionV2MigrationPerformed": false,
+  "productionDataWrite": false,
+  "productionTrafficSwitched": false,
+  "productionRegistryEnabled": false,
+  "productionConnectorsActivated": false,
+  "productionQrBehaviourChanged": false
+}

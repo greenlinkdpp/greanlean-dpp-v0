@@ -1,0 +1,106 @@
+{
+  "generatedAt": "2026-09-27T02:19:38.530Z",
+  "target": {
+    "environment": "preproduction",
+    "projectRefFingerprint": "d465ccdd1809"
+  },
+  "initial": {
+    "head": "0032",
+    "product_models": 0,
+    "passports": 0,
+    "connectors": 0
+  },
+  "rolledBack": [
+    {
+      "file": "0032_v2_phase6_seed_trigger_compatibility_fix.down.sql",
+      "sha256": "921f83d5e119066ee0b1f33c1f58f0aeac269bea89643340fae96722a7996806",
+      "elapsedMs": 2327,
+      "status": "PASS"
+    },
+    {
+      "file": "0031_v2_phase5_integration_registry_connectors.down.sql",
+      "sha256": "451831eeb5d6fceeffc2b040c0a718ff106990dede6dba937f214e27e958cbbc",
+      "elapsedMs": 2516,
+      "status": "PASS"
+    },
+    {
+      "file": "0030_v2_phase4_passport_publication_resolver.down.sql",
+      "sha256": "8e2080170190e15ba70468740e2140ac79596939aae7e5d9d4d8a3e3484773b9",
+      "elapsedMs": 2276,
+      "status": "PASS"
+    },
+    {
+      "file": "0029_v2_phase3_schema_canonical_provenance.down.sql",
+      "sha256": "7aaef67e8f3ddb19ec4e17f0e5d05db3a74ba8b9fc1df9e1dce174bf596f7d1b",
+      "elapsedMs": 2369,
+      "status": "PASS"
+    },
+    {
+      "file": "0028_v2_phase2_product_core.down.sql",
+      "sha256": "c9e4d7a3c16117f66a614d28b9bc3c3dd73458b3562c4ee66b437f70044c242f",
+      "elapsedMs": 2432,
+      "status": "PASS"
+    },
+    {
+      "file": "0027_v2_phase1_tenant_access_foundation.down.sql",
+      "sha256": "3355ceb08388148cd869c6cc51cd67c65a997cb598df6ae982cf5721d1645547",
+      "elapsedMs": 2354,
+      "status": "PASS"
+    }
+  ],
+  "afterRollback": {
+    "head": "0026",
+    "tenant_removed": true,
+    "product_model_removed": true,
+    "passport_removed": true,
+    "connector_removed": true
+  },
+  "reapplied": [
+    {
+      "file": "0027_v2_phase1_tenant_access_foundation.sql",
+      "sha256": "15a2984852d2c94517876102f673f563fdb19060df37cf569753235e6504ecc0",
+      "elapsedMs": 2663,
+      "status": "PASS"
+    },
+    {
+      "file": "0028_v2_phase2_product_core.sql",
+      "sha256": "a41d7de9e22c63507d3618dcf86cf0e70c4d43d2f9304d62956d195ea6ed5672",
+      "elapsedMs": 2868,
+      "status": "PASS"
+    },
+    {
+      "file": "0029_v2_phase3_schema_canonical_provenance.sql",
+      "sha256": "ea6a32617fa55412832c18ad0b809329d29c6bbbdf5fe12c943f49e5e1f27f6f",
+      "elapsedMs": 2560,
+      "status": "PASS"
+    },
+    {
+      "file": "0030_v2_phase4_passport_publication_resolver.sql",
+      "sha256": "2772914292ba5e6367755b210a28a0ec6459fac183d83cf61af65e6476d4310b",
+      "elapsedMs": 3993,
+      "status": "PASS"
+    },
+    {
+      "file": "0031_v2_phase5_integration_registry_connectors.sql",
+      "sha256": "b9c1c3f25f81fcbb914662cb53dc9bfcf19132d69235cb47f278050da74f32ff",
+      "elapsedMs": 2763,
+      "status": "PASS"
+    },
+    {
+      "file": "0032_v2_phase6_seed_trigger_compatibility_fix.sql",
+      "sha256": "624f9079e18c94f19dea0993c91759ba2fdbeb3498574479102e5acc387e4b18",
+      "elapsedMs": 2456,
+      "status": "PASS"
+    }
+  ],
+  "afterReapply": {
+    "head": "0032",
+    "tenant_present": true,
+    "product_model_present": true,
+    "passport_present": true,
+    "connector_present": true
+  },
+  "result": "PASS",
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false
+}

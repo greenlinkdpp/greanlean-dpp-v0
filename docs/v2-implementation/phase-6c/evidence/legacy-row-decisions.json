@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-09-27T14:00:00Z",
+  "scope": "preproduction-only",
+  "pilotPassport": "DPP-P4-MUJEZBWJ140310",
+  "counts": { "mapped": 0, "excludedFromPilot": 5, "quarantinedInPilot": 0, "unknownInPilot": 0 },
+  "records": [
+    { "id": "0f09ff28-37ce-4a87-9590-b3fb99154f1b", "name": "GreenVault ESS-14.3", "sku": "GV-ESS-14K3-2026", "dppId": "DPP-GV-ESS-14K3-000001", "disposition": "EXCLUDE_FROM_PILOT" },
+    { "id": "41c77aa2-a8d6-4a8f-a5c8-d9bd6f34c946", "name": "WPC PLANK", "sku": "MS140K25B", "dppId": "DPP-WPC-MS140K25B", "disposition": "EXCLUDE_FROM_PILOT" },
+    { "id": "6d3b043b-8104-43b2-a229-132c50638f45", "name": "Organic Cotton T-Shirt", "sku": "GL-TSHIRT-001", "dppId": "DPP-TEX-TSHIRT-001", "disposition": "EXCLUDE_FROM_PILOT" },
+    { "id": "a0de52dc-8655-4339-b7b6-c9a6940f9697", "name": "48V 15Ah synthetic battery", "sku": "GL-LMT-BAT-48V15AH", "dppId": "DPP-LMT-BAT-48V15AH", "disposition": "EXCLUDE_FROM_PILOT" },
+    { "id": "c2747230-24a9-4eb5-8b2c-6380391e8c40", "name": "Wireless Earbuds", "sku": "GL-EARBUDS-001", "dppId": "DPP-CE-EARBUDS-001", "disposition": "EXCLUDE_FROM_PILOT" }
+  ],
+  "v1MutationPerformed": false,
+  "automaticV2MappingCreated": false
+}

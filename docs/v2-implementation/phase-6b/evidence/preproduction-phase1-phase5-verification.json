@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-09-27T06:35:00.000Z",
+  "environment": "preproduction",
+  "targetProjectRefFingerprint": "d465ccdd1809",
+  "executionNote": "Phase 1 and Phase 2 completed in the initial orchestrated run. Phase 3 was rerun after a bounded transient network timeout. Phase 4 was rerun after adding bounded public-probe timeouts. Phase 5 passed after migration 0033 repaired future-tenant Connector capability seeding.",
+  "results": [
+    {
+      "phase": 1,
+      "script": "scripts/verify-v2-phase1-development.mjs",
+      "status": "PASS",
+      "checks": ["tenant isolation", "cross-tenant denial", "synthetic auth", "RLS", "capability/PDP", "idempotency"]
+    },
+    {
+      "phase": 2,
+      "script": "scripts/verify-v2-phase2-development.mjs",
+      "status": "PASS",
+      "checks": ["product hierarchy", "identifiers", "tenant constraints", "partner scope", "read-only denial"]
+    },
+    {
+      "phase": 3,
+      "script": "scripts/verify-v2-phase3-development.mjs",
+      "status": "PASS",
+      "schemaRegistry": "REUSED_AND_EXTENDED",
+      "dryRun": "PASS",
+      "mappingCommit": "PASS",
+      "idempotency": "PASS",
+      "immutableVersions": "PASS",
+      "resolution": "PASS_WITH_EXPECTED_BLOCKERS",
+      "provenanceCoveragePercent": 100,
+      "rls": "PASS"
+    },
+    {
+      "phase": 4,
+      "script": "scripts/verify-v2-phase4-development.mjs",
+      "status": "PASS",
+      "migration": "0030",
+      "immutableVersionCount": 2,
+      "formats": ["json", "html", "jsonld", "pdf", "qr"],
+      "resolverInputCount": 7,
+      "withdrawnTombstone": "PASS"
+    },
+    {
+      "phase": 5,
+      "script": "scripts/verify-v2-phase5-development.mjs",
+      "status": "PASS",
+      "migration": "0031+0033_REMEDIATION",
+      "connectorCount": 10,
+      "registryStates": ["ACCEPTED", "REJECTED", "ACCEPTED"],
+      "importAdapters": ["ERP", "MES", "PLM"],
+      "bmsSamplesAggregated": 2,
+      "webhook": "signature/replay/idempotency PASS",
+      "resolverIsolation": "PASS"
+    }
+  ],
+  "summary": {
+    "verifierCount": 5,
+    "tenantIsolation": "PASS",
+    "crossTenantDenial": "PASS",
+    "syntheticAuth": "PASS",
+    "productCore": "PASS",
+    "canonicalProvenance": "PASS",
+    "passportPublicationResolver": "PASS",
+    "integrationRegistryConnectors": "PASS"
+  },
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false
+}

@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-09-27T16:20:45.285Z",
+  "origin": "https://greanlean-dpp-preprod.vercel.app",
+  "functionalRegression": "PASS",
+  "securityRegression": "PASS",
+  "immutablePayloadHash": "63997d514d966107f17b239714ee3ab0501de50b43781b0ba75364a47ba9918a",
+  "cases": {
+    "dppId": { "status": 200, "bytes": 848, "queryCount": 1 },
+    "gtin": { "status": 200, "bytes": 848, "queryCount": 1 },
+    "legacyAlias": { "status": 200, "bytes": 848, "queryCount": 1 },
+    "publicJson": { "status": 200, "bytes": 848, "queryCount": 1 },
+    "publicHtml": { "status": 200, "bytes": 730, "queryCount": 1 },
+    "tombstone": { "status": 410, "bodyContainsWithdrawn": true },
+    "currentPointerRestored": { "status": 200, "payloadHashMatch": true }
+  },
+  "crossTenant": { "ownStatus": 200, "forgedStatus": 403 },
+  "rateLimit": { "hostedBackend": "distributed", "atomicLimit": 30, "firstOverLimitAllowed": false, "retryAfterPresent": true },
+  "unsafeQrStatus": 400,
+  "pointerRestored": true,
+  "productionWritePerformed": false
+}

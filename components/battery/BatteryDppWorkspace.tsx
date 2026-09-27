@@ -93,12 +93,12 @@ export function BatteryDppWorkspace({
         fieldCount: "个适用字段", expanded: "展开字段说明", collapsed: "收起字段说明", unit: "单位", granularity: "数据粒度", access: "访问权限",
         source: "数据来源", sourceReference: "来源引用", evidence: "证明材料", evidenceRequired: "需要证明材料", evidenceOptional: "当前未要求证明材料", regulation: "法规来源",
         complete: "已填写", missing: "未填写", dataStatus: "数据状态", evidenceStatus: "证据状态", verificationStatus: "核验状态", expertReview: "专家复核", expertNote: "复核备注", value: "字段值",
-        confirmed: "法规必填完整度", conditionalMetric: "条件适用完整度", optionalMetric: "可选项完整度", evidenceMetric: "证明材料完整度", verification: "数据核验完成度", registry: "关键标识准备度", futureFields: "未来要求（不计缺失）", duplicateFields: "重复项（不展示）",
+        confirmed: "法规必填完整度", conditionalMetric: "条件适用已决率", expertReviewMetric: "专家复核完成度", optionalMetric: "可选项完整度", evidenceMetric: "证明材料完整度", verification: "数据核验完成度", registry: "关键标识准备度", futureFields: "未来要求（不计缺失）", duplicateFields: "重复项（不展示）",
         noFields: "此步骤没有需要人工填写的静态字段。", itemTitle: "单体运行记录", itemIntro: "这里保存单体级最新快照和完整历史。运行数据只追加、不覆盖，并且不进入消费者公开页面。",
         item: "电池单体", serial: "序列号", upi: "唯一产品标识", createItem: "新增单体", metric: "动态指标", metricValue: "指标值", measuredAt: "测量时间", appendMetric: "追加指标",
         event: "生命周期事件", eventType: "事件类型", eventNote: "事件说明", appendEvent: "追加事件", noItems: "请先新增一个电池单体。",
         collectionMode: "采集方式", restrictedAccess: "访问级别", syncCadence: "更新节奏", latestSnapshot: "最近快照", legitimateInterest: "仅限经批准的正当利益主体", noSnapshot: "尚无运行数据", sourceType: "数据来源", sourceDevice: "设备或网关标识",
-        mapping: "现有字段映射", evidenceCount: "关联证据",
+        mapping: "现有字段映射", evidenceCount: "关联证据", provisionalAccess: "访问权限为平台临时映射，等待欧盟电池访问权实施法案确认。",
       }
     : {
         title: "Battery passport data workspace", subtitle: "Capture the 71 data points in Digital Batteries Passport - data points by category v2.0. BatteryPass-Ready remains an external JSON validation adapter.",
@@ -108,12 +108,12 @@ export function BatteryDppWorkspace({
         fieldCount: "applicable fields", expanded: "Expand field guidance", collapsed: "Collapse field guidance", unit: "Unit", granularity: "Data granularity", access: "Access",
         source: "Data source", sourceReference: "Source reference", evidence: "Evidence", evidenceRequired: "Evidence required", evidenceOptional: "No evidence currently required", regulation: "Legal source",
         complete: "Complete", missing: "Missing", dataStatus: "Data status", evidenceStatus: "Evidence status", verificationStatus: "Verification status", expertReview: "Expert review", expertNote: "Review note", value: "Field value",
-        confirmed: "Mandatory completeness", conditionalMetric: "Conditional completeness", optionalMetric: "Optional completeness", evidenceMetric: "Evidence completeness", verification: "Verification completion", registry: "Key identifier readiness", futureFields: "Future fields (excluded)", duplicateFields: "Duplicates (hidden)",
+        confirmed: "Mandatory completeness", conditionalMetric: "Conditional resolution", expertReviewMetric: "Expert review completion", optionalMetric: "Optional completeness", evidenceMetric: "Evidence completeness", verification: "Verification completion", registry: "Key identifier readiness", futureFields: "Future fields (excluded)", duplicateFields: "Duplicates (hidden)",
         noFields: "This step has no manually entered static fields.", itemTitle: "Item operating records", itemIntro: "This area stores item-level latest snapshots and complete history. Operating data is append-only and never enters the public consumer page.",
         item: "Battery item", serial: "Serial identifier", upi: "Unique product identifier", createItem: "Add item", metric: "Operating metric", metricValue: "Metric value", measuredAt: "Measured at", appendMetric: "Append metric",
         event: "Lifecycle event", eventType: "Event type", eventNote: "Event note", appendEvent: "Append event", noItems: "Add a battery item first.",
         collectionMode: "Collection mode", restrictedAccess: "Access level", syncCadence: "Update cadence", latestSnapshot: "Latest snapshot", legitimateInterest: "Approved legitimate-interest users only", noSnapshot: "No operating data yet", sourceType: "Data source", sourceDevice: "Device or gateway identifier",
-        mapping: "Existing-field mapping", evidenceCount: "Linked evidence",
+        mapping: "Existing-field mapping", evidenceCount: "Linked evidence", provisionalAccess: "Access classes are a provisional platform mapping pending the EU battery access-rights implementing act.",
       };
 
   const supabase = useMemo(() => createSupabaseClient(), []);
@@ -298,7 +298,7 @@ export function BatteryDppWorkspace({
 
   const applicabilityLabel = classification.applicability === "REQUIRED" ? t.required : classification.applicability === "NOT_REQUIRED" ? t.notRequired : classification.applicability === "CONDITIONAL" ? t.conditional : t.tbd;
   const readinessRows = [
-    [t.confirmed, readiness.confirmedMandatory], [t.conditionalMetric, readiness.conditionalMandatory], [t.optionalMetric, readiness.optional], [t.evidenceMetric, readiness.evidence],
+    [t.confirmed, readiness.confirmedMandatory], [t.conditionalMetric, readiness.conditionalMandatory], [t.expertReviewMetric, readiness.expertReview], [t.optionalMetric, readiness.optional], [t.evidenceMetric, readiness.evidence],
     [t.verification, readiness.verification], [t.registry, readiness.registry],
   ] as const;
 
@@ -307,6 +307,7 @@ export function BatteryDppWorkspace({
       <header className="border-b border-slate-200 px-6 py-5">
         <h2 className="text-xl font-black text-slate-950">{t.title}</h2>
         <p className="mt-1 text-sm leading-6 text-slate-600">{t.subtitle}</p>
+        {workspace.catalog?.accessPolicyStatus === "provisional" ? <p className="mt-3 border-l-2 border-amber-500 pl-3 text-xs font-semibold leading-5 text-amber-800">{t.provisionalAccess}</p> : null}
       </header>
 
       {showClassificationControls ? <div className="grid gap-4 border-b border-slate-200 bg-slate-50 px-6 py-5 md:grid-cols-4">
@@ -358,7 +359,7 @@ export function BatteryDppWorkspace({
                   <label><span className="label">{t.source}</span><input className="input mt-1" value={current?.sourceType || ""} onChange={(event) => changeValue(field.canonicalFieldCode, { sourceType: event.target.value })} /></label>
                   <label><span className="label">{t.sourceReference}</span><input className="input mt-1" value={current?.sourceReference || ""} onChange={(event) => changeValue(field.canonicalFieldCode, { sourceReference: event.target.value })} /></label>
                   <div className="grid grid-cols-2 gap-3"><div><span className="label">{t.evidenceStatus}</span><p className="input mt-1 flex items-center bg-slate-50 font-semibold">{optionLabel(current?.evidenceStatus || "missing", isZh)} · {current?.evidenceCount || 0}</p></div><div><span className="label">{t.verificationStatus}</span><p className="input mt-1 flex items-center bg-slate-50 font-semibold">{optionLabel(current?.verificationStatus || "unverified", isZh)}</p></div></div>
-                  <div className="grid grid-cols-[180px_minmax(0,1fr)] gap-3"><label><span className="label">{t.expertReview}</span><select className="input mt-1" value={current?.expertReviewStatus || field.expertReviewStatus} onChange={(event) => changeValue(field.canonicalFieldCode, { expertReviewStatus: event.target.value as BatteryFieldValue["expertReviewStatus"] })}><option value="not_required">{optionLabel("not_required", isZh)}</option><option value="pending">{optionLabel("pending", isZh)}</option><option value="confirmed">{optionLabel("confirmed", isZh)}</option><option value="questioned">{optionLabel("questioned", isZh)}</option></select></label><label><span className="label">{t.expertNote}</span><input className="input mt-1" value={current?.expertReviewNote || ""} onChange={(event) => changeValue(field.canonicalFieldCode, { expertReviewNote: event.target.value })} /></label></div>
+                  <div className="grid grid-cols-[180px_minmax(0,1fr)] gap-3"><label><span className="label">{t.expertReview}</span><select className="input mt-1" value={current?.expertReviewStatus || field.expertReviewStatus} onChange={(event) => changeValue(field.canonicalFieldCode, { expertReviewStatus: event.target.value as BatteryFieldValue["expertReviewStatus"] })}>{field.expertReviewStatus === "not_required" ? <option value="not_required">{optionLabel("not_required", isZh)}</option> : null}<option value="pending">{optionLabel("pending", isZh)}</option><option value="confirmed">{optionLabel("confirmed", isZh)}</option><option value="questioned">{optionLabel("questioned", isZh)}</option></select></label><label><span className="label">{t.expertNote}</span><input className="input mt-1" value={current?.expertReviewNote || ""} onChange={(event) => changeValue(field.canonicalFieldCode, { expertReviewNote: event.target.value })} /></label></div>
                 </div>
               </div>;
             })}

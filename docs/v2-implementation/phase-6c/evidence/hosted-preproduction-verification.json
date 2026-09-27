@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-09-27T14:26:30.778Z",
+  "origin": "https://greanlean-dpp-preprod.vercel.app",
+  "performance": {
+    "warmRequests": 60,
+    "failures": 0,
+    "errorRate": 0,
+    "worstRouteP95Ms": 2362.94,
+    "routes": [
+      { "label": "dpp-id", "p50Ms": 1026.89, "p95Ms": 1748.90, "p99Ms": 1748.90, "coldMs": 3610.29 },
+      { "label": "gtin", "p50Ms": 1139.35, "p95Ms": 1838.92, "p99Ms": 1838.92, "coldMs": 2840.62 },
+      { "label": "legacy-alias", "p50Ms": 971.09, "p95Ms": 1768.97, "p99Ms": 1768.97, "coldMs": 2966.69 },
+      { "label": "public-json", "p50Ms": 718.30, "p95Ms": 1089.01, "p99Ms": 1089.01, "coldMs": 3328.19 },
+      { "label": "public-html", "p50Ms": 808.78, "p95Ms": 2362.94, "p99Ms": 2362.94, "coldMs": 2429.58 }
+    ]
+  },
+  "security": {
+    "homepageStatus": 200,
+    "httpsRedirectStatus": 308,
+    "securityHeaders": "PASS",
+    "distributedRateLimit": "PASS",
+    "rateLimit429AndRetryAfter": "PASS (first over-limit status 429)",
+    "forwardedIpSpoof": "PASS",
+    "declaredOversizeStatus": 413,
+    "chunkedOversizeStatus": 413,
+    "unknownLengthSmallStatus": 400,
+    "arbitraryExternalQrStatus": 400,
+    "unsafeSchemeQrStatus": 400,
+    "ownTenantStatus": 200,
+    "forgedTenantStatus": 403,
+    "resolverUnknownStatus": 404,
+    "connectorProbeStatus": 401,
+    "anonymousDatabaseMutationChangedRows": 0
+  }
+}

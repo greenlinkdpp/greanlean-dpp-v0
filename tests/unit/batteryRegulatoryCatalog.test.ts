@@ -5,6 +5,7 @@ import { calculateBatteryReadiness } from "../../lib/battery/readiness.ts";
 import {
   EU_BATTERY_PASSPORT_CHAPTERS,
   EU_BATTERY_PASSPORT_FIELDS,
+  EU_BATTERY_PASSPORT_METADATA,
   regulatoryFieldsForBattery,
   regulatoryStatusForField,
 } from "../../lib/battery/regulatoryCatalog.ts";
@@ -16,6 +17,12 @@ test("v2.0 regulatory catalog preserves all 71 bilingual data points and ten cha
   assert.equal(EU_BATTERY_PASSPORT_CHAPTERS.length, 10);
   assert.ok(EU_BATTERY_PASSPORT_FIELDS.every((field) => field.nameEn && field.nameZh && field.legalSource && field.sourceNote));
   assert.ok(EU_BATTERY_PASSPORT_FIELDS.every((field) => ["ev", "lmt", "industrial"].every((category) => field.status[category as keyof typeof field.status])));
+});
+
+test("access classes remain explicitly provisional until the battery access-rights act is final", () => {
+  assert.equal(EU_BATTERY_PASSPORT_METADATA.accessPolicyStatus, "provisional");
+  assert.match(EU_BATTERY_PASSPORT_METADATA.accessPolicyNoteEn, /not presented as final/i);
+  assert.match(EU_BATTERY_PASSPORT_METADATA.accessPolicyNoteZh, /不代表.*最终法律结论/);
 });
 
 test("category columns remain independent and GreenVault uses industrial applicability only", () => {
@@ -43,20 +50,42 @@ test("future, duplicate and not-applicable fields remain configured but do not c
   assert.equal(readiness.confirmedMandatory.total, 32);
   assert.equal(readiness.conditionalMandatory.total, 26);
   assert.equal(readiness.futureFieldCount, 8);
+  assert.equal(readiness.tbdFieldCount, 8);
+  assert.ok(readiness.expertReview.complete < readiness.expertReview.total);
   assert.equal(readiness.duplicateFieldCount, 2);
   assert.equal(readiness.notApplicableFieldCount, 2);
 });
 
-test("conditional values explicitly marked not applicable leave the completeness denominator", () => {
+test("conditional values explicitly marked not applicable count as resolved without shrinking the denominator", () => {
   const industrial = classifyBattery({ legalCategory: "industrial", capacityKwh: 14.336, stationary: true });
-  const conditional = regulatoryFieldsForBattery(industrial).find((field) => regulatoryStatusForField(field, industrial) === "conditional")!;
+  const industrialFields = regulatoryFieldsForBattery(industrial);
+  const conditional = industrialFields.find((field) =>
+    regulatoryStatusForField(field, industrial) === "conditional"
+    && industrialFields.filter((candidate) => candidate.canonicalFieldCode === field.canonicalFieldCode).length === 1
+  )!;
   const values: Record<string, BatteryFieldValue> = {
     [conditional.canonicalFieldCode]: { value: null, dataStatus: "not_applicable" },
   };
   const before = calculateBatteryReadiness(industrial, {});
   const readiness = calculateBatteryReadiness(industrial, values);
-  assert.ok(readiness.conditionalMandatory.total < before.conditionalMandatory.total);
-  assert.equal(readiness.conditionalMandatory.complete, 0);
+  assert.equal(readiness.conditionalMandatory.total, before.conditionalMandatory.total);
+  assert.equal(readiness.conditionalMandatory.complete, before.conditionalMandatory.complete + 1);
+});
+
+test("mandatory and conditional fields require affirmative expert review", () => {
+  const industrial = classifyBattery({ legalCategory: "industrial", capacityKwh: 14.336, stationary: true });
+  const mandatory = regulatoryFieldsForBattery(industrial).find((field) => regulatoryStatusForField(field, industrial) === "mandatory")!;
+  const values: Record<string, BatteryFieldValue> = {
+    [mandatory.canonicalFieldCode]: { value: "declared", expertReviewStatus: "questioned" },
+  };
+  const baseline = calculateBatteryReadiness(industrial, {});
+  const questioned = calculateBatteryReadiness(industrial, values);
+  assert.equal(questioned.expertReview.complete, baseline.expertReview.complete);
+  assert.equal(questioned.questionedFieldCount, 1);
+  values[mandatory.canonicalFieldCode].expertReviewStatus = "confirmed";
+  const confirmed = calculateBatteryReadiness(industrial, values);
+  assert.equal(confirmed.expertReview.complete, baseline.expertReview.complete + 1);
+  assert.equal(confirmed.questionedFieldCount, 0);
 });
 
 test("passport status and lifecycle status are distinct concepts", () => {

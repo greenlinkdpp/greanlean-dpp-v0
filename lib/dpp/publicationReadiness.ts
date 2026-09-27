@@ -98,6 +98,9 @@ export function batteryPublicationReadinessChecks(
     && readiness.registry.complete === readiness.registry.total;
   const conditionalPassed = readiness.conditionalMandatory.complete
     === readiness.conditionalMandatory.total;
+  const expertReviewPassed = readiness.expertReview.total > 0
+    && readiness.expertReview.complete === readiness.expertReview.total
+    && readiness.questionedFieldCount === 0;
   const verificationPassed = readiness.verification.complete
     === readiness.verification.total;
 
@@ -133,12 +136,21 @@ export function batteryPublicationReadinessChecks(
     ),
     check(
       "BATTERY_CONDITIONAL_FIELDS_REVIEWED",
-      "WARNING",
+      "BLOCKER",
       "sector",
       conditionalPassed,
-      `条件必填字段：${readiness.conditionalMandatory.complete}/${readiness.conditionalMandatory.total}。`,
-      `Conditional mandatory fields: ${readiness.conditionalMandatory.complete}/${readiness.conditionalMandatory.total}.`,
+      `条件适用项已填写或确认不适用：${readiness.conditionalMandatory.complete}/${readiness.conditionalMandatory.total}。`,
+      `Conditional fields populated or confirmed not applicable: ${readiness.conditionalMandatory.complete}/${readiness.conditionalMandatory.total}.`,
       { ...readiness.conditionalMandatory },
+    ),
+    check(
+      "BATTERY_EXPERT_REVIEW_COMPLETE",
+      "BLOCKER",
+      "sector",
+      expertReviewPassed,
+      `必填及条件适用项专家复核：${readiness.expertReview.complete}/${readiness.expertReview.total}；有疑问 ${readiness.questionedFieldCount} 项。`,
+      `Expert review of mandatory and conditional fields: ${readiness.expertReview.complete}/${readiness.expertReview.total}; ${readiness.questionedFieldCount} questioned.`,
+      { ...readiness.expertReview, questionedFieldCount: readiness.questionedFieldCount },
     ),
     check(
       "BATTERY_FILLED_FIELDS_VERIFIED",
@@ -155,11 +167,11 @@ export function batteryPublicationReadinessChecks(
       "sector",
       readiness.tbdFieldCount === 0,
       readiness.tbdFieldCount === 0
-        ? "不存在待授权法案确认字段。"
-        : `仍有 ${readiness.tbdFieldCount} 个字段等待授权法案确认。`,
+        ? "当前目录不存在尚未启用的未来法规字段。"
+        : `当前目录保留 ${readiness.tbdFieldCount} 个尚未启用、等待后续法规或指南确认的字段。`,
       readiness.tbdFieldCount === 0
-        ? "No fields await delegated-act confirmation."
-        : `${readiness.tbdFieldCount} fields still await delegated-act confirmation.`,
+        ? "The current catalog has no inactive future regulatory fields."
+        : `${readiness.tbdFieldCount} inactive future fields remain pending later legislation or guidance.`,
       { tbdFieldCount: readiness.tbdFieldCount },
     ),
   ];

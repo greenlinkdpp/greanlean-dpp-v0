@@ -1,0 +1,1332 @@
+# RC pre-freeze changed and untracked inventory
+# Generated from git status before the RC commit.
+# Columns: pre-freeze status, SHA-256 of exact file content, path.
+# The inventory file itself is recorded by the resulting Git commit tree.
+SELF	RECORDED_BY_RC_GIT_TREE	docs/v2-implementation/phase-7/evidence/rc-pre-freeze-changes.tsv
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		.env.example
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		README.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		SPEC.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		app/01/[gtin]/[[...segments]]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		app/api/qr/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		app/dashboard/products/[id]/page.tsx
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		app/dashboard/projects/[projectId]/page.tsx
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		app/demos/industrial-battery/page.tsx
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		app/demos/lmt-battery/page.tsx
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		app/p/[slug]/page.tsx
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		app/passports/[slug]/page.tsx
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		app/products/green-vault-ess-14-3/page.tsx
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		components/battery/BatteryDppWorkspace.tsx
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		config/battery/eu-battery-passport-datapoints-v2.0.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		docs/regulatory/eu-battery-dpp/known-uncertainties.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		lib/battery/readiness.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		lib/battery/regulatoryCatalog.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		lib/dpp/publicationReadiness.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		lib/server/apiRoute.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		next-env.d.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		package-lock.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		package.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		pnpm-lock.yaml
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		pnpm-workspace.yaml
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		supabase/seeds/industrial_battery_demo.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		tests/integration/dppAccessContract.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		tests/unit/batteryRegulatoryCatalog.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+ M		tests/unit/publicationReadiness.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/batch-sku-links/[id]/deactivate/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/batch-sku-links/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/batches/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/batches/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/bms/aggregate/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/canonical-claims/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/capabilities/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/connector-jobs/[id]/cancel/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/connector-jobs/[id]/retry/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/connector-jobs/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/connector-receipts/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/connectors/[id]/credentials/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/connectors/[id]/jobs/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/connectors/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/connectors/[id]/test/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/connectors/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/data-sources/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/field-definitions/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/identifiers/[id]/retire/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/identifiers/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/identifiers/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/imports/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/items/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/items/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/mapping-profiles/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/mapping-versions/[id]/commit/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/mapping-versions/[id]/dry-run/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/mapping-versions/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/memberships/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/organisations/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/partner-authorizations/[authorizationId]/approve/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/partner-authorizations/[authorizationId]/revoke/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/partner-authorizations/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/partners/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/passport-reviews/[id]/approve/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/passport-reviews/[id]/reject/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/passport-reviews/[id]/request-changes/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/passport-reviews/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/passport-reviews/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/passports/[id]/integrity/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/passports/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/passports/[id]/versions/[version]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/passports/[id]/versions/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/passports/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/product-families/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/product-families/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/product-models/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/product-models/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/products/[subjectType]/[subjectId]/resolved-data/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/products/[subjectType]/[subjectId]/validation/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/public/passports/[identifier]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/publications/[id]/withdraw/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/publications/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/registry-submissions/[id]/poll/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/registry-submissions/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/registry-submissions/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/resolver-mappings/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/resolver/[identifier]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/roles/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/schema-versions/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/schemas/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/skus/[id]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/skus/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/source-records/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/tenants/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		app/api/v2/webhooks/[connectorCode]/route.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		config/dpp/eu-dpp-harmonised-standards-v2026.1.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		config/environment/production-target-denylist.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/product/customer-delivery-blueprint.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/product/solo-product-development-sop.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/production-baseline/01-production-environment-baseline.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/production-baseline/02-production-schema-and-migration-ledger.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/production-baseline/03-production-rls-verification.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/production-baseline/04-production-storage-and-files.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/production-baseline/05-production-backup-and-recovery-evidence.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/production-baseline/06-production-secrets-and-integrations.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/production-baseline/07-production-public-url-api-qr-baseline.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/production-baseline/08-production-drift-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/production-baseline/09-production-risk-reassessment.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/production-baseline/10-production-readiness-summary.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/regulatory/eu-dpp/harmonised-standards-conformance.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/01-current-platform-audit.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/02-current-data-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/03-current-dpp-flow.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/04-multi-tenant-and-permission-audit.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/05-product-hierarchy-audit.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/06-dpp-workflow-and-registry-audit.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/07-data-provenance-and-trust-audit.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/08-integration-and-dataspace-audit.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/09-v1-v2-gap-analysis.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/10-v2-target-architecture.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/11-v1-v2-migration-plan.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/12-refactor-roadmap.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/13-risk-register.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/adr/ADR-001-tenant-vs-organisation.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/adr/ADR-002-partner-tenant-authorization.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/adr/ADR-003-product-model-sku-batch-item.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/adr/ADR-004-dpp-identity-vs-version.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/adr/ADR-005-schema-authority.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/adr/ADR-006-canonical-data-and-provenance.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/adr/ADR-007-publication-single-source-of-truth.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/adr/ADR-008-resolver-and-stable-identifiers.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/adr/ADR-009-api-v1-v2-coexistence.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/adr/ADR-010-external-standards-as-adapters.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/01-v2-domain-boundaries.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/02-tenant-organisation-partner-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/03-product-hierarchy-and-identifier-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/04-dpp-passport-version-publication-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/05-schema-canonical-provenance-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/06-access-control-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/07-resolver-and-public-access-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/08-api-v2-boundaries.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/09-v2-database-additive-design.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/10-v2-implementation-gates.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/11-architecture-decisions-summary.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/12-open-business-decisions.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-architecture/final/ARCHITECTURE-BASELINE-v2.0.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/environment/development-isolation-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-1/01-phase1-implementation-summary.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-1/02-phase1-database-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-1/03-phase1-rls-design.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-1/04-phase1-policy-engine.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-1/05-phase1-api-contract.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-1/06-phase1-test-matrix.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-1/07-phase1-security-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-1/08-phase1-v1-regression-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-1/09-phase1-open-issues.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-1/10-phase1-exit-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-1/openapi-v2.yaml
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/01-phase2-implementation-summary.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/02-product-domain-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/03-product-database-and-constraints.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/04-product-rls-and-security.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/05-product-api-contract.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/06-identifier-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/07-legacy-product-mapping.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/08-phase2-test-matrix.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/09-phase2-security-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/10-phase2-v1-regression-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/11-phase2-open-issues.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-2/12-phase2-exit-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/01-phase3-implementation-summary.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/02-schema-registry-final-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/03-field-definition-and-rules.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/04-data-source-and-source-record.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/05-mapping-engine.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/06-canonical-claim-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/07-provenance-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/08-resolution-engine.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/09-validation-and-data-quality.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/10-phase3-api-contract.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/11-phase3-rls-and-security.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/12-phase3-test-matrix.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/13-phase3-security-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/14-phase3-v1-phase1-phase2-regression.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/15-phase3-open-issues.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-3/16-phase3-exit-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/01-phase4-implementation-summary.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/02-passport-identity-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/03-review-workflow.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/04-publication-version-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/05-publication-integrity.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/06-resolver-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/07-audience-projection.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/08-public-formats-html-json-jsonld-pdf.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/09-qr-and-legacy-url-compatibility.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/10-phase4-api-contract.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/11-phase4-rls-and-security.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/12-phase4-test-matrix.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/13-phase4-security-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/14-phase4-v1-v2-v3-regression.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/15-phase4-open-issues.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-4/16-phase4-exit-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/01-phase5-implementation-summary.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/02-integration-domain-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/03-connector-job-and-retry-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/04-connector-security-and-secrets.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/05-generic-rest-connector.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/06-file-import-and-mapping.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/07-erp-mes-plm-adapter-contracts.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/08-registry-test-adapter.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/09-webhook-callback-polling.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/10-bms-aggregation-adapter.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/11-phase5-api-contract.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/12-phase5-rls-and-security.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/13-phase5-test-matrix.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/14-phase5-security-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/15-phase5-regression-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/16-phase5-open-issues.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-5/17-phase5-exit-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/01-phase6-implementation-summary.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/02-production-baseline-closure.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/03-production-schema-rls-storage-verification.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/04-backup-pitr-restore-drill.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/05-preproduction-environment.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/06-v1-v2-migration-dry-run.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/07-legacy-data-reconciliation.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/08-shadow-read-and-compare.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/09-performance-and-load-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/10-security-and-threat-model.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/11-failure-recovery-and-kill-switch.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/12-cutover-write-strategy.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/13-resolver-api-compatibility.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/14-observability-and-alerting.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/15-pilot-cutover-runbook.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/16-pilot-go-no-go-checklist.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/17-phase6-risk-register.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/18-phase6-open-issues.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/19-phase6-exit-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/evidence/development-performance.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6/evidence/readiness-evidence.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/01-phase6b-remediation-summary.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/02-preproduction-environment.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/03-production-evidence-closure.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/04-production-rls-runtime-verification.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/05-backup-pitr-restore-closure.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/06-framework-and-security-header-remediation.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/07-rate-limit-and-capacity-controls.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/08-seed-trigger-closure.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/09-migration-dry-run-and-reconciliation.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/10-shadow-compare-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/11-performance-and-load-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/12-security-retest.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/13-failure-killswitch-rollback-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/14-resolver-and-api-compatibility.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/15-observability-and-alerting-results.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/16-production-change-request-status.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/17-risk-register-closure.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/18-phase6b-open-issues.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/19-phase6b-exit-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/19-phase6b-payment-deferred-exit-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/20-current-execution-status-and-supabase-reorg-plan.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/PITR-CHANGE-REQUEST.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/PRODUCTION-CHANGE-REQUEST.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/payment-deferred-production-after-preprod.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/payment-deferred-production-before-preprod.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/payment-deferred-production-unchanged-comparison.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/preproduction-0033-capability-repair.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/preproduction-failure-injection.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/preproduction-http-controls.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/preproduction-kill-switch-rehearsal.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/preproduction-migration-replay.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/preproduction-observability-rehearsal.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/preproduction-performance.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/preproduction-phase1-phase5-verification.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/preproduction-rollback-rehearsal.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/preproduction-seed-and-reconciliation.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/preproduction-shadow-compatibility.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/production-closure.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/production-managed-restore-drill.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/production-plan-capacity-evidence.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/production-post-pro-upgrade-smoke.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/production-pro-managed-backup-evidence.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/production-vercel-deployment-readonly.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/stage1-development-after-transfer.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/stage1-development-baseline.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/stage1-production-after-dev-pause.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/stage1-production-after-transfer.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6b/evidence/stage1-production-before.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/01-phase6c-summary.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/02-legacy-row-decisions.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/03-pilot-slo-and-capacity.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/04-resolver-performance-analysis.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/05-hosted-rate-limit-and-body-controls.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/06-hosted-proxy-security.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/07-pilot-operational-ownership.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/08-qr-policy-decision.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/09-hosted-security-retest.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/10-migration-compatibility-recheck.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/11-performance-capacity-recheck.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/12-phase6c-risk-closure.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/13-phase6c-exit-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/14-phase6-final-human-acceptance-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/15-phase6-final-exit-report.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/evidence/hosted-preproduction-burst.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/evidence/hosted-preproduction-verification.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/evidence/human-accepted-observability.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/evidence/human-accepted-pilot-performance.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/evidence/legacy-row-decisions.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/evidence/preproduction-0034-verification.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/evidence/production-final-readonly-check.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/01-resolver-timing-baseline.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/02-resolver-query-analysis.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/03-resolver-remediation-plan.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/04-resolver-remediation-result.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/05-hosted-performance-retest.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/06-phase6-final-performance-gate.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/evidence/hosted-performance-retest.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/evidence/hosted-timing-profile.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/evidence/production-post-remediation-readonly.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/evidence/resolver-fast-path-application.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/evidence/resolver-query-analysis.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-6c/performance-final/evidence/resolver-regression.json
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-7/00-PRODUCTION-CHANGE-REQUEST.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-7/01-pilot-scope-lock.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		docs/v2-implementation/phase-7/02-release-candidate.md
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/dppStandards.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/publicControls.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/collectionRoute.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/featureFlags.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/genericRestConnector.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/phase3Repository.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/phase3Routes.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/phase4Repository.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/phase4Routes.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/phase5Repository.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/phase5Routes.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/policyDecisionPoint.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/productHierarchyResolver.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/productRepository.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/productRoutes.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/repository.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/server/v2/security.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/audienceProjection.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/bmsAggregation.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/connectorJobs.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/connectorSecurity.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/externalAdapters.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/featureSwitches.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/legacyFieldAdapter.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/legacyProductMapping.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/mappingEngine.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/phase3Errors.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/phase4Errors.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/phase5Errors.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/policy.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/productErrors.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/productIdentifiers.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/publicFormats.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/qrPolicy.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/registryTestAdapter.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/resolutionEngine.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		lib/v2/resolver.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		middleware.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/assert-development-target.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/configure-development-env.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6/collect-readiness-evidence.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6/measure-development-performance.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/apply-and-rehearse-preproduction-0033.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/assert-preproduction-target.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/collect-production-closure.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/collect-stage1-development-baseline.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/collect-stage1-production-baseline.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/configure-preproduction-env.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/rehearse-preproduction-failures.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/rehearse-preproduction-kill-switches.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/rehearse-preproduction-observability.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/rehearse-preproduction-rollback.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/replay-preproduction-migrations.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/run-preproduction-verifiers.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/seed-and-reconcile-preproduction.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/verify-preproduction-compatibility.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6b/verify-preproduction-http-controls.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6c/analyze-resolver-query.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6c/apply-resolver-fast-path-preproduction.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6c/measure-hosted-burst.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6c/measure-human-accepted-pilot.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6c/profile-hosted-resolver-final.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6c/verify-hosted-preproduction.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6c/verify-human-accepted-observability.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/phase6c/verify-resolver-fast-path-regression.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/verify-v2-phase1-development.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/verify-v2-phase2-development.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/verify-v2-phase3-development.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/verify-v2-phase4-development.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		scripts/verify-v2-phase5-development.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/migrations/0027_v2_phase1_tenant_access_foundation.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/migrations/0028_v2_phase2_product_core.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/migrations/0029_v2_phase3_schema_canonical_provenance.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/migrations/0030_v2_phase4_passport_publication_resolver.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/migrations/0031_v2_phase5_integration_registry_connectors.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/migrations/0032_v2_phase6_seed_trigger_compatibility_fix.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/migrations/0033_v2_phase6b_future_tenant_connector_capabilities.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/migrations/0034_phase6c_hosted_pilot_controls.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/migrations/0035_phase6c_resolver_fast_path.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/rollbacks/0027_v2_phase1_tenant_access_foundation.down.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/rollbacks/0028_v2_phase2_product_core.down.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/rollbacks/0029_v2_phase3_schema_canonical_provenance.down.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/rollbacks/0030_v2_phase4_passport_publication_resolver.down.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/rollbacks/0031_v2_phase5_integration_registry_connectors.down.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/rollbacks/0032_v2_phase6_seed_trigger_compatibility_fix.down.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/rollbacks/0033_v2_phase6b_future_tenant_connector_capabilities.down.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/rollbacks/0034_phase6c_hosted_pilot_controls.down.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/rollbacks/0035_phase6c_resolver_fast_path.down.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		supabase/seeds/v1_development_reference_products.sql
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/integration/v2Phase3Contract.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/integration/v2Phase4Contract.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/integration/v2Phase5Contract.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/integration/v2Phase6bSecurityContract.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/integration/v2ProductCoreContract.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/integration/v2SecurityShellContract.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/migrations/v2Phase1Foundation.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/migrations/v2Phase2ProductCore.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/migrations/v2Phase3CanonicalProvenance.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/migrations/v2Phase4PassportPublication.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/migrations/v2Phase5Integration.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/migrations/v2Phase6Readiness.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/migrations/v2Phase6bFutureTenantCapabilities.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/migrations/v2Phase6cHostedPilotControls.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/migrations/v2Phase6cResolverFastPath.test.mjs
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/dppStandards.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/legacyFieldAdapter.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/legacyProductMapping.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/mappingEngine.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/phase4Projection.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/phase5ConnectorSecurity.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/phase5Connectors.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/phase6KillSwitches.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/productErrors.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/productIdentifiers.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/publicControls.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/qrPolicy.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/resolutionEngine.test.ts
+zsh:1: command not found: shasum
+zsh:1: command not found: awk
+??		tests/unit/v2Policy.test.ts
+

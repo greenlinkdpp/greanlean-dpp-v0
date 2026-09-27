@@ -1,0 +1,46 @@
+{
+  "capturedAt": "2026-09-27T07:16:53Z",
+  "production": {
+    "organizationPlan": "pro",
+    "computeTier": "nano",
+    "computeNote": "The project retained Nano after the organization upgrade; Supabase does not automatically resize upgraded Free projects.",
+    "databaseDisk": {
+      "type": "gp3",
+      "sizeGb": 2,
+      "iops": 3000,
+      "throughputMiBps": 125
+    },
+    "databaseSizeBytes": 23358611,
+    "activeConnectionsAtSample": 10,
+    "maxConnections": 60,
+    "estimatedLiveRows": 3262,
+    "userTableCount": 136
+  },
+  "preproductionBaseline": {
+    "requests": 60,
+    "concurrency": 10,
+    "successes": 60,
+    "errorRate": 0,
+    "p50Ms": 4721.09,
+    "p95Ms": 6126.85,
+    "p99Ms": 7100.99,
+    "boundary": "Local production-mode frontend against isolated Free-tier PreProd; not a hosted edge or Production load test."
+  },
+  "pilot": {
+    "accessModel": "invited-only",
+    "tenantCount": null,
+    "concurrencyTarget": null,
+    "acceptedLatencySlo": null,
+    "safetyMargin": "NOT_QUANTIFIABLE_WITHOUT_PILOT_SCOPE_AND_ACCEPTED_SLO"
+  },
+  "knownLimitations": [
+    "Production is still Nano compute.",
+    "No destructive or high-pressure Production load test was performed.",
+    "The measured PreProd resolver p95 is 6.13 seconds.",
+    "Pilot tenant volume, concurrency, and accepted SLO are not defined.",
+    "No Enterprise-scale capacity claim is made."
+  ],
+  "pilotCapacity": "BLOCKED",
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false
+}

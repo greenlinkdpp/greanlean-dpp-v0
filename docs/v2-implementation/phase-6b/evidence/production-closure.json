@@ -1,0 +1,171 @@
+{
+  "generatedAt": "2026-09-26T15:01:57.405Z",
+  "safety": {
+    "productionMethods": [
+      "GET",
+      "HEAD"
+    ],
+    "productionWritesPerformed": false,
+    "targetFingerprint": "3ce843a277e6"
+  },
+  "repository": {
+    "head": "796a0b6367f311d94347ef17415c6c417cbdaae6",
+    "dirty": true,
+    "deployedRevision": null,
+    "deployedRevisionStatus": "UNKNOWN"
+  },
+  "schema": {
+    "productionDefinitionCount": 99,
+    "definitionFingerprint": "d06f7ad612d5f096",
+    "expectedV1MigrationFiles": [
+      "0001_project_migration_ledger.sql",
+      "0006_schema_registry.sql",
+      "0007_field_definitions_and_rules.sql",
+      "0009_battery_domain.sql",
+      "0010_battery_dynamic_metrics.sql",
+      "0011_registry_adapter.sql",
+      "0012_unified_dpp_publications.sql",
+      "0013_identity_and_access.sql",
+      "0014_battery_operating_data_integration.sql",
+      "0015_dpp_publication_foundation.sql",
+      "0016_dpp_publication_review.sql",
+      "0017_publication_review_function_permissions.sql",
+      "0018_canonical_publication_finalization.sql",
+      "0019_file_evidence_lifecycle_foundation.sql",
+      "0020_system_operation_security_boundary.sql",
+      "0021_publication_backfill_and_read_cutover.sql",
+      "0022_pgcrypto_runtime_search_path.sql",
+      "0023_canonical_public_snapshot_resolution.sql",
+      "0024_canonical_schema_identifier_compatibility.sql",
+      "0025_p0_battery_pilot_foundation.sql",
+      "0026_battery_regulatory_datapoints_v2.sql"
+    ],
+    "expectedV1TableCount": 70,
+    "missingExpectedV1Tables": [],
+    "unexpectedDiffClassification": "PARTIAL_OPENAPI_ONLY"
+  },
+  "rlsRuntime": {
+    "protectedTableProbes": {
+      "users": {
+        "service": {
+          "status": 200,
+          "count": 0
+        },
+        "anonymous": {
+          "status": 200,
+          "count": 0
+        }
+      },
+      "customers": {
+        "service": {
+          "status": 200,
+          "count": 1
+        },
+        "anonymous": {
+          "status": 200,
+          "count": 0
+        }
+      },
+      "leads": {
+        "service": {
+          "status": 200,
+          "count": 2
+        },
+        "anonymous": {
+          "status": 200,
+          "count": 0
+        }
+      },
+      "dpp_user_membership": {
+        "service": {
+          "status": 200,
+          "count": 3
+        },
+        "anonymous": {
+          "status": 200,
+          "count": 0
+        }
+      },
+      "dpp_organisation": {
+        "service": {
+          "status": 200,
+          "count": 3
+        },
+        "anonymous": {
+          "status": 200,
+          "count": 0
+        }
+      },
+      "dpp_access_request": {
+        "service": {
+          "status": 200,
+          "count": 1
+        },
+        "anonymous": {
+          "status": 200,
+          "count": 0
+        }
+      },
+      "dpp_access_audit": {
+        "service": {
+          "status": 200,
+          "count": 179
+        },
+        "anonymous": {
+          "status": 200,
+          "count": 0
+        }
+      },
+      "dpp_project": {
+        "service": {
+          "status": 200,
+          "count": 0
+        },
+        "anonymous": {
+          "status": 401,
+          "count": null
+        }
+      },
+      "battery_integration_credential": {
+        "service": {
+          "status": 200,
+          "count": 0
+        },
+        "anonymous": {
+          "status": 200,
+          "count": 0
+        }
+      }
+    },
+    "publicViewProbes": {
+      "dpp_public_view": {
+        "anonymous": {
+          "status": 200,
+          "count": 146
+        }
+      },
+      "dpp_item_publication_pointer": {
+        "anonymous": {
+          "status": 401,
+          "count": null
+        }
+      },
+      "dpp_product_publication_pointer": {
+        "anonymous": {
+          "status": 401,
+          "count": null
+        }
+      },
+      "products": {
+        "anonymous": {
+          "status": 200,
+          "count": 8
+        }
+      }
+    },
+    "anonymousNegativePass": true,
+    "authenticatedTenantIsolation": "NOT_VERIFIED_NO_APPROVED_TEST_IDENTITIES",
+    "policyCatalogVerified": false,
+    "legacyProductsAnonymousVisibilityRequiresIntentConfirmation": 8
+  }
+}

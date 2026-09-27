@@ -13,7 +13,8 @@
 
 - Regulation (EU) 2024/1781（ESPR），重点为第 9 至 13 条；
 - Commission Implementing Regulation (EU) 2026/1778，重点为第 8 至 14 条；
-- 欧盟委员会 DPP Registry 官方页面和 Economic Operators User Guide v1.0（2026-07-17）；
+- 欧盟委员会 DPP Registry 官方页面和 Economic Operators User Guide v1.03（2026-09-16）；
+- Commission Implementing Decision (EU) 2026/1736 及 EN 18216:2026、EN 18219:2026、EN 18220:2026、EN 18221:2026、EN 18222:2026、EN 18223:2026；
 - 用户提供的 EU DPP Registry 实施条例草案，用于与正式文本追溯对比；
 - BatteryPass-Ready Data Attribute Longlist v1.3（2026-03）；
 - BatteryPass-Ready Data Model Documentation v1.0（2026-06-24）；
@@ -21,7 +22,7 @@
 - JRC145830 方法论资料；
 - [当前系统盘点](docs/architecture/current-system-audit.md)。
 
-其中 BatteryPass-Ready 模型仍处于持续演进状态；Registry 实施条例已经正式发布，Registry 和测试环境已经上线，但官方 User Guide v1.0 明确说明电池语义目录尚未定义、当前不能成功完成电池 DPP 注册。因此这些资料均不能单独作为“平台已经合规”的证明。未确认事项统一记录在 [known-uncertainties.md](docs/regulatory/eu-battery-dpp/known-uncertainties.md)。
+其中 BatteryPass-Ready 模型仍处于持续演进状态；Registry 实施条例和首批六项 DPP 协调标准已经正式发布，Registry 和测试环境已经上线，但官方 User Guide v1.03 仍明确说明电池语义目录尚未定义、当前不能成功完成电池 DPP 注册。因此这些资料均不能单独作为“平台已经合规”的证明。未确认事项统一记录在 [known-uncertainties.md](docs/regulatory/eu-battery-dpp/known-uncertainties.md)。
 
 ## 2. 产品定位
 
@@ -146,7 +147,7 @@ SOH、SOC、剩余容量、循环次数、温度、极端温度时长、能量�
 
 ### 4.7 Registry
 
-截至 2026-07-22，EU DPP Registry、生产入口和独立测试环境已经上线，正式实施条例为 Regulation (EU) 2026/1778。当前官方用户指南允许组织注册和在线/文件提交流程测试，但电池语义目录仍在开发，电池 DPP 暂不能成功注册。平台应区分“Registry 已上线”和“电池注册已可用”这两个状态。
+截至 2026-09-16，EU DPP Registry、生产入口和独立测试环境已经上线，正式实施条例为 Regulation (EU) 2026/1778。当前官方 User Guide v1.03 允许组织注册和在线/JSON/XML 文件提交流程测试，单批上限为 100 条且电池当前仅支持单体级流程；但电池语义目录仍在开发，电池 DPP 暂不能成功注册。平台应区分“Registry 已上线”和“电池注册已可用”这两个状态。
 
 Registry 适配必须支持：
 

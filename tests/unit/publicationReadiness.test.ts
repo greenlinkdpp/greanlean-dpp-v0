@@ -17,11 +17,13 @@ function batteryReadiness(
       percent: Math.round((mandatoryComplete / mandatoryTotal) * 100),
     },
     conditionalMandatory: { complete: 1, total: 1, percent: 100 },
+    expertReview: { complete: 84, total: 84, percent: 100 },
     optional: { complete: 0, total: 1, percent: 0 },
     evidence: { complete: 3, total: 3, percent: 100 },
     verification: { complete: 80, total: 83, percent: 96 },
     registry: { complete: 4, total: 4, percent: 100 },
     tbdFieldCount: 0,
+    questionedFieldCount: 0,
     futureFieldCount: 0,
     duplicateFieldCount: 0,
     notApplicableFieldCount: 0,
@@ -63,6 +65,38 @@ test("required battery passport passes hard readiness gates when complete", () =
     checks.find((item) => item.ruleCode === "BATTERY_FILLED_FIELDS_VERIFIED")?.passed,
     false,
   );
+});
+
+test("unresolved conditional fields and pending expert review block publication", () => {
+  const readiness = batteryReadiness(83, 83);
+  readiness.conditionalMandatory = { complete: 0, total: 1, percent: 0 };
+  readiness.expertReview = { complete: 83, total: 84, percent: 99 };
+  const checks = batteryPublicationReadinessChecks({
+    sectorCode: "battery",
+    profilePresent: true,
+    applicability: "REQUIRED",
+    readiness,
+  });
+  assert.equal(checks.find((item) => item.ruleCode === "BATTERY_CONDITIONAL_FIELDS_REVIEWED")?.severity, "BLOCKER");
+  assert.equal(checks.find((item) => item.ruleCode === "BATTERY_CONDITIONAL_FIELDS_REVIEWED")?.passed, false);
+  assert.equal(checks.find((item) => item.ruleCode === "BATTERY_EXPERT_REVIEW_COMPLETE")?.severity, "BLOCKER");
+  assert.equal(checks.find((item) => item.ruleCode === "BATTERY_EXPERT_REVIEW_COMPLETE")?.passed, false);
+});
+
+test("future regulatory fields remain visible as pending guidance", () => {
+  const readiness = batteryReadiness(83, 83);
+  readiness.tbdFieldCount = 8;
+  readiness.futureFieldCount = 8;
+  const checks = batteryPublicationReadinessChecks({
+    sectorCode: "battery",
+    profilePresent: true,
+    applicability: "REQUIRED",
+    readiness,
+  });
+  const future = checks.find((item) => item.ruleCode === "BATTERY_DELEGATED_ACT_FIELDS_CONFIRMED");
+  assert.equal(future?.severity, "WARNING");
+  assert.equal(future?.passed, false);
+  assert.match(future?.messageEn || "", /8 inactive future fields/);
 });
 
 test("unconfirmed battery applicability is a publication blocker", () => {

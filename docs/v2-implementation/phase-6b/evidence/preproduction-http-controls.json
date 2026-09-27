@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-09-27T02:02:04.040Z",
+  "classification": "PREPRODUCTION_BACKEND_LOCAL_RC",
+  "runtime": {
+    "next": "15.5.26",
+    "nodeEnv": "production",
+    "backend": "isolated Pre-Production"
+  },
+  "headers": {
+    "contentSecurityPolicy": true,
+    "cspNonce": true,
+    "cspStrictDynamic": true,
+    "cspUnsafeEval": false,
+    "hsts": "max-age=31536000; includeSubDomains",
+    "nosniff": "nosniff",
+    "frameOptions": "DENY",
+    "referrerPolicy": "strict-origin-when-cross-origin",
+    "permissionsPolicy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+  },
+  "rateLimit": {
+    "route": "/api/qr",
+    "documentedLimit": 30,
+    "successfulBeforeLimit": 30,
+    "firstOverLimitStatus": 429,
+    "retryAfterPresent": true
+  },
+  "capacity": {
+    "declaredJsonBytes": 1048577,
+    "status": 413
+  },
+  "limitations": [
+    "The application Release Candidate ran locally against the isolated Pre-Production backend; there is no hosted Pre-Production frontend deployment.",
+    "The in-memory limiter is per process and is not evidence of distributed Production-plan capacity.",
+    "Undeclared/chunked request bodies still require platform or streaming-parser enforcement."
+  ],
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false
+}

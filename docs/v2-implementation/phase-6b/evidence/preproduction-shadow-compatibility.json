@@ -1,0 +1,219 @@
+{
+  "generatedAt": "2026-09-27T06:36:11.035Z",
+  "classification": "PREPRODUCTION_BACKEND_LOCAL_RC",
+  "immutableVersion": {
+    "version": 4,
+    "payloadHash": "63997d514d966107f17b239714ee3ab0501de50b43781b0ba75364a47ba9918a",
+    "publicationState": "PUBLISHED"
+  },
+  "formatResults": [
+    {
+      "format": "json",
+      "status": 200,
+      "contentType": "application/json",
+      "bytes": 848,
+      "metadataMatch": true
+    },
+    {
+      "format": "html",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 730,
+      "metadataMatch": true
+    },
+    {
+      "format": "jsonld",
+      "status": 200,
+      "contentType": "application/ld+json",
+      "bytes": 663,
+      "metadataMatch": true
+    },
+    {
+      "format": "pdf",
+      "status": 200,
+      "contentType": "application/pdf",
+      "bytes": 1033,
+      "metadataMatch": true
+    },
+    {
+      "format": "qr",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 2394,
+      "metadataMatch": true
+    }
+  ],
+  "etagConditionalStatus": 304,
+  "aliasResults": [
+    {
+      "identifierClass": "PASSPORT_ID",
+      "status": 200,
+      "payloadHashMatch": true
+    },
+    {
+      "identifierClass": "ALIAS_OR_GS1",
+      "status": 200,
+      "payloadHashMatch": true
+    },
+    {
+      "identifierClass": "ALIAS_OR_GS1",
+      "status": 200,
+      "payloadHashMatch": true
+    },
+    {
+      "identifierClass": "ALIAS_OR_GS1",
+      "status": 200,
+      "payloadHashMatch": true
+    },
+    {
+      "identifierClass": "ALIAS_OR_GS1",
+      "status": 200,
+      "payloadHashMatch": true
+    },
+    {
+      "identifierClass": "ALIAS_OR_GS1",
+      "status": 200,
+      "payloadHashMatch": true
+    }
+  ],
+  "legacyCompatibility": {
+    "passportRoute": {
+      "status": 200,
+      "result": "PASS"
+    },
+    "gs1DigitalLinkRoute": {
+      "status": 307,
+      "result": "PASS"
+    },
+    "qrApi": {
+      "status": 200,
+      "contentType": "image/png",
+      "result": "PASS"
+    }
+  },
+  "apiInventory": {
+    "totalRoutes": 100,
+    "explicitV1Routes": [
+      "app/api/v1/imports/[jobId]/commit/route.ts",
+      "app/api/v1/imports/preflight/route.ts",
+      "app/api/v1/organisations/current/export/route.ts",
+      "app/api/v1/organisations/current/route.ts",
+      "app/api/v1/product-models/[productId]/hierarchy/route.ts",
+      "app/api/v1/product-models/[productId]/items-bulk/route.ts",
+      "app/api/v1/projects/[projectId]/applicability/route.ts",
+      "app/api/v1/projects/[projectId]/route.ts",
+      "app/api/v1/projects/route.ts"
+    ],
+    "v2Routes": [
+      "app/api/v2/batch-sku-links/[id]/deactivate/route.ts",
+      "app/api/v2/batch-sku-links/route.ts",
+      "app/api/v2/batches/[id]/route.ts",
+      "app/api/v2/batches/route.ts",
+      "app/api/v2/bms/aggregate/route.ts",
+      "app/api/v2/canonical-claims/route.ts",
+      "app/api/v2/capabilities/route.ts",
+      "app/api/v2/connector-jobs/[id]/cancel/route.ts",
+      "app/api/v2/connector-jobs/[id]/retry/route.ts",
+      "app/api/v2/connector-jobs/[id]/route.ts",
+      "app/api/v2/connector-receipts/[id]/route.ts",
+      "app/api/v2/connectors/[id]/credentials/route.ts",
+      "app/api/v2/connectors/[id]/jobs/route.ts",
+      "app/api/v2/connectors/[id]/route.ts",
+      "app/api/v2/connectors/[id]/test/route.ts",
+      "app/api/v2/connectors/route.ts",
+      "app/api/v2/data-sources/route.ts",
+      "app/api/v2/field-definitions/route.ts",
+      "app/api/v2/identifiers/[id]/retire/route.ts",
+      "app/api/v2/identifiers/[id]/route.ts",
+      "app/api/v2/identifiers/route.ts",
+      "app/api/v2/imports/route.ts",
+      "app/api/v2/items/[id]/route.ts",
+      "app/api/v2/items/route.ts",
+      "app/api/v2/mapping-profiles/route.ts",
+      "app/api/v2/mapping-versions/[id]/commit/route.ts",
+      "app/api/v2/mapping-versions/[id]/dry-run/route.ts",
+      "app/api/v2/mapping-versions/route.ts",
+      "app/api/v2/memberships/route.ts",
+      "app/api/v2/organisations/route.ts",
+      "app/api/v2/partner-authorizations/[authorizationId]/approve/route.ts",
+      "app/api/v2/partner-authorizations/[authorizationId]/revoke/route.ts",
+      "app/api/v2/partner-authorizations/route.ts",
+      "app/api/v2/partners/route.ts",
+      "app/api/v2/passport-reviews/[id]/approve/route.ts",
+      "app/api/v2/passport-reviews/[id]/reject/route.ts",
+      "app/api/v2/passport-reviews/[id]/request-changes/route.ts",
+      "app/api/v2/passport-reviews/[id]/route.ts",
+      "app/api/v2/passport-reviews/route.ts",
+      "app/api/v2/passports/[id]/integrity/route.ts",
+      "app/api/v2/passports/[id]/route.ts",
+      "app/api/v2/passports/[id]/versions/[version]/route.ts",
+      "app/api/v2/passports/[id]/versions/route.ts",
+      "app/api/v2/passports/route.ts",
+      "app/api/v2/product-families/[id]/route.ts",
+      "app/api/v2/product-families/route.ts",
+      "app/api/v2/product-models/[id]/route.ts",
+      "app/api/v2/product-models/route.ts",
+      "app/api/v2/products/[subjectType]/[subjectId]/resolved-data/route.ts",
+      "app/api/v2/products/[subjectType]/[subjectId]/validation/route.ts",
+      "app/api/v2/public/passports/[identifier]/route.ts",
+      "app/api/v2/publications/[id]/withdraw/route.ts",
+      "app/api/v2/publications/route.ts",
+      "app/api/v2/registry-submissions/[id]/poll/route.ts",
+      "app/api/v2/registry-submissions/[id]/route.ts",
+      "app/api/v2/registry-submissions/route.ts",
+      "app/api/v2/resolver-mappings/route.ts",
+      "app/api/v2/resolver/[identifier]/route.ts",
+      "app/api/v2/roles/route.ts",
+      "app/api/v2/schema-versions/route.ts",
+      "app/api/v2/schemas/route.ts",
+      "app/api/v2/skus/[id]/route.ts",
+      "app/api/v2/skus/route.ts",
+      "app/api/v2/source-records/route.ts",
+      "app/api/v2/tenants/route.ts",
+      "app/api/v2/webhooks/[connectorCode]/route.ts"
+    ],
+    "legacyUnversionedRoutes": [
+      "app/api/access-context/route.ts",
+      "app/api/access-requests/[requestId]/route.ts",
+      "app/api/access-requests/route.ts",
+      "app/api/battery-dpp/[productId]/batterypass-export/route.ts",
+      "app/api/battery-dpp/[productId]/route.ts",
+      "app/api/battery-dpp/items/[itemId]/metrics/history/route.ts",
+      "app/api/battery-dpp/items/[itemId]/metrics/latest/route.ts",
+      "app/api/battery-dpp/public/[identifier]/route.ts",
+      "app/api/chemical-document/route.ts",
+      "app/api/declaration/route.ts",
+      "app/api/demo-document/route.ts",
+      "app/api/dpp-access/[identifier]/route.ts",
+      "app/api/dpp-export/route.ts",
+      "app/api/dpp-files/[versionId]/route.ts",
+      "app/api/integrations/battery/credentials/route.ts",
+      "app/api/integrations/battery/items/[itemId]/events/route.ts",
+      "app/api/integrations/battery/items/[itemId]/metrics/route.ts",
+      "app/api/internal/data-write/route.ts",
+      "app/api/internal/dpp-files/route.ts",
+      "app/api/internal/dpp-integrity/[productId]/route.ts",
+      "app/api/internal/dpp-lifecycle/route.ts",
+      "app/api/internal/dpp-publications/[productId]/candidate/route.ts",
+      "app/api/qr/route.ts",
+      "app/api/registry/[productId]/export/[submissionId]/route.ts",
+      "app/api/registry/[productId]/route.ts"
+    ]
+  },
+  "shadowCompare": {
+    "sourceRows": 5,
+    "deterministicHashesMatch": true,
+    "automaticallyMapped": 0,
+    "reviewRequired": 5,
+    "automaticTargetWrites": 0,
+    "criticalUnknownDiffs": 0,
+    "result": "PASS_WITH_QUARANTINE",
+    "limitation": "All legacy rows require explicit business mapping review, so no semantic V1/V2 field-equivalence claim is made."
+  },
+  "limitations": [
+    "The Release Candidate ran locally against the isolated Pre-Production backend; no hosted Pre-Production frontend exists.",
+    "Historical customer QR telemetry and a Production traffic sample were not accessed."
+  ],
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false
+}

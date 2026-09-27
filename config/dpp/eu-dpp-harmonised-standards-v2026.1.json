@@ -1,0 +1,53 @@
+{
+  "baselineVersion": "2026.1",
+  "decision": "Commission Implementing Decision (EU) 2026/1736",
+  "decisionDate": "2026-07-14",
+  "officialJournalDate": "2026-07-15",
+  "officialUrl": "https://eur-lex.europa.eu/eli/dec_impl/2026/1736/oj",
+  "assessmentDate": "2026-09-17",
+  "claimPolicy": "No standard may be marked verified until its licensed normative text has been reviewed, the listed gaps have been closed, and objective conformance evidence has been approved.",
+  "standards": [
+    {
+      "reference": "EN 18216:2026",
+      "title": "Digital product passport - Data exchange protocols",
+      "status": "partial",
+      "evidence": ["app/api/dpp-export/route.ts", "lib/dpp/canonicalPublication.ts"],
+      "gaps": ["Licensed normative-text review", "Protocol conformance test suite", "Content-negotiation and error-contract evidence"]
+    },
+    {
+      "reference": "EN 18219:2026",
+      "title": "Digital product passport - Unique identifiers",
+      "status": "partial",
+      "evidence": ["lib/dppCompliance.ts", "app/01/[gtin]/[[...segments]]/route.ts", "supabase/migrations/0025_p0_battery_pilot_foundation.sql"],
+      "gaps": ["Licensed normative-text review", "Identifier-scheme governance approval", "Persistence and resolver continuity test"]
+    },
+    {
+      "reference": "EN 18220:2026",
+      "title": "Digital product passport - Data carriers",
+      "status": "partial",
+      "evidence": ["app/api/qr/route.ts", "lib/dppCompliance.ts"],
+      "gaps": ["Licensed normative-text review", "Physical placement and print-quality procedure", "Scan durability and fallback test evidence"]
+    },
+    {
+      "reference": "EN 18221:2026",
+      "title": "Digital product passport - Data storage, archiving, and persistence",
+      "status": "partial",
+      "evidence": ["lib/dpp/canonicalPublication.ts", "supabase/migrations/0018_canonical_publication_finalization.sql", "docs/engineering/deployment.md"],
+      "gaps": ["Licensed normative-text review", "Documented retention schedule", "Restore drill, RTO/RPO, and provider-exit evidence"]
+    },
+    {
+      "reference": "EN 18222:2026",
+      "title": "Digital product passport - Application Programming Interfaces (APIs) for product passport lifecycle management and searchability",
+      "status": "partial",
+      "evidence": ["app/api/dpp-access/[identifier]/route.ts", "app/api/dpp-export/route.ts", "lib/server/apiRoute.ts"],
+      "gaps": ["Licensed normative-text review", "Formal lifecycle/search API conformance suite", "Versioning, pagination, throttling, and availability contract"]
+    },
+    {
+      "reference": "EN 18223:2026",
+      "title": "Digital product passport - System interoperability",
+      "status": "partial",
+      "evidence": ["lib/schemaRegistry.ts", "lib/battery/projection.ts", "lib/dpp/canonicalPublication.ts"],
+      "gaps": ["Licensed normative-text review", "Cross-provider interoperability test", "Semantic repository and vocabulary alignment evidence"]
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 import { ProductEditor } from "@/components/ProductEditor";
 
-export default function ProductEditPage({
+export default async function ProductEditPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <ProductEditor productId={params.id} />;
+  const { id } = await params;
+  return <ProductEditor productId={id} />;
 }

@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-09-27T06:26:54.871Z",
+  "target": {
+    "environment": "preproduction",
+    "projectRefFingerprint": "d465ccdd1809",
+    "protectedTarget": false
+  },
+  "applicationBackendUnavailable": {
+    "injectedCondition": "V2 backend connection refused",
+    "v2Status": 500,
+    "genericErrorContract": true,
+    "correlationIdPreserved": true,
+    "sensitiveDetailsExposed": false,
+    "legacyQrStatus": 200,
+    "result": "PASS"
+  },
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false,
+  "partialMigrationFailure": {
+    "injectedCondition": "Transactional DDL followed by division-by-zero",
+    "managementApiStatus": 400,
+    "transactionFailed": true,
+    "partialTableAbsent": true,
+    "migrationHeadAfterFailure": "0033",
+    "result": "PASS"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-09-27T06:18:05.352Z",
+  "target": {
+    "environment": "preproduction",
+    "projectRefFingerprint": "d465ccdd1809"
+  },
+  "migration": {
+    "file": "supabase/migrations/0033_v2_phase6b_future_tenant_connector_capabilities.sql",
+    "sha256": "8a9807ea8caa51801d51ccd27141a7b0c9d47a932e62c69b546ff781fea3b6b6"
+  },
+  "rollback": {
+    "file": "supabase/rollbacks/0033_v2_phase6b_future_tenant_connector_capabilities.down.sql",
+    "sha256": "adb9ea64c66a37c6876909efc166722e9f668f24638333df593ee72ea2a1d6ee"
+  },
+  "initial": {
+    "head": "0033",
+    "repaired": true
+  },
+  "afterApply": {
+    "head": "0033",
+    "repaired": true
+  },
+  "futureTenantRoleBindingCount": 6,
+  "afterRollback": {
+    "head": "0032",
+    "function_removed": true,
+    "delta_removed": true
+  },
+  "afterReapply": {
+    "head": "0033",
+    "repaired": true
+  },
+  "result": "PASS",
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false
+}

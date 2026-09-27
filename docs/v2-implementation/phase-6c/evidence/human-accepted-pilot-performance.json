@@ -1,0 +1,66 @@
+{
+  "generatedAt": "2026-09-27T14:36:50.831Z",
+  "origin": "https://greanlean-dpp-preprod.vercel.app",
+  "scope": {
+    "tenantCount": 1,
+    "modelLimit": 30,
+    "passportLimit": 5000,
+    "normalConcurrency": "1-3",
+    "burstConcurrency": 5,
+    "resolverP95SloMs": 2500,
+    "errorRateSlo": "<1%",
+    "observationWindowDays": 7
+  },
+  "profiles": [
+    {
+      "label": "normal-concurrency-1",
+      "requestCount": 20,
+      "concurrency": 1,
+      "statuses": { "200": 20 },
+      "transportFailures": 0,
+      "errorRate": 0,
+      "p50Ms": 2999.10,
+      "p95Ms": 4348.88,
+      "p99Ms": 5782.66,
+      "maxMs": 5782.66,
+      "throughputRps": 0.32,
+      "latencyHeadroomMs": -1848.88,
+      "latencyHeadroomPercent": -73.96,
+      "pass": false
+    },
+    {
+      "label": "normal-concurrency-3",
+      "requestCount": 30,
+      "concurrency": 3,
+      "statuses": { "200": 30 },
+      "transportFailures": 0,
+      "errorRate": 0,
+      "p50Ms": 3029.11,
+      "p95Ms": 4353.18,
+      "p99Ms": 4690.72,
+      "maxMs": 4690.72,
+      "throughputRps": 0.81,
+      "latencyHeadroomMs": -1853.18,
+      "latencyHeadroomPercent": -74.13,
+      "pass": false
+    },
+    {
+      "label": "burst-concurrency-5",
+      "requestCount": 25,
+      "concurrency": 5,
+      "statuses": { "200": 25 },
+      "transportFailures": 0,
+      "errorRate": 0,
+      "p50Ms": 2839.16,
+      "p95Ms": 4018.78,
+      "p99Ms": 4399.94,
+      "maxMs": 4399.94,
+      "throughputRps": 1.35,
+      "latencyHeadroomMs": -1518.78,
+      "latencyHeadroomPercent": -60.75,
+      "pass": false
+    }
+  ],
+  "overallPass": false,
+  "decision": "PILOT_CAPACITY_FAIL"
+}

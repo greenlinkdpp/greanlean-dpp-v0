@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-09-27T02:11:30.412Z",
+  "classification": "PREPRODUCTION_BACKEND_LOCAL_RC",
+  "structuredLogging": {
+    "correlationIdRoundTrip": true,
+    "statusRecorded": true,
+    "sensitiveValuesRecorded": false
+  },
+  "syntheticAlert": {
+    "probeCount": 5,
+    "errorRate": 1,
+    "threshold": 0.2,
+    "delivered": true,
+    "acknowledged": true,
+    "severity": "HIGH"
+  },
+  "proposedThresholds": {
+    "resolver5xxRate": ">1% for 5 minutes",
+    "resolverP95Latency": ">2000 ms for 10 minutes",
+    "public429Rate": ">10% for 5 minutes",
+    "publicationFailure": ">=1 in 5 minutes",
+    "crossTenantDenySpike": ">20 in 5 minutes",
+    "connectorDeadLetter": ">=1 immediately",
+    "backupFreshness": "PRO_UPGRADE_PENDING"
+  },
+  "limitations": [
+    "Alert delivery was rehearsed against a local receiver; external on-call routing, retention and owner acknowledgment are not configured.",
+    "Production backup-freshness monitoring remains PRO_UPGRADE_PENDING."
+  ],
+  "productionWritePerformed": false,
+  "productionTrafficSwitched": false
+}

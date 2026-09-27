@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-09-27T06:31:26.948Z",
+  "classification": "PREPRODUCTION_BACKEND_LOCAL_RC",
+  "workload": {
+    "route": "/api/v2/resolver/[identifier]?format=json",
+    "requestCount": 60,
+    "concurrency": 10,
+    "warmupRequests": 1,
+    "warmupSuccessful": 1
+  },
+  "results": {
+    "successful": 60,
+    "failed": 0,
+    "errorRate": 0,
+    "latencyMs": {
+      "min": 3499.32,
+      "p50": 4721.09,
+      "p95": 6126.85,
+      "p99": 7100.99,
+      "max": 7100.99
+    }
+  },
+  "limitations": [
+    "Executed against a local production-mode Release Candidate connected to the isolated Pre-Production backend; no hosted Pre-Production frontend exists.",
+    "Uses a single Pre-Production passport and does not establish Production-plan capacity or SLO compliance.",
+    "No Production traffic or write operation was performed."
+  ]
+}

@@ -44,7 +44,8 @@ test("public DPP page treats view as a request, not a granted audience", async (
   const page = await readFile("app/p/[slug]/page.tsx", "utf8");
   const client = await readFile("components/AccessAwareDppPage.tsx", "utf8");
   assert.match(page, /AccessAwareDppPage/);
-  assert.match(page, /requestedView=\{searchParams\?\.view\}/);
+  assert.match(page, /const \[\{ slug \}, query = \{\}\] = await Promise\.all\(\[params, searchParams\]\)/);
+  assert.match(page, /requestedView=\{query\.view\}/);
   assert.doesNotMatch(page, /searchParams\?\.view === "audit"\s*\?\s*"AUTHORITY_ONLY"/);
   assert.match(client, /\/api\/dpp-access\//);
   assert.match(client, /Authorization: `Bearer \$\{session\.access_token\}`/);

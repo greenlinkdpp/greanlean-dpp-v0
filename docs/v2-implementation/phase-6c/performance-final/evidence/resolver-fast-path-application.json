@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-09-27T15:11:21.879Z",
+  "target": "Hosted PreProd only",
+  "migration": "0035_phase6c_resolver_fast_path",
+  "head": "0035",
+  "functionPresent": true,
+  "normalizedIdentifierIndexPresent": true,
+  "serviceRoleExecute": true,
+  "anonExecute": false,
+  "authenticatedExecute": false,
+  "compatibility": {
+    "dppId": { "status": "PUBLISHED", "passportIdentifier": "DPP-P4-MUJEZBWJ140310", "payloadHashPresent": true },
+    "gtin": { "status": "PUBLISHED", "passportIdentifier": "DPP-P4-MUJEZBWJ140310", "payloadHashPresent": true },
+    "legacyAlias": { "status": "PUBLISHED", "passportIdentifier": "DPP-P4-MUJEZBWJ140310", "payloadHashPresent": true }
+  },
+  "databaseRoundTripsBefore": "6-7 normal",
+  "databaseRoundTripsAfter": 1,
+  "productionWritePerformed": false
+}
