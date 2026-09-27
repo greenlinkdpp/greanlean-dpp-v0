@@ -1,1332 +1,448 @@
 # RC pre-freeze changed and untracked inventory
-# Generated from git status before the RC commit.
-# Columns: pre-freeze status, SHA-256 of exact file content, path.
-# The inventory file itself is recorded by the resulting Git commit tree.
-SELF	RECORDED_BY_RC_GIT_TREE	docs/v2-implementation/phase-7/evidence/rc-pre-freeze-changes.tsv
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		.env.example
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		README.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		SPEC.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		app/01/[gtin]/[[...segments]]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		app/api/qr/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		app/dashboard/products/[id]/page.tsx
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		app/dashboard/projects/[projectId]/page.tsx
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		app/demos/industrial-battery/page.tsx
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		app/demos/lmt-battery/page.tsx
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		app/p/[slug]/page.tsx
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		app/passports/[slug]/page.tsx
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		app/products/green-vault-ess-14-3/page.tsx
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		components/battery/BatteryDppWorkspace.tsx
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		config/battery/eu-battery-passport-datapoints-v2.0.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		docs/regulatory/eu-battery-dpp/known-uncertainties.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		lib/battery/readiness.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		lib/battery/regulatoryCatalog.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		lib/dpp/publicationReadiness.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		lib/server/apiRoute.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		next-env.d.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		package-lock.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		package.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		pnpm-lock.yaml
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		pnpm-workspace.yaml
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		supabase/seeds/industrial_battery_demo.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		tests/integration/dppAccessContract.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		tests/unit/batteryRegulatoryCatalog.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
- M		tests/unit/publicationReadiness.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/batch-sku-links/[id]/deactivate/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/batch-sku-links/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/batches/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/batches/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/bms/aggregate/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/canonical-claims/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/capabilities/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/connector-jobs/[id]/cancel/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/connector-jobs/[id]/retry/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/connector-jobs/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/connector-receipts/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/connectors/[id]/credentials/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/connectors/[id]/jobs/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/connectors/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/connectors/[id]/test/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/connectors/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/data-sources/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/field-definitions/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/identifiers/[id]/retire/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/identifiers/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/identifiers/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/imports/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/items/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/items/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/mapping-profiles/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/mapping-versions/[id]/commit/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/mapping-versions/[id]/dry-run/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/mapping-versions/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/memberships/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/organisations/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/partner-authorizations/[authorizationId]/approve/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/partner-authorizations/[authorizationId]/revoke/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/partner-authorizations/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/partners/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/passport-reviews/[id]/approve/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/passport-reviews/[id]/reject/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/passport-reviews/[id]/request-changes/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/passport-reviews/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/passport-reviews/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/passports/[id]/integrity/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/passports/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/passports/[id]/versions/[version]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/passports/[id]/versions/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/passports/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/product-families/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/product-families/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/product-models/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/product-models/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/products/[subjectType]/[subjectId]/resolved-data/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/products/[subjectType]/[subjectId]/validation/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/public/passports/[identifier]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/publications/[id]/withdraw/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/publications/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/registry-submissions/[id]/poll/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/registry-submissions/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/registry-submissions/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/resolver-mappings/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/resolver/[identifier]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/roles/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/schema-versions/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/schemas/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/skus/[id]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/skus/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/source-records/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/tenants/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		app/api/v2/webhooks/[connectorCode]/route.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		config/dpp/eu-dpp-harmonised-standards-v2026.1.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		config/environment/production-target-denylist.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/product/customer-delivery-blueprint.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/product/solo-product-development-sop.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/production-baseline/01-production-environment-baseline.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/production-baseline/02-production-schema-and-migration-ledger.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/production-baseline/03-production-rls-verification.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/production-baseline/04-production-storage-and-files.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/production-baseline/05-production-backup-and-recovery-evidence.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/production-baseline/06-production-secrets-and-integrations.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/production-baseline/07-production-public-url-api-qr-baseline.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/production-baseline/08-production-drift-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/production-baseline/09-production-risk-reassessment.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/production-baseline/10-production-readiness-summary.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/regulatory/eu-dpp/harmonised-standards-conformance.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/01-current-platform-audit.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/02-current-data-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/03-current-dpp-flow.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/04-multi-tenant-and-permission-audit.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/05-product-hierarchy-audit.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/06-dpp-workflow-and-registry-audit.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/07-data-provenance-and-trust-audit.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/08-integration-and-dataspace-audit.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/09-v1-v2-gap-analysis.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/10-v2-target-architecture.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/11-v1-v2-migration-plan.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/12-refactor-roadmap.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/13-risk-register.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/adr/ADR-001-tenant-vs-organisation.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/adr/ADR-002-partner-tenant-authorization.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/adr/ADR-003-product-model-sku-batch-item.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/adr/ADR-004-dpp-identity-vs-version.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/adr/ADR-005-schema-authority.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/adr/ADR-006-canonical-data-and-provenance.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/adr/ADR-007-publication-single-source-of-truth.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/adr/ADR-008-resolver-and-stable-identifiers.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/adr/ADR-009-api-v1-v2-coexistence.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/adr/ADR-010-external-standards-as-adapters.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/01-v2-domain-boundaries.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/02-tenant-organisation-partner-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/03-product-hierarchy-and-identifier-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/04-dpp-passport-version-publication-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/05-schema-canonical-provenance-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/06-access-control-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/07-resolver-and-public-access-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/08-api-v2-boundaries.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/09-v2-database-additive-design.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/10-v2-implementation-gates.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/11-architecture-decisions-summary.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/12-open-business-decisions.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-architecture/final/ARCHITECTURE-BASELINE-v2.0.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/environment/development-isolation-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-1/01-phase1-implementation-summary.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-1/02-phase1-database-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-1/03-phase1-rls-design.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-1/04-phase1-policy-engine.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-1/05-phase1-api-contract.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-1/06-phase1-test-matrix.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-1/07-phase1-security-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-1/08-phase1-v1-regression-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-1/09-phase1-open-issues.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-1/10-phase1-exit-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-1/openapi-v2.yaml
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/01-phase2-implementation-summary.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/02-product-domain-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/03-product-database-and-constraints.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/04-product-rls-and-security.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/05-product-api-contract.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/06-identifier-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/07-legacy-product-mapping.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/08-phase2-test-matrix.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/09-phase2-security-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/10-phase2-v1-regression-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/11-phase2-open-issues.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-2/12-phase2-exit-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/01-phase3-implementation-summary.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/02-schema-registry-final-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/03-field-definition-and-rules.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/04-data-source-and-source-record.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/05-mapping-engine.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/06-canonical-claim-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/07-provenance-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/08-resolution-engine.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/09-validation-and-data-quality.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/10-phase3-api-contract.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/11-phase3-rls-and-security.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/12-phase3-test-matrix.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/13-phase3-security-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/14-phase3-v1-phase1-phase2-regression.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/15-phase3-open-issues.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-3/16-phase3-exit-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/01-phase4-implementation-summary.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/02-passport-identity-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/03-review-workflow.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/04-publication-version-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/05-publication-integrity.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/06-resolver-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/07-audience-projection.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/08-public-formats-html-json-jsonld-pdf.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/09-qr-and-legacy-url-compatibility.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/10-phase4-api-contract.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/11-phase4-rls-and-security.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/12-phase4-test-matrix.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/13-phase4-security-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/14-phase4-v1-v2-v3-regression.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/15-phase4-open-issues.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-4/16-phase4-exit-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/01-phase5-implementation-summary.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/02-integration-domain-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/03-connector-job-and-retry-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/04-connector-security-and-secrets.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/05-generic-rest-connector.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/06-file-import-and-mapping.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/07-erp-mes-plm-adapter-contracts.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/08-registry-test-adapter.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/09-webhook-callback-polling.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/10-bms-aggregation-adapter.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/11-phase5-api-contract.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/12-phase5-rls-and-security.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/13-phase5-test-matrix.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/14-phase5-security-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/15-phase5-regression-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/16-phase5-open-issues.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-5/17-phase5-exit-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/01-phase6-implementation-summary.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/02-production-baseline-closure.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/03-production-schema-rls-storage-verification.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/04-backup-pitr-restore-drill.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/05-preproduction-environment.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/06-v1-v2-migration-dry-run.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/07-legacy-data-reconciliation.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/08-shadow-read-and-compare.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/09-performance-and-load-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/10-security-and-threat-model.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/11-failure-recovery-and-kill-switch.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/12-cutover-write-strategy.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/13-resolver-api-compatibility.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/14-observability-and-alerting.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/15-pilot-cutover-runbook.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/16-pilot-go-no-go-checklist.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/17-phase6-risk-register.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/18-phase6-open-issues.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/19-phase6-exit-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/evidence/development-performance.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6/evidence/readiness-evidence.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/01-phase6b-remediation-summary.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/02-preproduction-environment.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/03-production-evidence-closure.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/04-production-rls-runtime-verification.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/05-backup-pitr-restore-closure.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/06-framework-and-security-header-remediation.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/07-rate-limit-and-capacity-controls.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/08-seed-trigger-closure.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/09-migration-dry-run-and-reconciliation.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/10-shadow-compare-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/11-performance-and-load-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/12-security-retest.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/13-failure-killswitch-rollback-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/14-resolver-and-api-compatibility.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/15-observability-and-alerting-results.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/16-production-change-request-status.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/17-risk-register-closure.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/18-phase6b-open-issues.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/19-phase6b-exit-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/19-phase6b-payment-deferred-exit-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/20-current-execution-status-and-supabase-reorg-plan.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/PITR-CHANGE-REQUEST.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/PRODUCTION-CHANGE-REQUEST.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/payment-deferred-production-after-preprod.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/payment-deferred-production-before-preprod.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/payment-deferred-production-unchanged-comparison.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/preproduction-0033-capability-repair.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/preproduction-failure-injection.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/preproduction-http-controls.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/preproduction-kill-switch-rehearsal.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/preproduction-migration-replay.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/preproduction-observability-rehearsal.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/preproduction-performance.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/preproduction-phase1-phase5-verification.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/preproduction-rollback-rehearsal.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/preproduction-seed-and-reconciliation.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/preproduction-shadow-compatibility.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/production-closure.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/production-managed-restore-drill.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/production-plan-capacity-evidence.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/production-post-pro-upgrade-smoke.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/production-pro-managed-backup-evidence.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/production-vercel-deployment-readonly.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/stage1-development-after-transfer.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/stage1-development-baseline.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/stage1-production-after-dev-pause.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/stage1-production-after-transfer.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6b/evidence/stage1-production-before.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/01-phase6c-summary.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/02-legacy-row-decisions.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/03-pilot-slo-and-capacity.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/04-resolver-performance-analysis.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/05-hosted-rate-limit-and-body-controls.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/06-hosted-proxy-security.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/07-pilot-operational-ownership.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/08-qr-policy-decision.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/09-hosted-security-retest.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/10-migration-compatibility-recheck.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/11-performance-capacity-recheck.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/12-phase6c-risk-closure.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/13-phase6c-exit-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/14-phase6-final-human-acceptance-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/15-phase6-final-exit-report.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/evidence/hosted-preproduction-burst.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/evidence/hosted-preproduction-verification.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/evidence/human-accepted-observability.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/evidence/human-accepted-pilot-performance.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/evidence/legacy-row-decisions.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/evidence/preproduction-0034-verification.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/evidence/production-final-readonly-check.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/01-resolver-timing-baseline.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/02-resolver-query-analysis.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/03-resolver-remediation-plan.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/04-resolver-remediation-result.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/05-hosted-performance-retest.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/06-phase6-final-performance-gate.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/evidence/hosted-performance-retest.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/evidence/hosted-timing-profile.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/evidence/production-post-remediation-readonly.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/evidence/resolver-fast-path-application.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/evidence/resolver-query-analysis.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-6c/performance-final/evidence/resolver-regression.json
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-7/00-PRODUCTION-CHANGE-REQUEST.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-7/01-pilot-scope-lock.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		docs/v2-implementation/phase-7/02-release-candidate.md
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/dppStandards.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/publicControls.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/collectionRoute.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/featureFlags.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/genericRestConnector.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/phase3Repository.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/phase3Routes.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/phase4Repository.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/phase4Routes.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/phase5Repository.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/phase5Routes.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/policyDecisionPoint.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/productHierarchyResolver.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/productRepository.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/productRoutes.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/repository.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/server/v2/security.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/audienceProjection.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/bmsAggregation.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/connectorJobs.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/connectorSecurity.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/externalAdapters.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/featureSwitches.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/legacyFieldAdapter.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/legacyProductMapping.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/mappingEngine.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/phase3Errors.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/phase4Errors.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/phase5Errors.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/policy.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/productErrors.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/productIdentifiers.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/publicFormats.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/qrPolicy.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/registryTestAdapter.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/resolutionEngine.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		lib/v2/resolver.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		middleware.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/assert-development-target.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/configure-development-env.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6/collect-readiness-evidence.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6/measure-development-performance.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/apply-and-rehearse-preproduction-0033.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/assert-preproduction-target.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/collect-production-closure.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/collect-stage1-development-baseline.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/collect-stage1-production-baseline.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/configure-preproduction-env.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/rehearse-preproduction-failures.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/rehearse-preproduction-kill-switches.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/rehearse-preproduction-observability.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/rehearse-preproduction-rollback.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/replay-preproduction-migrations.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/run-preproduction-verifiers.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/seed-and-reconcile-preproduction.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/verify-preproduction-compatibility.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6b/verify-preproduction-http-controls.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6c/analyze-resolver-query.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6c/apply-resolver-fast-path-preproduction.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6c/measure-hosted-burst.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6c/measure-human-accepted-pilot.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6c/profile-hosted-resolver-final.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6c/verify-hosted-preproduction.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6c/verify-human-accepted-observability.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/phase6c/verify-resolver-fast-path-regression.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/verify-v2-phase1-development.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/verify-v2-phase2-development.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/verify-v2-phase3-development.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/verify-v2-phase4-development.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		scripts/verify-v2-phase5-development.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/migrations/0027_v2_phase1_tenant_access_foundation.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/migrations/0028_v2_phase2_product_core.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/migrations/0029_v2_phase3_schema_canonical_provenance.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/migrations/0030_v2_phase4_passport_publication_resolver.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/migrations/0031_v2_phase5_integration_registry_connectors.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/migrations/0032_v2_phase6_seed_trigger_compatibility_fix.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/migrations/0033_v2_phase6b_future_tenant_connector_capabilities.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/migrations/0034_phase6c_hosted_pilot_controls.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/migrations/0035_phase6c_resolver_fast_path.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/rollbacks/0027_v2_phase1_tenant_access_foundation.down.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/rollbacks/0028_v2_phase2_product_core.down.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/rollbacks/0029_v2_phase3_schema_canonical_provenance.down.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/rollbacks/0030_v2_phase4_passport_publication_resolver.down.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/rollbacks/0031_v2_phase5_integration_registry_connectors.down.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/rollbacks/0032_v2_phase6_seed_trigger_compatibility_fix.down.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/rollbacks/0033_v2_phase6b_future_tenant_connector_capabilities.down.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/rollbacks/0034_phase6c_hosted_pilot_controls.down.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/rollbacks/0035_phase6c_resolver_fast_path.down.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		supabase/seeds/v1_development_reference_products.sql
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/integration/v2Phase3Contract.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/integration/v2Phase4Contract.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/integration/v2Phase5Contract.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/integration/v2Phase6bSecurityContract.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/integration/v2ProductCoreContract.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/integration/v2SecurityShellContract.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/migrations/v2Phase1Foundation.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/migrations/v2Phase2ProductCore.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/migrations/v2Phase3CanonicalProvenance.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/migrations/v2Phase4PassportPublication.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/migrations/v2Phase5Integration.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/migrations/v2Phase6Readiness.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/migrations/v2Phase6bFutureTenantCapabilities.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/migrations/v2Phase6cHostedPilotControls.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/migrations/v2Phase6cResolverFastPath.test.mjs
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/dppStandards.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/legacyFieldAdapter.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/legacyProductMapping.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/mappingEngine.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/phase4Projection.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/phase5ConnectorSecurity.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/phase5Connectors.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/phase6KillSwitches.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/productErrors.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/productIdentifiers.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/publicControls.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/qrPolicy.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/resolutionEngine.test.ts
-zsh:1: command not found: shasum
-zsh:1: command not found: awk
-??		tests/unit/v2Policy.test.ts
+# Reconstructed from Git objects for base 796a0b6367f311d94347ef17415c6c417cbdaae6 and RC 907f86f1c57cc5957af974048e4539cf54877284.
+# Columns: pre-freeze status, SHA-256 of exact RC file content, path.
+# The self-referential inventory file is canonically recorded by RC Git tree 5eea86aec4fd9e9cc7da1f48268283c2980c43dc.
+M	ab397d840e5d7703316059efccad8bfffda54a864b41c2e5a7ae975ea5c86a18	.env.example
+M	f9f34d9b6cf730fd0e1e05d93122f2aaf7bc8b7a91c77e821913b3fb8ee71296	README.md
+M	55ed9f38c957df0db45b601e9a8294a7a9492214fd4a8c11f18314b272df565e	SPEC.md
+M	b8dbfe3784172815d256a086597e393b885926e6b6217676cf3c5cd432935f4a	app/01/[gtin]/[[...segments]]/route.ts
+M	1192cc46b62641f82dc3706508a485ed4b8a64d15348579a06805a6449c22b49	app/api/qr/route.ts
+A	992c99a4945cf324b9df2f3c06af297d6565cb377561b66d33a5f05daaa4f6a0	app/api/v2/batch-sku-links/[id]/deactivate/route.ts
+A	8b379fe2ff74512e2d3dcffdaa48c9071c796ada2012857fcd87d4bdc724e1fd	app/api/v2/batch-sku-links/route.ts
+A	a76187cb7e2d1925d2a1cd6ed1166379664e7d6b296794c7e21a8a9e017b3650	app/api/v2/batches/[id]/route.ts
+A	7be05c3ca4f467f36b8ae77da8eb9fa57794b75fa5ecda284d8fdbc1e41cb412	app/api/v2/batches/route.ts
+A	74578deef555dfb10961265c2d95fe7f7226f1cceba806f517d22da42b8021ec	app/api/v2/bms/aggregate/route.ts
+A	4c1ba07baf847a97af32fee18f7408258d2bf1bb18b2196026bf03d67cb032ba	app/api/v2/canonical-claims/route.ts
+A	fe595a449456b3caa077e6d3d98c91579b1992c74b97bbcd9c9dd9ec4a156222	app/api/v2/capabilities/route.ts
+A	25450695c2c140b75f416b40f62e661b5bd8648471d47929131993d55eaf0e03	app/api/v2/connector-jobs/[id]/cancel/route.ts
+A	c8ac0f67094d527f623bf729fde4716c7bbf535d808a5b567fa45aa226f10e3d	app/api/v2/connector-jobs/[id]/retry/route.ts
+A	af6e0caf2ccdce68529b0a146f7c3513acb49f5f38a96eba30e4b1c988c404ba	app/api/v2/connector-jobs/[id]/route.ts
+A	da26f97114fbb75e3708156efd6f65f2440fac8c9ff610f7026be9502ea56e72	app/api/v2/connector-receipts/[id]/route.ts
+A	976279206b59085a618c8864e8d2c01efaf50a8508460fb7dc357e038ff22b3e	app/api/v2/connectors/[id]/credentials/route.ts
+A	5903d358985a57a20edae9af01b4fc1adf29931b8496f63d3af0197dc0655f73	app/api/v2/connectors/[id]/jobs/route.ts
+A	8271132cb7b9479641d4b50264e86885e1233588c21543532c17212db11eb022	app/api/v2/connectors/[id]/route.ts
+A	898f40a8b9f40ef35a1ce53f0873d5a62f403b8f7bc8533643484033b510a1e4	app/api/v2/connectors/[id]/test/route.ts
+A	dc2947288461db7b6dd9865b950f2125e63bdc5212c9955bf1cc1617f4a7f572	app/api/v2/connectors/route.ts
+A	7fa3c900ac8e22314357fad260fd60d0e43207104547f460c728879cd277a50e	app/api/v2/data-sources/route.ts
+A	6e78a0aa5fcc5a8b6f9e30b344e225b85f595cf4dd35f5fb080e3142ef61d359	app/api/v2/field-definitions/route.ts
+A	953a6a06572574febb35d6c56c1d46ab0ace2b991c4f19ad087e2da15a3280e7	app/api/v2/identifiers/[id]/retire/route.ts
+A	965ad2df0b29fb51058f2676c9e4934ddbd852506cbbf09b1852eb50564ad31d	app/api/v2/identifiers/[id]/route.ts
+A	940723c3367dae47e8a774f7b410328a7d15da828ea5354d4ff6508d60d411cd	app/api/v2/identifiers/route.ts
+A	0fac6c5db20b15538f19e8e0492064984966f39d82e134b767832d6ae6e0b505	app/api/v2/imports/route.ts
+A	e8a6f3add49e272777ef4b29715e64d4a03cee0be3f44d73fd6887262c61be55	app/api/v2/items/[id]/route.ts
+A	5d0f2504daff7e84e4067c4bd6f866b0a8391621451b1ef85db5cdecc5d01569	app/api/v2/items/route.ts
+A	7cacee8b7527057a8519b0c46c04bb14dc9490bbb612cab23cce27e8fc53a202	app/api/v2/mapping-profiles/route.ts
+A	851b7afaac848a9706b8d609994bbe704a875dfe76069f61571837dbecf88198	app/api/v2/mapping-versions/[id]/commit/route.ts
+A	02b5eafdde8607ed1dfe112abfcf1bffa0b68fc4b01a5ac0f5bfe14aa43228e3	app/api/v2/mapping-versions/[id]/dry-run/route.ts
+A	c8e7c64c2d81277a9ec263399b121e0d9be377447078530c0717a335d487d0b8	app/api/v2/mapping-versions/route.ts
+A	d2436d83139ff2081e124faae0943bf630b9c377ac227d527369972cfeb9f4f7	app/api/v2/memberships/route.ts
+A	5e927bf67e4ea26ad4713728846f72bcfae0e92b2fa5559aa9e4d9c12ec2cc02	app/api/v2/organisations/route.ts
+A	f62d6a29ef4251f88a96047320b95dbcf6ccf715577372eefce5650bb6719ede	app/api/v2/partner-authorizations/[authorizationId]/approve/route.ts
+A	72325b2593f2d8d28232adeff36bfef5ed0fc44fc89f4159add955ed022217a3	app/api/v2/partner-authorizations/[authorizationId]/revoke/route.ts
+A	ae6542799a184e904b71c7ea84e0a5270290efcf6f80a230771ae4d294baa43b	app/api/v2/partner-authorizations/route.ts
+A	e74268a213a9cda8d8d77d4666f802eaec9c7eebda962208dda5d23cdfe69d3b	app/api/v2/partners/route.ts
+A	637f043c2aeaeaaa1d46b494cc7f3eda5eddfe22fc1cf78a07337edbcf257186	app/api/v2/passport-reviews/[id]/approve/route.ts
+A	7c8791c8054997dbf60ce5d27b71bee935da2a02b5a82a13561dd6614f946531	app/api/v2/passport-reviews/[id]/reject/route.ts
+A	659bb967fa1c41d0c8487e08bff1c0388c31dea39e4ffcba41ff43032295cb96	app/api/v2/passport-reviews/[id]/request-changes/route.ts
+A	8be8841ce0c6a45f7006cac5bf764cba43424b932d946c686c37026a3724700d	app/api/v2/passport-reviews/[id]/route.ts
+A	495df0aa3627bb887cfeddfaf6fcdb26e07aba19f476758d03abd227426a4c1b	app/api/v2/passport-reviews/route.ts
+A	e2b3205c114e8978b3160afd1e0a05f16db102eb21c69325b398c8bcd2ed4a85	app/api/v2/passports/[id]/integrity/route.ts
+A	206065ff2c7a428bb6dc53936ccd5b92922991097e95fbfb42ba6e15d7006d6d	app/api/v2/passports/[id]/route.ts
+A	0eb7c0f594c316d94ee235860b6603f9dd000c151151641925ea82aaf9288300	app/api/v2/passports/[id]/versions/[version]/route.ts
+A	5b89ac8c7a41b28693a0ffbe04aed110d63377f66f8f2f653699933274527961	app/api/v2/passports/[id]/versions/route.ts
+A	b398ff7e712246af250c09ce6dab4aab32e0a5a4c65b0f1ac4fe3ce92ec1bf27	app/api/v2/passports/route.ts
+A	3b8fa140ae07112229535a18bf549b4b2f2f9556e1d336385c0c92a0663019d0	app/api/v2/product-families/[id]/route.ts
+A	d2f609b16c372fd952766d715ef5e0acbd706abc60041478a724f09532305138	app/api/v2/product-families/route.ts
+A	9bb86669e5bb572e780e19bdd939ec679ae1e63e73fbfa8e617122b67b8ad523	app/api/v2/product-models/[id]/route.ts
+A	2ab4fa2b4630e48eca90d595e3b96512d9bec85b6c5bf80d82ff35e0f476d2dc	app/api/v2/product-models/route.ts
+A	54a4c31b335e16f405b99396eca0be024856b1d96fd5c3f4c0a56feda87c6f19	app/api/v2/products/[subjectType]/[subjectId]/resolved-data/route.ts
+A	4c68ee90386ee101fd55765a752fbe3008032cea6e06e8080da0530beeb80f22	app/api/v2/products/[subjectType]/[subjectId]/validation/route.ts
+A	4d0e3537e2be2a9428a9ac3dfc1a87d0a629116602c2ab0cefce982e61d76520	app/api/v2/public/passports/[identifier]/route.ts
+A	1d17b3d12313bc9fdefd768cf658812cb6a7410f51d30111a3110b03ce2d3937	app/api/v2/publications/[id]/withdraw/route.ts
+A	99c78034927fb15ba9f7a30ccfc65d54ab6e557cc2363f9466b369c183bc53dc	app/api/v2/publications/route.ts
+A	12d740b518ce4199fc72a50beb3ac9df49bc8032195bb3dd3f72ca10dd6e5169	app/api/v2/registry-submissions/[id]/poll/route.ts
+A	4a986c1b2bd74425a3ead81635571e9e19c3953b781d69581242ba289a6cb7ad	app/api/v2/registry-submissions/[id]/route.ts
+A	ba38293a8f3342425e91d3e9fa19d62b4c2bb07062f66229ebba32cb3f7b7ece	app/api/v2/registry-submissions/route.ts
+A	c6f08e49a94d6881f125ecc8eeb4e20128c922f67e24fbb4d487c049e9ec4799	app/api/v2/resolver-mappings/route.ts
+A	2e75de9638a81c0d8218e3b8626c9771f1a9014f19860d4081023e4c683b0abf	app/api/v2/resolver/[identifier]/route.ts
+A	51d8b76b334aabf996a5fee20182abe2ef9171aab31ab122df3b9b41b09fb17a	app/api/v2/roles/route.ts
+A	fe3e2aa3faa415fc2e765f957b7dc2888a5ce64cc25b628bbe3c9808cd44cb5c	app/api/v2/schema-versions/route.ts
+A	6d1dcc9be4f4ea46cd01caf6b4124b66a7f26bb893d35926728bcdecef0ac3c2	app/api/v2/schemas/route.ts
+A	41aa5b87ed1259005a7ef79f1ffed2720462d429059ec7994e765a48eb4b57e0	app/api/v2/skus/[id]/route.ts
+A	3c0033ea139a0f982ebb41cd7ac91cd4ba4e4d066f58189ebca88d678e479313	app/api/v2/skus/route.ts
+A	ecfeee0137043a1b8b24d86e196b0ca1802307c9db23da257a4c3eb834a26a72	app/api/v2/source-records/route.ts
+A	7f893eb9eb7929d876f3b36346ff152bd1d0e85fd9191426e2e18b2d356cdea3	app/api/v2/tenants/route.ts
+A	314ee24cfa0e07ec38ffd9bd155c46e0fb9a2e3b7a259a4eb2c0ddc81266a197	app/api/v2/webhooks/[connectorCode]/route.ts
+M	deddb9cb23704775249ee090d56c564a8bb4cb33fdc157a15b19453982829f3f	app/dashboard/products/[id]/page.tsx
+M	5e3abca265ed15a8266a24d99cbfa59c1fe389644b5af29cfc70fd24017abb19	app/dashboard/projects/[projectId]/page.tsx
+M	e9a4a5a570d0ddf673b78ff5862ca1a0578fe22ed83b21c72eb8bcb77da0b10d	app/demos/industrial-battery/page.tsx
+M	def7b452d6cf91e1c0d3d110af6c6036bb737aa1c64a23bfec1b9668922316f6	app/demos/lmt-battery/page.tsx
+M	9e47559595c3722a8718f2434b4efe85fceaf04ce0e6707bed91f042bb3d8e7d	app/p/[slug]/page.tsx
+M	94d10d72cfd6778e4e667cb10d609cf227c3bdc63c91b7997590ed6315af4cac	app/passports/[slug]/page.tsx
+M	2e8d6e46701377f61786b7dc1eb4398cd38d49696e44a4170bb87b7574e88eba	app/products/green-vault-ess-14-3/page.tsx
+M	8fb0407f285cc0712f0675dac063057c96c7735102655c0ed44246256c305426	components/battery/BatteryDppWorkspace.tsx
+M	14768cd9fa0a2d1cc4500957d8fd9abd83d93159c39d6f50c509aacb5e20f485	config/battery/eu-battery-passport-datapoints-v2.0.json
+A	7c31cee614e431e5fe29c46ee229e9fff1ea4474cefb37b756b8bab986fa004b	config/dpp/eu-dpp-harmonised-standards-v2026.1.json
+A	eaf149421676577ff436530e5c0c7ba3866fe9990db91d995f9c1001e75812a5	config/environment/production-target-denylist.json
+A	8c70b1b9490c58182b885ea2b5044a8a93ff84145456a085027855a527944e3f	docs/product/customer-delivery-blueprint.md
+A	02787218b88f09fa3e26e6accc446f8e32da36a7a1db553918dc453fdb886017	docs/product/solo-product-development-sop.md
+A	e8bf039c3975c284141465d315a0e37063bbbb4a03fe71d9cc3af81e92f3e3e5	docs/production-baseline/01-production-environment-baseline.md
+A	c4fdde0721af59f42a36ab318399f2e927662b2d68b9744bf2b4d14d2e06a89f	docs/production-baseline/02-production-schema-and-migration-ledger.md
+A	e7140d3a77edfe4b2cb8429ebf5caf77e28e1dafe1d134bd7ca48903eab21bc5	docs/production-baseline/03-production-rls-verification.md
+A	983558d929ad8a931c629a451887bd75dbbb446e83926adc3ab4ed486f5f0316	docs/production-baseline/04-production-storage-and-files.md
+A	d299a689ffd0d1acf17aa0c67ba4f6b34a80df90a045afcb0aa8130c77669c46	docs/production-baseline/05-production-backup-and-recovery-evidence.md
+A	c13bad2592255aaadb849e5370bd5c2e48b16cded9a655f1ccdc13dac4bde6fb	docs/production-baseline/06-production-secrets-and-integrations.md
+A	57821ca43e245cd8904fb3d10dfdef065f80667286193cfff921d34c12f8bbf4	docs/production-baseline/07-production-public-url-api-qr-baseline.md
+A	7cabf01caf92c47a10ed367cce8a988dcf07dd565715207ef18998e00fb723bf	docs/production-baseline/08-production-drift-report.md
+A	fc99ab4b4f9c9863055ecfe337c1b07b301a2d48b0743ec10a474fd11b786969	docs/production-baseline/09-production-risk-reassessment.md
+A	2b4b36042ad5ce7fcf4f38d11b39a2ad30b85de9ba4184fdc4b69cff5b7e0a54	docs/production-baseline/10-production-readiness-summary.md
+M	ebf5c0cd0ae92326120739e97b4d4ed9e11cb4d960cad1375a3a9b656e1e942c	docs/regulatory/eu-battery-dpp/known-uncertainties.md
+A	e4aaaf12c53d661545eb5a2bc6ec2c99729502bba3797033b85a9f9b677a75b4	docs/regulatory/eu-dpp/harmonised-standards-conformance.md
+A	45be5cd747e3c8bdec9891b72a163a5ad6e5c7af3c92226efc37e19cbef097b3	docs/v2-architecture/01-current-platform-audit.md
+A	ba61dc13ef78da299bc9842c89bda5da3a6e31f5c8c046270b842894a36eb8c2	docs/v2-architecture/02-current-data-model.md
+A	c854d458129f6c491381b396ffb53141973b3c674084336ee52aaba3f28e105e	docs/v2-architecture/03-current-dpp-flow.md
+A	05fff9d72ace275bf0c1b519f38b0ecc7eedc908e5b52c26ea2d156a2dd7cff3	docs/v2-architecture/04-multi-tenant-and-permission-audit.md
+A	b9ee26c8376c4353af06cd53361e84f3b94c228be54c744c029a0594d187ad70	docs/v2-architecture/05-product-hierarchy-audit.md
+A	5dc001bd673bf288fdb6e059010b7bc7224667cb4d9562c5307b0cd1ee12a0e8	docs/v2-architecture/06-dpp-workflow-and-registry-audit.md
+A	496bc2ac8bac5ea4be79b0e26c527ec814b1ce7db827029770767cda4e02e982	docs/v2-architecture/07-data-provenance-and-trust-audit.md
+A	921a387033569d977cdc557662f3c7839829fad5e18b5a9948e052f88b19821d	docs/v2-architecture/08-integration-and-dataspace-audit.md
+A	80577744160cd2ed2db21f8f66c1873da2c2ded94ddf1d0ed632a07dbd332fd1	docs/v2-architecture/09-v1-v2-gap-analysis.md
+A	72e5411d9ca078657e3eb67fa280b8ced4dfab5d9a04fc9a14f024d12b74ba7d	docs/v2-architecture/10-v2-target-architecture.md
+A	e930bb74867f06283bb27d6a9877c15011b853d50b8aeaad022828f3ad300911	docs/v2-architecture/11-v1-v2-migration-plan.md
+A	1c8d1f3bb99d8829a20fefba3bcd6c29a627b86b7860a992766c7432f908629a	docs/v2-architecture/12-refactor-roadmap.md
+A	468093017580567793d40dabd4ca63c3da619e674c79c9ed6eed0b5c357d0819	docs/v2-architecture/13-risk-register.md
+A	3522386defdc1d6cff30247ab80cb108db19501346112d8fb587ca159492a924	docs/v2-architecture/adr/ADR-001-tenant-vs-organisation.md
+A	d71038c0d3d1b4778b550795c212b2a58e55ab4785a9fc1e153cccd6334fb172	docs/v2-architecture/adr/ADR-002-partner-tenant-authorization.md
+A	9dc6e762bef03f4c689f9c2591e7cda6357e9b6d2a1cfb6ca913051ffdd29736	docs/v2-architecture/adr/ADR-003-product-model-sku-batch-item.md
+A	91dde10019ce479b88e3e5e57ad8d360249bf2fdb526b2e006ccf7b7e5ac183e	docs/v2-architecture/adr/ADR-004-dpp-identity-vs-version.md
+A	ab0c4cd161b08a4ff04c029f80a6c871ad1c61cf8d1a326bd3a20b855ec09993	docs/v2-architecture/adr/ADR-005-schema-authority.md
+A	92be526744876e14f43080a196e85adc9c8ef5ad3eb067b94dbd477251d8d2ed	docs/v2-architecture/adr/ADR-006-canonical-data-and-provenance.md
+A	d7e0368aea597868edc9d839a92d546048b9d63bc3016a004a734ff639fd175a	docs/v2-architecture/adr/ADR-007-publication-single-source-of-truth.md
+A	b1fa4050d8a90b7cb4c1cf8108b00da574733ca0b657e2046031f3bf3503529e	docs/v2-architecture/adr/ADR-008-resolver-and-stable-identifiers.md
+A	982726cf5360dd5d150a68d097cc3712b5968fb1e9260008e4b105df4f082b3a	docs/v2-architecture/adr/ADR-009-api-v1-v2-coexistence.md
+A	a23a2bdcc9a49bf07c810aaed987a28eab756cb150f06dd69f539646dda6c689	docs/v2-architecture/adr/ADR-010-external-standards-as-adapters.md
+A	31d221f2d4bfdbc95af898af4905fbb66b1baaaaf76c2ef0a7afa7af4c8087a4	docs/v2-architecture/final/01-v2-domain-boundaries.md
+A	55592408ae61a2fe744e16b2341ac02ef69fe6c0f5301bf1954d224dfee37f39	docs/v2-architecture/final/02-tenant-organisation-partner-model.md
+A	e7f9abe61762785aa2c66298f0fb85f3cf56cf5dab5125b7c465a668a3dffa48	docs/v2-architecture/final/03-product-hierarchy-and-identifier-model.md
+A	cdd4bde9f716bed81f52260bfbee0ca1c9a2d8d78dc719e41e5e4ffe5cd4d7f5	docs/v2-architecture/final/04-dpp-passport-version-publication-model.md
+A	5294e1339b86d52a5aeb59b925342e175a264f6d2ada9bb5efa66a39fdc5224b	docs/v2-architecture/final/05-schema-canonical-provenance-model.md
+A	4df9999ccb4f7ab1c22db0cdbd6b1e48d093041793a5db1c31a0742bcfdd9c51	docs/v2-architecture/final/06-access-control-model.md
+A	335f5cf4082e7b5763ac201efeac6b40fbac0317f324dfe88636b475df315587	docs/v2-architecture/final/07-resolver-and-public-access-model.md
+A	0b2c9fb7bb70b51b1e223670834845f8b6ff710bb9df1b7ede522bc19da07eae	docs/v2-architecture/final/08-api-v2-boundaries.md
+A	432470ccbed5fb96cd4188a389ef77114cf0d08835ca343ef8325b957bac1aca	docs/v2-architecture/final/09-v2-database-additive-design.md
+A	4d6aa460247684511c34e973571297f6d0b40e43eb99c664e7a4c0243bcd358e	docs/v2-architecture/final/10-v2-implementation-gates.md
+A	9de37e34937a0b14fad7db9174b493e38b1cf57bbc21cf2881b9fd4bf3f4cc0d	docs/v2-architecture/final/11-architecture-decisions-summary.md
+A	ee8f17fcae1dd16378a82ecff37319dbe7064b382a1c1b84fe7e21571fbc2fbb	docs/v2-architecture/final/12-open-business-decisions.md
+A	5b3393bc807edb9fb19bb5b123ce5c8ab9645aa0f5b10691240f85357011cda5	docs/v2-architecture/final/ARCHITECTURE-BASELINE-v2.0.md
+A	4638b73bf7e59a879fe76e0207fc9db35d15c82f4681c131fe27057debde1d09	docs/v2-implementation/environment/development-isolation-report.md
+A	cd9f9621a51323cefecf90e64bb9d6766a1777f1f081595c630a6324293f8043	docs/v2-implementation/phase-1/01-phase1-implementation-summary.md
+A	eeb68b28315e27993a1fd38a58f6e6c60060055edb5b1bc44a19d54ecdf37296	docs/v2-implementation/phase-1/02-phase1-database-model.md
+A	57914cf221090350f8b123b45a501d9bd1aec75083c0df07d51f26658189f4eb	docs/v2-implementation/phase-1/03-phase1-rls-design.md
+A	120cb3823a601cbd41c26cb0090a76fa135b55eed70289c5f836fe73d912e8ab	docs/v2-implementation/phase-1/04-phase1-policy-engine.md
+A	670298929945e913e20ebbec63aa84a16c202f541ef989acec7ed110c6940d93	docs/v2-implementation/phase-1/05-phase1-api-contract.md
+A	58b40817e478b733b2ff0482158eb83780feb2b773564d4a67178b60fe126f3f	docs/v2-implementation/phase-1/06-phase1-test-matrix.md
+A	28dde56b89364b71cd10e54e7dde801e39c5b9f3d5570fbdf3c1ae55c1aa5359	docs/v2-implementation/phase-1/07-phase1-security-results.md
+A	573b56bab6c402bdb6136c53189b3a44850b42e4aaff7409d54941cdf9af3a58	docs/v2-implementation/phase-1/08-phase1-v1-regression-results.md
+A	65b43de3cb29cadc61323605fbffd6caa036f0e06941dec4d91ab2ba53e6d3ff	docs/v2-implementation/phase-1/09-phase1-open-issues.md
+A	cdc240d5e7dfc3f01b400371bc877158f997f5bfe855d0e77d9d70b5fa871f31	docs/v2-implementation/phase-1/10-phase1-exit-report.md
+A	4b2190722aa29145cd70b976fc3320980d1baad337e66cd74a07a5750322db82	docs/v2-implementation/phase-1/openapi-v2.yaml
+A	f41ef3d5a0f4641892ea23fbd100fa5193d3b9428697b10150ac1b1f9dccebf3	docs/v2-implementation/phase-2/01-phase2-implementation-summary.md
+A	61419920e7bfb50ab51f5eef4272fb08bfeebfb0b2206b7dd873542b032a274b	docs/v2-implementation/phase-2/02-product-domain-model.md
+A	52f3b23e09414fe52da3d80a2590b5f964b22267814372382931048299513e88	docs/v2-implementation/phase-2/03-product-database-and-constraints.md
+A	29e89b60e1bf6a262a4db295781960705d25de861d866dfd02520212e08daaa6	docs/v2-implementation/phase-2/04-product-rls-and-security.md
+A	2fb241cb227a684fedc28563a407ac8a696026829baba4c557359a97f93c71e3	docs/v2-implementation/phase-2/05-product-api-contract.md
+A	055c70589d50a8545d1ba79dd589675e655cd3ae5f77371810b8978ae2b93a2b	docs/v2-implementation/phase-2/06-identifier-model.md
+A	504abf86f7d07e10dfa608603abdd1ca7aae2d82f27cb69ba6112868ed161e70	docs/v2-implementation/phase-2/07-legacy-product-mapping.md
+A	3356c86c7d9a0ffaf799654980790489f9e5c62563fc27f0a1f4b53ea6f11e0f	docs/v2-implementation/phase-2/08-phase2-test-matrix.md
+A	082a2c1683409b738e1979d2405f05052a6c9c74d2607406a2aea7615a37718e	docs/v2-implementation/phase-2/09-phase2-security-results.md
+A	f67a01c9513335b00717ea2a77cbd90277ffae9e4ddfa44bf01f1b3f6f00d3da	docs/v2-implementation/phase-2/10-phase2-v1-regression-results.md
+A	36831fc0355b067a8dc13367a0ab7f7b0980291a5cc87c2a0cd520e4d33de851	docs/v2-implementation/phase-2/11-phase2-open-issues.md
+A	2941fb63c0947266ae10c4224e6e692b87ca50175d16d3e783b28faf1e65c7b1	docs/v2-implementation/phase-2/12-phase2-exit-report.md
+A	b8ec65cf25e2f734232e1fb60dc2e27240f1769ba13e66b10f2bd268fb29a538	docs/v2-implementation/phase-3/01-phase3-implementation-summary.md
+A	9b900b9428e7ed238905ac6df6e7256a669b1a1e5e234a71df7c4f9ce009244e	docs/v2-implementation/phase-3/02-schema-registry-final-model.md
+A	129013c61ae9a6102cbca720d406cf3bc61b382cdd971c1119b392650b56fe46	docs/v2-implementation/phase-3/03-field-definition-and-rules.md
+A	94afb80f7b59a33a222199ca22d8936235805a44ca334d736e5ed5b474e1746e	docs/v2-implementation/phase-3/04-data-source-and-source-record.md
+A	9816245293e0e4cacb052ce930d9d03f72452e0c429eeba0661a26c001cadf30	docs/v2-implementation/phase-3/05-mapping-engine.md
+A	ca338ccf5b596a242b8571b6e5979ce6f325cc4c8b98c4358b2385e29189f17a	docs/v2-implementation/phase-3/06-canonical-claim-model.md
+A	a460f145ba040ebc6109bf061b3f98ad65b1b554fec9db7e3cab3548ee37a0d6	docs/v2-implementation/phase-3/07-provenance-model.md
+A	7b89160d2e7972dec3dabc5b7233a8db11c1d12240828d76a996e1e48a740c52	docs/v2-implementation/phase-3/08-resolution-engine.md
+A	4b1af6ea700690c2ad232f7d6cfb4d6a5e3e3f2bd203160b1f3ebf815ce16d16	docs/v2-implementation/phase-3/09-validation-and-data-quality.md
+A	6da7189195c7476117215f3e23c0785559c70973ecd11156a0595bd939c7af77	docs/v2-implementation/phase-3/10-phase3-api-contract.md
+A	159b8fc01130d2c9ee5bbbf35c38f2f2b4475a63cd1f954f77b54cb5ae77eb2c	docs/v2-implementation/phase-3/11-phase3-rls-and-security.md
+A	55ddc04c5bfab69310119957d74df222ef7475c211351db69b0e630b0249e7e1	docs/v2-implementation/phase-3/12-phase3-test-matrix.md
+A	4b94733c1eb204b08f96bca13de7d46df92bb18c24deeb146988a60e606a0a50	docs/v2-implementation/phase-3/13-phase3-security-results.md
+A	60dd01b43406d38144672d05cdfc66781590a1c74adcfa4d2b1f5cc00a515fd7	docs/v2-implementation/phase-3/14-phase3-v1-phase1-phase2-regression.md
+A	45117ada3a9b543e8be33a010e3a4ea431f1b9a98056d7dc8d346b870154e3da	docs/v2-implementation/phase-3/15-phase3-open-issues.md
+A	d696e14144a3cb84811ea61f9100f44ee3c479358ba57f6e97b124c803290540	docs/v2-implementation/phase-3/16-phase3-exit-report.md
+A	2a65398ed07de7e047a811c1811269eade88e2e757c06535eb731e1f602dc5e7	docs/v2-implementation/phase-4/01-phase4-implementation-summary.md
+A	9e0f1078590dfaa99b954d5f4477193f406a945ee26f0640a86bab7c02c098f7	docs/v2-implementation/phase-4/02-passport-identity-model.md
+A	02f4ec256aa19efd4a0be4a26583dce00d03241007522ab8960e0297bb237f7c	docs/v2-implementation/phase-4/03-review-workflow.md
+A	456617a23bb76e4fa790e3d374d7ebb1a85dfe173fc7ba99cff2eb2524324d34	docs/v2-implementation/phase-4/04-publication-version-model.md
+A	e27f161db2fe21d820f162221b51a98782f0d56e242adf3a82ab9e32162a8c22	docs/v2-implementation/phase-4/05-publication-integrity.md
+A	60549192c4f229852164f8d443b396443faa1ced569fba65add840571821c96f	docs/v2-implementation/phase-4/06-resolver-model.md
+A	2fb588ef31a93ed086bc3598f8a4b969f21762e5d9c7c07e6290be6e83d638c5	docs/v2-implementation/phase-4/07-audience-projection.md
+A	b68019b8bc00c396e997632799b242ab319a3df607b28746af901808fcf93fde	docs/v2-implementation/phase-4/08-public-formats-html-json-jsonld-pdf.md
+A	c88aa543d54cd1721780d4b96a0fcd540f658a16d0f1766d9e518c650837f757	docs/v2-implementation/phase-4/09-qr-and-legacy-url-compatibility.md
+A	57172f97ab3e0fa6fcb8568f76b210d76bab625a25564ed6aa9d3b6ee07a9df1	docs/v2-implementation/phase-4/10-phase4-api-contract.md
+A	59225859808331a0d1d7a347c433f666a7d834b1849f350761204410c645349a	docs/v2-implementation/phase-4/11-phase4-rls-and-security.md
+A	6d78481b50c37a5b598621db4b44145a402a01cfa652ad3de508a3110b45e2a2	docs/v2-implementation/phase-4/12-phase4-test-matrix.md
+A	79e9dcf045d27e1fa44bff3df93d564a171e21e9799467352b9d985cce735ca6	docs/v2-implementation/phase-4/13-phase4-security-results.md
+A	8c4ca41d47369e78d2c7b5f482dce36171a9e0aa8c6976f7ca26a2aa7c05b3ac	docs/v2-implementation/phase-4/14-phase4-v1-v2-v3-regression.md
+A	2dfe21bba31fde1863fdef00cb30fbe01d588b48b7bdd8f1b24d7d9ace94d400	docs/v2-implementation/phase-4/15-phase4-open-issues.md
+A	72c41d3be461eb341b9cdfd6ebcdb2e33dfa9313b480cfe4a07b95d84df1ca22	docs/v2-implementation/phase-4/16-phase4-exit-report.md
+A	e411a56f80931d6b3d7c03bbe6b13050874ee15eef68a5e733741c5de8241daa	docs/v2-implementation/phase-5/01-phase5-implementation-summary.md
+A	cbfd998ed803f4ef13663b7ce568e3130db9ff8b2b4e0e01c3371df713754df7	docs/v2-implementation/phase-5/02-integration-domain-model.md
+A	7ef58fcbb56614e8fafe2958a1236a511c737a8d684b12f084dacb0c7b106619	docs/v2-implementation/phase-5/03-connector-job-and-retry-model.md
+A	c3c6fa6e0f00fb16998fe1b648699cd9acf566d22d25c64750152ee77b4e5f35	docs/v2-implementation/phase-5/04-connector-security-and-secrets.md
+A	ae24752f7508443197c699c937885c4c74d626bcd9d75abb29731bf529ef8e94	docs/v2-implementation/phase-5/05-generic-rest-connector.md
+A	f1c5959ffd242b58fb1a8d110b8e4ed84a04b3d2ac69f0ab482b489521e29ac2	docs/v2-implementation/phase-5/06-file-import-and-mapping.md
+A	0cadb498dd1a91090456e5a04a213769604bfd9e4e794e0f3399ed9ae9b39b67	docs/v2-implementation/phase-5/07-erp-mes-plm-adapter-contracts.md
+A	061287b34a9291708b7344235033be97cceb347c4f7eeec0e400820400fc41fa	docs/v2-implementation/phase-5/08-registry-test-adapter.md
+A	78e5f068eec6ca80548665f3bb4dfe65bbf90ad5b3639678d4ceaf7725afa62d	docs/v2-implementation/phase-5/09-webhook-callback-polling.md
+A	3b2faf5c5451a3a74c578df26d19001569dafa452189956cf6b6da94642b6e59	docs/v2-implementation/phase-5/10-bms-aggregation-adapter.md
+A	1e6d1e6d0ef545052bdc10b2c2cb2d684187992453b4e59fa29b4106a83c0297	docs/v2-implementation/phase-5/11-phase5-api-contract.md
+A	04b465faf065a328f7f4e526c072805ab174286adfa935b91b829f375cf2d4bb	docs/v2-implementation/phase-5/12-phase5-rls-and-security.md
+A	61fc0e1e793b0c38f53d42b654ee3c4235f360a7630bd57ee44d84638387b3d9	docs/v2-implementation/phase-5/13-phase5-test-matrix.md
+A	f15d6560687db8f54f1f5d3bafa3b12041bc34fbd814438766c350d7a7bf5497	docs/v2-implementation/phase-5/14-phase5-security-results.md
+A	4b94f59993ed2cb5b713e0db02c619372dc6a47841a073decde8e3736218699b	docs/v2-implementation/phase-5/15-phase5-regression-results.md
+A	e24223ed25a695a5b7e178df9b09bd2dddffd8be1416e9ef321a66fa6726a45d	docs/v2-implementation/phase-5/16-phase5-open-issues.md
+A	3e0571f42a15fc530baf7fafdedea511ef2ccde50c0032f981acc81b558af26b	docs/v2-implementation/phase-5/17-phase5-exit-report.md
+A	68561760b4629da07820b4ae7964a60346faaef2657d8af939c0a32eb4ac4933	docs/v2-implementation/phase-6/01-phase6-implementation-summary.md
+A	fa3a0da271f69b9b3e1724eda6de45791d0bb8802b93edceab723889f513f64d	docs/v2-implementation/phase-6/02-production-baseline-closure.md
+A	d36bc51cd5fb8c3cfcb194dc4a93b4b63c6dea691d0e7744d985af975fa19332	docs/v2-implementation/phase-6/03-production-schema-rls-storage-verification.md
+A	d9f9d0b2dcb21fe38454324c2176e8a8a1b7015329e9b496e4f841efeb057099	docs/v2-implementation/phase-6/04-backup-pitr-restore-drill.md
+A	e7478067365b169d8a725b70a401f98121a69acc53772bc0834fd2b57da55165	docs/v2-implementation/phase-6/05-preproduction-environment.md
+A	79bd2997bec3a7a8813b789fada70e3a9699c643f5d3313c984464ce97884924	docs/v2-implementation/phase-6/06-v1-v2-migration-dry-run.md
+A	0da5825e9ebabd482997e0da2e241aab79af03357c23f7ddd9811de3da737068	docs/v2-implementation/phase-6/07-legacy-data-reconciliation.md
+A	4ade9515a4fcb9fe7843ee333580f651b8ca3ca16e7408586671a477ff16a210	docs/v2-implementation/phase-6/08-shadow-read-and-compare.md
+A	78ac3d0ce005cd5f63767fe5799df2a770ce9d4e005dbc4da2cf3dc7caff2d71	docs/v2-implementation/phase-6/09-performance-and-load-results.md
+A	50e36e4e6ead9a6351321b0c23f360388ffbbb757358352e7efb46fc9d41d2ae	docs/v2-implementation/phase-6/10-security-and-threat-model.md
+A	210620c6d543adc102dee1260155a89287d492a8a9c38146af79c84fa9beaad3	docs/v2-implementation/phase-6/11-failure-recovery-and-kill-switch.md
+A	c0bb6ba687a260ae23a45788d849b3397f51ffdda664234182517c2079a07be1	docs/v2-implementation/phase-6/12-cutover-write-strategy.md
+A	1b048ea0e63f6fb3d77737ab62962e399ca2f27b97cc9d26aa0f8a03e8068534	docs/v2-implementation/phase-6/13-resolver-api-compatibility.md
+A	7f9b11c09444eba2d571c78d7bf198575a2c60f8594377e7d666cad1e1b056c3	docs/v2-implementation/phase-6/14-observability-and-alerting.md
+A	ad9d74793984d03e01e7a57052675dca8e8dda5d5378d6096d7e0d5227eef6c8	docs/v2-implementation/phase-6/15-pilot-cutover-runbook.md
+A	5a34124ed9e0999a799d69ca563dd99c8d2668a7d9bf2957af04dd2125845431	docs/v2-implementation/phase-6/16-pilot-go-no-go-checklist.md
+A	dd1c722076f3e695771c260bf0c95eaf7216d022f74cfd94e8cb4c1d937a7be6	docs/v2-implementation/phase-6/17-phase6-risk-register.md
+A	fc6b143257be326324008a8f403449137724dd020551af1238c9c0f91d013acf	docs/v2-implementation/phase-6/18-phase6-open-issues.md
+A	6a0e5ef96e24259ecf747279b849ff3249c1bcb7dfad3e59735a0fbbcfc32861	docs/v2-implementation/phase-6/19-phase6-exit-report.md
+A	add60d82550d322738992ea781df0184ae42d94a9d1774d6d2d661aa37beb934	docs/v2-implementation/phase-6/evidence/development-performance.json
+A	141f8c8d46fc7d3dcc4245d7cb9e4b1bfaeeb09dd5974856f0d3d2709f7a2aca	docs/v2-implementation/phase-6/evidence/readiness-evidence.json
+A	81183b9c88b59b7ffabfb362bd84f7cf18f403fa00c1e70563a304bf0f2f6355	docs/v2-implementation/phase-6b/01-phase6b-remediation-summary.md
+A	ff8a485555b1dd9b5893f400e33b3963bb5a45229cdb3b615a43ee92a919c8d1	docs/v2-implementation/phase-6b/02-preproduction-environment.md
+A	b7b2ccbb8378cec8304c274e2e4ac9abcc54c93f950a700151ff546da3b2c941	docs/v2-implementation/phase-6b/03-production-evidence-closure.md
+A	d42c8225b146f1119231f7be654fedb5f12f8cdd6048a5c848f45d6a1c4667bf	docs/v2-implementation/phase-6b/04-production-rls-runtime-verification.md
+A	7521e6825399bae3205cb70fb8e4dadf14491410c06b3650e3323e22680ba405	docs/v2-implementation/phase-6b/05-backup-pitr-restore-closure.md
+A	5f01463c8b8005c0328ebe156bafce5aade38fcf9c30a6a77872f9f703f7f2ce	docs/v2-implementation/phase-6b/06-framework-and-security-header-remediation.md
+A	45c1dfca51acaad2e2092d88e4fb6ac78b7107cf6de95827f43ebd44fc890193	docs/v2-implementation/phase-6b/07-rate-limit-and-capacity-controls.md
+A	48bfb5be7567785ae374c3cb5da1cff9550fab1a440eb8d4c50bdcf50b89ee4f	docs/v2-implementation/phase-6b/08-seed-trigger-closure.md
+A	d690bddca660d83e6d5bf05a846b0a93e68c23e73c7a83fcabf9260fdfee98f9	docs/v2-implementation/phase-6b/09-migration-dry-run-and-reconciliation.md
+A	324c0c76154d5b88884c9c23086e38711141e7c4301b46add19a341ec333aba1	docs/v2-implementation/phase-6b/10-shadow-compare-results.md
+A	ee1a8f8f6d096e6c8594375d482131036614cd7b6897d107a0b618ea19b3ca46	docs/v2-implementation/phase-6b/11-performance-and-load-results.md
+A	83f8b6e407b10e55c0957e32e10e69a0ad42a95e865dfef7ba15bd5619198fce	docs/v2-implementation/phase-6b/12-security-retest.md
+A	5c99b6f84b63d09944ccc3574ebf1f11e2349a6b0d2878f3f9512254bfc22274	docs/v2-implementation/phase-6b/13-failure-killswitch-rollback-results.md
+A	681c4cc56302f660654e6ec83a35fba0657217201246f838ea3133a340941775	docs/v2-implementation/phase-6b/14-resolver-and-api-compatibility.md
+A	d61938e6df4689a18bd6c72762cdf9f0c2493a5b24478b3ffcddaccbca61e7f4	docs/v2-implementation/phase-6b/15-observability-and-alerting-results.md
+A	0ff2dcbf1970c344a79f22a31f479772ed4e4926a563838170fa1db332eb175e	docs/v2-implementation/phase-6b/16-production-change-request-status.md
+A	240f2f93b26f4e78a220d5c592fcb8227092ac2f3b589075fcfcd7a18a74adbb	docs/v2-implementation/phase-6b/17-risk-register-closure.md
+A	d7c14c092a51abbed9bac3b15137d1c65d2812f30b19898caef7ee46ffed80d5	docs/v2-implementation/phase-6b/18-phase6b-open-issues.md
+A	514f30222fd0fac42e01066f3feda58a11fb016a5be62a9578e4e31aaf9d3e7d	docs/v2-implementation/phase-6b/19-phase6b-exit-report.md
+A	cfbbd284f4c313ee14fae732dfec95c80b8e7d08f1c3450d1fe9084debf3176a	docs/v2-implementation/phase-6b/19-phase6b-payment-deferred-exit-report.md
+A	f6a24a3b635e2b2089e4548813480e42751515cd97ac47126014d81daf495088	docs/v2-implementation/phase-6b/20-current-execution-status-and-supabase-reorg-plan.md
+A	7491d0acb21ed55d62af675685823add60f87f7b9c1a290df35e6bb751937ad7	docs/v2-implementation/phase-6b/PITR-CHANGE-REQUEST.md
+A	c968987edf4b20558570440ff9264fec57f37058300b84e875d593ed322b5b8a	docs/v2-implementation/phase-6b/PRODUCTION-CHANGE-REQUEST.md
+A	c89d07f924253c5892dba405804ae6a2500e946b4063f7a9c62573335a572049	docs/v2-implementation/phase-6b/evidence/payment-deferred-production-after-preprod.json
+A	2ec24668883192d51653a13f605ae61b9b66a2c8a242f92b8aa6445a14dabf98	docs/v2-implementation/phase-6b/evidence/payment-deferred-production-before-preprod.json
+A	2f16f15093181227d4389ae062edb1e3da5c9092c5ef01624447f8d5286d3321	docs/v2-implementation/phase-6b/evidence/payment-deferred-production-unchanged-comparison.json
+A	199ed2a2cee86f4ed4a210496d0358fccfe736113e7b64c9eca8a75da9125682	docs/v2-implementation/phase-6b/evidence/preproduction-0033-capability-repair.json
+A	25b2762723dae337cacd871f837292242c84b16cd2319f28f2d6335916ed25bb	docs/v2-implementation/phase-6b/evidence/preproduction-failure-injection.json
+A	66e5d54a01051e21dfc6bcba99a661add9637fda93ed860ce7dd63f6277cfd2f	docs/v2-implementation/phase-6b/evidence/preproduction-http-controls.json
+A	0aa8d2ef7ff54417fa24b7c023c7736d5472abae8d2bf073627d08e44ff302e3	docs/v2-implementation/phase-6b/evidence/preproduction-kill-switch-rehearsal.json
+A	f9768de2f3822529b1dbbd02ca3d2fffce7ffc51fdd710297319290bc4cab8b4	docs/v2-implementation/phase-6b/evidence/preproduction-migration-replay.json
+A	aa5703fcf26857e1164cea3764049df66513f1b31f72df8c380417a973acc8a8	docs/v2-implementation/phase-6b/evidence/preproduction-observability-rehearsal.json
+A	fd6046e6600e45a34e46abebb2d1b4b6b2043da562ab79470c966903d6da1af2	docs/v2-implementation/phase-6b/evidence/preproduction-performance.json
+A	45410c32152f0b765fe47dbbbcc723ca3a3260dc234116b6b410ac8a83ffd146	docs/v2-implementation/phase-6b/evidence/preproduction-phase1-phase5-verification.json
+A	34b5576da5fa037631bf0089dd37e4e16675353a90d8a391896eb5ebeeb90137	docs/v2-implementation/phase-6b/evidence/preproduction-rollback-rehearsal.json
+A	a6b7f7247930fa0266dd0b16bac13d3ae2f75e714a79c8e7267b085c52383661	docs/v2-implementation/phase-6b/evidence/preproduction-seed-and-reconciliation.json
+A	f14aa45558733f913b474a5d163cb416cddfd0aab512a0922d7f0920b1940fcd	docs/v2-implementation/phase-6b/evidence/preproduction-shadow-compatibility.json
+A	6cbd921d2cda299353733b262674e8f268b3035fc7bafb6be27dbf9b44d3db7d	docs/v2-implementation/phase-6b/evidence/production-closure.json
+A	35a3033a8564f2bd6c7e3079986f66f8b991ef0c61da24db7f93e0ba65102f62	docs/v2-implementation/phase-6b/evidence/production-managed-restore-drill.json
+A	c8cdbdd76cd7695101d049312785fae4a9db97d6bcb708dd7e86e182744c02ad	docs/v2-implementation/phase-6b/evidence/production-plan-capacity-evidence.json
+A	a2a0a8e408f9c0601057d64272ce68afc738e36c1b2cfda9a10c1eed60f12d38	docs/v2-implementation/phase-6b/evidence/production-post-pro-upgrade-smoke.json
+A	5d03b140a45ff02b43864975fe1dac9df28955d736cff68dcf8e6ab5b9a0566a	docs/v2-implementation/phase-6b/evidence/production-pro-managed-backup-evidence.json
+A	cb97b06701a1621f88939cdf6378933be0470c4e3366e16a4032f1ff17f092e0	docs/v2-implementation/phase-6b/evidence/production-vercel-deployment-readonly.json
+A	1afd2407d427461bee063ff3c8af3ea7fbf3cab6c880b177614a1fe97b3f3d94	docs/v2-implementation/phase-6b/evidence/stage1-development-after-transfer.json
+A	c127027f081476dcef80ffca4a7f9b4c756c79bed1bed358c3de4819abfdd256	docs/v2-implementation/phase-6b/evidence/stage1-development-baseline.json
+A	b90b93a8ab4d6a81dfb51e7538bac4828e0a3523f71c058443dda1b26ba2d5ed	docs/v2-implementation/phase-6b/evidence/stage1-production-after-dev-pause.json
+A	abe0408290d473330281f07ce4ea88cdc433b302401dfd1143d9edf150adbecb	docs/v2-implementation/phase-6b/evidence/stage1-production-after-transfer.json
+A	a04d03c1cecf04ffb1cc3962a542a8a52159b652f9c6bc76270a789ff29f9f9c	docs/v2-implementation/phase-6b/evidence/stage1-production-before.json
+A	92f809d3bfec63201f40feac64e4f7900ada4a12866076a6f12c64c093982dd3	docs/v2-implementation/phase-6c/01-phase6c-summary.md
+A	16e814b0f4021478e74a1b93f2c9d3a4a965c0448e2d227e521c7032194b806e	docs/v2-implementation/phase-6c/02-legacy-row-decisions.md
+A	3780516b58e83e74daab4ab4a22fbeb2bbd89ff5c1541aa87006265c3a17dcd6	docs/v2-implementation/phase-6c/03-pilot-slo-and-capacity.md
+A	ec05b8cba60e4cda34104704d22a819516649711d10710537e526f72f0c73f01	docs/v2-implementation/phase-6c/04-resolver-performance-analysis.md
+A	c15e4f9affea300aa84de513e79a04083ba459d3916df9c744d163b61cd2dba6	docs/v2-implementation/phase-6c/05-hosted-rate-limit-and-body-controls.md
+A	39a0bb8000a0a316dd569b91f260a51d9bca14c410dd65a42786687ad00c6f21	docs/v2-implementation/phase-6c/06-hosted-proxy-security.md
+A	abccb04da5c7914a3c765b7aa3e13e3c88bc310cf10691751bded73178c921c7	docs/v2-implementation/phase-6c/07-pilot-operational-ownership.md
+A	77996f1da246af1e3a555f61b2ada0665dfabd81cf0cd590a9369231ae8d469a	docs/v2-implementation/phase-6c/08-qr-policy-decision.md
+A	eee9993c549ade1fa2c28d05e53b7568a58213294a6f5246c1498b17d057fc3d	docs/v2-implementation/phase-6c/09-hosted-security-retest.md
+A	442636bd4cab1fd523a462865e2eb4a032770c2a45e5c346e88c856ecb165799	docs/v2-implementation/phase-6c/10-migration-compatibility-recheck.md
+A	a82530ff719a7dd80e4ad262eeb6b9c33925e4fdaab5349b9a37b956df4f6202	docs/v2-implementation/phase-6c/11-performance-capacity-recheck.md
+A	ec4f99c7fae615b7bcbb196e73303b4c3f383efeb9c4887e8ff5a3c90c5ed663	docs/v2-implementation/phase-6c/12-phase6c-risk-closure.md
+A	38edeb406deea8f9d54caed7cef7b1e2610e0e52303671d4264a6d3f35a6e014	docs/v2-implementation/phase-6c/13-phase6c-exit-report.md
+A	a931f3dd6617eca2fa3029b355505be666b8c780400473e151beeac6156f440c	docs/v2-implementation/phase-6c/14-phase6-final-human-acceptance-report.md
+A	d0266e5f0d4971cea4dd198b2ad7f5e5e044e3cde2897632c9d2e0ee2acc03cc	docs/v2-implementation/phase-6c/15-phase6-final-exit-report.md
+A	450a2b608f8995bdbd88b3ec74269c846a7cb50ec0453af6606d4e22a8290088	docs/v2-implementation/phase-6c/evidence/hosted-preproduction-burst.json
+A	b8e804e09ddce93b3fedc03646b93524ea0d22cc417101b6297c9f9df079e2a2	docs/v2-implementation/phase-6c/evidence/hosted-preproduction-verification.json
+A	8387dd01fc7507e6ad7fb4e3c8f8220d5726ea257d54d68e7b1f3a053b1f7b50	docs/v2-implementation/phase-6c/evidence/human-accepted-observability.json
+A	6ce04a0d963c2d090a8ea9b86216cdcfcee97d9573d602648d7c4f7e4261aef4	docs/v2-implementation/phase-6c/evidence/human-accepted-pilot-performance.json
+A	26add5066bab193db13a205c3217b0a01d9a5702cac2f78eea1695443a26a51c	docs/v2-implementation/phase-6c/evidence/legacy-row-decisions.json
+A	41e700999f2d26734eba9af862524b85ba6d3c97844bb7d0593a4688daa1fdd6	docs/v2-implementation/phase-6c/evidence/preproduction-0034-verification.json
+A	c753838f5a8de43cdc2638312530ecfdef520d802c5170731e7d656ec5d45173	docs/v2-implementation/phase-6c/evidence/production-final-readonly-check.json
+A	45580a142fd441e7a06d5ac996d4dc1eda471444625bca57c8fb04a3f11a8761	docs/v2-implementation/phase-6c/performance-final/01-resolver-timing-baseline.md
+A	9e02b8586da8024c7e820ca316837acb966ff6dea61a24e2c11d9d0ea219ddc6	docs/v2-implementation/phase-6c/performance-final/02-resolver-query-analysis.md
+A	78d87aabbcdf18e3a192c913895d337f489abbf3109e64b2ee72433a6797477c	docs/v2-implementation/phase-6c/performance-final/03-resolver-remediation-plan.md
+A	8e48074223cf2510d6523b69afacfdc6e7f60468377db879b5dac5e5b1914180	docs/v2-implementation/phase-6c/performance-final/04-resolver-remediation-result.md
+A	620c6cbf512e5f6375d0985eaa9c0747c7795e3eba8de9e622214c99067f50d2	docs/v2-implementation/phase-6c/performance-final/05-hosted-performance-retest.md
+A	2a7dec995ebda54ce9f68400794294adb7b9d82f7a90761aaa3f7899ba75de2b	docs/v2-implementation/phase-6c/performance-final/06-phase6-final-performance-gate.md
+A	4835ada6ca42d16e0db21b6ad8e1e58b39508d9fb402e85691e627fd2006fce9	docs/v2-implementation/phase-6c/performance-final/evidence/hosted-performance-retest.json
+A	fbc16a4319a0d804d8cd0935765fbe1c5728f65e7404f69daad37c2faaf82bdb	docs/v2-implementation/phase-6c/performance-final/evidence/hosted-timing-profile.json
+A	1ba553c3bd912bf51d55f112d2374ac6078403af21739ab0c11539d979f63dbe	docs/v2-implementation/phase-6c/performance-final/evidence/production-post-remediation-readonly.json
+A	f298cab18bbae83dc05f92d219df0be4c30fd0d602d2f17553d31cefd96618d8	docs/v2-implementation/phase-6c/performance-final/evidence/resolver-fast-path-application.json
+A	7a113bd861d5e1a57cf5c87b7d9bbe1c64a35e821ca3c7be73a4e11501927bf0	docs/v2-implementation/phase-6c/performance-final/evidence/resolver-query-analysis.json
+A	a83deddaa4e444c6db32ed59f5d190157cc85ae1d01d1b1f17d76d036a7ce125	docs/v2-implementation/phase-6c/performance-final/evidence/resolver-regression.json
+A	af3b9ad67229c32c40f6959a7385402c8e256b5333229565bad58fe7f7d72b82	docs/v2-implementation/phase-7/00-PRODUCTION-CHANGE-REQUEST.md
+A	b9961b39c75b87dcb73c7fe6fab8514025a0b33accfb6da78468080bd01c1f89	docs/v2-implementation/phase-7/01-pilot-scope-lock.md
+A	1167bf9ef4dbcff6a0246e7448a7862beacbf9b5ce7803457699b36c4285cdb9	docs/v2-implementation/phase-7/02-release-candidate.md
+A	SELF_RECORDED_BY_RC_GIT_TREE	docs/v2-implementation/phase-7/evidence/rc-pre-freeze-changes.tsv
+M	a0a7a9eaaf413a2fffb2326a64653eb77af981acc3255820bdae4041d445470d	lib/battery/readiness.ts
+M	4e9c4a4ecf019d27a95eb8d5611809b0db9fd5148c259e59f68aecd6afba6f0a	lib/battery/regulatoryCatalog.ts
+M	cbaa4223185f1477c3d69db5d780c18fa25ba773ab213c36771d6ecc07e6ffc5	lib/dpp/publicationReadiness.ts
+A	7012ecfa53609e60fec90eca0721b402295d51e3d35835203638ed0b190aba4e	lib/dppStandards.ts
+M	48907969050aa48303604405d40cd2fc18173984bf80ef4e586c8ab6181f93da	lib/server/apiRoute.ts
+A	7bc300e264cc4ec4d02f6b40ff0340637b3486d59aae4ab91f3994522de27d3b	lib/server/publicControls.ts
+A	6ed461654b857e3e65a6973aeeef33fa6337c6ad14ab353f86ae288c246d10c2	lib/server/v2/collectionRoute.ts
+A	66e8ea43ce5a7287120ee0bd018d9ee80c519112aae4defb6bfb4085bebd9b2c	lib/server/v2/featureFlags.ts
+A	d4947b82489a5c2030c184c6e25027df0dbe945940894f6231c60fc6b469769c	lib/server/v2/genericRestConnector.ts
+A	ed0ed0328ec12e84d1d4eb4a8a4be822920a8aad065a5a78828693fbe4560d84	lib/server/v2/phase3Repository.ts
+A	d5fe92e7c45c564d1e5bb633cbb453b8b3445abbf84c15b4dd80cfa027841667	lib/server/v2/phase3Routes.ts
+A	930f1aa5a85f220b60d7816b450bd848c29fdc0e341fef4740524fa2c7fee8d8	lib/server/v2/phase4Repository.ts
+A	2ea324f8fe5ad21ca3e49b531919f4207f45ea57ce4171364b6bf9e0f1f584e2	lib/server/v2/phase4Routes.ts
+A	4c81c0e7a4738a95da469d3f01e7a56860753dbb531a43f3f2fc07c084891784	lib/server/v2/phase5Repository.ts
+A	05bbba640414a5fab3e3f1e497d02a799aa748ad750b76ba860998c52ae84ea1	lib/server/v2/phase5Routes.ts
+A	ffb7e06e2aa171fe25704e29d57209586e2b98e46a66f487f4c3b302a27e01b6	lib/server/v2/policyDecisionPoint.ts
+A	bdfdf8cceaeb46d33d2829b346a3d6798c8a7c592a48f44ede384b89c3a3c586	lib/server/v2/productHierarchyResolver.ts
+A	024ef9ae074eabc86b57c02bf13aecf4886fc5ce7240561cec367f298f3d5c54	lib/server/v2/productRepository.ts
+A	8d53397f0bd072ef953878f19c89dc495ee7ffa3c6f079178e7702d8018d598d	lib/server/v2/productRoutes.ts
+A	4d703d274405243527207c286d82ea55731d7c4976703492b86a596d80f2bbf7	lib/server/v2/repository.ts
+A	42d8f4df59d15a68b417792c1c8760d781138e5d3d8a1c1493f2398ef974eb6d	lib/server/v2/security.ts
+A	ed97342106b61b4d1f19433c82ef7f7720a8c55cf8f82f7606a425abdd49a8b8	lib/v2/audienceProjection.ts
+A	449953f6f1e7e842674b7fef7b7abfe21523bc41653d910d47ecf7587972f250	lib/v2/bmsAggregation.ts
+A	0a83eef5c7e2b1a30d81b9023dfcddc099d01844fe78401eb51ffa5a1116095d	lib/v2/connectorJobs.ts
+A	01fdde95b77faabc2fc9de02a817df6ba9391d23988e029ea8160da5029cefcf	lib/v2/connectorSecurity.ts
+A	14ef74e8a12ad054879a44c3ce40b66d4148560d83968fc2981318d11792b777	lib/v2/externalAdapters.ts
+A	6fdb8d3e6885ad39c62729688d179c352c020991c3f9b9f90b28c94cf7615ff0	lib/v2/featureSwitches.ts
+A	3ab86a6d9e6ac29d1f16dc9947d669f28dd2c2207f50cf7322cfed1e7409a76e	lib/v2/legacyFieldAdapter.ts
+A	1bc0da1a959f3f81bd5b5154395f8113034d876f4664efe7e065658557a18501	lib/v2/legacyProductMapping.ts
+A	f18ce3d03786b8650ba40749afe4ea8b9d4e8b813251028d750c2876d9bb9534	lib/v2/mappingEngine.ts
+A	df229121bbc684dadf8bdb1629fa89fc975eb41770c4f4631636d1af434ac693	lib/v2/phase3Errors.ts
+A	408f3bb037c8f5e77e0c165c3516fe96998905826a636fed53322a955276cef6	lib/v2/phase4Errors.ts
+A	8e15d1aa541e4a8b1e5ef988cf6c33ba5bad28b0d086128fa4034c0024ad6f43	lib/v2/phase5Errors.ts
+A	285a2a892b70a7bc33f941760e87cb187e5f0dada4d63152d91acdb5cd4152d3	lib/v2/policy.ts
+A	10c779c0095f30d5d7badc434c75f7c930207cd038080059a46eb5231eb0d80c	lib/v2/productErrors.ts
+A	352de665fd6709877c1885cb8cdb2bc3974688f55bd0a66b896271b8db0be8ca	lib/v2/productIdentifiers.ts
+A	6870f7f3880dc7731fe42e4cf5677080cb3b324f31358720bfb47c7449a4e420	lib/v2/publicFormats.ts
+A	93d09ff822281e49d52eb8e548d0d694c42b171ca464690bf9d1b89f1d6a85a9	lib/v2/qrPolicy.ts
+A	c3d724e1f5febcd5fa6d9a5b53e90d260c776c98b3b2c346ed1bfb0c4dd28e37	lib/v2/registryTestAdapter.ts
+A	9f9aa51ed0d8c93f2e7163091a44e9ae448fd07794a07574e3e65b7428eecf5c	lib/v2/resolutionEngine.ts
+A	cfbc6e6f24e4cda1168b1b42fa46f672987ff14831e7f0b4eb476a8cd39bf485	lib/v2/resolver.ts
+A	dd99474d55f7389b09f7972c99528582d7564d23b6ac9e5d2c70fa00e8f8b85e	middleware.ts
+M	85ae5aee75f011967cf2d25cbc342f62d69314e9d925f7f4aa3456fc2cffcca6	next-env.d.ts
+M	25cad20aab22790c360cf3c7c7c99ffcf9999821b34048637508732da8794940	package-lock.json
+M	e5f91eda6c8f96769fab9cad7ae3ff7b201af46392140e8bf4594be5b714b724	package.json
+M	cb84ed82367728e58c4bd91d6c179b2fffaa5f9760ab4ec803ad624e5003b8f0	pnpm-lock.yaml
+M	e3d184e28b37f638f953f9dcb9f37bdf1e114822f1f47af75a87dd80f990b48a	pnpm-workspace.yaml
+A	5be3d60bd624c687c5b3010f9d2b757f94a1862cf954ff4de5f972e58440bdac	scripts/assert-development-target.mjs
+A	4e538b625b08a05f70359b4e0bb0e6f1237ee82d1b8d6327a4b5a898a2a2a406	scripts/configure-development-env.mjs
+A	4fdbd4efae1278cc0bf7ef8245768937392975ff4f7301b5cbb61e5fa8d357ea	scripts/phase6/collect-readiness-evidence.mjs
+A	02cd2792342200185450c125c23525611f9f7bb0c907ea542f47f38d47a01a0a	scripts/phase6/measure-development-performance.mjs
+A	32646709ff308af008c421217c9d1fbc69a61d9cc8d71017fedf4c56b90e56d2	scripts/phase6b/apply-and-rehearse-preproduction-0033.mjs
+A	cac19d0843110982dd405ca2f19ddca7b1b25f92deffb4fbb3db40695e2aac37	scripts/phase6b/assert-preproduction-target.mjs
+A	c5d83688c435ba2a2c76b80ab20b4890d41f1329627c2cae5b6d45d6a10243ba	scripts/phase6b/collect-production-closure.mjs
+A	6747f91c4b17edf79bf2e7b85c7af2200b318e2ec41ec0baae9512497fd42b3c	scripts/phase6b/collect-stage1-development-baseline.mjs
+A	56483222c1f9c1bf0e54a64818b52ac80dafaabd04f1592b34737931b53c8055	scripts/phase6b/collect-stage1-production-baseline.mjs
+A	1f7da8dcffac527b24ea81a3468a594ff4f63fe2e6e8e1b2701473a047a04da3	scripts/phase6b/configure-preproduction-env.mjs
+A	54ffc6feaf84ac9e3aaa5f11f76946db9f6ff691e4e1afd48edc77f12d7c5bc6	scripts/phase6b/rehearse-preproduction-failures.mjs
+A	2dc555f8968f39d8a01d1a19b97481be4f866f78a220ef4025d86fa49f349e7a	scripts/phase6b/rehearse-preproduction-kill-switches.mjs
+A	b8b38581e18286b100f4ab370710713d9ab0b3931cfb52392807ab1fe9d0298e	scripts/phase6b/rehearse-preproduction-observability.mjs
+A	41dbec8f2e7086648664d68e97ab88835998717e83e8025abe1077fd0c2465ea	scripts/phase6b/rehearse-preproduction-rollback.mjs
+A	68bdb887c8603bfc85052b58ca7cffd3ed292c7b79a35a13f276e79dd51fa205	scripts/phase6b/replay-preproduction-migrations.mjs
+A	25cadb332bd36650a8588cd33770bdb45794eb602ae19ae9b4d3998e29d92c26	scripts/phase6b/run-preproduction-verifiers.mjs
+A	e366d65c5fbfdb3521a953779f92c7278a0dd08a78967f18cd531071a4f3c5d1	scripts/phase6b/seed-and-reconcile-preproduction.mjs
+A	e37bc3cda17f1712d10fc3319341d2ab3a3bfd12e3fa41444686708939747d49	scripts/phase6b/verify-preproduction-compatibility.mjs
+A	b3fcb8f318e027a983da1eebd3457b3b4d97161e72de782d27cf2dd776f54671	scripts/phase6b/verify-preproduction-http-controls.mjs
+A	24528fd4fd762256f8183509478232469c2e7420dde36b6737dbdf8902595397	scripts/phase6c/analyze-resolver-query.mjs
+A	c84cbbe415fd6140993df001783f2ef7b526836873dc421eada734b5ff393e1e	scripts/phase6c/apply-resolver-fast-path-preproduction.mjs
+A	c16cdf77b4b023055ec8ce0a3abf475e93ae2c0d8271b702eb7d601de5775e22	scripts/phase6c/measure-hosted-burst.mjs
+A	6982496dbc7755d1058f7f5eb1dc0299562bfa3bb6cd86500ba91e3e4cc593b6	scripts/phase6c/measure-human-accepted-pilot.mjs
+A	c7850fe8ae93002aa2a15fbe495d65d9268782d04fae5c66ec5c888975154445	scripts/phase6c/profile-hosted-resolver-final.mjs
+A	7ea6c01b5487418887536616df7dab8c3023575c38967793bd5c55fe3af6c923	scripts/phase6c/verify-hosted-preproduction.mjs
+A	e51d2691bd4977fa38aa70c21c79e6d01fbb23dce7e92ff5a1489fc553bc12f0	scripts/phase6c/verify-human-accepted-observability.mjs
+A	b47129ff6ec0631a36292e4312e40475d4fe136cdf2be3a52e28c91107811848	scripts/phase6c/verify-resolver-fast-path-regression.mjs
+A	54a760cec738e7e680e26cf12219683eaf557c857ee68857a38287b8cf97faa8	scripts/verify-v2-phase1-development.mjs
+A	793f2a3fad512429117fb4e9fe59d56e72e5dfcf18f599d753ff7d67103fc264	scripts/verify-v2-phase2-development.mjs
+A	ba2a7d1be8325fab27f58aa364ee04d5e575ccaf4853d4f52ea86af5ce8b147c	scripts/verify-v2-phase3-development.mjs
+A	e4e01ee2a8fd5ca9ccd7c7c278945491a0330cd1a1e445e58fdd127d94082cc4	scripts/verify-v2-phase4-development.mjs
+A	b5043e817842858c6adf9098248f0e9b592c415b3fd0b60c24788a4f78ba6abe	scripts/verify-v2-phase5-development.mjs
+A	15a2984852d2c94517876102f673f563fdb19060df37cf569753235e6504ecc0	supabase/migrations/0027_v2_phase1_tenant_access_foundation.sql
+A	a41d7de9e22c63507d3618dcf86cf0e70c4d43d2f9304d62956d195ea6ed5672	supabase/migrations/0028_v2_phase2_product_core.sql
+A	ea6a32617fa55412832c18ad0b809329d29c6bbbdf5fe12c943f49e5e1f27f6f	supabase/migrations/0029_v2_phase3_schema_canonical_provenance.sql
+A	2772914292ba5e6367755b210a28a0ec6459fac183d83cf61af65e6476d4310b	supabase/migrations/0030_v2_phase4_passport_publication_resolver.sql
+A	b9c1c3f25f81fcbb914662cb53dc9bfcf19132d69235cb47f278050da74f32ff	supabase/migrations/0031_v2_phase5_integration_registry_connectors.sql
+A	624f9079e18c94f19dea0993c91759ba2fdbeb3498574479102e5acc387e4b18	supabase/migrations/0032_v2_phase6_seed_trigger_compatibility_fix.sql
+A	8a9807ea8caa51801d51ccd27141a7b0c9d47a932e62c69b546ff781fea3b6b6	supabase/migrations/0033_v2_phase6b_future_tenant_connector_capabilities.sql
+A	480377579ff39cf797e6c29560b33d8e65c502436af81e1a04d73f1e77f1de1d	supabase/migrations/0034_phase6c_hosted_pilot_controls.sql
+A	3aa2eb054318d7b27f450f09345952583746559246c3a8cb680a0d290ed20cb6	supabase/migrations/0035_phase6c_resolver_fast_path.sql
+A	3355ceb08388148cd869c6cc51cd67c65a997cb598df6ae982cf5721d1645547	supabase/rollbacks/0027_v2_phase1_tenant_access_foundation.down.sql
+A	c9e4d7a3c16117f66a614d28b9bc3c3dd73458b3562c4ee66b437f70044c242f	supabase/rollbacks/0028_v2_phase2_product_core.down.sql
+A	7aaef67e8f3ddb19ec4e17f0e5d05db3a74ba8b9fc1df9e1dce174bf596f7d1b	supabase/rollbacks/0029_v2_phase3_schema_canonical_provenance.down.sql
+A	8e2080170190e15ba70468740e2140ac79596939aae7e5d9d4d8a3e3484773b9	supabase/rollbacks/0030_v2_phase4_passport_publication_resolver.down.sql
+A	451831eeb5d6fceeffc2b040c0a718ff106990dede6dba937f214e27e958cbbc	supabase/rollbacks/0031_v2_phase5_integration_registry_connectors.down.sql
+A	921f83d5e119066ee0b1f33c1f58f0aeac269bea89643340fae96722a7996806	supabase/rollbacks/0032_v2_phase6_seed_trigger_compatibility_fix.down.sql
+A	adb9ea64c66a37c6876909efc166722e9f668f24638333df593ee72ea2a1d6ee	supabase/rollbacks/0033_v2_phase6b_future_tenant_connector_capabilities.down.sql
+A	ff596a94904b956e33b444c8d4d05d43444786548e17be220652ffd4793b01ff	supabase/rollbacks/0034_phase6c_hosted_pilot_controls.down.sql
+A	ca4f6f58f9f60ab2373c2e20937f965a57e85d956d83133b0a5f76f52cd3dd97	supabase/rollbacks/0035_phase6c_resolver_fast_path.down.sql
+M	875a5b78920006e77f0a44ecbe7ef9b3a7355bd5cfe34bf2702d37f2f35eaef1	supabase/seeds/industrial_battery_demo.sql
+A	55d36dec77163078a73071ab336a32fee298a71e53029881137b068f807eb673	supabase/seeds/v1_development_reference_products.sql
+M	d9660a146becd754bc68350a8360dc116f759b5f2215dea0ccdb535dc30f8d8a	tests/integration/dppAccessContract.test.mjs
+A	386285fc86bda75c7afb0426aab8b3731b3ebfac52454cf39d0eaec643468c88	tests/integration/v2Phase3Contract.test.mjs
+A	8ca5bbb71669f535602814ab52cc657b8fc2e6e1fd351d0b1f467b67a9d06807	tests/integration/v2Phase4Contract.test.mjs
+A	f1949cdd77aee1d9f528d37856ae1304227e3cac1eca9b54ffd071ce3ead1fb8	tests/integration/v2Phase5Contract.test.mjs
+A	925339b4c70f8a915c03cf255aab609c2894156a90bc97ae03bbe221421b4daa	tests/integration/v2Phase6bSecurityContract.test.mjs
+A	f64f70ed9486eda7a885a4ade8c19488f259af3292d09d9f0da6dca1931138bb	tests/integration/v2ProductCoreContract.test.mjs
+A	52b02129b23a03a5328bb9f06cf4ac33e78964fde04d0aeb9ef3592a871a036b	tests/integration/v2SecurityShellContract.test.mjs
+A	9041bacfc5977fe905db092893d474b63d01858c240ad57a1f6321db96530853	tests/migrations/v2Phase1Foundation.test.mjs
+A	43bc391f6e558597e5859be4469e1f3ffca310eb92451363959bd397f077498e	tests/migrations/v2Phase2ProductCore.test.mjs
+A	7daf411ae6a7887fffcf8d3453fb93c92dd3d14dc24cf253150c405960cdbabd	tests/migrations/v2Phase3CanonicalProvenance.test.mjs
+A	fbeaf144e80f25f35d3a63f8d377e72f73d2d5b0bc6ca36be3d1079522a29987	tests/migrations/v2Phase4PassportPublication.test.mjs
+A	9194e706bdcd49ed80a6ebb04b78c962e8341eddf4190080d34ebefc374b4987	tests/migrations/v2Phase5Integration.test.mjs
+A	cc055b2a6eb950aedd07052ad91f16c4d3362825556eead3f09d18f690a223a4	tests/migrations/v2Phase6Readiness.test.mjs
+A	077f33496971caeef3cdbb1e1d3bab22ab731344af64703a3be864938e081d34	tests/migrations/v2Phase6bFutureTenantCapabilities.test.mjs
+A	555aabb9f219c24b2de7f173a9e75f8db9ba902ddcff123ed7fef0449ef65338	tests/migrations/v2Phase6cHostedPilotControls.test.mjs
+A	1fbd52b01f742d4c99279afa981a640972bbd97dc9e5082b9ab6e1e31c7bd508	tests/migrations/v2Phase6cResolverFastPath.test.mjs
+M	480bb1a5646a7028850c8204cde4b13656200d27cf451c37243f9131c5233525	tests/unit/batteryRegulatoryCatalog.test.ts
+A	36d7d644096b049b779de2260d8a9bf056e023e227758e8ce61db8f8bdfea586	tests/unit/dppStandards.test.ts
+A	b447062f59774a1897740ca1c2a43b7bb811d92975ccec7bd646bfd240d7ef4d	tests/unit/legacyFieldAdapter.test.ts
+A	6fc70425a781a71c592b336af57f50b64de9da348ac26febdaa99eb4c27cebc1	tests/unit/legacyProductMapping.test.ts
+A	77d8cc7e0eeea8b40bc90508a6a49c526d83e065324c974b8634b7f68067f044	tests/unit/mappingEngine.test.ts
+A	ef71b4ebe2545e557a4c37a103ce640351f565da500fbee4a6f20ba1701f3033	tests/unit/phase4Projection.test.ts
+A	880492bba0b499055b9a5c9a23348463871b52be5a9f496e1d1d830653b72d05	tests/unit/phase5ConnectorSecurity.test.ts
+A	93d87e8fbe8a0d2aa20630edaacefc5ac9a937f4681f64f02b9b90bd16e5a3b9	tests/unit/phase5Connectors.test.ts
+A	a4bc652d882e2c5b4d1ecc9604cbcc32760ae6bb217d8fc90e9e879aac8ea470	tests/unit/phase6KillSwitches.test.ts
+A	18ee8c41e26c5930a4232c38b785c234e19eae91738a47e4ec94e97e9b69de3b	tests/unit/productErrors.test.ts
+A	1bce9a71bd2b86935ec64b83c29cf07ceb5fe5b0e3416809d14dd9fa0b2d0f03	tests/unit/productIdentifiers.test.ts
+A	de1d62c9df0159b80ea1bcdb25ce9a40f71afdd647cb62caeb3e23f9a639d28c	tests/unit/publicControls.test.ts
+M	030a337694c18ea7f5a66a43c3013da5e8e2498c8d39621df19558f73afd3b48	tests/unit/publicationReadiness.test.ts
+A	5f774cbe0e84de2aa9bf9adf52a0adecbff3d9ea9c2b00aa7b5331d3fad0893e	tests/unit/qrPolicy.test.ts
+A	c27cf9e6d90c5d0f9005d46ed430c8ac3c2b354354cbe4b58d945b28693053be	tests/unit/resolutionEngine.test.ts
+A	7e584ac0184cd09f1a1caa2e3645699292e4911147031494fac29a5af55b8ca7	tests/unit/v2Policy.test.ts
 
