@@ -62,3 +62,7 @@ The authorised Production schema sequence completed successfully at head `0035`,
 Phase 7 stopped at the Pilot data preparation Gate. The subsequent authorised read-only deterministic discovery found an empty SOODOO Tenant relationship closure: zero Models, Passports, identifiers, approved legacy mappings and source records, plus no exact normalized SOODOO V1 customer, Organisation or product candidate. This makes deterministic reconciliation impossible and blocks every downstream publication, shadow, pre-switch, cutover and observation Gate. The complete inventory is in `01b-soodoo-pilot-data-inventory.md` and `evidence/soodoo-pilot-data-inventory.json`.
 
 The stop is safe: no Pilot business data was migrated, no traffic was switched, no Production application was deployed, Registry and real connectors remain disabled, and non-Pilot V1 continuity passed at the schema Gate. Phase 8 is not entered.
+
+## Synthetic Demo preview addendum
+
+An isolated Hosted PreProd Synthetic Demo was subsequently created and verified from the user-supplied fixture. Its result is recorded in `16-soodoo-synthetic-demo-preview.md`. It does not supply real customer business truth, does not unlock the real SOODOO Pilot data Gate and caused no Production data write or traffic switch.

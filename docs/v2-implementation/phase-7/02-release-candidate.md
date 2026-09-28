@@ -1,8 +1,8 @@
 # Phase 7 Release Candidate
 
 ```text
-RELEASE_CANDIDATE_FROZEN = TRUE
-RC_STATUS = FROZEN
+RELEASE_CANDIDATE_FROZEN = FALSE
+RC_STATUS = INVALIDATED_FOR_FUTURE_PRODUCTION_CUTOVER
 ```
 
 Current repository state at Phase 7 preflight:
@@ -36,3 +36,11 @@ The canonical complete file inventory is the 842-file Git tree `5eea86aec4fd9e9c
 The record update containing this SHA is documentation-only and does not alter the frozen RC code tree. Any later application, migration, configuration, or runtime code change invalidates this RC and requires full PreProd verification again.
 
 This RC freeze does not override the Pilot data blocker: `PILOT_TENANT_PROVISIONING_REQUIRED = TRUE`. It authorises no Production write.
+
+## Post-freeze invalidation record
+
+The historical RC above remains the exact artifact that produced the final Phase 6 evidence and was used for the already-completed Production schema migration sequence. It is no longer a valid RC for any future Production deployment or cutover.
+
+The Synthetic Demo review found that the public renderer could describe retained provenance as verified even when the underlying status was `UNVERIFIED`. The application-only correction and its regression tests were committed as `f7734502670aeb49b55b48c288be56b11606b060` and deployed exclusively to Hosted PreProd as `dpl_Et9v6Q2z2w82RrexRqivB1a25um4`. The exact changed tree passed lint, typecheck, 110 unit tests, 95 integration tests, 56 migration tests and production build verification.
+
+Because this application code change occurred after the historical freeze, RC `907f86f1c57cc5957af974048e4539cf54877284` is explicitly invalidated for future Production cutover. No replacement Production RC has been frozen. A future Production deployment requires a new reproducible RC and the applicable PreProd verification gates. This invalidation caused no Production deployment, data write, migration, traffic switch, Registry submission or connector activation.

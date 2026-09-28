@@ -1,0 +1,152 @@
+{
+  "generatedAt": "2026-09-28T01:35:06.555Z",
+  "environment": "HOSTED_PREPRODUCTION",
+  "projectRef": "efhiaufukjchxqhbmpvq",
+  "migrationHead": "0035",
+  "applicationOrigin": "https://greanlean-dpp-preprod.vercel.app",
+  "deployment": {
+    "id": "dpl_Et9v6Q2z2w82RrexRqivB1a25um4",
+    "commit": "f7734502670aeb49b55b48c288be56b11606b060",
+    "readyState": "READY"
+  },
+  "fixture": {
+    "name": "SOODOO Complete Synthetic Battery Passport Demo",
+    "version": "2.0",
+    "sha256": "104988c95cdc3bdb70ff7568f9090233fb8ee44b03b4366a8b156323204eafde"
+  },
+  "tenant": {
+    "id": "0c2f6dff-560d-4eeb-be47-1e87a2f710fe",
+    "name": "SOODOO E-bike",
+    "environment": "PREPRODUCTION_MIRROR"
+  },
+  "ids": {
+    "organisation": "7cfb8a68-4128-4d85-bcdb-14bc2da73953",
+    "family": "ae2618cf-3446-40f4-8c33-3433f44628df",
+    "model": "edd1628a-3dab-4ae0-8a08-19afec9e5b0d",
+    "sku": "1629c48a-b06a-438e-87a9-767637e0c61b",
+    "batch": "0f9b5008-6657-4b46-8303-babf426fad6c",
+    "items": [
+      "ef4bca5b-5c99-4e41-9b5b-cfab21ed3926",
+      "87346118-b8db-45cd-abda-3097c20843a7",
+      "5d0984fe-0fb9-4bce-8135-3222d6a88831"
+    ],
+    "passports": [
+      "988b2c18-d576-4694-9f38-ea19afff0629",
+      "5701191f-df8c-4cc9-a091-a4026a454240",
+      "a5896696-98c8-4585-bdb0-ffd7b643c7a3"
+    ]
+  },
+  "counts": {
+    "tenant": 1,
+    "organisation": 1,
+    "family": 1,
+    "model": 1,
+    "sku": 1,
+    "batch": 1,
+    "individual": 3,
+    "passport": 3,
+    "immutableVersion": 3,
+    "currentPointer": 3,
+    "identifier": 10,
+    "bmsSnapshot": 3,
+    "canonicalClaim": 25,
+    "documentMetadata": 5,
+    "lifecycleEvents": 3
+  },
+  "publicationWorkflow": {
+    "candidate": 3,
+    "validationPass": 3,
+    "review": 3,
+    "approval": 3,
+    "publishedVersion": 3,
+    "currentPointer": 3,
+    "resolver": 3,
+    "auditEvents": {
+      "passport.create": 3,
+      "review.submit": 3,
+      "review.approve": 3,
+      "publication.publish": 3,
+      "resolver_mapping.create": 6
+    },
+    "registryStates": ["NOT_SUBMITTED", "NOT_SUBMITTED", "NOT_SUBMITTED"]
+  },
+  "audienceProjection": {
+    "status": "PASS",
+    "perPassport": {
+      "totalFields": 21,
+      "public": 12,
+      "legitimateInterest": 5,
+      "authorityOnly": 2,
+      "internal": 2
+    },
+    "demoAudienceMapping": {
+      "PUBLIC": "PUBLIC",
+      "REPAIRER": "LEGITIMATE_INTEREST",
+      "RECYCLER": "LEGITIMATE_INTEREST",
+      "MANUFACTURER": "INTERNAL",
+      "AUTHORITY": "AUTHORITY"
+    },
+    "allFieldsUnverified": true,
+    "falseVerifiedStatementPresent": false
+  },
+  "previewChecks": [
+    {
+      "passportIdentifier": "DPP-SOODOO-SYN-BP4815-000001",
+      "resolverJsonStatus": 200,
+      "resolverHtmlStatus": 200,
+      "previewPageStatus": 200,
+      "qrStatus": 200,
+      "qrBytes": 2780,
+      "qrTarget": "https://greanlean-dpp-preprod.vercel.app/api/v2/resolver/DPP-SOODOO-SYN-BP4815-000001",
+      "payloadHash": "19e6a477880e470ae83d6d54b94d70abc0e4763abea30bbe3679a8b40734a2cf"
+    },
+    {
+      "passportIdentifier": "DPP-SOODOO-SYN-BP4815-000002",
+      "resolverJsonStatus": 200,
+      "resolverHtmlStatus": 200,
+      "previewPageStatus": 200,
+      "qrStatus": 200,
+      "qrBytes": 2821,
+      "qrTarget": "https://greanlean-dpp-preprod.vercel.app/api/v2/resolver/DPP-SOODOO-SYN-BP4815-000002",
+      "payloadHash": "680f3816cfedd347e55b850f03427719c2391d372e1aae8571b747ad04001537"
+    },
+    {
+      "passportIdentifier": "DPP-SOODOO-SYN-BP4815-000003",
+      "resolverJsonStatus": 200,
+      "resolverHtmlStatus": 200,
+      "previewPageStatus": 200,
+      "qrStatus": 200,
+      "qrBytes": 2784,
+      "qrTarget": "https://greanlean-dpp-preprod.vercel.app/api/v2/resolver/DPP-SOODOO-SYN-BP4815-000003",
+      "payloadHash": "c729d52ac4d07a1e036694a522260fec93fe1296a6bd6cf79a1bad2046d74665"
+    }
+  ],
+  "classification": {
+    "dataClassification": "SYNTHETIC_DEMO",
+    "customerVerified": false,
+    "productionBusinessTruth": false,
+    "regulatorySubmissionAllowed": false,
+    "registrySubmissionAllowed": false
+  },
+  "safety": {
+    "bmsConnectorEnvironment": "MOCK",
+    "bmsConnectorStatus": "DISABLED",
+    "registrySubmissionCount": 0,
+    "realCustomerConnectorsActivated": false,
+    "productionWritePerformed": false,
+    "productionTrafficSwitched": false,
+    "phase8Entered": false
+  },
+  "productionReadOnlyVerification": {
+    "migrationHead": "0035",
+    "soodooModels": 0,
+    "soodooPassports": 0,
+    "soodooIdentifiers": 0
+  },
+  "architectureCompatibility": {
+    "fixtureUpi": "urn:greanlean:soodoo:model:sd-bp48-15",
+    "canonicalUpiIdentifierCreated": false,
+    "handling": "Retained verbatim as a visibly synthetic claim. Product Core requires canonical UPI identifiers to use HTTPS, so the fixture URN was not misclassified or rewritten."
+  },
+  "result": "PASS"
+}
