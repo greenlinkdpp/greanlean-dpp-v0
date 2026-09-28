@@ -1,14 +1,28 @@
 {
-  "capturedAt": "2026-09-28T09:55:23Z",
+  "capturedAt": "2026-09-28T10:17:24Z",
   "environment": "Hosted PreProd",
   "applicationOrigin": "https://greanlean-dpp-preprod.vercel.app",
   "supabaseProjectRef": "efhiaufukjchxqhbmpvq",
   "migrationHead": "0035",
-  "releaseCommit": "43ecc448a362d05954a50b47417031ed9a6a01ee",
-  "deployment": { "status": "READY", "id": "dpl_B36MNDVzqNcstJXHB7cJGGyUQLWg", "url": "https://greanlean-dpp-preprod-3rwb60u4j-songweinie-1175s-projects.vercel.app", "stableAlias": "https://greanlean-dpp-preprod.vercel.app" },
-  "automated": { "typecheck": "PASS", "lint": "PASS", "unit": { "status": "PASS", "count": 122 }, "integration": { "status": "PASS", "count": 100 }, "combined": { "status": "PASS", "count": 222 }, "build": "PASS", "migrations": { "status": "PASS", "count": 56 } },
+  "releaseCommit": "4c0aa4a306fc7f62a57e374d07f57f55e84fbda0",
+  "deployment": { "status": "READY", "id": "dpl_FaKXuihKgJm8eJw1vQR8nv9Fj4na", "url": "https://greanlean-dpp-preprod-1gigond7c-songweinie-1175s-projects.vercel.app", "stableAlias": "https://greanlean-dpp-preprod.vercel.app" },
+  "automated": { "typecheck": "PASS", "lint": "PASS", "unit": { "status": "PASS", "count": 122 }, "integration": { "status": "PASS", "count": 101 }, "combined": { "status": "PASS", "count": 223 }, "build": "PASS", "migrations": { "status": "PASS", "count": 56 } },
   "httpQa": { "dashboardEn": 200, "dashboardZh": 200, "publicSoodooDpp": 200, "unauthenticatedContext": 401, "securityHeaders": "PASS", "cspNoncePropagation": { "status": "PASS", "scriptsWithMatchingNonce": 16 } },
-  "hostedQa": { "status": "AUTHENTICATED_BROWSER_PENDING", "authenticated": false, "hydration": "PASS", "bilingual": "PARTIAL_EN_CONFIRMED", "responsive": "PENDING", "tenantIsolation": "PENDING", "syntheticDataset": "PENDING" },
+  "hostedQa": {
+    "status": "PASS",
+    "authenticated": true,
+    "actor": { "classification": "SYNTHETIC_PREPROD", "role": "tenant_admin" },
+    "hydration": "PASS",
+    "bilingual": "PASS",
+    "responsive768": "PASS",
+    "tenantIsolation": "PASS",
+    "authorization": "PASS",
+    "publicDataLeakage": "NONE",
+    "syntheticDataset": { "status": "PASS", "tenant": 1, "organisation": 1, "family": 1, "model": 1, "sku": 1, "batch": 1, "individual": 3, "passport": 3, "published": 3 },
+    "walkthrough": { "dashboard": "PASS", "productMaster": "PASS", "importMapping": "PASS", "claimValidation": "PASS", "reviewPublication": "PASS", "passportVersion": "PASS", "identifierResolver": "PASS", "bms": "PASS", "audiencePolicy": "PASS", "audit": "PASS" }
+  },
+  "issues": { "critical": 0, "high": 0, "low": 1, "lowObservation": "Supabase admin-generated magic links still use localhost Site URL; deployed password login passed." },
+  "productionReadOnlySmoke": { "homepage": 200, "representativePublicDpp": 200, "representativePublicApi": 200 },
   "production": { "applicationDeployed": false, "dataWritePerformed": false, "trafficSwitched": false },
   "phase8Entered": false
 }
