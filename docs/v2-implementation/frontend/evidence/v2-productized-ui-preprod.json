@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-09-28T04:44:56Z",
+  "result": "PASS",
+  "environment": "HOSTED_PREPRODUCTION",
+  "applicationOrigin": "https://greanlean-dpp-preprod.vercel.app",
+  "migrationHead": "0035",
+  "source": {
+    "commit": "0909c9d51205604b7cdf896b7de3d4bc440f4680",
+    "tree": "bee3bb947ba84668a4b079adcf171026329aa81c"
+  },
+  "deployment": {
+    "id": "dpl_BPdJ6q9CwgypiqR14zgbZqSYbmQY",
+    "state": "READY",
+    "targetProject": "greanlean-dpp-preprod",
+    "buildSeconds": 56
+  },
+  "previews": [
+    "https://greanlean-dpp-preprod.vercel.app/p/DPP-SOODOO-SYN-BP4815-000001?lang=en",
+    "https://greanlean-dpp-preprod.vercel.app/p/DPP-SOODOO-SYN-BP4815-000002?lang=en",
+    "https://greanlean-dpp-preprod.vercel.app/p/DPP-SOODOO-SYN-BP4815-000003?lang=en"
+  ],
+  "automatedTests": {
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "unit": { "passed": 118, "failed": 0 },
+    "integration": { "passed": 95, "failed": 0 },
+    "migration": { "passed": 56, "failed": 0 },
+    "productionBuild": "PASS",
+    "staticClientBundleSecretScan": { "filesScanned": 142, "serviceKeyMatches": 0, "result": "PASS" },
+    "changedSourceDebugMarkerScan": "PASS"
+  },
+  "hostedChecks": {
+    "itemPages": { "passed": 3, "failed": 0 },
+    "resolverJson": { "passed": 3, "failed": 0 },
+    "resolverHtml": { "passed": 3, "failed": 0 },
+    "resolverQr": { "passed": 3, "failed": 0 },
+    "legacyAlias": "PASS",
+    "audienceRoles": ["PUBLIC", "REPAIRER", "RECYCLER", "MANUFACTURER", "AUTHORITY"],
+    "audienceGrantBoundary": "PASS",
+    "unsignedRoleSpoofing": "DENIED_TO_PUBLIC",
+    "publicDataLeakage": "NONE",
+    "falseVerifiedText": "NONE"
+  },
+  "responsive": {
+    "widths": [375, 390, 430, 768, 1024, 1440],
+    "horizontalOverflowCount": 0,
+    "desktopQa": "PASS",
+    "mobileQa": "PASS",
+    "criticalAccessibilityIssues": 0
+  },
+  "dynamicBmsEvidence": [
+    { "dppId": "DPP-SOODOO-SYN-BP4815-000001", "socPct": 82, "sohPct": 100, "cycleCount": 12, "chargeStatus": "DISCHARGING", "packVoltageV": 50.7 },
+    { "dppId": "DPP-SOODOO-SYN-BP4815-000002", "socPct": 76, "sohPct": 99, "cycleCount": 19, "chargeStatus": "IDLE", "packVoltageV": 49.9 },
+    { "dppId": "DPP-SOODOO-SYN-BP4815-000003", "socPct": 91, "sohPct": 100, "cycleCount": 7, "chargeStatus": "CHARGING", "packVoltageV": 52.1 }
+  ],
+  "boundaries": {
+    "rawJsonAsPrimaryUi": false,
+    "registrySubmissionPerformed": false,
+    "realCustomerConnectorsActivated": false,
+    "productionApplicationDeployed": false,
+    "productionTrafficSwitched": false,
+    "newProductionRcFrozen": false,
+    "phase8Entered": false
+  },
+  "knownLimitations": [
+    "The three active Demo Passports do not provide a live withdrawn fixture; tombstone behavior remains covered by the existing automated Phase 4 contract.",
+    "Document records are metadata-only and therefore intentionally provide no download action.",
+    "Audience preview grants are short-lived QA artifacts and are not published in evidence."
+  ]
+}
