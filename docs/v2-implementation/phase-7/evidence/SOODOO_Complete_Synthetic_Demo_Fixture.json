@@ -1,0 +1,575 @@
+{
+  "fixture_metadata": {
+    "fixture_name": "SOODOO Complete Synthetic Battery Passport Demo",
+    "fixture_version": "2.0",
+    "data_classification": "SYNTHETIC_DEMO",
+    "customer_verified": false,
+    "production_business_truth": false,
+    "regulatory_submission_allowed": false,
+    "registry_submission_allowed": false,
+    "purpose": [
+      "V2 platform demo",
+      "DPP page preview",
+      "Model/SKU/Batch/Individual hierarchy preview",
+      "Publication workflow validation",
+      "Resolver and QR validation",
+      "Audience/permission preview",
+      "BMS snapshot visualization"
+    ],
+    "provenance": "USER_AUTHORIZED_SYNTHETIC_FIXTURE",
+    "warning": "All values are fictional examples created for demo display only."
+  },
+  "tenant": {
+    "tenant_name": "SOODOO E-bike",
+    "tenant_id": "RESOLVE_EXISTING_CANONICAL_PRODUCTION_TENANT_ID",
+    "tenant_type": "CUSTOMER",
+    "status": "ACTIVE",
+    "country": "CN",
+    "default_language": "en",
+    "timezone": "Asia/Shanghai"
+  },
+  "organisation": {
+    "legal_name": "SOODOO Mobility Technology Co., Ltd. — Demo",
+    "trading_name": "SOODOO",
+    "organisation_role": [
+      "LMT battery brand owner",
+      "battery pack economic operator",
+      "EU market operator"
+    ],
+    "registration_number": "SYN-CN-91370200-DEMO-001",
+    "vat_eori": "SYN-EORI-DE-0095001234",
+    "website": "https://demo.soodoo.example",
+    "email": "dpp-demo@soodoo.example",
+    "phone": "+86-532-5555-0188",
+    "registered_address": {
+      "line1": "88 Demo Mobility Road",
+      "city": "Qingdao",
+      "province": "Shandong",
+      "postal_code": "266000",
+      "country": "CN"
+    },
+    "eu_responsible_operator": {
+      "name": "SOODOO Europe GmbH — Demo",
+      "role": "EU economic operator",
+      "address": "18 Demo Strasse, 10115 Berlin, Germany",
+      "email": "eu-demo@soodoo.example"
+    }
+  },
+  "product_family": {
+    "family_code": "SD-EPOWER-LMT",
+    "family_name": "SOODOO E-Power LMT Battery Family — Demo",
+    "description": "Synthetic family for light means of transport rechargeable battery packs."
+  },
+  "product_model": {
+    "model_code": "SD-BP48-15",
+    "product_name": "SOODOO 48V 15Ah E-Bike Battery Pack — Synthetic Demo",
+    "brand": "SOODOO",
+    "product_category": "LMT_BATTERY",
+    "intended_application": "Electric bicycle",
+    "market_scope": [
+      "EU",
+      "UK"
+    ],
+    "lifecycle_status": "DEMO_ACTIVE",
+    "introduction_date": "2026-01-15",
+    "nominal_voltage_v": 48.0,
+    "rated_capacity_ah": 15.0,
+    "rated_capacity_wh": 720.0,
+    "usable_energy_wh": 690.0,
+    "chemistry": "Lithium-ion NMC",
+    "cell_format": "21700 cylindrical",
+    "cell_configuration": "13S5P",
+    "cell_count": 65,
+    "pack_weight_kg": 4.2,
+    "dimensions_mm": {
+      "length": 365,
+      "width": 92,
+      "height": 105
+    },
+    "ip_rating": "IP65",
+    "rechargeable": true,
+    "replaceable": true,
+    "removable_without_special_tools": true,
+    "max_continuous_discharge_a": 25,
+    "peak_discharge_a_10s": 40,
+    "max_charge_current_a": 5,
+    "charge_voltage_v": 54.6,
+    "operating_temperature_c": {
+      "charge_min": 0,
+      "charge_max": 45,
+      "discharge_min": -20,
+      "discharge_max": 55
+    },
+    "storage_temperature_c": {
+      "min": -10,
+      "max": 35
+    },
+    "warranty_months": 24
+  },
+  "sku": {
+    "sku_code": "SD-BP48-15-EU-BLK",
+    "commercial_name": "48V 15Ah EU Black",
+    "colour": "Black",
+    "connector_type": "5-pin discharge + DC charge",
+    "market_variant": "EU",
+    "packaging_language": [
+      "EN",
+      "DE",
+      "PL"
+    ]
+  },
+  "batch": {
+    "batch_number": "SYN-2026-09-A",
+    "manufacture_date": "2026-09-01",
+    "production_line": "PACK-LINE-02-DEMO",
+    "factory_code": "QD-DEMO-01",
+    "quantity": 500,
+    "quality_release_date": "2026-09-03",
+    "batch_status": "RELEASED_DEMO"
+  },
+  "manufacturing": {
+    "pack_assembler": {
+      "name": "SOODOO Mobility Technology Co., Ltd. — Demo",
+      "site": "Qingdao Demo Pack Plant",
+      "country": "CN"
+    },
+    "cell_supplier": {
+      "name": "GreenCell Energy Co., Ltd. — Synthetic Supplier",
+      "country": "CN",
+      "cell_model": "GC21700-NMC50-DEMO"
+    },
+    "bms_supplier": {
+      "name": "SmartBMS Electronics Co., Ltd. — Synthetic Supplier",
+      "country": "CN",
+      "bms_model": "SBMS-13S-40A-DEMO"
+    },
+    "charger_supplier": {
+      "name": "E-Charge Systems Co., Ltd. — Synthetic Supplier",
+      "country": "CN",
+      "charger_model": "EC54V6A-DEMO"
+    }
+  },
+  "identifiers": {
+    "gtin14": "09506000123455",
+    "gtin_status": "SYNTHETIC_NOT_REGISTERED",
+    "model_identifier": "SD-BP48-15",
+    "sku_identifier": "SD-BP48-15-EU-BLK",
+    "batch_identifier": "SYN-2026-09-A",
+    "dpp_model_id": "DPP-SOODOO-SYN-MODEL-BP4815",
+    "upi": "urn:greanlean:soodoo:model:sd-bp48-15",
+    "legacy_slug": "soodoo-48v15ah-demo"
+  },
+  "materials": {
+    "total_pack_mass_kg": 4.2,
+    "material_composition_pct": [
+      {
+        "material": "Battery cells",
+        "mass_pct": 68.0
+      },
+      {
+        "material": "Aluminium",
+        "mass_pct": 10.5
+      },
+      {
+        "material": "Steel",
+        "mass_pct": 4.5
+      },
+      {
+        "material": "Copper",
+        "mass_pct": 4.0
+      },
+      {
+        "material": "Plastics",
+        "mass_pct": 7.5
+      },
+      {
+        "material": "Electronics/BMS",
+        "mass_pct": 3.0
+      },
+      {
+        "material": "Other",
+        "mass_pct": 2.5
+      }
+    ],
+    "critical_raw_materials": [
+      {
+        "material": "Lithium",
+        "estimated_mass_g": 420,
+        "demo_only": true
+      },
+      {
+        "material": "Cobalt",
+        "estimated_mass_g": 180,
+        "demo_only": true
+      },
+      {
+        "material": "Nickel",
+        "estimated_mass_g": 910,
+        "demo_only": true
+      },
+      {
+        "material": "Natural graphite",
+        "estimated_mass_g": 1050,
+        "demo_only": true
+      }
+    ],
+    "hazardous_substances": [
+      {
+        "name": "Electrolyte containing LiPF6",
+        "status": "contained in sealed cells",
+        "demo_only": true
+      }
+    ]
+  },
+  "recycled_content": {
+    "cobalt_pct": 8.0,
+    "lithium_pct": 4.0,
+    "nickel_pct": 6.0,
+    "lead_pct": 0.0,
+    "method": "Synthetic mass-balance demo declaration",
+    "verification_status": "UNVERIFIED_DEMO"
+  },
+  "carbon_footprint": {
+    "total_kg_co2e_per_battery": 58.4,
+    "functional_unit": "one battery pack",
+    "methodology": "Synthetic cradle-to-gate demo calculation",
+    "lifecycle_breakdown_kg_co2e": {
+      "raw_materials": 31.2,
+      "cell_manufacturing": 17.8,
+      "pack_assembly": 3.6,
+      "transport_to_eu": 4.9,
+      "packaging": 0.9
+    },
+    "performance_class": "DEMO-B",
+    "reference_period": "2026",
+    "third_party_verified": false,
+    "declaration_id": "SYN-PCF-SD-BP4815-2026-001"
+  },
+  "performance_and_durability": {
+    "rated_capacity_ah": 15.0,
+    "minimum_capacity_ah": 14.25,
+    "rated_energy_wh": 720,
+    "expected_cycle_life_to_80pct": 800,
+    "expected_calendar_life_years": 6,
+    "initial_internal_resistance_mohm": 75,
+    "round_trip_energy_efficiency_pct": 94,
+    "self_discharge_pct_per_month": 2.5,
+    "power_capability_w_continuous": 1200,
+    "power_capability_w_peak": 1900
+  },
+  "safety_and_compliance": {
+    "ce_marking": true,
+    "declaration_of_conformity_id": "SYN-DOC-SD-BP4815-2026-001",
+    "un38_3": {
+      "status": "PASS_DEMO",
+      "report_number": "SYN-UN383-2026-4815-001",
+      "lab": "Demo Battery Safety Lab"
+    },
+    "en_50604_1": {
+      "status": "PASS_DEMO",
+      "report_number": "SYN-EN50604-2026-4815-001",
+      "lab": "Demo Mobility Test Institute"
+    },
+    "iec_62133_2": {
+      "status": "PASS_DEMO",
+      "report_number": "SYN-IEC62133-2026-4815-001"
+    },
+    "sds": {
+      "document_id": "SYN-SDS-BP4815-EN-V1",
+      "revision": "1.0",
+      "date": "2026-08-20"
+    },
+    "transport_classification": "UN 3480, Lithium ion batteries",
+    "demo_warning": "All compliance references are synthetic and not legally valid."
+  },
+  "due_diligence": {
+    "policy_name": "Responsible Battery Materials Policy — Demo",
+    "policy_version": "1.0",
+    "supplier_code_of_conduct": true,
+    "risk_assessment_completed": true,
+    "high_risk_findings": 0,
+    "traceability_level": "Tier-2 synthetic traceability",
+    "audit_date": "2026-06-15",
+    "audit_result": "PASS_DEMO"
+  },
+  "repair_and_service": {
+    "repairability": "Serviceable by trained personnel",
+    "recommended_service_interval_months": 12,
+    "replaceable_components": [
+      "BMS",
+      "main fuse",
+      "charge connector",
+      "discharge connector",
+      "housing",
+      "wiring harness"
+    ],
+    "non_user_serviceable_components": [
+      "individual cells",
+      "welded cell interconnects"
+    ],
+    "spare_parts_availability_years": 7,
+    "repair_manual_id": "SYN-RM-SD-BP4815-V1",
+    "service_contact": "service-demo@soodoo.example"
+  },
+  "disassembly": {
+    "recommended_soc_before_disassembly_pct": 30,
+    "required_tools": [
+      "Torx T20",
+      "insulated screwdriver",
+      "multimeter",
+      "ESD protection"
+    ],
+    "steps": [
+      "Power off and isolate battery",
+      "Verify terminal voltage",
+      "Remove housing screws",
+      "Disconnect BMS harness",
+      "Remove pack module",
+      "Separate electronics and enclosure for recycling"
+    ],
+    "estimated_disassembly_time_min": 25,
+    "safety_notice": "Synthetic demo procedure; not a real service instruction."
+  },
+  "end_of_life": {
+    "collection_symbol": "Separate collection / crossed-out wheeled bin",
+    "take_back_available": true,
+    "take_back_contact": "recycling-demo@soodoo.example",
+    "recommended_recycling_route": "Authorised lithium-ion battery recycler",
+    "second_life_assessment_supported": true,
+    "minimum_soh_for_second_life_pct": 70,
+    "recycling_information": {
+      "target_materials": [
+        "Aluminium",
+        "Copper",
+        "Nickel",
+        "Cobalt",
+        "Lithium"
+      ],
+      "demo_recovery_target_pct": 70
+    }
+  },
+  "warranty": {
+    "duration_months": 24,
+    "capacity_retention_condition": ">=70% under normal use at warranty end — demo",
+    "cycle_limit": 500,
+    "exclusions": [
+      "physical abuse",
+      "water ingress beyond rated protection",
+      "unauthorised repair",
+      "operation outside specified temperature range"
+    ]
+  },
+  "supply_chain": {
+    "cell_origin_country": "CN",
+    "pack_assembly_country": "CN",
+    "eu_import_country": "DE",
+    "distribution_countries": [
+      "DE",
+      "PL",
+      "NL"
+    ],
+    "transport_mode": [
+      "Road",
+      "Sea"
+    ],
+    "traceability_reference": "SYN-SC-2026-BP4815-001"
+  },
+  "bms_schema": {
+    "protocol": "CAN 2.0B / UART gateway — demo",
+    "sample_interval_seconds": 60,
+    "fields": [
+      "SOC",
+      "SOH",
+      "pack_voltage",
+      "pack_current",
+      "min_cell_voltage",
+      "max_cell_voltage",
+      "min_temperature",
+      "max_temperature",
+      "cycle_count",
+      "charge_status",
+      "fault_code",
+      "timestamp"
+    ]
+  },
+  "individual_items": [
+    {
+      "serial_number": "SYN-SD-BP4815-000001",
+      "dpp_id": "DPP-SOODOO-SYN-BP4815-000001",
+      "legacy_alias": "soodoo-pilot-bp48-15-000001",
+      "manufacture_timestamp": "2026-09-01T09:12:00+08:00",
+      "commissioning_date": "2026-09-12",
+      "bms_snapshot": {
+        "timestamp": "2026-09-27T10:00:00+08:00",
+        "soc_pct": 82,
+        "soh_pct": 100,
+        "pack_voltage_v": 50.7,
+        "pack_current_a": -3.4,
+        "min_cell_voltage_v": 3.895,
+        "max_cell_voltage_v": 3.913,
+        "min_temperature_c": 24.6,
+        "max_temperature_c": 27.1,
+        "cycle_count": 12,
+        "charge_status": "DISCHARGING",
+        "fault_code": "NONE"
+      }
+    },
+    {
+      "serial_number": "SYN-SD-BP4815-000002",
+      "dpp_id": "DPP-SOODOO-SYN-BP4815-000002",
+      "legacy_alias": "soodoo-pilot-bp48-15-000002",
+      "manufacture_timestamp": "2026-09-01T09:18:00+08:00",
+      "commissioning_date": "2026-09-13",
+      "bms_snapshot": {
+        "timestamp": "2026-09-27T10:00:00+08:00",
+        "soc_pct": 76,
+        "soh_pct": 99,
+        "pack_voltage_v": 49.9,
+        "pack_current_a": 0.0,
+        "min_cell_voltage_v": 3.824,
+        "max_cell_voltage_v": 3.847,
+        "min_temperature_c": 23.9,
+        "max_temperature_c": 25.8,
+        "cycle_count": 19,
+        "charge_status": "IDLE",
+        "fault_code": "NONE"
+      }
+    },
+    {
+      "serial_number": "SYN-SD-BP4815-000003",
+      "dpp_id": "DPP-SOODOO-SYN-BP4815-000003",
+      "legacy_alias": "soodoo-pilot-bp48-15-000003",
+      "manufacture_timestamp": "2026-09-01T09:24:00+08:00",
+      "commissioning_date": "2026-09-14",
+      "bms_snapshot": {
+        "timestamp": "2026-09-27T10:00:00+08:00",
+        "soc_pct": 91,
+        "soh_pct": 100,
+        "pack_voltage_v": 52.1,
+        "pack_current_a": 2.1,
+        "min_cell_voltage_v": 3.998,
+        "max_cell_voltage_v": 4.013,
+        "min_temperature_c": 25.1,
+        "max_temperature_c": 28.2,
+        "cycle_count": 7,
+        "charge_status": "CHARGING",
+        "fault_code": "NONE"
+      }
+    }
+  ],
+  "lifecycle_events": [
+    {
+      "event_type": "MANUFACTURED",
+      "timestamp": "2026-09-01T09:00:00+08:00",
+      "actor": "SOODOO Demo Pack Plant",
+      "evidence_id": "SYN-EVT-MFG-001"
+    },
+    {
+      "event_type": "QUALITY_RELEASED",
+      "timestamp": "2026-09-03T15:30:00+08:00",
+      "actor": "SOODOO Demo QA",
+      "evidence_id": "SYN-EVT-QA-001"
+    },
+    {
+      "event_type": "EU_MARKET_PLACED",
+      "timestamp": "2026-09-20T10:00:00+02:00",
+      "actor": "SOODOO Europe GmbH — Demo",
+      "evidence_id": "SYN-EVT-EU-001"
+    }
+  ],
+  "passport_publication": {
+    "passport_profile_code": "PRIMARY",
+    "publication_status": "PUBLISHED_SYNTHETIC_DEMO",
+    "version": 1,
+    "issue_date": "2026-09-27",
+    "last_update_date": "2026-09-27",
+    "language": [
+      "en",
+      "zh-CN"
+    ],
+    "public_url_template": "https://dpp.greanlean.com/p/{dpp_id}",
+    "qr_target_template": "https://dpp.greanlean.com/p/{dpp_id}",
+    "registry_status": "NOT_SUBMITTED",
+    "registry_external_id": null
+  },
+  "access_policy_demo": {
+    "PUBLIC": [
+      "product identity",
+      "basic technical data",
+      "carbon footprint demo",
+      "recycled content demo",
+      "safety/compliance demo",
+      "end-of-life information",
+      "passport version"
+    ],
+    "REPAIRER": [
+      "public fields",
+      "repair information",
+      "disassembly guidance",
+      "service history"
+    ],
+    "RECYCLER": [
+      "public fields",
+      "material composition",
+      "critical raw materials",
+      "disassembly",
+      "recycling information"
+    ],
+    "MANUFACTURER": [
+      "all demo operational fields",
+      "BMS snapshots",
+      "supplier details",
+      "quality data"
+    ],
+    "AUTHORITY": [
+      "all synthetic demo fields",
+      "audit/provenance",
+      "access history"
+    ]
+  },
+  "documents": [
+    {
+      "document_type": "DECLARATION_OF_CONFORMITY",
+      "document_id": "SYN-DOC-SD-BP4815-2026-001",
+      "title": "EU Declaration of Conformity — Synthetic Demo",
+      "version": "1.0",
+      "visibility": "PUBLIC"
+    },
+    {
+      "document_type": "UN38_3_TEST_SUMMARY",
+      "document_id": "SYN-UN383-2026-4815-001",
+      "title": "UN38.3 Test Summary — Synthetic Demo",
+      "version": "1.0",
+      "visibility": "PUBLIC"
+    },
+    {
+      "document_type": "SDS",
+      "document_id": "SYN-SDS-BP4815-EN-V1",
+      "title": "Safety Data Sheet — Synthetic Demo",
+      "version": "1.0",
+      "visibility": "PUBLIC"
+    },
+    {
+      "document_type": "REPAIR_MANUAL",
+      "document_id": "SYN-RM-SD-BP4815-V1",
+      "title": "Repair Manual — Synthetic Demo",
+      "version": "1.0",
+      "visibility": "REPAIRER"
+    },
+    {
+      "document_type": "CARBON_FOOTPRINT_DECLARATION",
+      "document_id": "SYN-PCF-SD-BP4815-2026-001",
+      "title": "Carbon Footprint Declaration — Synthetic Demo",
+      "version": "1.0",
+      "visibility": "PUBLIC"
+    }
+  ],
+  "provenance_defaults": {
+    "source_type": "SYNTHETIC_FIXTURE",
+    "source_name": "SOODOO Complete Synthetic Demo Fixture v2.0",
+    "verification_status": "UNVERIFIED_DEMO",
+    "customer_confirmed": false,
+    "evidence_status": "SYNTHETIC",
+    "claim_state": "OVERRIDE"
+  }
+}

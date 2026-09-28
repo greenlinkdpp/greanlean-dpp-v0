@@ -6,7 +6,7 @@ import { loadShowcaseDppData } from "@/lib/server/dppShowcase";
 import { createSupabaseClient } from "@/lib/supabase";
 import { createSupabaseAdminClient } from "@/lib/server/supabase";
 import { resolvePublicPassport } from "@/lib/server/v2/phase4Repository";
-import { projectImmutableDpp } from "@/lib/v2/audienceProjection";
+import { isSyntheticDemoPayload, projectImmutableDpp, SYNTHETIC_DEMO_NOTICES } from "@/lib/v2/audienceProjection";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -115,9 +115,15 @@ export default async function PublicDppPage({
   }
   if (v2?.kind === "PUBLISHED") {
     const projection = projectImmutableDpp(v2.payload, "PUBLIC");
+    const syntheticDemo = isSyntheticDemoPayload(v2.payload);
     return (
       <main className="mx-auto max-w-4xl p-8" data-passport-id={projection.passportId} data-version={projection.version} data-payload-hash={String(projection.payloadHash)}>
         <h1 className="text-3xl font-semibold">Digital Product Passport</h1>
+        {syntheticDemo ? (
+          <aside role="alert" className="mt-6 border-2 border-amber-700 bg-amber-50 p-4 font-semibold text-amber-950">
+            {SYNTHETIC_DEMO_NOTICES.join(" · ")}
+          </aside>
+        ) : null}
         <dl className="mt-8 grid grid-cols-[max-content_1fr] gap-x-6 gap-y-3">
           <dt>Passport</dt><dd>{projection.passportIdentifier}</dd>
           <dt>Version</dt><dd>{projection.version}</dd>

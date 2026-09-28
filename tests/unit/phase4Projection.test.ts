@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { projectImmutableDpp, type ImmutableDppPayload } from "../../lib/v2/audienceProjection.ts";
+import { isSyntheticDemoPayload, projectImmutableDpp, provenanceSourceStatement, type ImmutableDppPayload } from "../../lib/v2/audienceProjection.ts";
 import { JSON_LD_CONTEXT_VERSION, publicHtml, publicJsonLd, publicPdf } from "../../lib/v2/publicFormats.ts";
 import { buildApprovedResolverUrl, normalizeResolverPath } from "../../lib/v2/resolver.ts";
 
@@ -59,4 +59,17 @@ test("QR target accepts only an approved Resolver origin", () => {
   assert.equal(buildApprovedResolverUrl({ origin: "https://dev.dpp.greanlean.test", identifier: "DPP-1", approvedHosts: ["dev.dpp.greanlean.test"] }), "https://dev.dpp.greanlean.test/api/v2/resolver/DPP-1");
   assert.throws(() => buildApprovedResolverUrl({ origin: "https://evil.example", identifier: "DPP-1", approvedHosts: ["dev.dpp.greanlean.test"] }), /RESOLVER_OPEN_REDIRECT/);
   assert.throws(() => buildApprovedResolverUrl({ origin: "https://dev.dpp.greanlean.test", identifier: "https:\/\/evil.example", approvedHosts: ["dev.dpp.greanlean.test"] }), /RESOLVER_IDENTIFIER_INVALID/);
+});
+
+test("synthetic demo payloads are detected and unverified provenance is not described as verified", () => {
+  const synthetic = {
+    ...payload,
+    fields: [...payload.fields, { fieldCode: "demo.warning", value: { dataClassification: "SYNTHETIC_DEMO" }, accessLevel: "PUBLIC" as const }],
+  };
+  assert.equal(isSyntheticDemoPayload(payload), false);
+  assert.equal(isSyntheticDemoPayload(synthetic), true);
+  assert.match(publicHtml(synthetic, "PUBLIC"), /SYNTHETIC DEMO DATA/);
+  assert.match(publicHtml(synthetic, "PUBLIC"), /NOT CUSTOMER VERIFIED/);
+  assert.equal(provenanceSourceStatement("UNVERIFIED"), "Source provenance retained; verification status: UNVERIFIED.");
+  assert.equal(provenanceSourceStatement("UNVERIFIED").includes("retained and verified"), false);
 });

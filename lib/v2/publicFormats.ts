@@ -1,5 +1,5 @@
 import type { DppAudience, ImmutableDppPayload } from "./audienceProjection.ts";
-import { projectImmutableDpp } from "./audienceProjection.ts";
+import { isSyntheticDemoPayload, projectImmutableDpp, SYNTHETIC_DEMO_NOTICES } from "./audienceProjection.ts";
 
 export const JSON_LD_CONTEXT_VERSION = "greanlean-dpp-internal-2026-09-v1";
 
@@ -47,10 +47,13 @@ export function publicJsonLd(payload: ImmutableDppPayload, audience: DppAudience
 
 export function publicHtml(payload: ImmutableDppPayload, audience: DppAudience) {
   const projection = projectImmutableDpp(payload, audience);
+  const warning = isSyntheticDemoPayload(payload)
+    ? `<aside role="alert" style="border:3px solid #b45309;background:#fffbeb;padding:16px;margin:16px 0"><strong>${SYNTHETIC_DEMO_NOTICES.map(escapeHtml).join(" · ")}</strong></aside>`
+    : "";
   const rows = projection.fields.map((field) =>
     `<tr><th>${escapeHtml(field.fieldCode)}</th><td>${escapeHtml(typeof field.value === "object" ? JSON.stringify(field.value) : field.value)}${field.unit ? ` ${escapeHtml(field.unit)}` : ""}</td></tr>`,
   ).join("");
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>DPP ${escapeHtml(projection.passportIdentifier)}</title></head><body><main data-passport-id="${escapeHtml(projection.passportId)}" data-version="${projection.version}" data-payload-hash="${escapeHtml(projection.payloadHash)}"><h1>Digital Product Passport</h1><dl><dt>Passport</dt><dd>${escapeHtml(projection.passportIdentifier)}</dd><dt>Version</dt><dd>${projection.version}</dd><dt>Schema Version</dt><dd>${escapeHtml(projection.schemaVersion)}</dd><dt>Payload Hash</dt><dd>${escapeHtml(projection.payloadHash)}</dd><dt>Published At</dt><dd>${escapeHtml(projection.publishedAt)}</dd></dl><table><tbody>${rows}</tbody></table></main></body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>DPP ${escapeHtml(projection.passportIdentifier)}</title></head><body><main data-passport-id="${escapeHtml(projection.passportId)}" data-version="${projection.version}" data-payload-hash="${escapeHtml(projection.payloadHash)}"><h1>Digital Product Passport</h1>${warning}<dl><dt>Passport</dt><dd>${escapeHtml(projection.passportIdentifier)}</dd><dt>Version</dt><dd>${projection.version}</dd><dt>Schema Version</dt><dd>${escapeHtml(projection.schemaVersion)}</dd><dt>Payload Hash</dt><dd>${escapeHtml(projection.payloadHash)}</dd><dt>Published At</dt><dd>${escapeHtml(projection.publishedAt)}</dd></dl><table><tbody>${rows}</tbody></table></main></body></html>`;
 }
 
 export function publicPdf(payload: ImmutableDppPayload, audience: DppAudience) {
@@ -87,4 +90,3 @@ export function publicPdf(payload: ImmutableDppPayload, audience: DppAudience) {
   offsets.slice(1).forEach((offset) => { pdf += `${String(offset).padStart(10, "0")} 00000 n \n`; });
   return pdf + `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
 }
-

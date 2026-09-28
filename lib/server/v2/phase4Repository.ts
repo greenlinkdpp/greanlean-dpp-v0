@@ -1,6 +1,6 @@
 import { canonicalHash } from "../dppCanonicalization";
 import { ApiError } from "../apiRoute";
-import type { ImmutableDppPayload, PublishedField } from "../../v2/audienceProjection";
+import { provenanceSourceStatement, type ImmutableDppPayload, type PublishedField } from "../../v2/audienceProjection";
 import { MAX_RESOLVER_REDIRECT_DEPTH, normalizeResolverHost, normalizeResolverPath } from "../../v2/resolver";
 import { resolveCandidate } from "./phase3Repository";
 import { assertVerifiedPolicyContext, type VerifiedV2PolicyContext } from "./security";
@@ -207,7 +207,7 @@ function publicationPayload(passport: any, review: any, publishedAt: string): Om
     vocabularyReference: field.vocabularyReference || null,
     verificationStatus: field.verificationStatus || null,
     provenance: {
-      sourceStatement: field.provenanceId ? "Source provenance retained and verified in the tenant audit domain." : null,
+      sourceStatement: field.provenanceId ? provenanceSourceStatement(field.verificationStatus) : null,
       publicEvidenceReference: Array.isArray(field.evidence) ? field.evidence.find((item: unknown) => typeof item === "string" && String(item).startsWith("https://")) || null : null,
     },
   }));

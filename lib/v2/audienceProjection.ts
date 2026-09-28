@@ -33,6 +33,22 @@ export type ImmutableDppPayload = {
   [key: string]: unknown;
 };
 
+export const SYNTHETIC_DEMO_NOTICES = [
+  "SYNTHETIC DEMO DATA",
+  "NOT CUSTOMER VERIFIED",
+  "NOT FOR REGULATORY DECLARATION",
+] as const;
+
+export function isSyntheticDemoPayload(payload: ImmutableDppPayload) {
+  const warning = payload.fields.find((field) => field.fieldCode === "demo.warning")?.value;
+  return Boolean(warning && JSON.stringify(warning).includes("SYNTHETIC_DEMO"));
+}
+
+export function provenanceSourceStatement(verificationStatus?: string | null) {
+  const status = String(verificationStatus || "UNVERIFIED").toUpperCase();
+  return `Source provenance retained; verification status: ${status}.`;
+}
+
 const CLASSIFICATION_RANK: Record<FieldClassification, number> = {
   PUBLIC: 0,
   LEGITIMATE_INTEREST: 1,
@@ -87,4 +103,3 @@ export function projectImmutableDpp(payload: ImmutableDppPayload, audience: DppA
       })),
   };
 }
-
