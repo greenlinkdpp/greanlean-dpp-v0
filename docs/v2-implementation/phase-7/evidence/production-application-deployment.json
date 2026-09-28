@@ -1,0 +1,157 @@
+{
+  "generatedAt": "2026-09-28T06:13:00Z",
+  "result": "PASS",
+  "releaseCandidate": {
+    "reference": "codex/phase7-v2-productized-ui-rc",
+    "commit": "0909c9d51205604b7cdf896b7de3d4bc440f4680",
+    "tree": "bee3bb947ba84668a4b079adcf171026329aa81c",
+    "approvedBuildId": "Jh7WCWCCbbIdoCGFC9C7D",
+    "deployedRcMatch": true,
+    "deploymentSource": "git archive of exact approved commit",
+    "trackedSourceFileCount": 867
+  },
+  "deployment": {
+    "project": "greanlean-dpp-v0",
+    "previousDeploymentId": "dpl_4UWPqEXqygwG6vSzj67Cw8pNFReL",
+    "newDeploymentId": "dpl_3pVpitoxedeeEUy9DWHe76igZcwp",
+    "newDeploymentUrl": "https://greanlean-dpp-v0-4ywjf50zl-songweinie-1175s-projects.vercel.app",
+    "createdAt": "2026-09-28T06:07:32.144Z",
+    "verifiedAt": "2026-09-28T06:12:59.436Z",
+    "readyState": "READY",
+    "target": "production",
+    "aliases": [
+      "https://www.greanlean.com",
+      "https://greanlean.com",
+      "https://greanlean-dpp-v0.vercel.app",
+      "https://greanlean-dpp-v0-songweinie-1175s-projects.vercel.app"
+    ],
+    "blockedAttempt": {
+      "deploymentId": "dpl_EDJcuQZcURenBvSfENaWNttYpiiT",
+      "status": "BLOCKED_BEFORE_BUILD",
+      "reason": "Commit author did not have Vercel project deployment permission",
+      "productionAliasAssigned": false,
+      "productionImpact": "NONE"
+    }
+  },
+  "database": {
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "migrationHeadBefore": "0035",
+    "migrationHeadAfter": "0035",
+    "productionDataWritePerformed": false,
+    "v1CountsBefore": {
+      "organisations": 3,
+      "projects": 0,
+      "products": 9,
+      "productVersions": 12,
+      "identifierAliases": 6
+    },
+    "v1CountsAfter": {
+      "organisations": 3,
+      "projects": 0,
+      "products": 9,
+      "productVersions": 12,
+      "identifierAliases": 6
+    },
+    "soodooCountsBefore": {
+      "organisations": 0,
+      "models": 0,
+      "items": 0,
+      "passports": 0,
+      "identifiers": 0
+    },
+    "soodooCountsAfter": {
+      "organisations": 0,
+      "models": 0,
+      "items": 0,
+      "passports": 0,
+      "identifiers": 0
+    },
+    "connectorInstancesBefore": 0,
+    "connectorInstancesAfter": 0,
+    "registrySubmissionsBefore": 0,
+    "registrySubmissionsAfter": 0
+  },
+  "featureFlags": {
+    "before": {
+      "globalV2Primary": false,
+      "soodooV2Primary": false,
+      "allOtherTenantsV2Primary": false,
+      "registry": false,
+      "realCustomerConnectors": false
+    },
+    "after": {
+      "globalV2Primary": false,
+      "soodooV2Primary": false,
+      "allOtherTenantsV2Primary": false,
+      "registry": false,
+      "realCustomerConnectors": false
+    },
+    "evidence": "No FEATURE_V2_* Production environment variables; V2 feature-gated routes returned dormant 404 responses"
+  },
+  "smoke": {
+    "homepage": { "status": 200, "latencyMs": 1148 },
+    "v1PublicDpp": { "status": 200, "latencyMs": 4728 },
+    "v1PublicApi": { "status": 200, "latencyMs": 4629, "accessLevel": "PUBLIC" },
+    "login": { "status": 200, "latencyMs": 748 },
+    "auth": { "status": 200, "latencyMs": 1031 },
+    "storage": { "status": 200, "latencyMs": 1629, "bucketCount": 3 },
+    "legacyNegativeRoute": { "status": 404, "expected": true },
+    "positiveAliases": { "checked": 4, "passed": 4 },
+    "v2DormantResolver": { "status": 404 },
+    "v2DormantTenants": { "status": 404 },
+    "approvedQr": { "status": 200, "contentType": "image/png" },
+    "arbitraryQr": { "status": 400, "result": "DISALLOWED" }
+  },
+  "security": {
+    "publicDataLeakage": "NONE",
+    "unverifiedFalseVerifiedText": "NONE",
+    "clientBundleFilesScanned": 12,
+    "clientBundleBytesScanned": 852790,
+    "clientBundleSecretMatches": 0,
+    "restrictedProjectionMatches": 0,
+    "publicRoleSpoof": "BLOCKED_NO_ELEVATION",
+    "publicPageRemainedPublic": true,
+    "arbitraryQrTarget": "DISALLOWED",
+    "securityHeaders": "PASS"
+  },
+  "performance": {
+    "sampledAt": "2026-09-28T06:12:59.436Z",
+    "sampleCount": 25,
+    "http5xxRate": 0,
+    "unexpectedHttp4xxRate": 0,
+    "routes": {
+      "homepage": { "success": "5/5", "p50Ms": 1412, "p95Ms": 1741 },
+      "v1PublicPage": { "success": "5/5", "p50Ms": 3003, "p95Ms": 4840 },
+      "v1PublicApi": { "success": "5/5", "p50Ms": 3882, "p95Ms": 5422 },
+      "auth": { "success": "5/5", "p50Ms": 1067, "p95Ms": 1812 },
+      "storage": { "success": "5/5", "p50Ms": 1451, "p95Ms": 2140 }
+    },
+    "deploymentHttp500Logs": 0,
+    "materialRegression": false
+  },
+  "compatibility": {
+    "v1AfterApplicationDeployment": "PASS",
+    "resolver": "PASS",
+    "qr": "PASS",
+    "stablePassportIds": "PASS",
+    "currentPointer": "PASS",
+    "withdrawTombstone": "PASS_BY_FROZEN_CONTRACT_SUITE_NO_LIVE_MUTATION"
+  },
+  "rollback": {
+    "ready": true,
+    "applicationDeploymentId": "dpl_4UWPqEXqygwG6vSzj67Cw8pNFReL",
+    "latestVerifiedManagedBackupReference": "1801742967",
+    "backupCompletedAt": "2026-09-27T16:53:31.313Z",
+    "executed": false
+  },
+  "boundaries": {
+    "productionDataWritePerformed": false,
+    "syntheticDemoCopiedToProduction": false,
+    "registrySubmissionPerformed": false,
+    "realCustomerConnectorsActivated": false,
+    "formalObservationWindowStarted": false,
+    "phase7Complete": false,
+    "phase8Entered": false
+  },
+  "nextAction": "WAIT FOR USER DECISION ON THE REAL SOODOO PILOT DATA GATE"
+}
