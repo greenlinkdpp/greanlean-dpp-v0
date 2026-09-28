@@ -27,6 +27,6 @@ PRODUCTION_WRITE_PERFORMED = YES_LIMITED_TO_0027_THROUGH_0035_AND_TENANT_BOUNDAR
 | Excluded legacy rows | The five Phase 6 ambiguous rows remain `EXCLUDE_FROM_PILOT` |
 | Observation start/end | `NOT_SCHEDULED` |
 
-Tenant selection is complete, but the full Pilot scope remains unlocked. Production verification found zero SOODOO Product Models and zero SOODOO Passports in V2, and no existing SOODOO Organisation/customer/product source record was found that could be mapped without guessing. The exact included Models, Passports and identifiers must be approved before data preparation. Limits remain one Tenant, no more than 30 Models and no more than 5,000 Passports.
+Tenant selection is complete, but the full Pilot scope remains unlocked. The authorised deterministic discovery was completed read-only and is recorded in `01b-soodoo-pilot-data-inventory.md`. It found zero qualifying Models, Passports and identifiers reachable from the Tenant, no approved legacy mappings/source records and no exact SOODOO V1 customer, Organisation or product candidate. `SOODOO_PILOT_SCOPE_DISCOVERY = BLOCKED` and `SOODOO_BUSINESS_DATA_REQUIRED = TRUE`. Limits remain one Tenant, no more than 30 Models and no more than 5,000 Passports.
 
 Migration `0027` and provisioning evidence are recorded in `01a-production-0027-migration-evidence.md` and `01b-soodoo-tenant-provisioning-evidence.md`. The earlier `01a-soodoo-tenant-provisioning-evidence.md` is retained as historical evidence of the correctly blocked pre-schema attempt.

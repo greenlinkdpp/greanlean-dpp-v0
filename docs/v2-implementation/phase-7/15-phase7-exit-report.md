@@ -48,14 +48,17 @@ PRODUCTION_DEPLOYMENT_CHANGED = NO
 
 CONTROLLED_ROLLOUT_READINESS = NOT_READY
 
+SOODOO_PILOT_SCOPE_DISCOVERY = BLOCKED
+SOODOO_BUSINESS_DATA_REQUIRED = TRUE
+
 NEXT ACTION =
-STOP; OBTAIN EXPLICIT SOODOO MODEL/PASSPORT/IDENTIFIER SCOPE BEFORE RESUMING PHASE 7
+WAIT FOR USER ACCEPTANCE OF THE SOODOO PILOT DATA INVENTORY BEFORE RESUMING PHASE 7
 ```
 
 ## Result
 
 The authorised Production schema sequence completed successfully at head `0035`, and immediate V1 regression passed. The schema remains dormant for traffic: no Pilot or global V2-primary state was enabled.
 
-Phase 7 stopped at the Pilot data preparation Gate. Tenant selection alone is insufficient to identify business records. No included SOODOO Models, Passports or identifiers were approved, and Production contains no discoverable SOODOO legacy source representation that can be assigned without guessing. This makes deterministic reconciliation impossible and blocks every downstream publication, shadow, pre-switch, cutover and observation Gate.
+Phase 7 stopped at the Pilot data preparation Gate. The subsequent authorised read-only deterministic discovery found an empty SOODOO Tenant relationship closure: zero Models, Passports, identifiers, approved legacy mappings and source records, plus no exact normalized SOODOO V1 customer, Organisation or product candidate. This makes deterministic reconciliation impossible and blocks every downstream publication, shadow, pre-switch, cutover and observation Gate. The complete inventory is in `01b-soodoo-pilot-data-inventory.md` and `evidence/soodoo-pilot-data-inventory.json`.
 
 The stop is safe: no Pilot business data was migrated, no traffic was switched, no Production application was deployed, Registry and real connectors remain disabled, and non-Pilot V1 continuity passed at the schema Gate. Phase 8 is not entered.

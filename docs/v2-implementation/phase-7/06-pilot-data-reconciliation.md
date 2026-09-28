@@ -13,4 +13,4 @@ The canonical Tenant exists, but the approved scope does not identify any includ
 
 Consequently no deterministic chain of `V1 source → V2 subject → identifier → passport` can be constructed. Inventing records, assigning unrelated legacy products or treating the Tenant display name as a data-selection rule would violate the scope-lock and reconciliation requirements. The five Phase 6 ambiguous legacy rows remain `EXCLUDE_FROM_PILOT`.
 
-No Pilot data migration, backfill, publication or feature-flag write was attempted. Continuation requires an explicit list or deterministic source-selection rule for the included SOODOO Models, Passports and identifiers.
+No Pilot data migration, backfill, publication or feature-flag write was attempted. The subsequently authorised deterministic source-selection run returned an empty Tenant relationship closure and is recorded in `01b-soodoo-pilot-data-inventory.md`. Continuation requires actual SOODOO business source data linked through approved Tenant relationships or approved legacy mapping evidence; a name-only association is insufficient.

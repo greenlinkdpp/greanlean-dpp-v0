@@ -1,0 +1,104 @@
+{
+  "generatedAt": "2026-09-28T00:52:58.300114Z",
+  "discoveryMode": "PRODUCTION_READ_ONLY",
+  "production": {
+    "projectName": "greanlen-dpp",
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "migrationHead": "0035"
+  },
+  "result": {
+    "soodooPilotScopeDiscovery": "BLOCKED",
+    "pilotScopeDeterministic": false,
+    "soodooBusinessDataRequired": true,
+    "productionWritePerformed": false
+  },
+  "tenant": {
+    "id": "0c2f6dff-560d-4eeb-be47-1e87a2f710fe",
+    "code": "soodoo-e-bike",
+    "name": "SOODOO E-bike",
+    "status": "ACTIVE",
+    "createdAt": "2026-09-27T23:58:55.70031Z",
+    "organisationId": null,
+    "organisationRelationship": null
+  },
+  "counts": {
+    "pilotModelCount": 0,
+    "pilotPassportCount": 0,
+    "pilotIdentifierCount": 0,
+    "unknownCount": 0,
+    "ambiguousCount": 0,
+    "reviewRequiredCount": 0
+  },
+  "models": [],
+  "passports": [],
+  "identifiers": [],
+  "relationshipClosure": {
+    "organisations": 0,
+    "models": 0,
+    "skus": 0,
+    "batches": 0,
+    "batchSkuLinks": 0,
+    "items": 0,
+    "passports": 0,
+    "identifiers": 0,
+    "resolverMappings": 0,
+    "legacyEntityMappings": 0,
+    "sourceRecords": 0,
+    "externalIdentifierMappings": 0
+  },
+  "v1ExactNormalizedSoodooCandidates": {
+    "customers": [],
+    "organisations": [],
+    "products": []
+  },
+  "quarantinedLegacyDecisionRows": [
+    {
+      "id": "0f09ff28-37ce-4a87-9590-b3fb99154f1b",
+      "disposition": "EXCLUDE_FROM_PILOT",
+      "presentByExactIdInProduction": false
+    },
+    {
+      "id": "41c77aa2-a8d6-4a8f-a5c8-d9bd6f34c946",
+      "disposition": "EXCLUDE_FROM_PILOT",
+      "presentByExactIdInProduction": false
+    },
+    {
+      "id": "6d3b043b-8104-43b2-a229-132c50638f45",
+      "disposition": "EXCLUDE_FROM_PILOT",
+      "presentByExactIdInProduction": false
+    },
+    {
+      "id": "a0de52dc-8655-4339-b7b6-c9a6940f9697",
+      "disposition": "EXCLUDE_FROM_PILOT",
+      "presentByExactIdInProduction": true
+    },
+    {
+      "id": "c2747230-24a9-4eb5-8b2c-6380391e8c40",
+      "disposition": "EXCLUDE_FROM_PILOT",
+      "presentByExactIdInProduction": false
+    }
+  ],
+  "selectionDecision": {
+    "modelRuleResult": "MODEL_SOURCE_NOT_DETERMINISTIC",
+    "passportRuleResult": "NO_SELECTED_MODELS_OR_QUALIFYING_PASSPORTS",
+    "identifierRuleResult": "NO_SELECTED_SUBJECTS_OR_EXISTING_CANONICAL_IDENTIFIERS",
+    "selectedRecordCount": 0
+  },
+  "missingSourceCategories": [
+    "Canonical SOODOO product_model rows linked by tenant_id, or approved legacy_entity_mapping evidence for identified SOODOO V1 product/model sources",
+    "Canonical or approved-mapped Passport sources bound to a supported selected subject",
+    "Existing canonical or approved-mapped identifiers required for current lookup behaviour",
+    "Approved Tenant-to-Organisation/customer relationship if V1 ownership is used as the source boundary"
+  ],
+  "safety": {
+    "modelCreated": false,
+    "passportCreated": false,
+    "identifierCreated": false,
+    "publicationPerformed": false,
+    "v2PrimaryEnabled": false,
+    "trafficSwitched": false,
+    "registryEnabled": false,
+    "realConnectorsActivated": false,
+    "phase8Entered": false
+  }
+}
