@@ -1,0 +1,124 @@
+{
+  "generatedAt": "2026-09-28T05:22:36Z",
+  "result": {
+    "newProductionRcFrozen": true,
+    "sourceMatchesVerifiedPreProd": true,
+    "reproducible": true
+  },
+  "rc": {
+    "reference": "codex/phase7-v2-productized-ui-rc",
+    "commit": "0909c9d51205604b7cdf896b7de3d4bc440f4680",
+    "tree": "bee3bb947ba84668a4b079adcf171026329aa81c",
+    "trackedFileCount": 867,
+    "buildId": "Jh7WCWCCbbIdoCGFC9C7D",
+    "historicalInvalidRc": "907f86f1c57cc5957af974048e4539cf54877284"
+  },
+  "migrations": {
+    "head": "0035",
+    "fileCount": 30,
+    "manifestSha256": "6e34ca7a9b274ccf4cc92881453e0a6a3ccd69b53544fadeba86b7339caa76ab",
+    "checksums": {
+      "0001_project_migration_ledger.sql": "bde9b3d605aad8e3b28e54494a94f23a13d69691724611a2c94892228eb7259c",
+      "0006_schema_registry.sql": "45b18877ed7b7912de17e742be8ace93ec03be5665de2cc5c35e787534ae3375",
+      "0007_field_definitions_and_rules.sql": "35e21e5767f52cfa3e5682165e1f7f8e9cf9d14583e87ee87fda8d67082b533b",
+      "0009_battery_domain.sql": "a0090ef68260c8341f7b35031819be3899b297c87bded2d316461651ac2b04e9",
+      "0010_battery_dynamic_metrics.sql": "15fc8c8bbe421f74da58157042d9b1dbb04cfe9147a7ee01230eebe291fd0ec6",
+      "0011_registry_adapter.sql": "1defb24ca3cb05e937b93263770a4ffe2194c44affde7b31226e5364f164b695",
+      "0012_unified_dpp_publications.sql": "3a3be3434ad04210be5fae3e8024d4f809de5e92460bad6ea093631f59de15ac",
+      "0013_identity_and_access.sql": "e0433bff0633d7329b8dfa9cbba25d7112e6f114578f0b4b53f4ed41c3d010b0",
+      "0014_battery_operating_data_integration.sql": "a296cdc3d2722d9b848e286a7b455187a1813e2ca385a3b07111fffac55f4b2a",
+      "0015_dpp_publication_foundation.sql": "6b1590ba985cf6559bce41675fc0e533a81e7f29a12643f7efca88465198db98",
+      "0016_dpp_publication_review.sql": "2be96d052802eabc9fbc4010eb500b6bf81c691647c866bc5ab298b56da5073c",
+      "0017_publication_review_function_permissions.sql": "31ea8993b7776029200c7dd511a4f263bc01fbc8abdd345df11c5286eebe47f8",
+      "0018_canonical_publication_finalization.sql": "e53be6263b38e47b2d650e79b054c0629b528dc914d883551308235e878b1b92",
+      "0019_file_evidence_lifecycle_foundation.sql": "57574fdf21b439d98ef2292d2e1e18097979cd2656e848f529e2f60ab14f8a78",
+      "0020_system_operation_security_boundary.sql": "18878f9ba6132302444b090c1b6a1724a7b2b17a874279b23dfaa946d3150864",
+      "0021_publication_backfill_and_read_cutover.sql": "1ad4dcc431d4dce41a662c5c120231afb702bb15f1f40e33ec11d02f504ea6f7",
+      "0022_pgcrypto_runtime_search_path.sql": "5840cb23b9c8c977b7a92e1bb02616032efd4b82a44e4d22c073eacf2ef76b7c",
+      "0023_canonical_public_snapshot_resolution.sql": "44391262e8ad1d1b20729f2c4a49e40ed85a6b897527dd596076ebbba09cdca8",
+      "0024_canonical_schema_identifier_compatibility.sql": "ae45cb514b1054a4ec255a1bbc00835a9742b1d52be658f9f41c4485dc0d8609",
+      "0025_p0_battery_pilot_foundation.sql": "c2dc15897a21f3d697ce4ec993d1fa38ad446444008ad13afc4c136c8b6d4f8a",
+      "0026_battery_regulatory_datapoints_v2.sql": "9c911c4f816b6ce548a0861d7fbe89958d1892bb7e065583a690a47485aee643",
+      "0027_v2_phase1_tenant_access_foundation.sql": "15a2984852d2c94517876102f673f563fdb19060df37cf569753235e6504ecc0",
+      "0028_v2_phase2_product_core.sql": "a41d7de9e22c63507d3618dcf86cf0e70c4d43d2f9304d62956d195ea6ed5672",
+      "0029_v2_phase3_schema_canonical_provenance.sql": "ea6a32617fa55412832c18ad0b809329d29c6bbbdf5fe12c943f49e5e1f27f6f",
+      "0030_v2_phase4_passport_publication_resolver.sql": "2772914292ba5e6367755b210a28a0ec6459fac183d83cf61af65e6476d4310b",
+      "0031_v2_phase5_integration_registry_connectors.sql": "b9c1c3f25f81fcbb914662cb53dc9bfcf19132d69235cb47f278050da74f32ff",
+      "0032_v2_phase6_seed_trigger_compatibility_fix.sql": "624f9079e18c94f19dea0993c91759ba2fdbeb3498574479102e5acc387e4b18",
+      "0033_v2_phase6b_future_tenant_connector_capabilities.sql": "8a9807ea8caa51801d51ccd27141a7b0c9d47a932e62c69b546ff781fea3b6b6",
+      "0034_phase6c_hosted_pilot_controls.sql": "480377579ff39cf797e6c29560b33d8e65c502436af81e1a04d73f1e77f1de1d",
+      "0035_phase6c_resolver_fast_path.sql": "3aa2eb054318d7b27f450f09345952583746559246c3a8cb680a0d290ed20cb6"
+    }
+  },
+  "verification": {
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "unitTests": { "result": "PASS", "passed": 118, "total": 118 },
+    "integrationTests": { "result": "PASS", "passed": 95, "total": 95 },
+    "migrationTests": { "result": "PASS", "passed": 56, "total": 56 },
+    "productionBuild": "PASS",
+    "credentialScan": { "result": "PASS", "trackedFilesScanned": 867, "credentialValuesCompared": 7, "matches": 0 },
+    "debugTemporaryScan": { "result": "PASS", "matches": 0 },
+    "generatedArtifactExclusion": "PASS",
+    "environmentFileExclusion": { "result": "PASS", "tracked": [".env.example"] }
+  },
+  "preProduction": {
+    "deploymentId": "dpl_BPdJ6q9CwgypiqR14zgbZqSYbmQY",
+    "alias": "https://greanlean-dpp-preprod.vercel.app",
+    "migrationHead": "0035",
+    "reverify": "PASS",
+    "passportCountChecked": 3,
+    "publicDataLeakage": "NONE",
+    "unverifiedFalseVerifiedText": "NONE",
+    "clientBundleSecretMatches": 0,
+    "publicRoleSpoof": "REMAINS_PUBLIC",
+    "arbitraryQrTarget": "DISALLOWED",
+    "mobileWidthsChecked": [375, 390, 430, 768, 1024, 1440]
+  },
+  "productionReadOnlyBaseline": {
+    "checkedAt": "2026-09-28T05:20:00Z",
+    "result": "PASS",
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "migrationHead": "0035",
+    "applicationDeploymentId": "dpl_4UWPqEXqygwG6vSzj67Cw8pNFReL",
+    "v1Counts": { "organisations": 3, "projects": 0, "products": 9, "productVersions": 12, "identifierAliases": 6 },
+    "soodooTenant": { "id": "0c2f6dff-560d-4eeb-be47-1e87a2f710fe", "status": "ACTIVE", "organisations": 0, "models": 0, "items": 0, "passports": 0, "identifiers": 0 },
+    "connectorInstances": 0,
+    "registrySubmissions": 0,
+    "authHttpStatus": 200,
+    "storageHttpStatus": 200,
+    "storageBucketCount": 3,
+    "globalV2Primary": false,
+    "soodooV2Primary": false,
+    "otherTenantV2Primary": false,
+    "publicSmoke": {
+      "homepage": { "status": 200, "sha256": "8e2a706062e83339f2543db849ea8a1a93541086f0e408b249ba36e424de33ac" },
+      "publicDpp": { "status": 200, "sha256": "90d9bfd7e8d6596d5de168edcaec73734f2895ab20ee200ae1d7984661ac981b" },
+      "publicApi": { "status": 200, "sha256": "53be283be17ecf3757934811519e25e62afc043afd9f8fe62af65e619484f9b8" },
+      "legacyNegativeRoute": { "status": 404, "sha256": "2c8868e773b0fb208f6c2d8e1fc1e1ed71de51b24e83559f845b641ce47205e6" },
+      "login": { "status": 200, "sha256": "619dbaa909ed37e6f9df918256b4e37d987e0b2e0ea4fc54d72dda98ed4c2d50" }
+    },
+    "methods": ["GET", "HEAD"]
+  },
+  "rollback": {
+    "ready": true,
+    "applicationDeploymentId": "dpl_4UWPqEXqygwG6vSzj67Cw8pNFReL",
+    "latestVerifiedManagedBackupReference": "1801742967",
+    "backupCompletedAt": "2026-09-27T16:53:31.313Z"
+  },
+  "boundaries": {
+    "productionApplicationDeployed": false,
+    "productionDataWritePerformed": false,
+    "productionTrafficSwitched": false,
+    "registrySubmissionPerformed": false,
+    "realCustomerConnectorsActivated": false,
+    "phase8Entered": false,
+    "syntheticDemoCopiedToProduction": false
+  },
+  "knownLimitations": [
+    "Production SOODOO has no real customer Models, Items, Passports or identifiers.",
+    "The Hosted PreProd SOODOO dataset is synthetic and customer verification remains pending.",
+    "A live withdrawn Demo passport is not present; withdraw/tombstone behavior is covered by passing contract tests.",
+    "This evidence authorizes neither Production application deployment nor Pilot cutover."
+  ]
+}
