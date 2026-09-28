@@ -15,6 +15,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { locale } = useLanguage();
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
+  const [hasV2Backoffice, setHasV2Backoffice] = useState(false);
   const [organisationName, setOrganisationName] = useState("");
 
   const t = locale === "zh"
@@ -31,6 +32,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         esg: "ESG 快录",
         certificates: "证书快录",
         workspace: "DPP 工作流",
+        v2Operations: "V2 运营控制台",
         partnerWorkspace: "合作伙伴工作台",
         partnerRole: "合作伙伴编辑者",
         platformRole: "平台管理员",
@@ -54,6 +56,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         esg: "ESG Quick Entry",
         certificates: "Certificate Quick Entry",
         workspace: "DPP Workflow",
+        v2Operations: "V2 Operations Console",
         partnerWorkspace: "Partner workspace",
         partnerRole: "Partner editor",
         platformRole: "Platform administrator",
@@ -73,6 +76,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             [t.overview, "/dashboard", "01"],
             [t.projects, "/dashboard/projects", "02"],
             [t.products, "/dashboard/products", "03"],
+            [t.v2Operations, "/dashboard/v2", "V2"],
           ],
         },
         {
@@ -97,7 +101,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     : [
         {
           label: t.workspaceGroup,
-          items: [[t.products, "/dashboard/products", "01"]],
+          items: [
+            [t.products, "/dashboard/products", "01"],
+            ...(hasV2Backoffice ? [[t.v2Operations, "/dashboard/v2", "V2"]] : []),
+          ],
         },
       ];
   const nav = navGroups.flatMap((group) => group.items);
@@ -158,9 +165,18 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       }
       setIsPlatformAdmin(Boolean(identity.isPlatformAdmin));
       setOrganisationName(identity.memberships?.[0]?.organisationName || "");
+      const v2Response = await fetch("/api/v2/backoffice/context", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+        cache: "no-store",
+      });
+      const v2Identity = await v2Response.json().catch(() => null);
+      if (!active) return;
+      const canUseV2Backoffice = v2Response.ok && Array.isArray(v2Identity?.data) && v2Identity.data.length > 0;
+      setHasV2Backoffice(canUseV2Backoffice);
       const partnerRouteAllowed =
         pathname === "/dashboard/products" ||
-        pathname.startsWith("/dashboard/products/");
+        pathname.startsWith("/dashboard/products/") ||
+        (canUseV2Backoffice && (pathname === "/dashboard/v2" || pathname.startsWith("/dashboard/v2/")));
       if (!identity.isPlatformAdmin && !partnerRouteAllowed) {
         router.replace(`/dashboard/products?lang=${locale}`);
         return;

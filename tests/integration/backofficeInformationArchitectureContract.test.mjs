@@ -43,10 +43,11 @@ test("dashboard uses the same five-stage operating workflow as the product edito
   assert.match(dashboard, /xl:grid-cols-5/);
 });
 
-test("partner navigation remains product-only while platform navigation owns sensitive work", async () => {
+test("partner navigation exposes V2 only when a server-authorised V2 context exists", async () => {
   const shell = await readFile("components/DashboardShell.tsx", "utf8");
 
-  assert.match(shell, /items:\s*\[\[t\.products,\s*"\/dashboard\/products",\s*"01"\]\]/);
+  assert.match(shell, /hasV2Backoffice \? \[\[t\.v2Operations, "\/dashboard\/v2", "V2"\]\] : \[\]/);
+  assert.match(shell, /fetch\("\/api\/v2\/backoffice\/context"/);
   assert.match(shell, /items:\s*\[\[t\.leads,\s*"\/dashboard\/leads",\s*"\d+"\]\]/);
   assert.match(shell, /\[t\.access,\s*"\/dashboard\/access",\s*"\d+"\]/);
   assert.match(shell, /const navGroups = isPlatformAdmin/);

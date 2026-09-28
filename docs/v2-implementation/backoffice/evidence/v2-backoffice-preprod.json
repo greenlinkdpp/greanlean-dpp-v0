@@ -1,0 +1,12 @@
+{
+  "capturedAt": "2026-09-28T00:00:00Z",
+  "environment": "Hosted PreProd",
+  "applicationOrigin": "https://greanlean-dpp-preprod.vercel.app",
+  "supabaseProjectRef": "efhiaufukjchxqhbmpvq",
+  "migrationHead": "0035",
+  "deployment": { "status": "PENDING", "id": null, "url": null },
+  "automated": { "typecheck": "PASS", "lint": "PASS", "unit": { "status": "PASS", "count": 122 }, "integration": { "status": "PASS", "count": 99 }, "build": "PASS", "migrations": "PENDING" },
+  "hostedQa": { "status": "PENDING", "authenticated": false, "bilingual": "PENDING", "responsive": "PENDING", "tenantIsolation": "PENDING", "syntheticDataset": "PENDING" },
+  "production": { "applicationDeployed": false, "dataWritePerformed": false, "trafficSwitched": false },
+  "phase8Entered": false
+}
