@@ -22,6 +22,18 @@ async function globalRows(admin: AdminClient, table: string, select: string, ids
 export async function loadBackofficeSnapshot(admin: AdminClient, context: VerifiedV2PolicyContext) {
   assertVerifiedPolicyContext(context);
   const tenantId = context.tenantId;
+  if (context.actorType !== "TENANT") {
+    throw new ApiError(403, "BACKOFFICE_TENANT_AUTHORITY_REQUIRED", "The aggregate operator console requires a Tenant membership; Partners must use resource-scoped APIs.");
+  }
+  const membership = await admin.from("tenant_membership").select("role_id").eq("id", context.authorityId).eq("tenant_id", tenantId).maybeSingle();
+  if (membership.error || !membership.data) throw new ApiError(403, "BACKOFFICE_AUTHORITY_NOT_FOUND", "The verified Tenant authority is no longer available.");
+  const capabilityResult = await admin.from("role_capability").select("capability:capability(code,status)").eq("role_id", membership.data.role_id);
+  if (capabilityResult.error) throw new ApiError(500, "BACKOFFICE_CAPABILITY_LOOKUP_FAILED", "Operator capabilities could not be loaded.");
+  const capabilities = new Set<string>((capabilityResult.data || []).flatMap((row: any) => {
+    const capability = Array.isArray(row.capability) ? row.capability[0] : row.capability;
+    return capability?.status === "ACTIVE" && typeof capability.code === "string" ? [capability.code] : [];
+  }));
+  const can = (code: string) => capabilities.has(code);
   const tenantResult = await admin.from("tenant").select("id,code,name,status,residency_policy,created_at,updated_at").eq("id", tenantId).maybeSingle();
   if (tenantResult.error || !tenantResult.data) throw new ApiError(404, "TENANT_NOT_FOUND", "The authorised Tenant was not found.");
 
@@ -33,7 +45,7 @@ export async function loadBackofficeSnapshot(admin: AdminClient, context: Verifi
     registrySubmissions, bmsSnapshots, connectorAudit, policyAudit,
   ] = await Promise.all([
     rows(admin, "organisation_v2", "id,parent_organisation_id,organisation_type,legal_name,trading_name,country,registration_identifier,vat_number,eori,address,status,created_at,updated_at", tenantId),
-    rows(admin, "tenant_membership", "id,user_id,role_id,status,valid_from,valid_until,created_at,updated_at", tenantId),
+    rows(admin, "tenant_membership", "id,role_id,status,valid_from,valid_until,created_at,updated_at", tenantId),
     rows(admin, "partner_tenant_authorization", "id,partner_id,permission_profile_id,scope,valid_from,valid_until,status,approved_at,approval_evidence_reference,created_at,updated_at", tenantId),
     rows(admin, "product_family", "id,code,name,description,status,created_at,updated_at", tenantId),
     rows(admin, "product_model", "id,family_id,manufacturer_organisation_id,model_code,name,description,product_category,sector,status,created_at,updated_at", tenantId),
@@ -97,10 +109,27 @@ export async function loadBackofficeSnapshot(admin: AdminClient, context: Verifi
 
   return {
     generatedAt: new Date().toISOString(), tenant: tenantResult.data,
-    organisations, memberships, partnerAuthorizations, families, models, skus, batches, batchSkuLinks, items,
-    identifiers, dataSources, sourceRecords, mappingProfiles, mappingVersions, mappingRules, transformations,
-    provenance, claims, fields, validationRules, accessPolicies, passports, reviews, versions, currentPointers,
-    resolverMappings, publicationAudit, connectors, connectorDefinitions, connectorJobs, connectorAttempts,
-    connectorReceipts, deadLetters, importSessions, registrySubmissions, bmsSnapshots, connectorAudit, policyAudit,
+    organisations: can("tenant.view") ? organisations : [],
+    memberships: can("tenant.manage") ? memberships : [],
+    partnerAuthorizations: can("partner.approve") || can("tenant.manage") ? partnerAuthorizations : [],
+    families: can("product.view") ? families : [], models: can("product.view") ? models : [],
+    skus: can("product.view") ? skus : [], batches: can("product.view") ? batches : [],
+    batchSkuLinks: can("product.view") ? batchSkuLinks : [], items: can("product.view") ? items : [],
+    identifiers: can("product.view") ? identifiers : [],
+    dataSources: can("schema.view") ? dataSources : [], sourceRecords: can("schema.view") ? sourceRecords : [],
+    mappingProfiles: can("schema.view") ? mappingProfiles : [], mappingVersions: can("schema.view") ? mappingVersions : [],
+    mappingRules: can("schema.view") ? mappingRules : [], transformations: can("schema.view") ? transformations : [],
+    provenance: can("product.view") ? provenance : [], claims: can("product.view") ? claims : [],
+    fields: can("schema.view") ? fields : [], validationRules: can("schema.view") ? validationRules : [],
+    accessPolicies: can("schema.view") ? accessPolicies : [],
+    passports: can("dpp.view") ? passports : [], reviews: can("dpp.review") || can("dpp.view") ? reviews : [],
+    versions: can("dpp.view") ? versions : [], currentPointers: can("dpp.view") ? currentPointers : [],
+    resolverMappings: can("dpp.view") ? resolverMappings : [], publicationAudit: can("dpp.view") ? publicationAudit : [],
+    connectors: can("connector.view") ? connectors : [], connectorDefinitions: can("connector.view") ? connectorDefinitions : [],
+    connectorJobs: can("connector.view") ? connectorJobs : [], connectorAttempts: can("connector.view") ? connectorAttempts : [],
+    connectorReceipts: can("connector.read_receipt") ? connectorReceipts : [], deadLetters: can("connector.retry") ? deadLetters : [],
+    importSessions: can("connector.view") ? importSessions : [], registrySubmissions: can("registry.view") ? registrySubmissions : [],
+    bmsSnapshots: can("connector.view") ? bmsSnapshots : [], connectorAudit: can("connector.view") ? connectorAudit : [],
+    policyAudit: can("tenant.manage") ? policyAudit : [],
   };
 }

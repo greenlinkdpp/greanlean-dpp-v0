@@ -171,7 +171,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       });
       const v2Identity = await v2Response.json().catch(() => null);
       if (!active) return;
-      const canUseV2Backoffice = v2Response.ok && Array.isArray(v2Identity?.data) && v2Identity.data.length > 0;
+      const canUseV2Backoffice = v2Response.ok && Array.isArray(v2Identity?.data) && v2Identity.data.some((item: { authorityType?: string }) => item.authorityType === "TENANT");
       setHasV2Backoffice(canUseV2Backoffice);
       const partnerRouteAllowed =
         pathname === "/dashboard/products" ||

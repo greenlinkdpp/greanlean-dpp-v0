@@ -1,6 +1,6 @@
 # Import and Mapping Workflow
 
-The import workspace accepts CSV, JSON and Excel (`.xlsx`/`.xls`) selections. CSV and JSON are previewed as text. Excel workbooks are read locally in the browser; the first worksheet is normalized to escaped CSV so the existing controlled Phase 5 import protocol and database format remain unchanged.
+The import workspace accepts CSV, JSON and modern Excel (`.xlsx`) selections. CSV and JSON are previewed as text. Excel workbooks are read locally in the browser; the first worksheet is normalized to escaped CSV so the existing controlled Phase 5 import protocol and database format remain unchanged.
 
 The operator sequence is:
 

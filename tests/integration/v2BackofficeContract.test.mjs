@@ -34,7 +34,7 @@ test("operator writes retain capability and idempotency enforcement", async () =
 test("backoffice includes bilingual productized views and safe file preflight", async () => {
   const [ui, model] = await Promise.all([read("components/v2/backoffice/BackofficeConsole.tsx"), read("lib/v2/backoffice.ts")]);
   assert.match(model, /V2 Operations Console/); assert.match(model, /V2 运营控制台/);
-  assert.match(ui, /\.csv,\.json,\.xlsx,\.xls/);
+  assert.match(ui, /\.csv,\.json,\.xlsx/);
   assert.match(ui, /PREFLIGHT/);
   assert.match(ui, /Audience preview boundary/);
   assert.doesNotMatch(ui, /dangerouslySetInnerHTML/);

@@ -18,9 +18,10 @@ The Product hierarchy preserves Model → SKU and Model → Batch as parallel di
 
 ## Trust boundaries
 
-- The browser discovers available contexts from `/api/v2/backoffice/context`; it cannot nominate an arbitrary Tenant.
+- The browser discovers available contexts from `/api/v2/backoffice/context`; it cannot nominate an arbitrary Tenant. The aggregate console is available only through an active Tenant membership. Partner users continue through the existing resource-scoped APIs so an aggregate snapshot cannot bypass Partner scope grants.
 - `/api/v2/backoffice/snapshot` re-evaluates the bearer token, Tenant authority, capability, feature gates and scope in the existing V2 PDP.
 - All repository reads include `tenant_id`; global Schema and Connector definitions are fetched only by identifiers already referenced by Tenant-scoped rows.
+- Returned datasets are capability-filtered on the server (`tenant.manage`, `product.view`, `schema.view`, `dpp.view`, connector and Registry capabilities); hiding a navigation item is never the authorization boundary.
 - Connector secret references, connector configuration, candidate payloads and immutable publication payloads are excluded from the aggregate response.
 - Every mutation continues through an existing V2 endpoint with an idempotency key and server-side capability check.
 

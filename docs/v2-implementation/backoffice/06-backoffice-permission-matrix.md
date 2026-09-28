@@ -14,4 +14,4 @@
 | Registry | Connector/DPP view | `registry.submit` |
 | Audit | Tenant-authorised operational view | Append-only, produced by server operations |
 
-The UI consumes capability codes only to explain or disable actions. The backend remains authoritative and re-evaluates identity, active time window, Tenant, capability, scope, feature gates and resource identifiers on every request. Partner authority is bounded by its Permission Profile and Scope Grant; platform status alone does not imply Tenant data access.
+The UI consumes capability codes only to explain or disable actions. The backend remains authoritative and re-evaluates identity, active time window, Tenant, capability, scope, feature gates and resource identifiers on every request. The aggregate console additionally filters each returned dataset by its read capability and omits membership identity details for non-administrators. Partner authority is bounded by its Permission Profile and Scope Grant and therefore uses the existing resource-scoped APIs rather than the Tenant-wide aggregate snapshot; platform status alone does not imply Tenant data access.
