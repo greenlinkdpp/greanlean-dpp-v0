@@ -1,0 +1,195 @@
+{
+  "generatedAt": "2026-09-28T12:38:02Z",
+  "result": "PASS",
+  "releaseCandidate": {
+    "reference": "codex/phase7-v2-backoffice-rc",
+    "commit": "4c0aa4a306fc7f62a57e374d07f57f55e84fbda0",
+    "tree": "cc17d8ceeb012774ce6435b68baf5dbcb79aea38",
+    "trackedFileCount": 897,
+    "approvedBuildId": "Ru6dqW55LAaapcO9VAZIM",
+    "deployedRcMatch": true,
+    "deploymentSource": "git archive of exact approved commit",
+    "sourceVerification": {
+      "packageSha256": "4b946b4e5bdac48f09aa7df882c7776f3209f9f2d0e8dbc4cb94757dca12ec27",
+      "applicationRuntimeConfigMigrationTestFilesMatch": true,
+      "deploymentToolOnlyDelta": ".gitignore gained .env* while Vercel created ignored .vercel metadata and an ephemeral .env.local"
+    }
+  },
+  "deployment": {
+    "project": "greanlean-dpp-v0",
+    "previousDeploymentId": "dpl_3pVpitoxedeeEUy9DWHe76igZcwp",
+    "newDeploymentId": "dpl_2n7VMa4Bgs4pxtiXtzJVHQdYApgA",
+    "newDeploymentUrl": "https://greanlean-dpp-v0-2a9r0sxrp-songweinie-1175s-projects.vercel.app",
+    "createdAt": "2026-09-28T12:24:09.859Z",
+    "verifiedAt": "2026-09-28T12:38:02Z",
+    "readyState": "READY",
+    "target": "production",
+    "aliases": [
+      "https://www.greanlean.com",
+      "https://greanlean.com",
+      "https://greanlean-dpp-v0.vercel.app",
+      "https://greanlean-dpp-v0-songweinie-1175s-projects.vercel.app"
+    ]
+  },
+  "database": {
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "migrationHeadBefore": "0035",
+    "migrationHeadAfter": "0035",
+    "productionDataWritePerformed": false,
+    "v1CountsBefore": {
+      "organisations": 3,
+      "projects": 0,
+      "products": 9,
+      "productVersions": 12,
+      "identifierAliases": 6
+    },
+    "v1CountsAfter": {
+      "organisations": 3,
+      "projects": 0,
+      "products": 9,
+      "productVersions": 12,
+      "identifierAliases": 6
+    },
+    "soodooCountsBefore": {
+      "organisations": 0,
+      "models": 0,
+      "items": 0,
+      "passports": 0,
+      "identifiers": 0
+    },
+    "soodooCountsAfter": {
+      "organisations": 0,
+      "models": 0,
+      "items": 0,
+      "passports": 0,
+      "identifiers": 0
+    },
+    "connectorInstancesBefore": 0,
+    "connectorInstancesAfter": 0,
+    "registrySubmissionsBefore": 0,
+    "registrySubmissionsAfter": 0
+  },
+  "featureFlags": {
+    "before": {
+      "globalV2Primary": false,
+      "soodooV2Primary": false,
+      "otherTenantV2Primary": false,
+      "registry": false,
+      "realCustomerConnectors": false
+    },
+    "after": {
+      "globalV2Primary": false,
+      "soodooV2Primary": false,
+      "otherTenantV2Primary": false,
+      "registry": false,
+      "realCustomerConnectors": false
+    },
+    "evidence": "No Production FEATURE_V2, Registry or connector environment variable is enabled; representative V2 Resolver remains feature-disabled with HTTP 404."
+  },
+  "smoke": {
+    "homepage": 200,
+    "v1PublicDpp": 200,
+    "v1PublicApi": 200,
+    "login": 200,
+    "auth": 200,
+    "storage": { "status": 200, "bucketCount": 3 },
+    "legacyAlias": 200,
+    "legacyNegativeRoute": { "status": 404, "expected": true },
+    "approvedQr": { "status": 200, "contentType": "image/png" },
+    "arbitraryQr": { "status": 400, "result": "DISALLOWED" },
+    "v2DormantResolver": 404,
+    "aliases": {
+      "www": 200,
+      "apex": 307,
+      "vercelStable": 200
+    },
+    "fingerprints": {
+      "homepageBefore": "958da80ef044449e5848eee5261335745fceaf72928f44e203cdbf66764f3708",
+      "homepageAfter": "d066213d703a7d17f53d21ea6983036e9122bfce85c5b4e19d037a5cbedd0a14",
+      "v1DppBefore": "5d27e636cc617b15f2d611a625f0ec49555161bd40f3cc9c1d8f6fdf02f0fa2e",
+      "v1DppAfter": "1696f5c4ba5bd50853d0da7c78fa0efda42b6c2a0bf12343d8f09ef53f1a32e9",
+      "v1PublicApiBefore": "e93ee7d183176c0d4b2b5487fe7c53e2af3ce04736b505ec8a452f73cce097f7",
+      "v1PublicApiAfter": "e93ee7d183176c0d4b2b5487fe7c53e2af3ce04736b505ec8a452f73cce097f7",
+      "semanticContent": "PASS"
+    }
+  },
+  "backofficeBoundary": {
+    "result": "PASS",
+    "unauthenticatedContextHttp": 401,
+    "unauthenticatedDashboardFinalUrl": "https://www.greanlean.com/login?lang=zh",
+    "unauthenticatedDashboardExposedData": false,
+    "tenantIsolation": "PASS",
+    "foreignTenantAccess": "DENIED_BY_ACCEPTED_RC_AND_DATABASE_RLS",
+    "productionAnonymousBusinessRows": 0,
+    "legacyV1DashboardGateIndependent": true,
+    "productionTestDataCreated": false
+  },
+  "cspHydration": {
+    "result": "PASS",
+    "loginHttp": 200,
+    "cspNoncePresent": true,
+    "frameworkScriptCount": 5,
+    "scriptsWithMatchingNonce": 5,
+    "uniqueScriptNonces": 1,
+    "documentReadyState": "complete",
+    "passwordFormRendered": true,
+    "pageErrors": 0,
+    "failedResourcesOnRepeatCapture": 0
+  },
+  "security": {
+    "publicDataLeakage": "NONE",
+    "unverifiedFalseVerifiedText": "NONE",
+    "clientBundleFilesScanned": 11,
+    "clientBundleBytesScanned": 811166,
+    "clientBundleSecretMatches": 0,
+    "restrictedProjectionMatches": 0,
+    "publicRoleSpoof": "BLOCKED_NO_ELEVATION",
+    "publicPageRemainedPublic": true,
+    "audienceApiEscalationHttp": 401,
+    "arbitraryQrTarget": "DISALLOWED",
+    "securityHeaders": "PASS"
+  },
+  "performance": {
+    "sampledAt": "2026-09-28T12:33:00Z",
+    "sampleCount": 25,
+    "http5xxRate": 0,
+    "unexpectedHttp4xxRate": 0,
+    "routes": {
+      "homepage": { "success": "5/5", "p50Ms": 1643, "p95Ms": 2638 },
+      "v1PublicDpp": { "success": "5/5", "p50Ms": 5508, "p95Ms": 6538 },
+      "v1PublicApi": { "success": "5/5", "p50Ms": 2167, "p95Ms": 2188 },
+      "auth": { "success": "5/5", "p50Ms": 1408, "p95Ms": 2327 },
+      "storage": { "success": "5/5", "p50Ms": 1527, "p95Ms": 2998 }
+    },
+    "v1DppFollowup": { "success": "5/5", "p50Ms": 5021, "p95Ms": 6112 },
+    "deploymentHttp500Logs": 0,
+    "expectedProbeErrorLogs": 4,
+    "unexpectedDeploymentErrorLogs": 0,
+    "materialRegressionEstablished": false,
+    "observation": "The short V1 DPP client sample was elevated versus the prior immediate sample, while the public API improved and other network services varied. Record for later observation; no sustained application-specific breach was established."
+  },
+  "rollback": {
+    "ready": true,
+    "primaryApplicationDeploymentId": "dpl_3pVpitoxedeeEUy9DWHe76igZcwp",
+    "secondaryPriorDeploymentId": "dpl_4UWPqEXqygwG6vSzj67Cw8pNFReL",
+    "latestVerifiedManagedBackupReference": "1801742967",
+    "backupCompletedAt": "2026-09-27T16:53:31.313Z",
+    "databaseRestoreExpected": false,
+    "executed": false
+  },
+  "knownLowObservations": [
+    "Supabase admin-generated magic links use http://localhost:3000; password login remains the supported verified path."
+  ],
+  "boundaries": {
+    "productionApplicationDeployed": true,
+    "productionDataWritePerformed": false,
+    "productionTrafficSwitchedToV2Primary": false,
+    "syntheticDemoCopiedToProduction": false,
+    "registrySubmissionPerformed": false,
+    "realCustomerConnectorsActivated": false,
+    "formalObservationWindowStarted": false,
+    "phase7Complete": false,
+    "phase8Entered": false
+  },
+  "nextAction": "WAIT FOR USER DECISION ON THE REAL CUSTOMER DATA GATE BEFORE ANY PILOT CUTOVER OR OBSERVATION WINDOW"
+}
