@@ -15,6 +15,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { locale } = useLanguage();
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
+  const [canUseLegacyDashboard, setCanUseLegacyDashboard] = useState(false);
   const [hasV2Backoffice, setHasV2Backoffice] = useState(false);
   const [organisationName, setOrganisationName] = useState("");
 
@@ -102,7 +103,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         {
           label: t.workspaceGroup,
           items: [
-            [t.products, "/dashboard/products", "01"],
+            ...(canUseLegacyDashboard ? [[t.products, "/dashboard/products", "01"]] : []),
             ...(hasV2Backoffice ? [[t.v2Operations, "/dashboard/v2", "V2"]] : []),
           ],
         },
@@ -153,31 +154,44 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const response = await fetch("/api/access-context", {
-        headers: { Authorization: `Bearer ${session.access_token}` },
-        cache: "no-store",
-      });
-      const identity = await response.json().catch(() => null);
+      const headers = { Authorization: `Bearer ${session.access_token}` };
+      const [response, v2Response] = await Promise.all([
+        fetch("/api/access-context", { headers, cache: "no-store" }),
+        fetch("/api/v2/backoffice/context", { headers, cache: "no-store" }),
+      ]);
+      const [identity, v2Identity] = await Promise.all([
+        response.json().catch(() => null),
+        v2Response.json().catch(() => null),
+      ]);
       if (!active) return;
-      if (!response.ok || !identity?.canUseDashboard) {
+      const canUseLegacy = response.ok && Boolean(identity?.canUseDashboard);
+      const tenantContexts = v2Response.ok && Array.isArray(v2Identity?.data)
+        ? v2Identity.data.filter((item: { authorityType?: string }) => item.authorityType === "TENANT")
+        : [];
+      const canUseV2Backoffice = tenantContexts.length > 0;
+      const isV2Route = pathname === "/dashboard/v2" || pathname.startsWith("/dashboard/v2/");
+
+      if (!canUseLegacy && !canUseV2Backoffice) {
         router.replace(`/?lang=${locale}`);
         return;
       }
-      setIsPlatformAdmin(Boolean(identity.isPlatformAdmin));
-      setOrganisationName(identity.memberships?.[0]?.organisationName || "");
-      const v2Response = await fetch("/api/v2/backoffice/context", {
-        headers: { Authorization: `Bearer ${session.access_token}` },
-        cache: "no-store",
-      });
-      const v2Identity = await v2Response.json().catch(() => null);
-      if (!active) return;
-      const canUseV2Backoffice = v2Response.ok && Array.isArray(v2Identity?.data) && v2Identity.data.some((item: { authorityType?: string }) => item.authorityType === "TENANT");
+
+      setCanUseLegacyDashboard(canUseLegacy);
+      setIsPlatformAdmin(canUseLegacy && Boolean(identity?.isPlatformAdmin));
       setHasV2Backoffice(canUseV2Backoffice);
+      setOrganisationName(
+        identity?.memberships?.[0]?.organisationName || tenantContexts[0]?.tenantName || "",
+      );
+
+      if (!canUseLegacy && canUseV2Backoffice && !isV2Route) {
+        router.replace(`/dashboard/v2?lang=${locale}`);
+        return;
+      }
       const partnerRouteAllowed =
         pathname === "/dashboard/products" ||
         pathname.startsWith("/dashboard/products/") ||
-        (canUseV2Backoffice && (pathname === "/dashboard/v2" || pathname.startsWith("/dashboard/v2/")));
-      if (!identity.isPlatformAdmin && !partnerRouteAllowed) {
+        (canUseV2Backoffice && isV2Route);
+      if (canUseLegacy && !identity.isPlatformAdmin && !partnerRouteAllowed) {
         router.replace(`/dashboard/products?lang=${locale}`);
         return;
       }

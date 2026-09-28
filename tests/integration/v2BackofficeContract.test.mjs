@@ -46,3 +46,13 @@ test("strict CSP pages are request-rendered so framework scripts receive the non
   assert.match(middleware, /requestHeaders\.set\("x-nonce", nonce\)/);
   assert.match(middleware, /'strict-dynamic'/);
 });
+
+test("V2-only Tenant members bypass the legacy dashboard gate only for V2 routes", async () => {
+  const shell = await read("components/DashboardShell.tsx");
+  assert.match(shell, /Promise\.all\(\[/);
+  assert.match(shell, /const canUseLegacy = response\.ok/);
+  assert.match(shell, /const canUseV2Backoffice = tenantContexts\.length > 0/);
+  assert.match(shell, /!canUseLegacy && canUseV2Backoffice && !isV2Route/);
+  assert.match(shell, /router\.replace\(`\/dashboard\/v2\?lang=\$\{locale\}`\)/);
+  assert.match(shell, /canUseLegacy && !identity\.isPlatformAdmin && !partnerRouteAllowed/);
+});
