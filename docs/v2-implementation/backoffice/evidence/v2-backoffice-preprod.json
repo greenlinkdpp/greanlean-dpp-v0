@@ -1,12 +1,14 @@
 {
-  "capturedAt": "2026-09-28T00:00:00Z",
+  "capturedAt": "2026-09-28T09:55:23Z",
   "environment": "Hosted PreProd",
   "applicationOrigin": "https://greanlean-dpp-preprod.vercel.app",
   "supabaseProjectRef": "efhiaufukjchxqhbmpvq",
   "migrationHead": "0035",
-  "deployment": { "status": "PENDING", "id": null, "url": null },
-  "automated": { "typecheck": "PASS", "lint": "PASS", "unit": { "status": "PASS", "count": 122 }, "integration": { "status": "PASS", "count": 99 }, "build": "PASS", "migrations": "PENDING" },
-  "hostedQa": { "status": "PENDING", "authenticated": false, "bilingual": "PENDING", "responsive": "PENDING", "tenantIsolation": "PENDING", "syntheticDataset": "PENDING" },
+  "releaseCommit": "43ecc448a362d05954a50b47417031ed9a6a01ee",
+  "deployment": { "status": "READY", "id": "dpl_B36MNDVzqNcstJXHB7cJGGyUQLWg", "url": "https://greanlean-dpp-preprod-3rwb60u4j-songweinie-1175s-projects.vercel.app", "stableAlias": "https://greanlean-dpp-preprod.vercel.app" },
+  "automated": { "typecheck": "PASS", "lint": "PASS", "unit": { "status": "PASS", "count": 122 }, "integration": { "status": "PASS", "count": 100 }, "combined": { "status": "PASS", "count": 222 }, "build": "PASS", "migrations": { "status": "PASS", "count": 56 } },
+  "httpQa": { "dashboardEn": 200, "dashboardZh": 200, "publicSoodooDpp": 200, "unauthenticatedContext": 401, "securityHeaders": "PASS", "cspNoncePropagation": { "status": "PASS", "scriptsWithMatchingNonce": 16 } },
+  "hostedQa": { "status": "AUTHENTICATED_BROWSER_PENDING", "authenticated": false, "hydration": "PASS", "bilingual": "PARTIAL_EN_CONFIRMED", "responsive": "PENDING", "tenantIsolation": "PENDING", "syntheticDataset": "PENDING" },
   "production": { "applicationDeployed": false, "dataWritePerformed": false, "trafficSwitched": false },
   "phase8Entered": false
 }

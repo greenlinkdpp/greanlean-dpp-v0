@@ -11,13 +11,15 @@ Production change: none
 | TypeScript | PASS |
 | Repository hygiene/lint | PASS |
 | Unit suite | PASS — 122 tests |
-| Integration suite | PASS — 99 tests |
-| Production build | PASS — 68 generated pages, V2 Backoffice routes present |
-| Migration suite | Pending final release run |
+| Integration suite | PASS — 100 tests |
+| Combined application suite | PASS — 222 tests |
+| Production build | PASS — all application routes request-rendered for CSP nonce propagation; V2 Backoffice routes present |
+| Migration suite | PASS — 56 tests |
+| CSP nonce | PASS — response nonce matches all 16 framework script nonces on the Hosted PreProd login page |
 
 ## Hosted verification
 
-Deployment identifier, authenticated browser observations, responsive checks and final synthetic counts are recorded in `evidence/v2-backoffice-preprod.json` after the Hosted PreProd deployment. This report must not be read as Production deployment evidence.
+Hosted PreProd deployment `dpl_B36MNDVzqNcstJXHB7cJGGyUQLWg` is READY at the stable alias. Public route, SOODOO public DPP, authentication boundary and security headers passed HTTP verification. Browser verification found and remediated a pre-existing CSP integration defect: static HTML did not receive the per-request nonce, so hydration was blocked. The root is now request-rendered and a real browser confirms English hydration works. Authenticated console and responsive observations remain pending only until the operator completes login in the open PreProd tab; no PASS is claimed for those checks yet.
 
 ## Boundaries
 
