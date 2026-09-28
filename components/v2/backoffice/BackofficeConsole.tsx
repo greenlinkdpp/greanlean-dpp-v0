@@ -94,12 +94,22 @@ function ModelPage({ snapshot, modelId, locale }: { snapshot: BackofficeSnapshot
   const model = snapshot.models.find((row) => row.id === modelId);
   const related = modelRelationships(snapshot, modelId);
   if (!model) return <Panel title={locale === "zh" ? "未找到型号" : "Model not found"}><p className="text-sm text-slate-500">{modelId}</p></Panel>;
+  const subjectIds = new Set([modelId, ...related.skus.map((row) => String(row.id)), ...related.batches.map((row) => String(row.id)), ...related.items.map((row) => String(row.id))]);
+  const identifiers = snapshot.identifiers.filter((row) => subjectIds.has(String(row.subject_id)));
+  const claims = snapshot.claims.filter((row) => subjectIds.has(String(row.subject_id)));
+  const passports = snapshot.passports.filter((row) => subjectIds.has(String(row.subject_id)));
+  const sourceRecords = snapshot.sourceRecords.filter((row) => subjectIds.has(String(row.subject_id)));
+  const sourceIds = new Set(sourceRecords.map((row) => String(row.data_source_id)));
+  const dataSources = snapshot.dataSources.filter((row) => sourceIds.has(String(row.id)));
   return <div className="space-y-6">
     <Panel title={stringValue(model.name)} subtitle={`${stringValue(model.model_code)} · ${stringValue(model.product_category)}`}>
       <div className="grid gap-4 sm:grid-cols-4">{[["Status", model.status], ["SKUs", related.skus.length], ["Batches", related.batches.length], ["Items", related.items.length]].map(([label, value]) => <div key={String(label)} className="bg-slate-50 p-4"><p className="text-xs font-black uppercase text-slate-500">{String(label)}</p><p className="mt-2 font-black">{stringValue(value)}</p></div>)}</div>
     </Panel>
     <div className="grid gap-6 xl:grid-cols-2"><Panel title="SKUs"><DataTable rows={related.skus} keys={["sku_code", "name", "market", "status"]} query="" empty="No SKUs" /></Panel><Panel title={locale === "zh" ? "批次" : "Batches"}><DataTable rows={related.batches} keys={["batch_number", "production_date", "status"]} query="" empty="No batches" /></Panel></div>
     <Panel title={locale === "zh" ? "单件与护照关联" : "Items and passport coverage"}><DataTable rows={related.items} keys={["serial_number", "upi", "sku_id", "batch_id", "status"]} query="" empty="No items" /></Panel>
+    <div className="grid gap-6 xl:grid-cols-2"><Panel title={locale === "zh" ? "标识符" : "Identifiers"}><DataTable rows={identifiers} keys={["identifier_type", "value", "subject_type", "status"]} query="" empty="No identifiers" /></Panel><Panel title={locale === "zh" ? "数据源" : "Data sources"}><DataTable rows={dataSources} keys={["name", "source_type", "trust_level", "status"]} query="" empty="No data sources" /></Panel></div>
+    <div className="grid gap-6 xl:grid-cols-2"><Panel title={locale === "zh" ? "声明与验证" : "Claims and validation"}><DataTable rows={claims} keys={["subject_type", "resolution_state", "verification_status", "canonical_unit"]} query="" empty="No claims" /></Panel><Panel title={locale === "zh" ? "护照状态" : "Passport status"}><DataTable rows={passports} keys={["passport_identifier", "subject_type", "status", "updated_at"]} query="" empty="No passports" /></Panel></div>
+    <Panel title={locale === "zh" ? "来源与审计历史" : "Source and audit history"}><DataTable rows={[...sourceRecords, ...snapshot.publicationAudit.filter((row) => passports.some((passport) => passport.id === row.passport_id))]} keys={["subject_type", "status", "event_type", "received_at", "created_at"]} query="" empty="No history" /></Panel>
   </div>;
 }
 
@@ -161,6 +171,50 @@ function ReviewWorkspace({ snapshot, context, token, locale, onRefresh }: { snap
   </Panel>)}</div>;
 }
 
+type CreateField = { name: string; label: string; required?: boolean; options?: Array<{ value: string; label: string }> };
+
+function CreateRecordPanel({ section, snapshot, context, token, locale, onRefresh }: { section: BackofficeSection; snapshot: BackofficeSnapshot; context: BackofficeContext; token: string; locale: "en" | "zh"; onRefresh: () => void }) {
+  const configurations: Partial<Record<BackofficeSection, { endpoint: string; capability: string; fields: CreateField[]; defaults?: BackofficeRow }>> = {
+    organisations: { endpoint: "/api/v2/organisations", capability: "organisation.edit", fields: [{ name: "legal_name", label: "Legal name", required: true }, { name: "trading_name", label: "Trading name" }, { name: "organisation_type", label: "Organisation type", required: true, options: ["MANUFACTURER","SUPPLIER","IMPORTER","DISTRIBUTOR","SERVICE_PROVIDER","RECYCLER"].map((value) => ({ value, label: value })) }, { name: "country", label: "Country" }], defaults: { status: "ACTIVE" } },
+    families: { endpoint: "/api/v2/product-families", capability: "product.edit", fields: [{ name: "code", label: "Family code", required: true }, { name: "name", label: "Family name", required: true }, { name: "description", label: "Description" }], defaults: { status: "ACTIVE" } },
+    models: { endpoint: "/api/v2/product-models", capability: "product.edit", fields: [{ name: "family_id", label: "Product family", required: true, options: snapshot.families.map((row) => ({ value: String(row.id), label: stringValue(row.name) })) }, { name: "model_code", label: "Model code", required: true }, { name: "name", label: "Model name", required: true }, { name: "product_category", label: "Product category" }, { name: "sector", label: "Sector" }], defaults: { status: "ACTIVE" } },
+    skus: { endpoint: "/api/v2/skus", capability: "product.edit", fields: [{ name: "model_id", label: "Model", required: true, options: snapshot.models.map((row) => ({ value: String(row.id), label: stringValue(row.name) })) }, { name: "sku_code", label: "SKU code", required: true }, { name: "name", label: "SKU name", required: true }, { name: "market", label: "Market" }], defaults: { status: "ACTIVE", configuration_json: {} } },
+    batches: { endpoint: "/api/v2/batches", capability: "product.edit", fields: [{ name: "model_id", label: "Model", required: true, options: snapshot.models.map((row) => ({ value: String(row.id), label: stringValue(row.name) })) }, { name: "batch_number", label: "Batch number", required: true }, { name: "production_date", label: "Production date" }], defaults: { status: "ACTIVE" } },
+    items: { endpoint: "/api/v2/items", capability: "product.edit", fields: [{ name: "model_id", label: "Model", required: true, options: snapshot.models.map((row) => ({ value: String(row.id), label: stringValue(row.name) })) }, { name: "sku_id", label: "Optional SKU", options: snapshot.skus.map((row) => ({ value: String(row.id), label: stringValue(row.sku_code) })) }, { name: "batch_id", label: "Optional batch", options: snapshot.batches.map((row) => ({ value: String(row.id), label: stringValue(row.batch_number) })) }, { name: "serial_number", label: "Serial number", required: true }, { name: "upi", label: "HTTPS UPI" }], defaults: { status: "ACTIVE", enforce_batch_sku_link: false } },
+    sources: { endpoint: "/api/v2/data-sources", capability: "import.create", fields: [{ name: "name", label: "Source name", required: true }, { name: "source_type", label: "Source type", required: true, options: ["MANUAL","EXCEL","CSV","JSON","ERP","MES","PLM","API","BMS","SUPPLIER","LEGACY"].map((value) => ({ value, label: value })) }, { name: "trust_level", label: "Trust level", required: true, options: ["UNVERIFIED","SELF_DECLARED","CONTRACTED","SYSTEM_CONTROLLED","THIRD_PARTY_VERIFIED"].map((value) => ({ value, label: value })) }], defaults: { status: "ACTIVE", residency_classification: "UNSPECIFIED" } },
+  };
+  const configuration = configurations[section];
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [state, setState] = useState<ActionState>({ kind: "idle", message: "" });
+  if (!configuration) return null;
+  const allowed = context.capabilities.includes(configuration.capability);
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!configuration || !allowed) return;
+    setState({ kind: "working", message: locale === "zh" ? "正在创建…" : "Creating…" });
+    const payload = Object.fromEntries(Object.entries({ ...configuration.defaults, ...values }).filter(([, value]) => value !== ""));
+    const response = await fetch(configuration.endpoint, { method: "POST", headers: { Authorization: `Bearer ${token}`, "x-tenant-id": context.tenantId, "idempotency-key": crypto.randomUUID(), "content-type": "application/json" }, body: JSON.stringify(payload) });
+    const body = await response.json().catch(() => ({}));
+    setState({ kind: response.ok ? "success" : "error", message: response.ok ? (locale === "zh" ? "记录已创建。" : "Record created.") : String(body?.error?.message || body?.message || "Create failed") });
+    if (response.ok) { setValues({}); onRefresh(); }
+  }
+  return <Panel title={locale === "zh" ? "新建记录" : "Create record"} subtitle={allowed ? (locale === "zh" ? "使用现有 V2 领域 API；操作带幂等键。" : "Uses the existing V2 domain API with an idempotency key.") : (locale === "zh" ? "当前角色没有创建权限。" : "The current role cannot create this record.")}>
+    <form onSubmit={(event) => void submit(event)} className="grid gap-3 sm:grid-cols-2">{configuration.fields.map((field) => <label key={field.name} className="text-xs font-black uppercase text-slate-600">{field.label}{field.required ? " *" : ""}{field.options ? <select required={field.required} value={values[field.name] || ""} onChange={(event) => setValues((current) => ({ ...current, [field.name]: event.target.value }))} className="mt-1 w-full border border-slate-300 bg-white px-3 py-2 text-sm font-semibold normal-case"><option value="">—</option>{field.options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select> : <input required={field.required} value={values[field.name] || ""} onChange={(event) => setValues((current) => ({ ...current, [field.name]: event.target.value }))} className="mt-1 w-full border border-slate-300 px-3 py-2 text-sm font-semibold normal-case" />}</label>)}</form>
+    <button disabled={!allowed || state.kind === "working"} onClick={(event) => void submit(event)} className="mt-4 bg-slate-950 px-4 py-2 text-sm font-black text-white disabled:bg-slate-300">{locale === "zh" ? "创建" : "Create"}</button>
+    {state.message && <p className={`mt-3 text-sm font-bold ${state.kind === "error" ? "text-red-700" : "text-emerald-700"}`}>{state.message}</p>}
+  </Panel>;
+}
+
+function ClaimWorkspace({ snapshot, query, empty }: { snapshot: BackofficeSnapshot; query: string; empty: string }) {
+  const fields = new Map(snapshot.fields.map((field) => [field.id, field]));
+  const provenance = new Map(snapshot.provenance.map((record) => [record.id, record]));
+  const rows = snapshot.claims.map((claim) => {
+    const field = fields.get(claim.field_definition_id); const source = provenance.get(claim.provenance_record_id);
+    return { ...claim, field: field?.label_en || field?.field_code, resolved_value: claim.resolution_state === "OVERRIDE" ? claim.value_json : claim.resolution_state, source: source?.source_disclosure || source?.verification_method, last_updated: claim.created_at };
+  });
+  return <Panel title="Canonical claims" subtitle="INHERIT, OVERRIDE, CLEAR, NOT_APPLICABLE and UNKNOWN remain distinct."><DataTable rows={rows} keys={["field", "resolved_value", "canonical_unit", "resolution_state", "source", "verification_status", "last_updated"]} query={query} empty={empty} /></Panel>;
+}
+
 export function BackofficeConsole({ section: requested = "dashboard", modelId }: Props) {
   const { locale } = useLanguage(); const copy = backofficeCopy[locale];
   const section = isBackofficeSection(requested) ? requested : "dashboard";
@@ -184,12 +238,14 @@ export function BackofficeConsole({ section: requested = "dashboard", modelId }:
     if (section === "dashboard") return <Dashboard snapshot={snapshot} locale={locale} />;
     if (section === "imports") return <ImportWorkspace snapshot={snapshot} context={selected} token={token} locale={locale} onRefresh={() => void refresh()} />;
     if (section === "reviews") return <ReviewWorkspace snapshot={snapshot} context={selected} token={token} locale={locale} onRefresh={() => void refresh()} />;
+    if (section === "claims") return <ClaimWorkspace snapshot={snapshot} query={query} empty={copy.noData} />;
     if (section === "tenants") return <div className="grid gap-6 xl:grid-cols-2"><Panel title={locale === "zh" ? "租户边界" : "Tenant boundary"}><DataTable rows={[snapshot.tenant]} keys={["code", "name", "status", "residency_policy"]} query={query} empty={copy.noData} /></Panel><Panel title={locale === "zh" ? "成员与合作伙伴授权" : "Memberships and partner authority"}><DataTable rows={[...snapshot.memberships, ...snapshot.partnerAuthorizations]} keys={["role_id", "permission_profile_id", "status", "valid_until"]} query={query} empty={copy.noData} /></Panel></div>;
     if (section === "audiences") return <div className="grid gap-6 xl:grid-cols-2"><Panel title={locale === "zh" ? "字段访问策略" : "Field access policy"}><DataTable rows={snapshot.accessPolicies} keys={["policy_code", "access_level_code", "purpose_required", "status"]} query={query} empty={copy.noData} /></Panel><Panel title={locale === "zh" ? "受众预览边界" : "Audience preview boundary"}><p className="text-sm leading-6 text-slate-600">{locale === "zh" ? "公开、客户、合作伙伴、审计员和监管机构视图由服务端访问策略裁剪。控制台不会把隐藏字段下载到未经授权的浏览器。" : "Public, customer, partner, auditor, and regulator views are filtered by server-side access policy. Hidden fields are not downloaded to an unauthorised browser."}</p></Panel></div>;
     if (section === "settings") return <div className="grid gap-6 xl:grid-cols-2"><Panel title={locale === "zh" ? "当前授权" : "Current authority"}><dl className="space-y-3 text-sm">{[["Tenant", selected.tenantName], ["Role", selected.roleName], ["Authority", selected.authorityType], ["Capabilities", selected.capabilities.join(", ")]].map(([key, value]) => <div key={key}><dt className="font-black text-slate-500">{key}</dt><dd className="mt-1 break-words text-slate-900">{value}</dd></div>)}</dl></Panel><Panel title={locale === "zh" ? "操作保护" : "Operational safeguards"}><ul className="space-y-2 text-sm text-slate-600"><li>• Tenant is resolved from verified server-side authority.</li><li>• Writes require capability checks and idempotency keys.</li><li>• Credentials and secrets are never returned in this view.</li><li>• Synthetic data is labelled and isolated in PreProd.</li></ul></Panel></div>;
     if (section === "documents") { const docs = snapshot.sourceRecords.flatMap((row) => { const payload = row.payload_json as Record<string, unknown> | undefined; return Array.isArray(payload?.documents) ? payload.documents as BackofficeRow[] : []; }); return <Panel title={title}><DataTable rows={docs} keys={["type", "name", "status", "url"]} query={query} empty={copy.noData} /></Panel>; }
     if (section === "lifecycle") { const events = snapshot.sourceRecords.flatMap((row) => { const payload = row.payload_json as Record<string, unknown> | undefined; return Array.isArray(payload?.lifecycle_events) ? payload.lifecycle_events as BackofficeRow[] : []; }); return <Panel title={title}><DataTable rows={events} keys={["event_type", "occurred_at", "location", "status"]} query={query} empty={copy.noData} /></Panel>; }
     if (section === "mappings") return <div className="grid gap-6 xl:grid-cols-2"><Panel title={title}><DataTable rows={snapshot.mappingProfiles.map((row) => ({ ...row, readiness: mappingStatus(row) }))} keys={["name", "status", "readiness", "data_source_id"]} query={query} empty={copy.noData} /></Panel><Panel title={locale === "zh" ? "映射规则" : "Mapping rules"}><DataTable rows={snapshot.mappingRules} keys={["source_path", "target_field_definition_id", "confidence", "status"]} query={query} empty={copy.noData} /></Panel></div>;
+    if (["organisations", "families", "models", "skus", "batches", "items", "sources"].includes(section)) return <div className="grid gap-6 xl:grid-cols-[1.35fr_.65fr]"><Panel title={title} subtitle={`${rows.length} ${locale === "zh" ? "条记录" : "records"}`}><DataTable rows={rows} keys={columns[section] || ["id", "status", "created_at"]} query={query} empty={copy.noData} />{section === "models" && <div className="mt-4 flex flex-wrap gap-2">{snapshot.models.map((model) => <Link key={String(model.id)} href={`/dashboard/v2/models/${model.id}?lang=${locale}`} className="border border-slate-300 px-3 py-2 text-xs font-black hover:bg-slate-50">{locale === "zh" ? "打开" : "Open"} {stringValue(model.name)}</Link>)}</div>}</Panel><CreateRecordPanel section={section} snapshot={snapshot} context={selected} token={token} locale={locale} onRefresh={() => void refresh()} /></div>;
     return <Panel title={title} subtitle={`${rows.length} ${locale === "zh" ? "条记录" : "records"}`}><DataTable rows={rows} keys={columns[section] || ["id", "status", "created_at"]} query={query} empty={copy.noData} /></Panel>;
   };
   return <div className="mx-auto max-w-[1600px] space-y-5">

@@ -7,8 +7,11 @@ export const GET = withApiRoute(async (request, requestContext) => {
     capability: "tenant.view",
     resourceType: "TENANT",
     purpose: "backoffice.snapshot",
+  }, {
+    partnerFeature: true, productFeature: true, schemaFeature: true, canonicalFeature: true,
+    provenanceFeature: true, passportFeature: true, reviewFeature: true, publicationFeature: true,
+    integrationFeature: true,
   });
   const data = await loadBackofficeSnapshot(admin, policyContext);
   return Response.json({ data }, { headers: { "Cache-Control": "private, no-store" } });
 });
-
