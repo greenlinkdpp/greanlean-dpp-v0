@@ -39,3 +39,10 @@ test("backoffice includes bilingual productized views and safe file preflight", 
   assert.match(ui, /Audience preview boundary/);
   assert.doesNotMatch(ui, /dangerouslySetInnerHTML/);
 });
+
+test("strict CSP pages are request-rendered so framework scripts receive the nonce", async () => {
+  const [layout, middleware] = await Promise.all([read("app/layout.tsx"), read("middleware.ts")]);
+  assert.match(layout, /dynamic = "force-dynamic"/);
+  assert.match(middleware, /requestHeaders\.set\("x-nonce", nonce\)/);
+  assert.match(middleware, /'strict-dynamic'/);
+});
