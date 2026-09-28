@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AccessAwareDppPage } from "@/components/AccessAwareDppPage";
+import { ProductizedDppPage } from "@/components/v2/ProductizedDppPage";
 import { loadPublicDppData } from "@/lib/dpp/publicDppRepository";
 import { loadShowcaseDppData } from "@/lib/server/dppShowcase";
 import { createSupabaseClient } from "@/lib/supabase";
 import { createSupabaseAdminClient } from "@/lib/server/supabase";
+import { createAudiencePreviewGrant, isPreprodAudiencePreviewHost, verifyAudiencePreviewGrant } from "@/lib/server/v2/audiencePreview";
 import { resolvePublicPassport } from "@/lib/server/v2/phase4Repository";
-import { isSyntheticDemoPayload, projectImmutableDpp, SYNTHETIC_DEMO_NOTICES } from "@/lib/v2/audienceProjection";
+import { projectImmutableDpp } from "@/lib/v2/audienceProjection";
+import { ROLE_TO_AUDIENCE, type PreviewRole } from "@/lib/v2/presentation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -16,7 +19,21 @@ type PageSearchParams = {
   lang?: string;
   preview?: string;
   showcase?: string;
+  audience?: string;
+  audienceGrant?: string;
 };
+
+const PREVIEW_ROLES = new Set<PreviewRole>(["PUBLIC", "REPAIRER", "RECYCLER", "MANUFACTURER", "AUTHORITY"]);
+
+function requestedPreviewRole(value?: string): PreviewRole {
+  const role = String(value || "PUBLIC").toUpperCase() as PreviewRole;
+  return PREVIEW_ROLES.has(role) ? role : "PUBLIC";
+}
+
+function audiencePreviewHost() {
+  const site = new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000");
+  return site.hostname;
+}
 
 async function getData(identifier: string, includeDraft = false) {
   return loadPublicDppData(createSupabaseClient(), identifier, includeDraft);
@@ -50,9 +67,15 @@ export async function generateMetadata({
   const [{ slug }, query = {}] = await Promise.all([params, searchParams]);
   const v2 = await getV2Data(decodeURIComponent(slug));
   if (v2?.kind === "PUBLISHED") {
+    const publicProjection = projectImmutableDpp(v2.payload, "PUBLIC");
+    const productIdentity = publicProjection.fields.find((field) => field.fieldCode === "identity.product")?.value;
+    const product = productIdentity && typeof productIdentity === "object" && !Array.isArray(productIdentity)
+      ? productIdentity as Record<string, unknown>
+      : {};
     return {
-      title: `Digital Product Passport - ${v2.passport.passport_identifier}`,
-      description: `Published DPP version ${v2.version.version_number}.`,
+      title: `${String(product.productName || "Digital Product Passport")} - ${v2.passport.passport_identifier}`,
+      description: `${String(product.brand || "GreanLean")} Digital Product Passport for ${String(product.modelCode || v2.passport.passport_identifier)}.`,
+      robots: { index: false, follow: false },
     };
   }
   if (v2?.kind === "WITHDRAWN") return { title: `Withdrawn DPP - ${v2.tombstone.passportIdentifier}` };
@@ -114,28 +137,18 @@ export default async function PublicDppPage({
     );
   }
   if (v2?.kind === "PUBLISHED") {
-    const projection = projectImmutableDpp(v2.payload, "PUBLIC");
-    const syntheticDemo = isSyntheticDemoPayload(v2.payload);
-    return (
-      <main className="mx-auto max-w-4xl p-8" data-passport-id={projection.passportId} data-version={projection.version} data-payload-hash={String(projection.payloadHash)}>
-        <h1 className="text-3xl font-semibold">Digital Product Passport</h1>
-        {syntheticDemo ? (
-          <aside role="alert" className="mt-6 border-2 border-amber-700 bg-amber-50 p-4 font-semibold text-amber-950">
-            {SYNTHETIC_DEMO_NOTICES.join(" · ")}
-          </aside>
-        ) : null}
-        <dl className="mt-8 grid grid-cols-[max-content_1fr] gap-x-6 gap-y-3">
-          <dt>Passport</dt><dd>{projection.passportIdentifier}</dd>
-          <dt>Version</dt><dd>{projection.version}</dd>
-          <dt>Schema version</dt><dd>{projection.schemaVersion}</dd>
-          <dt>Payload hash</dt><dd className="break-all font-mono text-sm">{projection.payloadHash}</dd>
-          <dt>Published at</dt><dd>{projection.publishedAt}</dd>
-        </dl>
-        <table className="mt-10 w-full"><tbody>{projection.fields.map((field) => (
-          <tr key={field.fieldCode} className="border-t"><th className="py-3 text-left">{field.fieldCode}</th><td className="py-3">{typeof field.value === "object" ? JSON.stringify(field.value) : String(field.value ?? "-")}{field.unit ? ` ${field.unit}` : ""}</td></tr>
-        ))}</tbody></table>
-      </main>
-    );
+    const requestedRole = requestedPreviewRole(query.audience);
+    const host = audiencePreviewHost();
+    const localPreview = process.env.NODE_ENV === "development";
+    const signedPreview = verifyAudiencePreviewGrant({ host, identifier: v2.passport.passport_identifier, role: requestedRole, grant: query.audienceGrant });
+    const previewEnabled = localPreview || signedPreview;
+    const previewRole = previewEnabled ? requestedRole : "PUBLIC";
+    const expiry = Math.floor(Date.now() / 1000) + 60 * 60;
+    const previewGrants = !localPreview && signedPreview && isPreprodAudiencePreviewHost(host)
+      ? Object.fromEntries(Array.from(PREVIEW_ROLES).map((role) => [role, createAudiencePreviewGrant(v2.passport.passport_identifier, role, expiry)]))
+      : undefined;
+    const projection = projectImmutableDpp(v2.payload, ROLE_TO_AUDIENCE[previewRole]);
+    return <ProductizedDppPage projection={projection} locale={query.lang === "zh" ? "zh" : "en"} previewRole={previewRole} audiencePreviewEnabled={previewEnabled} previewGrants={previewGrants} />;
   }
   const showcaseData = query.showcase === "1"
     ? await loadShowcaseDppData(identifier)
