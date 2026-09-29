@@ -1,0 +1,445 @@
+{
+  "generatedAt": "2026-09-29T00:08:14Z",
+  "result": {
+    "internalReferenceProductionPilotPreparation": "PASS",
+    "acceptedPreprodSourceResolved": true,
+    "referenceFixtureRepositoryOwned": true,
+    "referenceFixtureSha256Match": true,
+    "localAbsoluteFixturePathDependency": "NONE",
+    "newReferencePilotRcFrozen": true,
+    "rcReproducible": true
+  },
+  "classification": {
+    "technicalReferencePilot": "INTERNAL_SYNTHETIC",
+    "realCustomerPilot": "NOT_STARTED"
+  },
+  "acceptedPreprod": {
+    "deploymentId": "dpl_CjY6fVs8rJXv1qC2WUUnvpYQRKgR",
+    "status": "READY",
+    "immutableUrl": "https://greanlean-dpp-preprod-1jz39rdvu-songweinie-1175s-projects.vercel.app",
+    "stableAlias": "https://greanlean-dpp-preprod.vercel.app",
+    "sourceMode": "manual Vercel CLI upload from a local working-tree snapshot",
+    "deploymentAttachedGitCommit": null,
+    "deploymentAttachedGitTree": null,
+    "gitBaseCommit": "199cdc05ddcae13911852a7a9c0399c57fb9ecf8",
+    "gitBaseTree": "ea915ae3b97fa118029e9c57893f8e131dc082bf",
+    "sourceManifestFileCount": 909,
+    "sourceManifestSha256": "94a6727513b21d50a35ecad53452749b667f6f9b3eb16c153070babba7a4e1f3",
+    "sourceComparison": {
+      "byteIdenticalFiles": 907,
+      "postDeploymentDocumentationDifferences": 2,
+      "runtimeMismatchCount": 0,
+      "deployedDocumentationSha1": {
+        "docs/v2-implementation/phase-7/25-reference-passport-publication-report.md": "a36d060ad7cea83962ce19bc63f29dfe166fec42",
+        "docs/v2-implementation/phase-7/evidence/internal-reference-brand-pilot.json": "594f8a00e3e50a22e8cb4308dfe0a348970b896b"
+      }
+    },
+    "buildOutputDigest": "ee909c9ff3266b6685ae0efe4ebec332f2f00797b884af1f787a9c73a9239ed6"
+  },
+  "releaseCandidate": {
+    "reference": "codex/phase7-internal-reference-pilot-rc",
+    "commit": "84e432cefa7e0aef8db6acc1e321ed94ad7ed40d",
+    "tree": "a57a4b51145aeaab751a5f1587738dc819a875cf",
+    "trackedFileCount": 910,
+    "buildId": "S0uaqvWf6xUwnOFiKPfx-",
+    "migrationHead": "0035",
+    "migrationFileCount": 30,
+    "migrationManifestSha256": "6e34ca7a9b274ccf4cc92881453e0a6a3ccd69b53544fadeba86b7339caa76ab"
+  },
+  "fixture": {
+    "path": "fixtures/internal-reference/GreanLean_Reference_Ebike_Catalog_From_EN50604.json",
+    "sha256": "018c60c9db81d621aa439d5f801d5aad2756d29be4762bb85d106b2735425222",
+    "classification": "INTERNAL_SYNTHETIC_REFERENCE"
+  },
+  "changeClassification": {
+    "applicationRuntime": [
+      "components/v2/backoffice/BackofficeConsole.tsx"
+    ],
+    "configuration": [
+      "scripts/phase6b/configure-preproduction-env.mjs"
+    ],
+    "tests": [
+      "tests/integration/backofficeInformationArchitectureContract.test.mjs",
+      "tests/integration/internalReferenceBrandContract.test.mjs",
+      "tests/unit/v2Backoffice.test.ts"
+    ],
+    "referenceFixture": [
+      "fixtures/internal-reference/GreanLean_Reference_Ebike_Catalog_From_EN50604.json"
+    ],
+    "referenceTooling": [
+      "scripts/phase7/build-internal-reference-preprod.mjs",
+      "scripts/phase7/build-internal-reference-production-pilot.mjs"
+    ],
+    "documentationOnly": [
+      "Phase 7 Backoffice deployment evidence",
+      "Phase 7 Reference catalog/import/publication/readiness records",
+      "repository audit path wording"
+    ],
+    "generatedArtifact": {
+      "included": [],
+      "excluded": [
+        "local Reference HTML/JSON/header/QR inspection output",
+        ".next",
+        "coverage",
+        ".vercel"
+      ]
+    }
+  },
+  "verification": {
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "unitTests": {
+      "result": "PASS",
+      "passed": 122,
+      "total": 122
+    },
+    "integrationTests": {
+      "result": "PASS",
+      "passed": 107,
+      "total": 107
+    },
+    "combinedTests": {
+      "result": "PASS",
+      "passed": 229,
+      "total": 229
+    },
+    "referenceContractTests": {
+      "result": "PASS",
+      "passed": 5,
+      "total": 5
+    },
+    "migrationTests": {
+      "result": "PASS",
+      "passed": 56,
+      "total": 56
+    },
+    "productionBuild": "PASS",
+    "credentialScan": {
+      "result": "PASS",
+      "actionableFindings": 0,
+      "classifiedNonSecret": "existing unit-test sentinel"
+    },
+    "localAbsolutePathScan": {
+      "result": "PASS",
+      "findings": 0
+    },
+    "runtimeDebugTemporaryMarkerScan": {
+      "result": "PASS",
+      "findings": 0
+    },
+    "environmentFileExclusion": {
+      "result": "PASS",
+      "tracked": [
+        ".env.example"
+      ]
+    },
+    "generatedArtifactExclusion": "PASS"
+  },
+  "preprodRegression": {
+    "status": "PASS",
+    "resolverHttp200": 22,
+    "version1": 22,
+    "warningsPass": 22,
+    "sourceVendorLeakage": 0,
+    "publicBmsLeakage": 0,
+    "qr": {
+      "status": 200,
+      "contentType": "image/png"
+    },
+    "publicUi": {
+      "status": 200,
+      "warnings": true
+    },
+    "backoffice": {
+      "unauthenticatedContextStatus": 401,
+      "referenceTenant": "GreanLean Reference Mobility",
+      "counts": {
+        "models": 8,
+        "skus": 22,
+        "batches": 8,
+        "batchSkuLinks": 22,
+        "individuals": 22,
+        "sourceRecords": 22,
+        "transformations": 22,
+        "claims": 374,
+        "passports": 22,
+        "reviews": 22,
+        "versions": 22,
+        "currentPointers": 22,
+        "resolverMappings": 22,
+        "bmsSnapshots": 22
+      }
+    },
+    "soodoo": {
+      "activeDemo": false,
+      "defaultDemo": false,
+      "retainedForRegression": true
+    },
+    "productionWritePerformed": false
+  },
+  "productionReadOnlyBaseline": {
+    "result": "PASS",
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "health": "ACTIVE_HEALTHY",
+    "migrationHead": "0035",
+    "v1Counts": {
+      "organisations": 3,
+      "projects": 0,
+      "products": 9,
+      "productVersions": 12,
+      "identifierAliases": 6
+    },
+    "globalV2Primary": false,
+    "soodooV2Primary": false,
+    "otherTenantV2Primary": false,
+    "registry": "OFF",
+    "realCustomerConnectors": "OFF",
+    "http": {
+      "homepage": 200,
+      "representativeV1Dpp": 200,
+      "representativeV1Api": 200,
+      "login": 200,
+      "auth": 200,
+      "storage": 200,
+      "dormantV2Resolver": 404
+    },
+    "storageBucketCount": 3,
+    "responseSha256": {
+      "homepage": "8c7a7fca9dd1e90df834d98b88383a580222073366f97df070593d881586af2b",
+      "representativeV1Dpp": "7d8f483904f7344d04759e375c336d1e5a5cc39f2ade1a6b4c502b810220d936",
+      "representativeV1Api": "1d2e8ba98527e70d9762c8dc03d5edffb979be8ddba221fae62ead511163fdcd",
+      "login": "3ffa21d1979dcfe331c5408a06a8440025cc17e7bb39607df48619a21b506de0",
+      "auth": "338a059ffe5e5b0b888072e63fe10a0ef7f72ac95b14eceeddc3cc755c2aba4e",
+      "storage": "53872c8797dc9903d3bb13199f3f9b34c8766a21ebd5daa7d01c31a985067933"
+    }
+  },
+  "productionDryRun": {
+    "status": "PASS",
+    "generatedAt": "2026-09-28T23:59:23.068Z",
+    "environment": "production",
+    "projectRefFingerprint": "3ce843a277e6",
+    "migrationHead": "0035",
+    "fixture": {
+      "path": "fixtures/internal-reference/GreanLean_Reference_Ebike_Catalog_From_EN50604.json",
+      "sha256": "018c60c9db81d621aa439d5f801d5aad2756d29be4762bb85d106b2735425222",
+      "classification": "INTERNAL_SYNTHETIC_REFERENCE"
+    },
+    "safetyGates": {
+      "globalV2Primary": false,
+      "registry": "OFF",
+      "realCustomerConnectors": "OFF",
+      "enabledV2OrExternalFlags": [],
+      "productionConnectorCount": 0,
+      "registrySubmissionCount": 0
+    },
+    "currentReferenceState": {
+      "tenants": 0,
+      "models": 0,
+      "passports": 0
+    },
+    "v1Counts": {
+      "organisations": 3,
+      "projects": 0,
+      "products": 9,
+      "productVersions": 12,
+      "identifierAliases": 6
+    },
+    "collisions": {
+      "dppId": 0,
+      "serial": 0,
+      "sku": 0,
+      "modelCode": 0
+    },
+    "idempotencyNaturalKeys": [
+      "tenant code",
+      "organisation legal name",
+      "family code",
+      "model code",
+      "SKU code",
+      "batch number",
+      "serial number",
+      "passport_identifier",
+      "fixture hash / source identifier",
+      "mapping profile + version",
+      "schema code + version"
+    ],
+    "proposedMutations": {
+      "tenants": 1,
+      "organisations": 1,
+      "families": 1,
+      "models": 8,
+      "skus": 22,
+      "batches": 8,
+      "batchSkuLinks": 22,
+      "individuals": 22,
+      "dataSources": 1,
+      "sourceRecords": 22,
+      "transformations": 22,
+      "canonicalClaims": 374,
+      "provenanceRecords": 374,
+      "passports": 22,
+      "reviews": 22,
+      "immutableVersions": 22,
+      "currentPointers": 22,
+      "resolverMappings": 22,
+      "bmsSnapshots": 22
+    },
+    "proposedResolverMappings": [
+      {
+        "dppId": "DPP-GLR-EBIKE-000001",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000001",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000001"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000002",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000002",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000002"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000003",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000003",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000003"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000004",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000004",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000004"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000005",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000005",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000005"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000006",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000006",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000006"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000007",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000007",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000007"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000008",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000008",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000008"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000009",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000009",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000009"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000010",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000010",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000010"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000011",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000011",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000011"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000012",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000012",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000012"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000013",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000013",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000013"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000014",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000014",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000014"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000015",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000015",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000015"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000016",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000016",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000016"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000017",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000017",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000017"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000018",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000018",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000018"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000019",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000019",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000019"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000020",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000020",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000020"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000021",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000021",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000021"
+      },
+      {
+        "dppId": "DPP-GLR-EBIKE-000022",
+        "host": "www.greanlean.com",
+        "normalizedPath": "/p/DPP-GLR-EBIKE-000022",
+        "target": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000022"
+      }
+    ],
+    "productionWriteAllowed": false,
+    "dryRunOnly": true,
+    "productionWritePerformed": false
+  },
+  "rollback": {
+    "currentProductionDeploymentId": "dpl_2n7VMa4Bgs4pxtiXtzJVHQdYApgA",
+    "secondaryPriorDeploymentId": "dpl_3pVpitoxedeeEUy9DWHe76igZcwp",
+    "latestVerifiedManagedBackupReference": "1801742967",
+    "backupCompletedAt": "2026-09-27T16:53:31.313Z",
+    "executed": false
+  },
+  "observations": {
+    "v1DppLatency": "OPEN_FOR_PILOT_MONITORING"
+  },
+  "safety": {
+    "productionDataWritePerformed": false,
+    "productionReferenceTenantCreated": false,
+    "productionTrafficSwitched": false,
+    "registrySubmissionPerformed": false,
+    "realCustomerConnectorsActivated": false,
+    "phase8Entered": false
+  },
+  "nextAction": "WAIT FOR EXPLICIT USER APPROVAL TO RUN INTERNAL REFERENCE PRODUCTION DATA ONBOARDING"
+}
+
