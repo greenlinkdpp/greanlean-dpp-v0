@@ -141,3 +141,6 @@ Every sensitive decision records `who`, `identity context`, `tenant`, `partner a
 - no Platform Admin bypass is implicit;
 - denied decisions have stable reason codes and audit records;
 - role changes cannot mutate historical publication approvals.
+# V2.1 amendment
+
+Platform Operator multi-Tenant access is governed by [ADR-011](../adr/ADR-011-platform-operator-multitenant-context.md) and [Architecture Baseline v2.1](ARCHITECTURE-BASELINE-v2.1.md). Platform authority remains separate from Tenant membership. Platform-wide reads require explicit `platform.*` capabilities; every business operation additionally requires a verified active Tenant and reuses the Tenant-scoped PDP, repository, RLS, idempotency, and audit boundaries.

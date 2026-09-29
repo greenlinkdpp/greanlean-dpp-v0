@@ -5,11 +5,30 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { createSupabaseClient } from "@/lib/supabase";
 import { BrandLogo } from "@/components/BrandLogo";
-import { safeLoginReturnPath } from "@/lib/navigation";
+import { PLATFORM_CONSOLE_PATH, safeLoginReturnPath } from "@/lib/navigation";
 
-function safeNextPath(locale: string) {
+async function safeNextPath(locale: string, accessToken?: string) {
   const requestedNext = new URLSearchParams(window.location.search).get("next");
-  return safeLoginReturnPath(requestedNext, locale === "en" ? "en" : "zh");
+  const language = locale === "en" ? "en" : "zh";
+  if (requestedNext) return safeLoginReturnPath(requestedNext, language);
+  if (accessToken) {
+    const platformResponse = await fetch("/api/v2/platform/context", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      cache: "no-store",
+    });
+    if (platformResponse.ok) {
+      return safeLoginReturnPath(null, language, PLATFORM_CONSOLE_PATH);
+    }
+    const response = await fetch("/api/access-context", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      cache: "no-store",
+    });
+    const identity = await response.json().catch(() => null);
+    if (response.ok && identity?.isPlatformAdmin) {
+      return safeLoginReturnPath(null, language, PLATFORM_CONSOLE_PATH);
+    }
+  }
+  return safeLoginReturnPath(null, language);
 }
 
 function normalizeLoginIdentifier(value: string) {
@@ -62,7 +81,7 @@ export default function LoginPage() {
     let active = true;
     createSupabaseClient().auth.getSession().then(({ data }) => {
       if (active && data.session) {
-        window.location.replace(safeNextPath(locale));
+        void safeNextPath(locale, data.session.access_token).then((destination) => window.location.replace(destination));
       }
     });
     return () => {
@@ -82,7 +101,7 @@ export default function LoginPage() {
     const password = String(form.get("password") || "").trim();
 
     try {
-      const { error } = await createSupabaseClient().auth.signInWithPassword({
+      const { data, error } = await createSupabaseClient().auth.signInWithPassword({
         email,
         password,
       });
@@ -92,7 +111,7 @@ export default function LoginPage() {
         return;
       }
 
-      window.location.assign(safeNextPath(locale));
+      window.location.assign(await safeNextPath(locale, data.session?.access_token));
     } catch (error) {
       setMsg(
         t.failed +
@@ -153,6 +172,7 @@ export default function LoginPage() {
                 id="login-password"
                 name="password"
                 type="password"
+                autoComplete="current-password"
                 required
                 className="input mt-1"
               />

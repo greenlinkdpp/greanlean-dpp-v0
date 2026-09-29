@@ -59,7 +59,30 @@ test("tenant membership grants only its own tenant capability", () => {
 test("platform role never grants automatic tenant access", () => {
   const decision = evaluateV2Policy({ ...request, authorityGrants: [], hasPlatformRole: true });
   assert.equal(decision.decision, "DENY");
-  assert.equal(decision.reasonCode, "PLATFORM_ROLE_TENANT_DENIED");
+  assert.equal(decision.reasonCode, "PLATFORM_CAPABILITY_DENIED");
+});
+
+test("explicit platform assignment grants only its mapped capability in an active Tenant context", () => {
+  const grant: V2AuthorityGrant = {
+    source: "PLATFORM_ASSIGNMENT",
+    id: "platform-assignment-a",
+    tenantId: null,
+    roleCode: "platform_operator",
+    status: "ACTIVE",
+    validFrom: "2026-01-01T00:00:00Z",
+    validUntil: null,
+    capabilities: ["platform.organisation.view"],
+    scopes: [],
+  };
+  const allowed = evaluateV2Policy({ ...request, platformCapability: "platform.organisation.view", authorityGrants: [grant], hasPlatformRole: true });
+  assert.equal(allowed.decision, "ALLOW");
+  assert.equal(allowed.actorType, "PLATFORM");
+  assert.equal(allowed.tenantId, "tenant-a");
+  assert.equal(allowed.effectiveScope.platformCapability, "platform.organisation.view");
+
+  const denied = evaluateV2Policy({ ...request, platformCapability: "platform.organisation.manage", authorityGrants: [grant], hasPlatformRole: true });
+  assert.equal(denied.decision, "DENY");
+  assert.equal(denied.reasonCode, "PLATFORM_CAPABILITY_DENIED");
 });
 
 test("partner without a binding is denied", () => {

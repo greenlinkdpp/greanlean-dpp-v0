@@ -61,3 +61,7 @@ Architecture acceptance does not itself approve coding against Production. Phase
 - ADR-001 through ADR-010: `ACCEPTED`
 - Supersedes: none
 - Production Baseline remains `BLOCKED`; this acceptance authorizes only isolated Local/Development Phase 1 work.
+# V2.1 accepted amendment
+
+- ADR-011 — Platform Operator Multi-Tenant Context: explicit platform authority, platform-wide read with Tenant ownership, and active-Tenant-bound business operations without per-Tenant Platform Admin memberships.
+- The controlling consolidated baseline is now [ARCHITECTURE-BASELINE-v2.1.md](ARCHITECTURE-BASELINE-v2.1.md); unchanged V2.0 decisions remain in force.

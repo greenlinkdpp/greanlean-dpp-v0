@@ -9,8 +9,8 @@ function snapshot(overrides: Partial<BackofficeSnapshot> = {}): BackofficeSnapsh
 }
 
 test("backoffice exposes every required operating area", () => {
-  assert.equal(backofficeNavigation.length, 26);
-  for (const section of ["dashboard","tenants","models","imports","mappings","claims","validation","reviews","publications","passports","identifiers","documents","lifecycle","bms","audiences","integrations","registry","audit","settings"]) {
+  assert.equal(backofficeNavigation.length, 27);
+  for (const section of ["dashboard","tenants","models","manual","imports","mappings","claims","validation","reviews","publications","passports","identifiers","documents","lifecycle","bms","audiences","integrations","registry","audit","settings"]) {
     assert.ok(backofficeNavigation.some((item) => item.section === section), section);
   }
 });

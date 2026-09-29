@@ -1,5 +1,6 @@
 import { withApiRoute } from "@/lib/server/apiRoute";
 import { createSupabaseAdminClient, requireAuthenticatedUser } from "@/lib/server/supabase";
+import { tenantOperationCapabilities } from "@/lib/v2/platformCapabilities";
 
 type RoleRow = { id: string; code: string; name: string; status: string };
 type TenantRow = { id: string; code: string; name: string; status: string };
@@ -24,11 +25,12 @@ export const GET = withApiRoute(async (request) => {
   const { user } = await requireAuthenticatedUser(request);
   const admin = createSupabaseAdminClient();
 
-  const [{ data: memberships, error: membershipError }, { data: partnerLinks, error: partnerLinkError }] = await Promise.all([
+  const [{ data: memberships, error: membershipError }, { data: partnerLinks, error: partnerLinkError }, { data: platformAssignment, error: platformAssignmentError }] = await Promise.all([
     admin.from("tenant_membership").select("id,tenant_id,role_id,status,valid_from,valid_until").eq("user_id", user.id).eq("status", "ACTIVE"),
     admin.from("partner_user_link").select("partner_id,status").eq("user_id", user.id).eq("status", "ACTIVE"),
+    admin.from("platform_role_assignment").select("id,role_id,status,valid_from,valid_until").eq("user_id", user.id).eq("status", "ACTIVE").maybeSingle(),
   ]);
-  if (membershipError || partnerLinkError) throw new Error("Backoffice authority lookup failed.");
+  if (membershipError || partnerLinkError || platformAssignmentError) throw new Error("Backoffice authority lookup failed.");
 
   const partnerIds = (partnerLinks || []).map((row) => row.partner_id);
   const { data: partnerAuthorizations, error: partnerAuthorizationError } = partnerIds.length
@@ -45,15 +47,18 @@ export const GET = withApiRoute(async (request) => {
   ]));
   const roleIds = Array.from(new Set((memberships || []).map((row) => row.role_id)));
   const profileIds = Array.from(new Set((partnerAuthorizations || []).map((row) => row.permission_profile_id)));
+  const platformRoleIds = platformAssignment ? [platformAssignment.role_id] : [];
 
-  const [tenantResult, roleResult, roleCapabilityResult, profileResult, profileCapabilityResult] = await Promise.all([
-    tenantIds.length ? admin.from("tenant").select("id,code,name,status").in("id", tenantIds) : Promise.resolve({ data: [], error: null }),
-    roleIds.length ? admin.from("role").select("id,code,name,status").in("id", roleIds).eq("status", "ACTIVE") : Promise.resolve({ data: [], error: null }),
-    roleIds.length ? admin.from("role_capability").select("role_id,capability:capability(code)").in("role_id", roleIds) : Promise.resolve({ data: [], error: null }),
+  const [tenantResult, roleResult, roleCapabilityResult, profileResult, profileCapabilityResult, platformRoleResult, platformCapabilityResult] = await Promise.all([
+    platformAssignment ? admin.from("tenant").select("id,code,name,status").eq("status", "ACTIVE") : tenantIds.length ? admin.from("tenant").select("id,code,name,status").in("id", tenantIds) : Promise.resolve({ data: [], error: null }),
+    roleIds.length ? admin.from("role").select("id,code,name,status,role_class").in("id", roleIds).eq("status", "ACTIVE") : Promise.resolve({ data: [], error: null }),
+    roleIds.length ? admin.from("role_capability").select("role_id,capability:capability(code,status)").in("role_id", roleIds) : Promise.resolve({ data: [], error: null }),
     profileIds.length ? admin.from("permission_profile").select("id,code,name,status").in("id", profileIds).eq("status", "ACTIVE") : Promise.resolve({ data: [], error: null }),
-    profileIds.length ? admin.from("permission_profile_capability").select("permission_profile_id,capability:capability(code)").in("permission_profile_id", profileIds) : Promise.resolve({ data: [], error: null }),
+    profileIds.length ? admin.from("permission_profile_capability").select("permission_profile_id,capability:capability(code,status)").in("permission_profile_id", profileIds) : Promise.resolve({ data: [], error: null }),
+    platformRoleIds.length ? admin.from("role").select("id,code,name,status,role_class").in("id", platformRoleIds).eq("status", "ACTIVE").eq("role_class", "PLATFORM") : Promise.resolve({ data: [], error: null }),
+    platformRoleIds.length ? admin.from("role_capability").select("role_id,capability:capability(code,status)").in("role_id", platformRoleIds) : Promise.resolve({ data: [], error: null }),
   ]);
-  if (tenantResult.error || roleResult.error || roleCapabilityResult.error || profileResult.error || profileCapabilityResult.error) {
+  if (tenantResult.error || roleResult.error || roleCapabilityResult.error || profileResult.error || profileCapabilityResult.error || platformRoleResult.error || platformCapabilityResult.error) {
     throw new Error("Backoffice authority metadata lookup failed.");
   }
 
@@ -62,8 +67,24 @@ export const GET = withApiRoute(async (request) => {
   const profiles = new Map((profileResult.data as RoleRow[] || []).map((row) => [row.id, row]));
   const roleCapabilities = capabilityCodes(roleCapabilityResult.data || [], "role_id");
   const profileCapabilities = capabilityCodes(profileCapabilityResult.data || [], "permission_profile_id");
+  const platformRoles = new Map((platformRoleResult.data as RoleRow[] || []).map((row) => [row.id, row]));
+  const platformCapabilities = capabilityCodes(platformCapabilityResult.data || [], "role_id");
+  const platformRole = platformAssignment ? platformRoles.get(platformAssignment.role_id) : undefined;
+  const grantedPlatformCapabilities = platformAssignment ? (platformCapabilities.get(platformAssignment.role_id) || []).sort() : [];
 
   const contexts = [
+    ...(platformAssignment && platformRole && isCurrentlyValid(platformAssignment) ? (tenantResult.data as TenantRow[] || []).map((tenant) => ({
+      tenantId: tenant.id,
+      tenantCode: tenant.code,
+      tenantName: tenant.name,
+      tenantStatus: tenant.status,
+      authorityType: "PLATFORM" as const,
+      authorityId: platformAssignment.id,
+      roleCode: platformRole.code,
+      roleName: platformRole.name,
+      capabilities: tenantOperationCapabilities(grantedPlatformCapabilities),
+      platformCapabilities: grantedPlatformCapabilities,
+    })) : []),
     ...(memberships || []).filter(isCurrentlyValid).flatMap((membership) => {
       const tenant = tenants.get(membership.tenant_id);
       const role = roles.get(membership.role_id);

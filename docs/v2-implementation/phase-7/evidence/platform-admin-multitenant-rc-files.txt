@@ -1,0 +1,55 @@
+Phase 7 Platform Admin multi-Tenant RC pre-freeze inventory
+Generated: 2026-09-29
+Branch: codex/phase7-platform-multitenant-console
+Base commit: 7075570
+
+The following modified/untracked paths were reviewed and intentionally included in the RC.
+The inventory file itself appears in this list and is included.
+
+ M .gitignore
+ M app/api/v2/backoffice/context/route.ts
+ M app/login/page.tsx
+ M components/DashboardShell.tsx
+ M components/v2/backoffice/BackofficeConsole.tsx
+ M docs/v2-architecture/final/06-access-control-model.md
+ M docs/v2-architecture/final/11-architecture-decisions-summary.md
+ M lib/navigation.ts
+ M lib/server/v2/backofficeRepository.ts
+ M lib/server/v2/policyDecisionPoint.ts
+ M lib/server/v2/security.ts
+ M lib/v2/backoffice.ts
+ M lib/v2/policy.ts
+ M tests/unit/v2Backoffice.test.ts
+ M tests/unit/v2Policy.test.ts
+?? app/api/v2/platform/context/route.ts
+?? app/api/v2/platform/dpps/route.ts
+?? app/api/v2/platform/operations/route.ts
+?? app/api/v2/platform/organisations/route.ts
+?? app/api/v2/platform/products/route.ts
+?? app/api/v2/platform/tenants/route.ts
+?? app/dashboard/platform/page.tsx
+?? components/v2/platform/PlatformConsole.tsx
+?? docs/v2-architecture/adr/ADR-011-platform-operator-multitenant-context.md
+?? docs/v2-architecture/final/ARCHITECTURE-BASELINE-v2.1.md
+?? docs/v2-implementation/phase-7/43-platform-admin-multitenant-architecture-amendment.md
+?? docs/v2-implementation/phase-7/44-platform-console-and-active-tenant-context.md
+?? docs/v2-implementation/phase-7/45-platform-operated-dpp-entry-import-preprod-verification.md
+?? docs/v2-implementation/phase-7/46-consolidated-backoffice-navigation-rc.md
+?? docs/v2-implementation/phase-7/evidence/platform-admin-multitenant-database-preprod.json
+?? docs/v2-implementation/phase-7/evidence/platform-admin-multitenant-preprod.json
+?? docs/v2-implementation/phase-7/evidence/platform-admin-multitenant-rc-files.txt
+?? docs/v2-implementation/phase-7/evidence/platform-admin-preprod-identity.json
+?? lib/server/v2/platformRepository.ts
+?? lib/server/v2/platformSecurity.ts
+?? lib/v2/platformCapabilities.ts
+?? output/playwright/import-preflight-preprod.png
+?? output/playwright/phase7-import-preflight.csv
+?? output/playwright/platform-console-preprod.png
+?? output/playwright/tenant-workspace-zh-mobile-preprod.png
+?? scripts/phase7/apply-platform-operator-preproduction.mjs
+?? scripts/phase7/provision-preprod-platform-operator.mjs
+?? scripts/phase7/verify-platform-multitenant-preproduction.mjs
+?? supabase/migrations/0036_v2_platform_operator_multitenant.sql
+?? supabase/rollbacks/0036_v2_platform_operator_multitenant.down.sql
+?? tests/integration/platformAdminMultitenantContract.test.mjs
+?? tests/migrations/v2PlatformOperatorMultitenant.test.mjs

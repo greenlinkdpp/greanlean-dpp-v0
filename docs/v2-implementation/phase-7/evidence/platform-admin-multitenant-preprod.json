@@ -1,0 +1,197 @@
+{
+  "generatedAt": "2026-09-29T14:48:09.337Z",
+  "target": {
+    "environment": "preproduction",
+    "projectRefFingerprint": "d465ccdd1809",
+    "deployment": {
+      "id": "dpl_7ntfD7zmosspCRhBM3invmRYsZXX",
+      "immutableUrl": "https://greanlean-dpp-preprod-fhtnfm97j-songweinie-1175s-projects.vercel.app",
+      "stableAlias": "https://greanlean-dpp-preprod.vercel.app"
+    }
+  },
+  "architectureBaseline": "v2.1",
+  "authority": {
+    "model": "PLATFORM_ASSIGNMENT_ONLY",
+    "activePlatformAssignments": 1,
+    "tenantMembershipsForPlatformOperator": 0,
+    "platformCapabilities": 22
+  },
+  "globalVisibility": {
+    "tenants": 5,
+    "organisations": 6,
+    "products": 32,
+    "dpps": 51,
+    "tenantOwnershipShownInPlatformConsole": true
+  },
+  "tenantScopedWrites": {
+    "result": "PASS",
+    "models": [
+      {
+        "id": "3461011a-137e-421b-b1ab-1aac74f2cf50",
+        "model_code": "P7-PLATFORM-A-20260929",
+        "name": "P7-PLATFORM-A-20260929 Platform context verification",
+        "tenant_code": "phase1-tenant-a"
+      },
+      {
+        "id": "e359aef9-a7be-447c-ae33-e5ff94b44ab9",
+        "model_code": "P7-PLATFORM-B-20260929",
+        "name": "P7-PLATFORM-B-20260929 Platform context verification",
+        "tenant_code": "phase1-tenant-b"
+      }
+    ],
+    "forgedTenantContext": {
+      "httpStatus": 403,
+      "result": "DENIED",
+      "audit": {
+        "decision": "DENY",
+        "reason_code": "ACTIVE_TENANT_INVALID",
+        "platform_capability": "platform.product.view",
+        "operation": "product_model.list",
+        "tenant_id": null,
+        "safe_metadata": {
+          "requestedTenantReference": "ffffffff-ffff-4fff-8fff-ffffffffffff",
+          "requestedResourceReference": null
+        },
+        "created_at": "2026-09-29 14:21:42.248705+00"
+      }
+    },
+    "crossTenantMutation": {
+      "sourceTenant": "phase1-tenant-a",
+      "targetTenant": "phase1-tenant-b",
+      "targetModelId": "e359aef9-a7be-447c-ae33-e5ff94b44ab9",
+      "attemptedOperation": "PATCH product model",
+      "httpStatus": 404,
+      "result": "DENIED",
+      "targetUnchanged": true
+    }
+  },
+  "manualDppEntry": {
+    "result": "PASS",
+    "claim": {
+      "id": "8b5ea7f2-d166-4ccc-ba5e-eb98664abd6c",
+      "resolution_state": "UNKNOWN",
+      "verification_status": "UNVERIFIED",
+      "applicability_reason": "Phase 7 PreProd manual-entry verification",
+      "evidence_references": [
+        "preprod://phase7/platform-manual-entry"
+      ],
+      "tenant_code": "phase1-tenant-a",
+      "created_at": "2026-09-29 14:22:15.902976+00"
+    }
+  },
+  "fileImport": {
+    "result": "PASS",
+    "uiVerified": true,
+    "fixture": "output/playwright/phase7-import-preflight.csv",
+    "session": {
+      "id": "dbfbf3cd-eb08-4599-ba20-7d67bb42e252",
+      "file_format": "CSV",
+      "status": "PREFLIGHT",
+      "committed_at": null,
+      "created_at": "2026-09-29 14:30:57.77508+00",
+      "tenant_code": "phase1-tenant-a"
+    },
+    "productionFeatureFlag": "OFF_BY_DEFAULT_AND_NOT_DEPLOYED"
+  },
+  "referenceDataIntegrity": {
+    "models": 8,
+    "skus": 22,
+    "items": 22,
+    "claims": 374,
+    "passports": 22,
+    "versions": 22,
+    "currentPointers": 22,
+    "resolverMappings": 22,
+    "bmsSnapshots": 22,
+    "duplicateDppIds": 0,
+    "duplicateSerials": 0,
+    "crossTenantRelationshipViolations": 0,
+    "publicLeakageMarkers": [],
+    "immutableVersionMutationPerformed": false,
+    "result": "PASS"
+  },
+  "v1Data": {
+    "products": 5,
+    "publications": 0,
+    "unchanged": true
+  },
+  "auditSummary": [
+    {
+      "decision": "ALLOW",
+      "reason_code": "PLATFORM_CAPABILITY",
+      "count": 25
+    },
+    {
+      "decision": "ALLOW",
+      "reason_code": "PLATFORM_CAPABILITY_ACTIVE_TENANT",
+      "count": 39
+    },
+    {
+      "decision": "DENY",
+      "reason_code": "ACTIVE_TENANT_INVALID",
+      "count": 2
+    }
+  ],
+  "publicRegression": [
+    {
+      "url": "https://www.greanlean.com/",
+      "status": 200,
+      "finalUrl": "https://www.greanlean.com/",
+      "durationMs": 1089
+    },
+    {
+      "url": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000001",
+      "status": 200,
+      "finalUrl": "https://www.greanlean.com/p/DPP-GLR-EBIKE-000001",
+      "durationMs": 2265
+    },
+    {
+      "url": "https://www.greanlean.com/api/v2/resolver/DPP-GLR-EBIKE-000001?format=json",
+      "status": 200,
+      "finalUrl": "https://www.greanlean.com/api/v2/resolver/DPP-GLR-EBIKE-000001?format=json",
+      "durationMs": 1844
+    },
+    {
+      "url": "https://greanlean-dpp-preprod.vercel.app/",
+      "status": 200,
+      "finalUrl": "https://greanlean-dpp-preprod.vercel.app/",
+      "durationMs": 1088
+    },
+    {
+      "url": "https://greanlean-dpp-preprod.vercel.app/p/DPP-GLR-EBIKE-000001",
+      "status": 200,
+      "finalUrl": "https://greanlean-dpp-preprod.vercel.app/p/DPP-GLR-EBIKE-000001",
+      "durationMs": 3585
+    },
+    {
+      "url": "https://greanlean-dpp-preprod.vercel.app/api/v2/resolver/DPP-GLR-EBIKE-000001?format=json",
+      "status": 200,
+      "finalUrl": "https://greanlean-dpp-preprod.vercel.app/api/v2/resolver/DPP-GLR-EBIKE-000001?format=json",
+      "durationMs": 3594
+    }
+  ],
+  "screenshots": [
+    "output/playwright/platform-console-preprod.png",
+    "output/playwright/import-preflight-preprod.png",
+    "output/playwright/tenant-workspace-zh-mobile-preprod.png"
+  ],
+  "assertions": {
+    "platformConsole": "PASS",
+    "globalTenantVisibility": "PASS",
+    "globalProductVisibility": "PASS",
+    "globalDppVisibility": "PASS",
+    "activeTenantContext": "PASS",
+    "tenantScopedWrite": "PASS",
+    "forgedTenantContext": "DENIED",
+    "crossTenantMutation": "DENIED",
+    "manualDppEntry": "PASS",
+    "fileImportPreflightMappingPreProd": "PASS",
+    "navigationConsolidation": "PASS",
+    "productionDeployed": false,
+    "productionWritePerformed": false,
+    "observationWindowRestartRequired": false
+  },
+  "ownerLogoAssetRequired": true,
+  "logoIntegration": "PENDING_OWNER_ASSET",
+  "result": "PASS"
+}

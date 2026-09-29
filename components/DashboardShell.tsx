@@ -34,6 +34,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         certificates: "证书快录",
         workspace: "DPP 工作流",
         v2Operations: "V2 运营控制台",
+        platformConsole: "多租户平台控制台",
         partnerWorkspace: "合作伙伴工作台",
         partnerRole: "合作伙伴编辑者",
         platformRole: "平台管理员",
@@ -58,6 +59,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         certificates: "Certificate Quick Entry",
         workspace: "DPP Workflow",
         v2Operations: "V2 Operations Console",
+        platformConsole: "Multi-Tenant Platform Console",
         partnerWorkspace: "Partner workspace",
         partnerRole: "Partner editor",
         platformRole: "Platform administrator",
@@ -74,6 +76,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         {
           label: t.workspaceGroup,
           items: [
+            [t.platformConsole, "/dashboard/platform", "P"],
             [t.overview, "/dashboard", "01"],
             [t.projects, "/dashboard/projects", "02"],
             [t.products, "/dashboard/products", "03"],
@@ -167,9 +170,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       if (!active) return;
       const canUseLegacy = response.ok && Boolean(identity?.canUseDashboard);
       const tenantContexts = v2Response.ok && Array.isArray(v2Identity?.data)
-        ? v2Identity.data.filter((item: { authorityType?: string }) => item.authorityType === "TENANT")
+        ? v2Identity.data.filter((item: { authorityType?: string }) => item.authorityType === "TENANT" || item.authorityType === "PLATFORM")
         : [];
+      const platformContexts = tenantContexts.filter((item: { authorityType?: string }) => item.authorityType === "PLATFORM");
       const canUseV2Backoffice = tenantContexts.length > 0;
+      const hasPlatformAuthority = platformContexts.length > 0;
       const isV2Route = pathname === "/dashboard/v2" || pathname.startsWith("/dashboard/v2/");
 
       if (!canUseLegacy && !canUseV2Backoffice) {
@@ -178,20 +183,21 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       }
 
       setCanUseLegacyDashboard(canUseLegacy);
-      setIsPlatformAdmin(canUseLegacy && Boolean(identity?.isPlatformAdmin));
+      setIsPlatformAdmin(hasPlatformAuthority || Boolean(identity?.isPlatformAdmin));
       setHasV2Backoffice(canUseV2Backoffice);
       setOrganisationName(
-        identity?.memberships?.[0]?.organisationName || tenantContexts[0]?.tenantName || "",
+        platformContexts[0]?.tenantName || identity?.memberships?.[0]?.organisationName || tenantContexts[0]?.tenantName || "",
       );
 
-      if (!canUseLegacy && canUseV2Backoffice && !isV2Route) {
+      if (!canUseLegacy && canUseV2Backoffice && !isV2Route && !hasPlatformAuthority) {
         router.replace(`/dashboard/v2?lang=${locale}`);
         return;
       }
       const partnerRouteAllowed =
         pathname === "/dashboard/products" ||
         pathname.startsWith("/dashboard/products/") ||
-        (canUseV2Backoffice && isV2Route);
+        (canUseV2Backoffice && isV2Route) ||
+        (hasPlatformAuthority && pathname === "/dashboard/platform");
       if (canUseLegacy && !identity.isPlatformAdmin && !partnerRouteAllowed) {
         router.replace(`/dashboard/products?lang=${locale}`);
         return;
@@ -223,7 +229,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-slate-950 text-white">
       <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-white/10 bg-slate-950 lg:flex lg:flex-col">
         <div className="border-b border-white/10 px-6 py-6">
-          <BrandLogo href="/dashboard" size="md" variant="light" />
+          <BrandLogo href={isPlatformAdmin ? "/dashboard/platform" : "/dashboard/v2"} size="md" variant="light" />
           <p className="mt-3 text-xs font-bold uppercase text-slate-500">{t.workspace}</p>
         </div>
 
@@ -277,7 +283,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <div className="min-h-screen bg-slate-50 text-slate-950">
           <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur lg:hidden">
             <div className="flex items-center justify-between gap-3">
-              <BrandLogo href="/dashboard" size="sm" />
+              <BrandLogo href={isPlatformAdmin ? "/dashboard/platform" : "/dashboard/v2"} size="sm" />
               <LanguageSwitcher />
             </div>
 

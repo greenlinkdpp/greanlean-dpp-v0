@@ -11,10 +11,11 @@ export type V2ScopeGrant = {
 };
 
 export type V2AuthorityGrant = {
-  source: "TENANT_MEMBERSHIP" | "PARTNER_AUTHORIZATION";
+  source: "TENANT_MEMBERSHIP" | "PARTNER_AUTHORIZATION" | "PLATFORM_ASSIGNMENT";
   id: string;
-  tenantId: string;
+  tenantId: string | null;
   partnerId?: string | null;
+  roleCode?: string | null;
   status: string;
   validFrom: string;
   validUntil?: string | null;
@@ -26,6 +27,7 @@ export type V2PolicyInput = {
   authenticated: boolean;
   requestedTenantId?: string | null;
   capability: string;
+  platformCapability?: string | null;
   resourceType: string;
   resourceId?: string | null;
   purpose?: string | null;
@@ -43,7 +45,7 @@ export type V2PolicyDecision = {
   partnerId: string | null;
   authorityId: string | null;
   effectiveScope: Record<string, unknown>;
-  policyVersion: "v2-phase1.1";
+  policyVersion: "v2.1-platform-context";
 };
 
 function activeAt(status: string, validFrom: string, validUntil: string | null | undefined, now: Date) {
@@ -74,7 +76,7 @@ function deny(
     partnerId: null,
     authorityId: null,
     effectiveScope: {},
-    policyVersion: "v2-phase1.1",
+    policyVersion: "v2.1-platform-context",
   };
 }
 
@@ -83,12 +85,38 @@ export function evaluateV2Policy(input: V2PolicyInput): V2PolicyDecision {
   if (!input.authenticated) return deny("AUTH_REQUIRED", tenantId);
   if (!tenantId) return deny("TENANT_CONTEXT_REQUIRED", null, "TENANT");
 
-  const tenantGrants = input.authorityGrants.filter((grant) => grant.tenantId === tenantId);
-  if (tenantGrants.length === 0) {
-    return deny(input.hasPlatformRole ? "PLATFORM_ROLE_TENANT_DENIED" : "TENANT_RELATIONSHIP_REQUIRED", tenantId, "TENANT");
+  const now = input.now || new Date();
+  const activePlatformGrants = input.authorityGrants.filter((grant) =>
+    grant.source === "PLATFORM_ASSIGNMENT"
+    && activeAt(grant.status, grant.validFrom, grant.validUntil, now)
+  );
+  if (activePlatformGrants.length > 0 && input.platformCapability) {
+    const capable = activePlatformGrants.find((grant) => grant.capabilities.includes(input.platformCapability!));
+    if (capable) {
+      return {
+        allowed: true,
+        decision: "ALLOW",
+        reasonCode: "PLATFORM_CAPABILITY_ACTIVE_TENANT",
+        actorType: "PLATFORM",
+        tenantId,
+        partnerId: null,
+        authorityId: capable.id,
+        effectiveScope: {
+          tenantId,
+          resourceType: input.resourceType,
+          resourceId: input.resourceId || null,
+          platformCapability: input.platformCapability,
+        },
+        policyVersion: "v2.1-platform-context",
+      };
+    }
   }
 
-  const now = input.now || new Date();
+  const tenantGrants = input.authorityGrants.filter((grant) => grant.tenantId === tenantId);
+  if (tenantGrants.length === 0) {
+    return deny(input.hasPlatformRole ? "PLATFORM_CAPABILITY_DENIED" : "TENANT_RELATIONSHIP_REQUIRED", tenantId, input.hasPlatformRole ? "PLATFORM" : "TENANT");
+  }
+
   const activeGrants = tenantGrants.filter((grant) => activeAt(grant.status, grant.validFrom, grant.validUntil, now));
   if (activeGrants.length === 0) {
     const revoked = tenantGrants.some((grant) => grant.status === "REVOKED");
@@ -110,7 +138,7 @@ export function evaluateV2Policy(input: V2PolicyInput): V2PolicyDecision {
         partnerId: null,
         authorityId: grant.id,
         effectiveScope: { resourceType: input.resourceType, resourceId: input.resourceId || null },
-        policyVersion: "v2-phase1.1",
+        policyVersion: "v2.1-platform-context",
       };
     }
 
@@ -131,7 +159,7 @@ export function evaluateV2Policy(input: V2PolicyInput): V2PolicyDecision {
         resourceId: allowedScope.resourceId || null,
         purpose: allowedScope.purpose || null,
       },
-      policyVersion: "v2-phase1.1",
+      policyVersion: "v2.1-platform-context",
     };
   }
 

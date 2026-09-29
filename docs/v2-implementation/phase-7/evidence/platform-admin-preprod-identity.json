@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-09-29T14:04:42.163Z",
+  "target": {
+    "environment": "preproduction",
+    "projectRefFingerprint": "d465ccdd1809"
+  },
+  "identity": {
+    "email": "phase7-platform-operator@preprod.greanlean.invalid",
+    "userIdFingerprint": "9e7407afe93e3959",
+    "synthetic": true,
+    "secretRecorded": false
+  },
+  "verification": {
+    "head": "0036",
+    "active_platform_assignments": 1,
+    "tenant_memberships": 0,
+    "platform_capabilities": 22
+  },
+  "authorityModel": "PLATFORM_ASSIGNMENT_ONLY",
+  "result": "PASS",
+  "productionWritePerformed": false
+}

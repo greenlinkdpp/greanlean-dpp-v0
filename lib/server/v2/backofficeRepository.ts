@@ -1,5 +1,6 @@
 import { ApiError } from "../apiRoute";
 import { assertVerifiedPolicyContext, type VerifiedV2PolicyContext } from "./security";
+import { platformCapabilityForTenantOperation } from "@/lib/v2/platformCapabilities";
 
 type AdminClient = any;
 
@@ -22,18 +23,24 @@ async function globalRows(admin: AdminClient, table: string, select: string, ids
 export async function loadBackofficeSnapshot(admin: AdminClient, context: VerifiedV2PolicyContext) {
   assertVerifiedPolicyContext(context);
   const tenantId = context.tenantId;
-  if (context.actorType !== "TENANT") {
+  if (context.actorType !== "TENANT" && context.actorType !== "PLATFORM") {
     throw new ApiError(403, "BACKOFFICE_TENANT_AUTHORITY_REQUIRED", "The aggregate operator console requires a Tenant membership; Partners must use resource-scoped APIs.");
   }
-  const membership = await admin.from("tenant_membership").select("role_id").eq("id", context.authorityId).eq("tenant_id", tenantId).maybeSingle();
-  if (membership.error || !membership.data) throw new ApiError(403, "BACKOFFICE_AUTHORITY_NOT_FOUND", "The verified Tenant authority is no longer available.");
-  const capabilityResult = await admin.from("role_capability").select("capability:capability(code,status)").eq("role_id", membership.data.role_id);
+  const authority = context.actorType === "PLATFORM"
+    ? await admin.from("platform_role_assignment").select("role_id").eq("id", context.authorityId).eq("status", "ACTIVE").maybeSingle()
+    : await admin.from("tenant_membership").select("role_id").eq("id", context.authorityId).eq("tenant_id", tenantId).maybeSingle();
+  if (authority.error || !authority.data) throw new ApiError(403, "BACKOFFICE_AUTHORITY_NOT_FOUND", "The verified operator authority is no longer available.");
+  const capabilityResult = await admin.from("role_capability").select("capability:capability(code,status)").eq("role_id", authority.data.role_id);
   if (capabilityResult.error) throw new ApiError(500, "BACKOFFICE_CAPABILITY_LOOKUP_FAILED", "Operator capabilities could not be loaded.");
   const capabilities = new Set<string>((capabilityResult.data || []).flatMap((row: any) => {
     const capability = Array.isArray(row.capability) ? row.capability[0] : row.capability;
     return capability?.status === "ACTIVE" && typeof capability.code === "string" ? [capability.code] : [];
   }));
-  const can = (code: string) => capabilities.has(code);
+  const can = (code: string) => {
+    if (capabilities.has(code)) return true;
+    const platformCapability = platformCapabilityForTenantOperation(code);
+    return context.actorType === "PLATFORM" && Boolean(platformCapability && capabilities.has(platformCapability));
+  };
   const tenantResult = await admin.from("tenant").select("id,code,name,status,residency_policy,created_at,updated_at").eq("id", tenantId).maybeSingle();
   if (tenantResult.error || !tenantResult.data) throw new ApiError(404, "TENANT_NOT_FOUND", "The authorised Tenant was not found.");
 
@@ -130,6 +137,6 @@ export async function loadBackofficeSnapshot(admin: AdminClient, context: Verifi
     connectorReceipts: can("connector.read_receipt") ? connectorReceipts : [], deadLetters: can("connector.retry") ? deadLetters : [],
     importSessions: can("connector.view") ? importSessions : [], registrySubmissions: can("registry.view") ? registrySubmissions : [],
     bmsSnapshots: can("connector.view") ? bmsSnapshots : [], connectorAudit: can("connector.view") ? connectorAudit : [],
-    policyAudit: can("tenant.manage") ? policyAudit : [],
+    policyAudit: can("tenant.manage") || capabilities.has("platform.audit.view") ? policyAudit : [],
   };
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLanguage } from "@/components/LanguageProvider";
 import { createSupabaseClient } from "@/lib/supabase";
 import { localizedPath, PRIMARY_V2_DEMO_PATH } from "@/lib/navigation";
@@ -141,7 +142,9 @@ function ImportWorkspace({ snapshot, context, token, locale, onRefresh }: { snap
   }
   async function preflight() {
     if (!file || !canImport) return;
-    const connector = snapshot.connectors[0]; const mapping = snapshot.mappingVersions.find((row) => row.status === "COMMITTED") || snapshot.mappingVersions[0];
+    const fileDefinitionIds = new Set(snapshot.connectorDefinitions.filter((row) => row.connector_type === "FILE_IMPORT").map((row) => row.id));
+    const connector = snapshot.connectors.find((row) => fileDefinitionIds.has(row.connector_definition_id));
+    const mapping = snapshot.mappingVersions.find((row) => row.mapping_profile_id === connector?.mapping_profile_id && ["ACTIVE", "COMMITTED"].includes(String(row.status)));
     if (!connector || !mapping) { setAction({ kind: "error", message: locale === "zh" ? "需要已配置的连接器与映射版本。" : "A configured connector and mapping version are required." }); return; }
     setAction({ kind: "working", message: locale === "zh" ? "正在预检…" : "Running preflight…" });
     const response = await fetch("/api/v2/imports", { method: "POST", headers: { Authorization: `Bearer ${token}`, "x-tenant-id": context.tenantId, "idempotency-key": crypto.randomUUID(), "content-type": "application/json" }, body: JSON.stringify({ connector_instance_id: connector.id, mapping_version_id: mapping.id, file_format: normalizedFormat, content: preview, action: "PREFLIGHT", allow_unmapped: true }) });
@@ -149,7 +152,7 @@ function ImportWorkspace({ snapshot, context, token, locale, onRefresh }: { snap
     setAction({ kind: response.ok ? "success" : "error", message: response.ok ? (locale === "zh" ? "预检完成；尚未提交任何数据。" : "Preflight complete; no data was committed.") : String(body?.error?.message || body?.message || "Preflight failed") });
     if (response.ok) onRefresh();
   }
-  return <div className="grid gap-6 xl:grid-cols-[1.2fr_.8fr]"><Panel title={locale === "zh" ? "文件导入" : "File import"} subtitle={locale === "zh" ? "CSV、Excel 或 JSON；先预检，再明确提交。" : "CSV, Excel, or JSON; preflight first, explicit commit second."}>
+  return <div className="grid gap-6 xl:grid-cols-[1.2fr_.8fr]"><Panel title={locale === "zh" ? "文件导入" : "File import"} subtitle={locale === "zh" ? "CSV、Excel 或 JSON；先预检，再明确提交。功能按环境开关控制，本 RC 的 Production 保持关闭。" : "CSV, Excel, or JSON; preflight first, explicit commit second. Availability is environment-gated; Production remains off for this RC."}>
     <label className="block cursor-pointer border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center"><span className="font-black">{file?.name || (locale === "zh" ? "选择导入文件" : "Choose an import file")}</span><input className="sr-only" type="file" accept=".csv,.json,.xlsx" onChange={(event) => void choose(event.target.files?.[0])} /></label>
     {preview && <pre className="mt-4 max-h-56 overflow-auto bg-slate-950 p-4 text-xs text-emerald-200">{preview}</pre>}
     <button disabled={!file || !canImport || action.kind === "working"} onClick={() => void preflight()} className="mt-4 bg-emerald-700 px-5 py-3 text-sm font-black text-white disabled:cursor-not-allowed disabled:bg-slate-300">{locale === "zh" ? "运行安全预检" : "Run safe preflight"}</button>
@@ -216,8 +219,60 @@ function ClaimWorkspace({ snapshot, query, empty }: { snapshot: BackofficeSnapsh
   return <Panel title="Canonical claims" subtitle="INHERIT, OVERRIDE, CLEAR, NOT_APPLICABLE and UNKNOWN remain distinct."><DataTable rows={rows} keys={["field", "resolved_value", "canonical_unit", "resolution_state", "source", "verification_status", "last_updated"]} query={query} empty={empty} /></Panel>;
 }
 
+function ManualClaimWorkspace({ snapshot, context, token, locale, onRefresh }: { snapshot: BackofficeSnapshot; context: BackofficeContext; token: string; locale: "en" | "zh"; onRefresh: () => void }) {
+  const subjects = [
+    ...snapshot.families.map((row) => ({ type: "FAMILY", id: String(row.id), label: `${stringValue(row.code)} · ${stringValue(row.name)}` })),
+    ...snapshot.models.map((row) => ({ type: "MODEL", id: String(row.id), label: `${stringValue(row.model_code)} · ${stringValue(row.name)}` })),
+    ...snapshot.skus.map((row) => ({ type: "SKU", id: String(row.id), label: `${stringValue(row.sku_code)} · ${stringValue(row.name)}` })),
+    ...snapshot.batches.map((row) => ({ type: "BATCH", id: String(row.id), label: stringValue(row.batch_number) })),
+    ...snapshot.items.map((row) => ({ type: "ITEM", id: String(row.id), label: stringValue(row.serial_number) })),
+  ];
+  const [subject, setSubject] = useState("");
+  const [fieldId, setFieldId] = useState("");
+  const [resolutionState, setResolutionState] = useState("OVERRIDE");
+  const [value, setValue] = useState("");
+  const [unit, setUnit] = useState("");
+  const [evidence, setEvidence] = useState("");
+  const [reason, setReason] = useState("");
+  const [state, setState] = useState<ActionState>({ kind: "idle", message: "" });
+  const field = snapshot.fields.find((row) => row.id === fieldId);
+  const allowed = context.capabilities.includes("product.edit");
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    const [subject_type, subject_id] = subject.split(":");
+    if (!allowed || !subject_type || !subject_id || !field) return;
+    setState({ kind: "working", message: locale === "zh" ? "正在保存规范化声明…" : "Saving canonical claim…" });
+    let value_json: unknown = null;
+    if (resolutionState === "OVERRIDE") {
+      try { value_json = JSON.parse(value); } catch { value_json = value; }
+    }
+    const payload = {
+      subject_type, subject_id, field_definition_id: field.id, schema_version_id: field.schema_version_id,
+      resolution_state: resolutionState, value_json, canonical_unit: unit || field.unit_code || null,
+      applicability_reason: reason || null,
+      evidence_references: evidence.split(",").map((item) => item.trim()).filter(Boolean),
+      raw_value_reference: resolutionState === "OVERRIDE" ? { value: value_json, enteredThrough: "BACKOFFICE_MANUAL" } : null,
+    };
+    const response = await fetch("/api/v2/canonical-claims", { method: "POST", headers: { Authorization: `Bearer ${token}`, "x-tenant-id": context.tenantId, "idempotency-key": crypto.randomUUID(), "content-type": "application/json" }, body: JSON.stringify(payload) });
+    const body = await response.json().catch(() => ({}));
+    setState({ kind: response.ok ? "success" : "error", message: response.ok ? (locale === "zh" ? "声明已保存，并记录来源与审计信息。" : "Claim saved with provenance and audit context.") : String(body?.error?.message || body?.message || "Claim creation failed") });
+    if (response.ok) { setValue(""); setEvidence(""); setReason(""); onRefresh(); }
+  }
+  return <div className="grid gap-6 xl:grid-cols-[.85fr_1.15fr]"><Panel title={locale === "zh" ? "手工 DPP 数据录入" : "Manual DPP data entry"} subtitle={locale === "zh" ? "所有写入绑定当前租户，并保留规范化状态、证据与来源。" : "Every write is bound to the active Tenant and preserves canonical state, evidence, and provenance."}><form onSubmit={(event) => void submit(event)} className="grid gap-4">
+    <label className="text-xs font-black uppercase text-slate-600">{locale === "zh" ? "产品对象" : "Product subject"}<select required value={subject} onChange={(event) => setSubject(event.target.value)} className="mt-1 w-full border border-slate-300 bg-white px-3 py-2 text-sm font-semibold normal-case"><option value="">—</option>{subjects.map((item) => <option key={`${item.type}:${item.id}`} value={`${item.type}:${item.id}`}>{item.type} · {item.label}</option>)}</select></label>
+    <label className="text-xs font-black uppercase text-slate-600">{locale === "zh" ? "字段" : "Canonical field"}<select required value={fieldId} onChange={(event) => setFieldId(event.target.value)} className="mt-1 w-full border border-slate-300 bg-white px-3 py-2 text-sm font-semibold normal-case"><option value="">—</option>{snapshot.fields.map((item) => <option key={String(item.id)} value={String(item.id)}>{stringValue(item.field_code)} · {stringValue(locale === "zh" ? item.label_zh || item.label_en : item.label_en)}</option>)}</select></label>
+    <label className="text-xs font-black uppercase text-slate-600">{locale === "zh" ? "解析状态" : "Resolution state"}<select value={resolutionState} onChange={(event) => setResolutionState(event.target.value)} className="mt-1 w-full border border-slate-300 bg-white px-3 py-2 text-sm font-semibold normal-case">{["INHERIT","OVERRIDE","CLEAR","NOT_APPLICABLE","UNKNOWN"].map((item) => <option key={item}>{item}</option>)}</select></label>
+    {resolutionState === "OVERRIDE" && <><label className="text-xs font-black uppercase text-slate-600">{locale === "zh" ? "值（文本或 JSON）" : "Value (text or JSON)"}<textarea required value={value} onChange={(event) => setValue(event.target.value)} className="mt-1 min-h-24 w-full border border-slate-300 px-3 py-2 text-sm font-semibold normal-case" /></label><label className="text-xs font-black uppercase text-slate-600">{locale === "zh" ? "单位" : "Unit"}<input value={unit} onChange={(event) => setUnit(event.target.value)} placeholder={stringValue(field?.unit_code)} className="mt-1 w-full border border-slate-300 px-3 py-2 text-sm font-semibold normal-case" /></label></>}
+    <label className="text-xs font-black uppercase text-slate-600">{locale === "zh" ? "证据引用（逗号分隔）" : "Evidence references (comma-separated)"}<input value={evidence} onChange={(event) => setEvidence(event.target.value)} className="mt-1 w-full border border-slate-300 px-3 py-2 text-sm font-semibold normal-case" /></label>
+    <label className="text-xs font-black uppercase text-slate-600">{locale === "zh" ? "适用性说明" : "Applicability reason"}<input value={reason} onChange={(event) => setReason(event.target.value)} className="mt-1 w-full border border-slate-300 px-3 py-2 text-sm font-semibold normal-case" /></label>
+    <button disabled={!allowed || state.kind === "working"} className="min-h-11 bg-slate-950 px-4 text-sm font-black text-white disabled:bg-slate-300">{locale === "zh" ? "保存声明" : "Save claim"}</button>
+    {state.message && <p className={`text-sm font-bold ${state.kind === "error" ? "text-red-700" : "text-emerald-700"}`}>{state.message}</p>}
+  </form></Panel><ClaimWorkspace snapshot={snapshot} query="" empty={locale === "zh" ? "暂无声明" : "No claims"} /></div>;
+}
+
 export function BackofficeConsole({ section: requested = "dashboard", modelId }: Props) {
   const { locale } = useLanguage(); const copy = backofficeCopy[locale];
+  const router = useRouter(); const searchParams = useSearchParams();
   const section = isBackofficeSection(requested) ? requested : "dashboard";
   const [contexts, setContexts] = useState<BackofficeContext[]>([]); const [selectedId, setSelectedId] = useState(""); const [snapshot, setSnapshot] = useState<BackofficeSnapshot | null>(null); const [token, setToken] = useState("");
   const [loading, setLoading] = useState(true); const [error, setError] = useState(""); const [query, setQuery] = useState("");
@@ -228,7 +283,7 @@ export function BackofficeConsole({ section: requested = "dashboard", modelId }:
     const body = await response.json().catch(() => ({})); if (!response.ok) { setError(String(body?.error?.message || copy.accessDenied)); setLoading(false); return; }
     setSnapshot(body.data); setLoading(false);
   }, [copy.accessDenied, selected?.tenantId, token]);
-  useEffect(() => { let live = true; void (async () => { const { data: { session } } = await createSupabaseClient().auth.getSession(); if (!live || !session) return; setToken(session.access_token); const response = await fetch("/api/v2/backoffice/context", { headers: { Authorization: `Bearer ${session.access_token}` }, cache: "no-store" }); const body = await response.json().catch(() => ({})); if (!live) return; const next: BackofficeContext[] = (response.ok ? body.data || [] : []).filter((item: BackofficeContext) => item.authorityType === "TENANT"); setContexts(next); const preferred = next.find((item) => item.tenantCode === "greanlean-reference-mobility") || next[0]; if (!preferred) { setError(copy.accessDenied); setLoading(false); return; } setSelectedId(preferred.tenantId); await refresh(session.access_token, preferred.tenantId); })(); return () => { live = false; }; }, [copy.accessDenied, refresh]);
+  useEffect(() => { let live = true; void (async () => { const { data: { session } } = await createSupabaseClient().auth.getSession(); if (!live || !session) return; setToken(session.access_token); const response = await fetch("/api/v2/backoffice/context", { headers: { Authorization: `Bearer ${session.access_token}` }, cache: "no-store" }); const body = await response.json().catch(() => ({})); if (!live) return; const next: BackofficeContext[] = (response.ok ? body.data || [] : []).filter((item: BackofficeContext) => item.authorityType === "TENANT" || item.authorityType === "PLATFORM"); setContexts(next); const requestedTenant = searchParams.get("tenant"); const preferred = next.find((item) => item.tenantCode === requestedTenant || item.tenantId === requestedTenant) || next.find((item) => item.tenantCode === "greanlean-reference-mobility") || next[0]; if (!preferred) { setError(copy.accessDenied); setLoading(false); return; } setSelectedId(preferred.tenantId); await refresh(session.access_token, preferred.tenantId); })(); return () => { live = false; }; }, [copy.accessDenied, refresh, searchParams]);
   useEffect(() => { if (token && selectedId) void refresh(token, selectedId); }, [selectedId]); // eslint-disable-line react-hooks/exhaustive-deps
   const title = backofficeNavigation.find((item) => item.section === section)?.label[locale] || copy.productName;
   const rows = useMemo(() => { if (!snapshot) return []; const key = sectionData[section]; if (!key) return []; const value = snapshot[key]; return Array.isArray(value) ? value as BackofficeRow[] : []; }, [section, snapshot]);
@@ -238,6 +293,7 @@ export function BackofficeConsole({ section: requested = "dashboard", modelId }:
     if (modelId) return <ModelPage snapshot={snapshot} modelId={modelId} locale={locale} />;
     if (section === "dashboard") return <Dashboard snapshot={snapshot} locale={locale} />;
     if (section === "imports") return <ImportWorkspace snapshot={snapshot} context={selected} token={token} locale={locale} onRefresh={() => void refresh()} />;
+    if (section === "manual") return <ManualClaimWorkspace snapshot={snapshot} context={selected} token={token} locale={locale} onRefresh={() => void refresh()} />;
     if (section === "reviews") return <ReviewWorkspace snapshot={snapshot} context={selected} token={token} locale={locale} onRefresh={() => void refresh()} />;
     if (section === "claims") return <ClaimWorkspace snapshot={snapshot} query={query} empty={copy.noData} />;
     if (section === "tenants") return <div className="grid gap-6 xl:grid-cols-2"><Panel title={locale === "zh" ? "租户边界" : "Tenant boundary"}><DataTable rows={[snapshot.tenant]} keys={["code", "name", "status", "residency_policy"]} query={query} empty={copy.noData} /></Panel><Panel title={locale === "zh" ? "成员与合作伙伴授权" : "Memberships and partner authority"}><DataTable rows={[...snapshot.memberships, ...snapshot.partnerAuthorizations]} keys={["role_id", "permission_profile_id", "status", "valid_until"]} query={query} empty={copy.noData} /></Panel></div>;
@@ -250,8 +306,8 @@ export function BackofficeConsole({ section: requested = "dashboard", modelId }:
     return <Panel title={title} subtitle={`${rows.length} ${locale === "zh" ? "条记录" : "records"}`}><DataTable rows={rows} keys={columns[section] || ["id", "status", "created_at"]} query={query} empty={copy.noData} /></Panel>;
   };
   return <div className="mx-auto max-w-[1600px] space-y-5">
-    <header className="border border-slate-200 bg-white p-5 shadow-sm"><div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between"><div><div className="flex flex-wrap items-center gap-2"><p className="text-xs font-black uppercase tracking-widest text-emerald-700">{copy.productName}</p><Status value={copy.synthetic} /></div><h1 className="mt-2 text-2xl font-black">{title}</h1><p className="mt-1 text-sm font-semibold text-slate-500">{selected.tenantName} · {selected.roleName}</p><nav aria-label={locale === "zh" ? "实用链接" : "Utility links"} className="mt-3 flex flex-wrap gap-3 text-sm font-black"><Link href={`/?lang=${locale}`} className="text-emerald-700 hover:text-emerald-900">{locale === "zh" ? "返回官网" : "Back to website"}</Link><Link href={localizedPath(PRIMARY_V2_DEMO_PATH, locale)} className="text-emerald-700 hover:text-emerald-900">{locale === "zh" ? "查看公开 Demo" : "View public Demo"}</Link></nav></div><div className="flex flex-wrap gap-2"><select aria-label="Tenant" value={selected.tenantId} onChange={(event) => setSelectedId(event.target.value)} className="border border-slate-300 bg-white px-3 py-2 text-sm font-bold">{contexts.map((item) => <option key={`${item.authorityType}-${item.authorityId}`} value={item.tenantId}>{item.tenantName}</option>)}</select><input aria-label={copy.search} value={query} onChange={(event) => setQuery(event.target.value)} placeholder={copy.search} className="min-w-64 border border-slate-300 px-3 py-2 text-sm"/><button onClick={() => void refresh()} className="border border-slate-300 px-4 py-2 text-sm font-black">{copy.refresh}</button></div></div>
-      <nav className="mt-5 flex gap-2 overflow-x-auto border-t border-slate-100 pt-4">{backofficeNavigation.map((item) => <Link key={item.section} href={`/dashboard/v2/${item.section}?lang=${locale}`} className={`whitespace-nowrap px-3 py-2 text-xs font-black ${item.section === section ? "bg-slate-950 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}>{item.label[locale]}</Link>)}</nav>
+    <header className="border border-slate-200 bg-white p-5 shadow-sm"><div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between"><div><div className="flex flex-wrap items-center gap-2"><p className="text-xs font-black uppercase tracking-widest text-emerald-700">{copy.productName}</p><Status value={selected.authorityType === "PLATFORM" ? (locale === "zh" ? "平台管理员" : "Platform Admin") : copy.synthetic} /></div><h1 className="mt-2 text-2xl font-black">{title}</h1><p className="mt-1 text-sm font-semibold text-slate-500">{locale === "zh" ? "当前租户" : "Active Tenant"}: <span className="font-black text-slate-950">{selected.tenantName}</span> · {selected.roleName}</p><nav aria-label={locale === "zh" ? "实用链接" : "Utility links"} className="mt-3 flex flex-wrap gap-3 text-sm font-black"><Link href={`/?lang=${locale}`} className="text-emerald-700 hover:text-emerald-900">{locale === "zh" ? "返回官网" : "Back to website"}</Link>{selected.authorityType === "PLATFORM" && <Link href={`/dashboard/platform?lang=${locale}`} className="text-emerald-700 hover:text-emerald-900">{locale === "zh" ? "返回平台控制台" : "Back to Platform console"}</Link>}<Link href={localizedPath(PRIMARY_V2_DEMO_PATH, locale)} className="text-emerald-700 hover:text-emerald-900">{locale === "zh" ? "查看公开 Demo" : "View public Demo"}</Link></nav></div><div className="flex flex-wrap gap-2"><select aria-label="Tenant" value={selected.tenantId} onChange={(event) => { const next = contexts.find((item) => item.tenantId === event.target.value); if (!next) return; setSelectedId(next.tenantId); router.replace(`${window.location.pathname}?tenant=${encodeURIComponent(next.tenantCode)}&lang=${locale}`); }} className="border border-slate-300 bg-white px-3 py-2 text-sm font-bold">{contexts.map((item) => <option key={`${item.authorityType}-${item.authorityId}-${item.tenantId}`} value={item.tenantId}>{item.tenantName}</option>)}</select><input aria-label={copy.search} value={query} onChange={(event) => setQuery(event.target.value)} placeholder={copy.search} className="min-w-64 border border-slate-300 px-3 py-2 text-sm"/><button onClick={() => void refresh()} className="border border-slate-300 px-4 py-2 text-sm font-black">{copy.refresh}</button></div></div>
+      <nav className="mt-5 flex gap-2 overflow-x-auto border-t border-slate-100 pt-4">{backofficeNavigation.map((item) => <Link key={item.section} href={`/dashboard/v2/${item.section}?tenant=${encodeURIComponent(selected.tenantCode)}&lang=${locale}`} className={`whitespace-nowrap px-3 py-2 text-xs font-black ${item.section === section ? "bg-slate-950 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}>{item.label[locale]}</Link>)}</nav>
     </header>
     {error && <div className="border border-amber-200 bg-amber-50 p-3 text-sm font-bold text-amber-900">{error}</div>}
     {render()}

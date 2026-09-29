@@ -12,7 +12,7 @@ export type VerifiedV2PolicyContext = {
   readonly [policyContextBrand]: true;
   readonly user: User;
   readonly tenantId: string;
-  readonly actorType: "TENANT" | "PARTNER";
+  readonly actorType: "TENANT" | "PARTNER" | "PLATFORM";
   readonly authorityId: string;
   readonly partnerId: string | null;
   readonly capability: string;
@@ -74,14 +74,14 @@ export async function requireV2PolicyContext(
     tenantId,
     ...policyRequest,
   });
-  if (!decision.allowed || !decision.authorityId || (decision.actorType !== "TENANT" && decision.actorType !== "PARTNER")) {
+  if (!decision.allowed || !decision.authorityId || !["TENANT", "PARTNER", "PLATFORM"].includes(decision.actorType)) {
     throw new ApiError(403, decision.reasonCode, "The requested operation is not permitted.");
   }
   const policyContext: VerifiedV2PolicyContext = {
     [policyContextBrand]: true,
     user,
     tenantId,
-    actorType: decision.actorType,
+    actorType: decision.actorType as "TENANT" | "PARTNER" | "PLATFORM",
     authorityId: decision.authorityId,
     partnerId: decision.partnerId,
     capability: policyRequest.capability,

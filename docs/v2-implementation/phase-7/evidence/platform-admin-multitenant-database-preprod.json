@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2026-09-29T14:02:58.012Z",
+  "target": {
+    "environment": "preproduction",
+    "projectRefFingerprint": "d465ccdd1809"
+  },
+  "migration": {
+    "file": "supabase/migrations/0036_v2_platform_operator_multitenant.sql",
+    "sha256": "ba077080223b6b462465a57a0594c8bb20e5d7b9051d02a232fbfa0c188316a5"
+  },
+  "rollback": {
+    "file": "supabase/rollbacks/0036_v2_platform_operator_multitenant.down.sql",
+    "sha256": "d07582b7e31f10783caee83b194cd483ad46eb9be62f9eba7d54319b2207a2d9"
+  },
+  "before": {
+    "head": "0035",
+    "tenant_memberships": 18,
+    "tenants": 5,
+    "v1_products": 5,
+    "v1_publications": 0,
+    "reference_models": 8,
+    "reference_skus": 22,
+    "reference_items": 22,
+    "reference_claims": 374,
+    "reference_passports": 22
+  },
+  "afterApply": {
+    "head": "0036",
+    "tenant_memberships": 18,
+    "tenants": 5,
+    "v1_products": 5,
+    "v1_publications": 0,
+    "reference_models": 8,
+    "reference_skus": 22,
+    "reference_items": 22,
+    "reference_claims": 374,
+    "reference_passports": 22,
+    "assignment_table": true,
+    "audit_table": true,
+    "platform_capabilities": 22,
+    "platform_roles": 1,
+    "active_platform_assignments": 0
+  },
+  "afterRollback": {
+    "head": "0035",
+    "tenant_memberships": 18,
+    "tenants": 5,
+    "v1_products": 5,
+    "v1_publications": 0,
+    "reference_models": 8,
+    "reference_skus": 22,
+    "reference_items": 22,
+    "reference_claims": 374,
+    "reference_passports": 22,
+    "assignment_removed": true,
+    "audit_removed": true,
+    "platform_capabilities": 0
+  },
+  "finalState": {
+    "head": "0036",
+    "tenant_memberships": 18,
+    "tenants": 5,
+    "v1_products": 5,
+    "v1_publications": 0,
+    "reference_models": 8,
+    "reference_skus": 22,
+    "reference_items": 22,
+    "reference_claims": 374,
+    "reference_passports": 22,
+    "platform_capabilities": 22,
+    "active_platform_assignments": 0,
+    "platform_users_with_tenant_membership": 0
+  },
+  "assertions": {
+    "tenantMembershipsUnchanged": true,
+    "v1DataUnchanged": true,
+    "referenceDataUnchanged": true,
+    "rollbackReapply": "PASS"
+  },
+  "result": "PASS",
+  "productionWritePerformed": false,
+  "productionDeployed": false
+}

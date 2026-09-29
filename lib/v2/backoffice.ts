@@ -10,6 +10,7 @@ export type BackofficeSection =
   | "batches"
   | "items"
   | "sources"
+  | "manual"
   | "imports"
   | "mappings"
   | "claims"
@@ -35,11 +36,12 @@ export type BackofficeContext = {
   tenantCode: string;
   tenantName: string;
   tenantStatus: string;
-  authorityType: "TENANT" | "PARTNER";
+  authorityType: "TENANT" | "PARTNER" | "PLATFORM";
   authorityId: string;
   roleCode: string;
   roleName: string;
   capabilities: string[];
+  platformCapabilities?: string[];
 };
 
 export type BackofficeSnapshot = {
@@ -101,6 +103,7 @@ export const backofficeNavigation: NavigationItem[] = [
   { section: "batches", label: { en: "Batches", zh: "批次" }, group: "operate" },
   { section: "items", label: { en: "Individual items", zh: "单件产品" }, group: "operate" },
   { section: "sources", label: { en: "Data sources", zh: "数据源" }, group: "data" },
+  { section: "manual", label: { en: "Manual DPP entry", zh: "手工 DPP 录入" }, group: "data" },
   { section: "imports", label: { en: "Import workspace", zh: "导入工作台" }, group: "data" },
   { section: "mappings", label: { en: "Field mapping", zh: "字段映射" }, group: "data" },
   { section: "claims", label: { en: "Canonical claims", zh: "规范化声明" }, group: "data" },
