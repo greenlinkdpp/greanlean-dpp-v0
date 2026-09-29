@@ -1,0 +1,127 @@
+{
+  "generatedAt": "2026-09-29T04:05:00Z",
+  "result": "FAIL",
+  "failure": {
+    "checkpoint": "FIRST_MAPPING_DRY_RUN",
+    "httpStatus": 404,
+    "code": "V2_FEATURE_DISABLED",
+    "message": "The V2 API is not enabled in this environment.",
+    "newWritesStopped": true,
+    "destructiveCleanupPerformed": false,
+    "secondWriteAttemptPerformed": false
+  },
+  "releaseCandidate": {
+    "reference": "codex/phase7-internal-reference-confirmed-write-rc",
+    "commit": "b4412f0a32f0e91c3b16f6bc7017f8ee7a9de773",
+    "tree": "166c65c46bdadf9ba4a31759dfd21a2d22d2c1f7",
+    "trackedFileCount": 919,
+    "untrackedFileCount": 0,
+    "fixtureSha256": "018c60c9db81d621aa439d5f801d5aad2756d29be4762bb85d106b2735425222",
+    "match": true
+  },
+  "backup": {
+    "gate": "PASS",
+    "reference": "1811221013",
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "status": "COMPLETED",
+    "completedAt": "2026-09-28T16:53:51.066Z",
+    "checkedAt": "2026-09-29T03:51:28.225Z",
+    "ageHours": 10.96
+  },
+  "deployment": {
+    "result": "PASS",
+    "project": "greanlean-dpp-v0",
+    "previousDeploymentId": "dpl_2n7VMa4Bgs4pxtiXtzJVHQdYApgA",
+    "newDeploymentId": "dpl_E6SqW2kKTseE1jYajt5k6uutE56p",
+    "immutableUrl": "https://greanlean-dpp-v0-4avqi95po-songweinie-1175s-projects.vercel.app",
+    "readyState": "READY",
+    "target": "production",
+    "productionAliasAssigned": true,
+    "migrationHeadBefore": "0035",
+    "migrationHeadAfter": "0035"
+  },
+  "referenceCheckpoint": {
+    "provenance": "EXACT_APPROVED_CONFIRMED_WRITE_WORKFLOW",
+    "resumable": true,
+    "tenantId": "632943cf-520b-47ac-83af-88ca866d4fa5",
+    "tenantCode": "greanlean-reference-mobility",
+    "tenantName": "GreanLean Reference Mobility",
+    "classification": "INTERNAL_SYNTHETIC_REFERENCE",
+    "counts": {
+      "tenants": 1,
+      "organisations": 1,
+      "families": 1,
+      "models": 8,
+      "skus": 22,
+      "batches": 8,
+      "batchSkuLinks": 22,
+      "individuals": 22,
+      "identifiers": 60,
+      "dataSources": 1,
+      "sourceRecords": 1,
+      "transformations": 0,
+      "canonicalClaims": 0,
+      "provenanceRecords": 0,
+      "passports": 0,
+      "reviews": 0,
+      "immutableVersions": 0,
+      "currentPointers": 0,
+      "resolverMappings": 0,
+      "bmsSnapshots": 0,
+      "registrySubmissions": 0
+    },
+    "foundation": {
+      "schemaDefinitions": 1,
+      "schemaVersions": 1,
+      "fieldDefinitions": 17,
+      "mappingProfiles": 1,
+      "mappingVersions": 1,
+      "mappingRules": 17,
+      "tenantMemberships": 3,
+      "idempotencyRecords": 0
+    },
+    "remainingPlan": {
+      "sourceRecords": 21,
+      "transformations": 22,
+      "canonicalClaims": 374,
+      "provenanceRecords": 374,
+      "passports": 22,
+      "reviews": 22,
+      "immutableVersions": 22,
+      "currentPointers": 22,
+      "resolverMappings": 22,
+      "bmsSnapshots": 22
+    },
+    "duplicatesCreated": 0,
+    "foreignNaturalKeyCollisions": 0
+  },
+  "v1Continuity": {
+    "result": "PASS",
+    "migrationHead": "0035",
+    "countsUnchanged": true,
+    "http5xx": 0,
+    "unexpected4xx": 0,
+    "latencyObservation": "OPEN_FOR_PILOT_MONITORING",
+    "sample": {
+      "sampleCount": 25,
+      "homepage": { "success": "5/5", "p50Ms": 721, "p95Ms": 1052 },
+      "v1Dpp": { "success": "5/5", "p50Ms": 2459, "p95Ms": 3931 },
+      "v1Api": { "success": "5/5", "p50Ms": 2447, "p95Ms": 4112 },
+      "auth": { "success": "5/5", "p50Ms": 617, "p95Ms": 1029 },
+      "storage": { "success": "5/5", "p50Ms": 622, "p95Ms": 1121 }
+    }
+  },
+  "boundaries": {
+    "globalV2Primary": false,
+    "referenceTenantV2Primary": false,
+    "soodooV2Primary": false,
+    "otherTenantV2Primary": false,
+    "registrySubmissionPerformed": false,
+    "realCustomerConnectorsActivated": false,
+    "formalObservationWindowStarted": false,
+    "realCustomerPilot": "NOT_STARTED",
+    "phase7Complete": false,
+    "phase8Entered": false
+  },
+  "nextAction": "EXPLICIT_AUTHORIZATION_REQUIRED_TO_RESOLVE_THE_SERVER_V2_FEATURE_GATE_BEFORE_IDEMPOTENT_RESUME"
+}
