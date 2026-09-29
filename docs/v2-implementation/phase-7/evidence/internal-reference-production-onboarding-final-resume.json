@@ -1,0 +1,269 @@
+{
+  "generatedAt": "2026-09-29T06:12:00Z",
+  "result": "PASS",
+  "resolverHostAllowlist": {
+    "result": "PASS",
+    "before": [
+      "127.0.0.1",
+      "dev.dpp.greanlean.test",
+      "greanlean-dpp-preprod.vercel.app",
+      "localhost"
+    ],
+    "after": [
+      "127.0.0.1",
+      "dev.dpp.greanlean.test",
+      "greanlean-dpp-preprod.vercel.app",
+      "localhost",
+      "www.greanlean.com"
+    ],
+    "inserted": {
+      "host": "www.greanlean.com",
+      "status": "ACTIVE",
+      "createdAt": "2026-09-29T05:48:33.781812Z"
+    },
+    "newRows": 1,
+    "unexpectedRows": 0,
+    "hostNormalization": "PASS",
+    "approvedHostFastPath": {
+      "httpStatus": 200,
+      "kind": "PUBLISHED",
+      "passportIdentifier": "DPP-GLR-EBIKE-000001",
+      "version": 1
+    },
+    "arbitraryHost": {
+      "host": "evil.example",
+      "httpStatus": 400,
+      "rejected": true,
+      "error": "RESOLVER_NOT_FOUND"
+    },
+    "codeChangePerformed": false,
+    "newRcRequired": false
+  },
+  "releaseCandidate": {
+    "reference": "codex/phase7-internal-reference-confirmed-write-rc",
+    "commit": "b4412f0a32f0e91c3b16f6bc7017f8ee7a9de773",
+    "tree": "166c65c46bdadf9ba4a31759dfd21a2d22d2c1f7",
+    "deployedRcMatch": true
+  },
+  "deployment": {
+    "id": "dpl_6poWp5p95At2hq4jbUAn1hZkQo3y",
+    "url": "https://greanlean-dpp-v0-ljivv75pj-songweinie-1175s-projects.vercel.app",
+    "target": "production",
+    "status": "READY",
+    "changed": false,
+    "migrationHead": "0035"
+  },
+  "backup": {
+    "gate": "PASS",
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "reference": "1811221013",
+    "status": "COMPLETED",
+    "physical": true,
+    "completedAt": "2026-09-28T16:53:51.066Z",
+    "checkedAt": "2026-09-29T05:47:41.627Z",
+    "ageHours": 12.9,
+    "pitrEnabled": false
+  },
+  "preResumeCheckpoint": {
+    "result": "PASS",
+    "tenantId": "632943cf-520b-47ac-83af-88ca866d4fa5",
+    "counts": {
+      "tenants": 1,
+      "organisations": 1,
+      "families": 1,
+      "models": 8,
+      "skus": 22,
+      "batches": 8,
+      "batchSkuLinks": 22,
+      "individuals": 22,
+      "dataSources": 1,
+      "sourceRecords": 22,
+      "transformations": 22,
+      "canonicalClaims": 374,
+      "provenanceRecords": 374,
+      "passports": 1,
+      "reviews": 1,
+      "immutableVersions": 1,
+      "currentPointers": 1,
+      "resolverMappings": 0,
+      "bmsSnapshots": 0,
+      "registrySubmissions": 0
+    },
+    "firstPublishedPassport": {
+      "passportIdentifier": "DPP-GLR-EBIKE-000001",
+      "passportId": "9bb47327-ce39-4177-b22a-72b1927c92f2",
+      "reviewId": "81fad3e1-a78f-4fec-9528-0756b789c90e",
+      "reviewStatus": "PUBLISHED",
+      "versionId": "10f9f3f0-6268-45cc-819c-bfa3f29cdc2d",
+      "version": 1,
+      "payloadHash": "37018545c5390f27895b08738d30be73e812c66390243fa440d0c94c5fd89d28",
+      "publicationState": "PUBLISHED",
+      "registryState": "NOT_REQUIRED",
+      "currentPointerMatches": true
+    }
+  },
+  "resume": {
+    "result": "PASS",
+    "confirmedWriteExecutions": 1,
+    "startedAfter": "2026-09-29T05:49:27Z",
+    "lastResolverCreatedAt": "2026-09-29T06:02:04.995308Z",
+    "lastBmsSnapshotCreatedAt": "2026-09-29T06:02:37.063796Z",
+    "confirmedWritePerformed": true,
+    "productionDeploymentChanged": false,
+    "productionTrafficSwitched": false
+  },
+  "finalCounts": {
+    "families": 1,
+    "models": 8,
+    "skus": 22,
+    "batches": 8,
+    "batchSkuLinks": 22,
+    "individuals": 22,
+    "dataSources": 1,
+    "sourceRecords": 22,
+    "transformations": 22,
+    "canonicalClaims": 374,
+    "provenanceRecords": 374,
+    "passports": 22,
+    "reviews": 22,
+    "immutableVersions": 22,
+    "currentPointers": 22,
+    "resolverMappings": 22,
+    "bmsSnapshots": 22,
+    "registrySubmissions": 0,
+    "activeRealProductionConnectors": 0
+  },
+  "resolverVerification": {
+    "approvedHostMappings": 22,
+    "otherHostMappings": 0,
+    "unexpectedPaths": 0,
+    "duplicateHostPathPairs": 0,
+    "pathStart": "/p/DPP-GLR-EBIKE-000001",
+    "pathEnd": "/p/DPP-GLR-EBIKE-000022",
+    "openRedirectProtection": "PASS"
+  },
+  "publicationLedger": [
+    { "passportIdentifier": "DPP-GLR-EBIKE-000001", "version": 1, "payloadHash": "37018545c5390f27895b08738d30be73e812c66390243fa440d0c94c5fd89d28", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000001" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000002", "version": 1, "payloadHash": "1f024a4055971f307a1a092f1ba52c18ca77759db084cd4889f57145d416ce8c", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000002" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000003", "version": 1, "payloadHash": "34655b9b8c81e55cb65ed457b6c994aa04bca666e5119e844909f14af4156e9a", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000003" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000004", "version": 1, "payloadHash": "c967925a54eaf299c7b1c26b1d3abfeb9edff059864683f6ff0cb7902deadde9", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000004" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000005", "version": 1, "payloadHash": "1fa0f6df50a32883ab5d74cd10837c287f97d5ef0e925d924c75504824203def", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000005" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000006", "version": 1, "payloadHash": "f8f20eba39f8ad4eab98b51aaf4943a17d18645a6bd1fef19b7e8e1e7841877d", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000006" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000007", "version": 1, "payloadHash": "c85869a59df909e5b7d008de47a9bf84bbc185b55d0c64be46adb8db64064659", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000007" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000008", "version": 1, "payloadHash": "b9c35efd448213ea24378df1d11aa4b94257f117cf787c5221fc284d479d363c", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000008" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000009", "version": 1, "payloadHash": "5ce93c343f5c2c4f1d7287216abdbe65e968e46dcc332342ffa6cf8f3fe0660f", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000009" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000010", "version": 1, "payloadHash": "50fac1fb346e7468039c6353e2b9a4ac164559ca0839d8a914a4a99c4cf3d9cf", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000010" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000011", "version": 1, "payloadHash": "b026ef21daf4f6fd9db8c64c57efd60d30401a7b768a252b466b9e18cad2fa52", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000011" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000012", "version": 1, "payloadHash": "27b979a25380861711f8c772f2e8430d38b8b8c5201bc87eb61f0ceec8bed600", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000012" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000013", "version": 1, "payloadHash": "6bbd777168629feea7a2ed9ba0d009a7c17694b1af40dafb10300cf3ee27501b", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000013" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000014", "version": 1, "payloadHash": "0d7a1754ead1655b2ee7beb454e93a4886e8b1ecb0367b15f29a4d2ab7e5a1a6", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000014" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000015", "version": 1, "payloadHash": "c9db043b252d93373cc85885ad2cf5cc3348d575cc06335259a7469c670b832d", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000015" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000016", "version": 1, "payloadHash": "8e7b0d5d7f286c6be589b57f7706b7bc32635c96588e70268d7fe8b4b72a3c6b", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000016" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000017", "version": 1, "payloadHash": "33cc208e78d514c7a579eb27a7914bdf7a4939d9b2f6246ff1966ff320e220ca", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000017" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000018", "version": 1, "payloadHash": "73c9beb0d08ccf54739c9cc5ac259f828d940020fab1d32843fc5fb96286de3a", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000018" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000019", "version": 1, "payloadHash": "33e72615a29bfa69a5a10c1905a75d337f18e60aebac45ec7bc4f3fca1e76c8a", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000019" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000020", "version": 1, "payloadHash": "6344dccda87d41a6efaba6c3adf6772f63fff19393d9c64b13495d295e2dba3f", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000020" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000021", "version": 1, "payloadHash": "63e38025e1244de23454b2e0b787263480ee71aed61b3582d1be8c33d914af67", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000021" },
+    { "passportIdentifier": "DPP-GLR-EBIKE-000022", "version": 1, "payloadHash": "c385747688d6390231b57a6cca93282a193e44dbd7049639a8d3cf5ba219905c", "pointerMatches": true, "host": "www.greanlean.com", "path": "/p/DPP-GLR-EBIKE-000022" }
+  ],
+  "audienceSafety": {
+    "result": "PASS",
+    "passportsChecked": 22,
+    "roles": {
+      "PUBLIC": { "mappedAudience": "PUBLIC", "fieldsPerPassport": 13 },
+      "REPAIRER": { "mappedAudience": "LEGITIMATE_INTEREST", "fieldsPerPassport": 16 },
+      "RECYCLER": { "mappedAudience": "LEGITIMATE_INTEREST", "fieldsPerPassport": 16 },
+      "MANUFACTURER": { "mappedAudience": "INTERNAL", "fieldsPerPassport": 17 },
+      "AUTHORITY": { "mappedAudience": "AUTHORITY", "fieldsPerPassport": 16 }
+    },
+    "warningContractFailures": 0,
+    "payloadHashFailures": 0,
+    "publicDataLeakage": "NONE",
+    "sourceVendorPublicLeakage": "NONE",
+    "publicBmsLeakage": "NONE",
+    "unverifiedFalseVerifiedText": "NONE"
+  },
+  "backoffice": {
+    "result": "PASS",
+    "contextHttp": 200,
+    "snapshotHttp": 200,
+    "counts": {
+      "families": 1,
+      "models": 8,
+      "skus": 22,
+      "batches": 8,
+      "batchSkuLinks": 22,
+      "items": 22,
+      "dataSources": 1,
+      "sourceRecords": 22,
+      "transformations": 22,
+      "claims": 374,
+      "passports": 22,
+      "reviews": 22,
+      "versions": 22,
+      "currentPointers": 22,
+      "resolverMappings": 22,
+      "bmsSnapshots": 22,
+      "registrySubmissions": 0
+    },
+    "tenantIsolation": "PASS",
+    "foreignTenant": "soodoo-e-bike",
+    "foreignTenantHttp": 403,
+    "foreignTenantError": "TENANT_RELATIONSHIP_REQUIRED",
+    "credentialsRecorded": false
+  },
+  "idempotency": {
+    "result": "PASS",
+    "netNewMutations": 0,
+    "duplicateObjectsCreated": 0,
+    "allManagedResourceMutationCountsZero": true
+  },
+  "v1Continuity": {
+    "result": "PASS",
+    "migrationHead": "0035",
+    "counts": {
+      "products": 9,
+      "productVersions": 12,
+      "batteryModelProfiles": 3,
+      "batteryBatches": 0,
+      "batteryItems": 2,
+      "identifierAliases": 6
+    },
+    "publicApiSha256": "8a0d1cc4f05eab8c5dd88eb92062ea3e6e65c42eb5f7fa42a1fecece3ab17c9a",
+    "sampleCount": 25,
+    "http5xx": 0,
+    "unexpected4xx": 0,
+    "latencyObservation": "OPEN_FOR_PILOT_MONITORING",
+    "routes": {
+      "homepage": { "success": "5/5", "p50Ms": 808, "p95Ms": 2102 },
+      "v1Dpp": { "success": "5/5", "p50Ms": 2449, "p95Ms": 2671 },
+      "v1Api": { "success": "5/5", "p50Ms": 2152, "p95Ms": 2667 },
+      "auth": { "success": "5/5", "p50Ms": 591, "p95Ms": 1009 },
+      "storage": { "success": "5/5", "p50Ms": 1051, "p95Ms": 1201 }
+    },
+    "smoke": {
+      "login": 200,
+      "positiveLegacyAlias": 200,
+      "expectedNegativeGs1": 404,
+      "approvedQr": { "status": 200, "contentType": "image/png" },
+      "arbitraryQr": { "status": 400, "code": "QR_TARGET_NOT_APPROVED" },
+      "dormantReferenceResolver": { "status": 404, "code": "V2_FEATURE_DISABLED" }
+    }
+  },
+  "boundaries": {
+    "featureV2PublicRead": false,
+    "featureV2PublicProjection": false,
+    "globalV2Primary": false,
+    "referenceTenantV2Primary": false,
+    "soodooV2Primary": false,
+    "otherTenantV2Primary": false,
+    "registrySubmissionPerformed": false,
+    "realCustomerConnectorsActivated": false,
+    "formalObservationWindowStarted": false,
+    "technicalReferencePilot": "READY_FOR_CUTOVER",
+    "realCustomerPilot": "NOT_STARTED",
+    "phase7Complete": false,
+    "phase8Entered": false
+  },
+  "nextAction": "WAIT_FOR_EXPLICIT_AUTHORIZATION_TO_PERFORM_INTERNAL_REFERENCE_TENANT_PRODUCTION_CUTOVER_AND_START_THE_FORMAL_7_DAY_TECHNICAL_OBSERVATION"
+}
