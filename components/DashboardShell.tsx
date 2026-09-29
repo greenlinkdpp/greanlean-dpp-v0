@@ -3,7 +3,7 @@
 import Link from "next/link";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase";
 import { useLanguage } from "@/components/LanguageProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -12,6 +12,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { locale } = useLanguage();
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
@@ -38,6 +39,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         partnerWorkspace: "合作伙伴工作台",
         partnerRole: "合作伙伴编辑者",
         platformRole: "平台管理员",
+        platformGroup: "平台",
+        tenantGroup: "租户工作区",
+        currentScope: "当前范围",
+        allTenants: "平台 · 全部租户",
         workspaceGroup: "工作区",
         dataGroup: "数据协作",
         collaborationGroup: "客户协作",
@@ -63,6 +68,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         partnerWorkspace: "Partner workspace",
         partnerRole: "Partner editor",
         platformRole: "Platform administrator",
+        platformGroup: "Platform",
+        tenantGroup: "Tenant workspace",
+        currentScope: "Current Scope",
+        allTenants: "Platform · All Tenants",
         workspaceGroup: "Workspace",
         dataGroup: "Data operations",
         collaborationGroup: "Collaboration",
@@ -74,32 +83,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const navGroups = isPlatformAdmin
     ? [
         {
-          label: t.workspaceGroup,
-          items: [
-            [t.platformConsole, "/dashboard/platform", "P"],
-            [t.overview, "/dashboard", "01"],
-            [t.projects, "/dashboard/projects", "02"],
-            [t.products, "/dashboard/products", "03"],
-            [t.v2Operations, "/dashboard/v2", "V2"],
-          ],
+          label: t.platformGroup,
+          items: [[t.platformConsole, "/dashboard/platform", "01"]],
         },
         {
-          label: t.dataGroup,
-          items: [
-            [t.importData, "/dashboard/import", "04"],
-            [t.suppliers, "/dashboard/suppliers", "05"],
-          ],
-        },
-        {
-          label: t.collaborationGroup,
-          items: [[t.leads, "/dashboard/leads", "06"]],
-        },
-        {
-          label: t.governanceGroup,
-          items: [
-            [t.organisation, "/dashboard/organisation", "07"],
-            [t.access, "/dashboard/access", "08"],
-          ],
+          label: t.tenantGroup,
+          items: [[t.v2Operations, "/dashboard/v2", "02"]],
         },
       ]
     : [
@@ -129,7 +118,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   }, [nav, pathname, t.access, t.certificates, t.esg, t.materials, t.workspace]);
 
   function withLocale(href: string) {
-    return `${href}?lang=${locale}`;
+    const tenant = searchParams.get("tenant");
+    const params = new URLSearchParams({ lang: locale });
+    if (tenant && href.startsWith("/dashboard/v2")) params.set("tenant", tenant);
+    return `${href}?${params.toString()}`;
   }
 
   function isActive(href: string) {
@@ -185,9 +177,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       setCanUseLegacyDashboard(canUseLegacy);
       setIsPlatformAdmin(hasPlatformAuthority || Boolean(identity?.isPlatformAdmin));
       setHasV2Backoffice(canUseV2Backoffice);
-      setOrganisationName(
-        platformContexts[0]?.tenantName || identity?.memberships?.[0]?.organisationName || tenantContexts[0]?.tenantName || "",
+      const requestedTenant = searchParams.get("tenant");
+      const requestedContext = tenantContexts.find(
+        (item: { tenantCode?: string; tenantId?: string }) => item.tenantCode === requestedTenant || item.tenantId === requestedTenant,
       );
+      setOrganisationName(requestedContext?.tenantName || identity?.memberships?.[0]?.organisationName || "");
 
       if (!canUseLegacy && canUseV2Backoffice && !isV2Route && !hasPlatformAuthority) {
         router.replace(`/dashboard/v2?lang=${locale}`);
@@ -210,7 +204,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     return () => {
       active = false;
     };
-  }, [locale, pathname, router]);
+  }, [locale, pathname, router, searchParams]);
 
   if (checkingAuth) {
     return (
@@ -226,17 +220,18 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-white/10 bg-slate-950 lg:flex lg:flex-col">
-        <div className="border-b border-white/10 px-6 py-6">
-          <BrandLogo href={isPlatformAdmin ? "/dashboard/platform" : "/dashboard/v2"} size="md" variant="light" />
-          <p className="mt-3 text-xs font-bold uppercase text-slate-500">{t.workspace}</p>
+    <div className="min-h-screen bg-[#0b2824] text-white">
+      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-white/10 bg-[#0b2824] lg:flex lg:flex-col">
+        <div className="px-5 pb-2 pt-5">
+          <div className="rounded-[14px] bg-white px-3 py-2 shadow-sm">
+            <BrandLogo href={isPlatformAdmin ? "/dashboard/platform" : "/dashboard/v2"} size="md" />
+          </div>
         </div>
 
-        <div className="mx-4 mt-5 border border-white/10 bg-white/[0.04] px-4 py-3">
-          <p className="text-[11px] font-black uppercase text-slate-500">{t.currentOrganisation}</p>
+        <div className="mx-5 mt-4 rounded-xl border border-white/10 bg-white/[0.06] px-4 py-3">
+          <p className="text-[11px] font-black uppercase tracking-[.12em] text-emerald-200/60">{t.currentScope}</p>
           <p className="mt-1 truncate text-sm font-black text-white">
-            {isPlatformAdmin ? "GreanLean" : organisationName || t.partnerWorkspace}
+            {isPlatformAdmin && pathname === "/dashboard/platform" ? t.allTenants : organisationName ? `Tenant · ${organisationName}` : t.tenantGroup}
           </p>
           <p className="mt-1 text-xs font-semibold text-emerald-300">
             {isPlatformAdmin ? t.platformRole : t.partnerRole}
@@ -253,7 +248,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                     key={href}
                     href={withLocale(href)}
                     className={clsx(
-                      "flex min-h-11 items-center gap-3 border-l-2 px-3 py-2.5 text-sm font-bold transition",
+                      "flex min-h-11 items-center gap-3 rounded-lg border-l-2 px-3 py-2.5 text-sm font-bold transition",
                       isActive(href)
                         ? "border-emerald-400 bg-white/10 text-white"
                         : "border-transparent text-slate-300 hover:border-white/30 hover:bg-white/[0.06] hover:text-white"
@@ -273,14 +268,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
         <button
           onClick={signOut}
-          className="mx-4 mb-5 shrink-0 border border-white/10 px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white"
+          className="mx-5 mb-5 shrink-0 rounded-lg border border-white/10 px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white"
         >
           {t.signOut}
         </button>
       </aside>
 
-      <main className="lg:pl-72">
-        <div className="min-h-screen bg-slate-50 text-slate-950">
+      <main className="lg:pl-64">
+        <div className="min-h-screen bg-[#f6f8f7] text-slate-950">
           <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur lg:hidden">
             <div className="flex items-center justify-between gap-3">
               <BrandLogo href={isPlatformAdmin ? "/dashboard/platform" : "/dashboard/v2"} size="sm" />
@@ -307,7 +302,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <div className="mb-7 hidden items-center justify-between border-b border-slate-200 pb-5 lg:flex">
               <div>
                 <p className="text-xs font-black uppercase text-emerald-700">
-                  {isPlatformAdmin ? t.workspace : `${t.partnerWorkspace} · ${organisationName || t.partnerRole}`}
+                  {isPlatformAdmin && pathname === "/dashboard/platform" ? t.allTenants : `${t.tenantGroup} · ${organisationName || t.partnerRole}`}
                 </p>
                 <p className="mt-1 text-sm font-semibold text-slate-500">
                   {isPlatformAdmin ? t.platformRole : t.partnerRole}

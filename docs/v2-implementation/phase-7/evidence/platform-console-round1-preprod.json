@@ -1,0 +1,114 @@
+{
+  "generatedAt": "2026-09-29T20:18:00Z",
+  "result": "PASS",
+  "architectureBaseline": "v2.1",
+  "round": "PHASE_7_ROUND_1_PLATFORM_CONSOLE",
+  "architectureDecision": {
+    "previousMembershipTask": "SUPERSEDED_BEFORE_PRODUCTION_WRITE",
+    "platformAdminLoginDestination": "/dashboard/platform",
+    "platformAuthorityModel": "PLATFORM_ASSIGNMENT_ONLY"
+  },
+  "environment": {
+    "name": "preproduction",
+    "projectRefFingerprint": "sha256:d465ccdd1809",
+    "project": "greanlean-dpp-preprod",
+    "migrationHead": "0036",
+    "deploymentId": "dpl_ECtqDJxGR4QCUHjxTLpt8ggqcmeM",
+    "deploymentUrl": "https://greanlean-dpp-preprod-gl6da5q2k-songweinie-1175s-projects.vercel.app",
+    "stableAlias": "https://greanlean-dpp-preprod.vercel.app"
+  },
+  "authority": {
+    "model": "PLATFORM_ASSIGNMENT_ONLY",
+    "platformOperatorTenantMemberships": 0,
+    "tenantAuthorityDerivedFromUrl": false,
+    "serverRevalidatesRequestedTenant": true
+  },
+  "platformOverview": {
+    "activeTenants": 5,
+    "productModels": 32,
+    "dppPassports": 51,
+    "failedOrQuarantinedImports": 0,
+    "initialActiveTenantSelection": null,
+    "tenantEntryActions": true,
+    "tenantOwnershipDisplayed": true,
+    "soodoo": {
+      "name": "SOODOO E-bike",
+      "code": "soodoo-e-bike",
+      "productModels": 1,
+      "dppPassports": 3
+    }
+  },
+  "contextGuards": {
+    "platformAdminWithoutTenant": {
+      "url": "/dashboard/v2?lang=en",
+      "result": "ACTIVE_TENANT_REQUIRED",
+      "snapshotFetched": false
+    },
+    "explicitSoodooTenant": {
+      "url": "/dashboard/v2?tenant=soodoo-e-bike&lang=zh",
+      "result": "PASS",
+      "tenantDisplayed": "SOODOO E-bike",
+      "publishedDppsDisplayed": 3
+    }
+  },
+  "tenantIsolation": {
+    "forgedTenantContext": "DENIED",
+    "crossTenantResourceAccess": "DENIED",
+    "futureTenantUserPlatformAccess": "DENIED",
+    "referenceTenantEntry": "PASS"
+  },
+  "referenceDataIntegrity": {
+    "models": 8,
+    "skus": 22,
+    "individuals": 22,
+    "claims": 374,
+    "passports": 22,
+    "versions": 22,
+    "currentPointers": 22,
+    "resolverMappings": 22,
+    "bmsSnapshots": 22,
+    "duplicateDppIds": 0,
+    "crossTenantBusinessRowMovement": 0,
+    "immutableVersionMutation": false
+  },
+  "regression": {
+    "v1Regression": "PASS",
+    "publicReferenceDppRegression": "PASS",
+    "productionUnchanged": true
+  },
+  "tests": {
+    "targeted": "PASS",
+    "finalFullRegression": {
+      "status": "PASS",
+      "unitAndIntegrationTests": 247,
+      "migrationTests": 57,
+      "lint": "PASS",
+      "typecheck": "PASS",
+      "build": "PASS"
+    }
+  },
+  "browserQa": {
+    "desktopEnglish": "PASS",
+    "desktopChinese": "PASS",
+    "mobileChinese": "PASS",
+    "mobileViewport": "390x844",
+    "screenshots": [
+      "output/playwright/platform-console-round1-preprod.png",
+      "output/playwright/platform-console-round1-preprod-zh-mobile.png"
+    ]
+  },
+  "ownerLogo": {
+    "asset": "public/brand/greanlean-wordmark.png",
+    "sha256": "729fc6d0249c8613bd8246dfc58011da42ccdb9c8f9de00874e1d6796c240eec",
+    "rendering": "CSS object-contain in white shell/login card"
+  },
+  "productionBoundary": {
+    "productionWritePerformed": false,
+    "productionMigrationPerformed": false,
+    "productionTrafficSwitched": false,
+    "productionDeploymentChanged": false,
+    "registryEnabled": false,
+    "connectorsActivated": false
+  },
+  "round2Started": false
+}

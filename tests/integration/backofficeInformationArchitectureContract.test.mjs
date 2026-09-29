@@ -48,20 +48,23 @@ test("partner navigation exposes V2 only when a server-authorised V2 context exi
 
   assert.match(shell, /hasV2Backoffice \? \[\[t\.v2Operations, "\/dashboard\/v2", "V2"\]\] : \[\]/);
   assert.match(shell, /fetch\("\/api\/v2\/backoffice\/context"/);
-  assert.match(shell, /items:\s*\[\[t\.leads,\s*"\/dashboard\/leads",\s*"\d+"\]\]/);
-  assert.match(shell, /\[t\.access,\s*"\/dashboard\/access",\s*"\d+"\]/);
+  assert.match(shell, /items:\s*\[\[t\.platformConsole, "\/dashboard\/platform", "01"\]\]/);
+  assert.match(shell, /items:\s*\[\[t\.v2Operations, "\/dashboard\/v2", "02"\]\]/);
   assert.match(shell, /const navGroups = isPlatformAdmin/);
   assert.match(shell, /!identity\.isPlatformAdmin && !partnerRouteAllowed/);
 });
 
-test("V2 backoffice defaults to the neutral internal reference Tenant", async () => {
+test("Platform V2 backoffice requires an explicit verified Tenant context", async () => {
   const consoleSource = await readFile("components/v2/backoffice/BackofficeConsole.tsx", "utf8");
 
-  assert.match(consoleSource, /item\.tenantCode === "greanlean-reference-mobility"/);
+  assert.match(consoleSource, /const requestedContext = requestedTenant \? next\.find/);
+  assert.match(consoleSource, /hasPlatformAuthority/);
+  assert.match(consoleSource, /Choose a Tenant from Platform Overview/);
+  assert.doesNotMatch(consoleSource, /item\.tenantCode === "greanlean-reference-mobility"/);
   assert.doesNotMatch(consoleSource, /tenantName\.toLowerCase\(\)\.includes\("soodoo"\)/i);
 });
 
-test("login accepts the Orintent username alias and dark surfaces use the white logo", async () => {
+test("login accepts the Orintent username alias and shells contain the official logo on white", async () => {
   const [login, shell, logo] = await Promise.all([
     readFile("app/login/page.tsx", "utf8"),
     readFile("components/DashboardShell.tsx", "utf8"),
@@ -70,7 +73,7 @@ test("login accepts the Orintent username alias and dark surfaces use the white 
 
   assert.match(login, /identifier\.includes\("@"\) \? identifier : `\$\{identifier\}@greanlean\.com`/);
   assert.match(login, /name="identifier"/);
-  assert.match(login, /variant="light"/);
-  assert.match(shell, /variant="light"/);
-  assert.match(logo, /brightness-0 invert/);
+  assert.match(login, /rounded-\[14px\] bg-white/);
+  assert.match(shell, /rounded-\[14px\] bg-white/);
+  assert.match(logo, /object-contain/);
 });

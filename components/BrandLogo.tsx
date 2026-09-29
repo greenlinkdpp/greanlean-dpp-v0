@@ -22,19 +22,14 @@ export function BrandLogo({
     : size === "sm"
       ? "h-8 w-[142px]"
       : "h-10 w-[176px]";
-  const imageSize = size === "lg"
-    ? "w-[360px]"
-    : size === "sm"
-      ? "w-[252px]"
-      : "w-[312px]";
 
   return (
     <Link href={href} aria-label="GreanLean" className={`inline-flex shrink-0 ${className}`}>
-      <span className={`relative block overflow-hidden ${frameSize} ${markClassName}`}>
+      <span className={`relative block ${frameSize} ${markClassName}`}>
         <img
           src="/brand/greanlean-wordmark.png"
           alt="GreanLean"
-          className={`absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 ${imageSize} ${
+          className={`h-full w-full object-contain ${
             variant === "light" ? "brightness-0 invert" : ""
           } ${wordmarkClassName}`}
         />

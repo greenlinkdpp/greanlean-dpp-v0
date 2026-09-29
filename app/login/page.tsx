@@ -134,7 +134,9 @@ export default function LoginPage() {
       <main className="relative grid min-h-screen place-items-center px-6 py-20">
         <div className="grid w-full max-w-5xl overflow-hidden rounded-lg border border-white/10 bg-white shadow-2xl lg:grid-cols-[0.95fr_1.05fr]">
           <section className="bg-slate-950 p-8 text-white lg:p-10">
-            <BrandLogo href={`/?lang=${locale}`} size="lg" variant="light" markClassName="shadow-brand-500/20" />
+            <div className="inline-flex rounded-[14px] bg-white px-4 py-3 shadow-sm">
+              <BrandLogo href={`/?lang=${locale}`} size="lg" />
+            </div>
             <h1 className="mt-6 text-4xl font-black leading-tight">{t.title}</h1>
             <p className="mt-4 leading-7 text-slate-300">{t.subtitle}</p>
 

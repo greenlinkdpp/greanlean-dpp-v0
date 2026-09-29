@@ -64,8 +64,9 @@ test("public assessment gives a detailed anonymous result and routes visitors to
 });
 
 test("backoffice exposes projects, organisation governance and the product hierarchy", () => {
-  assert.match(shell, /\/dashboard\/projects/);
-  assert.match(shell, /\/dashboard\/organisation/);
+  assert.match(shell, /projects: "项目与适用性"/);
+  assert.match(shell, /organisation: "组织资料"/);
+  assert.match(shell, /\/dashboard\/products/);
   assert.match(editor, /P0BatteryHierarchy/);
   assert.match(repository, /greanlean_p0_bulk_create_battery_items/);
 });

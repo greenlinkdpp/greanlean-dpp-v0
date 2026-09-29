@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
@@ -38,8 +39,9 @@ test("platform inventory is capability protected and preserves Tenant ownership"
 });
 
 test("every platform business write is rebound to an explicit active Tenant", async () => {
-  const [consoleSource, policy, security, shell, login] = await Promise.all([
+  const [consoleSource, platformConsole, policy, security, shell, login] = await Promise.all([
     read("components/v2/backoffice/BackofficeConsole.tsx"),
+    read("components/v2/platform/PlatformConsole.tsx"),
     read("lib/v2/policy.ts"),
     read("lib/server/v2/security.ts"),
     read("components/DashboardShell.tsx"),
@@ -48,6 +50,9 @@ test("every platform business write is rebound to an explicit active Tenant", as
   assert.match(consoleSource, /x-tenant-id/);
   assert.match(consoleSource, /Active Tenant/);
   assert.match(consoleSource, /authorityType === "PLATFORM"/);
+  assert.doesNotMatch(consoleSource, /contexts\[0\]/);
+  assert.doesNotMatch(platformConsole, /setActiveTenantId\(reference/);
+  assert.match(platformConsole, /<option value="">\{t\.chooseTenant\}<\/option>/);
   assert.match(policy, /PLATFORM_CAPABILITY_ACTIVE_TENANT/);
   assert.match(security, /A valid x-tenant-id header is required/);
   assert.match(shell, /\/dashboard\/platform/);
@@ -66,4 +71,15 @@ test("manual claim entry and file preflight retain provenance and controlled sta
   assert.match(consoleSource, /raw_value_reference/);
   assert.match(consoleSource, /PREFLIGHT/);
   assert.match(claimRoute, /createManualClaim/);
+});
+
+test("Round 1 uses the approved owner logo asset without destructive cropping", async () => {
+  const [logoSource, asset] = await Promise.all([
+    read("components/BrandLogo.tsx"),
+    readFile("public/brand/greanlean-wordmark.png"),
+  ]);
+  assert.match(logoSource, /\/brand\/greanlean-wordmark\.png/);
+  assert.match(logoSource, /object-contain/);
+  assert.doesNotMatch(logoSource, /overflow-hidden/);
+  assert.equal(createHash("sha256").update(asset).digest("hex"), "729fc6d0249c8613bd8246dfc58011da42ccdb9c8f9de00874e1d6796c240eec");
 });
