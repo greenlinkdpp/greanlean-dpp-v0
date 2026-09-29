@@ -1,0 +1,131 @@
+{
+  "generatedAt": "2026-09-29T09:08:00Z",
+  "result": "FAIL",
+  "technicalGoLive": false,
+  "technicalGoLiveAt": null,
+  "preCutover": {
+    "result": "PASS",
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "projectStatus": "ACTIVE_HEALTHY",
+    "migrationHead": "0035",
+    "deploymentId": "dpl_6poWp5p95At2hq4jbUAn1hZkQo3y",
+    "rcCommit": "b4412f0a32f0e91c3b16f6bc7017f8ee7a9de773",
+    "rcTree": "166c65c46bdadf9ba4a31759dfd21a2d22d2c1f7",
+    "backup": {
+      "reference": "1811221013",
+      "status": "COMPLETED",
+      "completedAt": "2026-09-28T16:53:51.066Z",
+      "checkedAt": "2026-09-29T09:00:26.035Z",
+      "ageHours": 16.1
+    },
+    "referenceTenantId": "632943cf-520b-47ac-83af-88ca866d4fa5",
+    "counts": {
+      "families": 1,
+      "models": 8,
+      "skus": 22,
+      "batches": 8,
+      "batchSkuLinks": 22,
+      "individuals": 22,
+      "sourceRecords": 22,
+      "transformations": 22,
+      "canonicalClaims": 374,
+      "provenanceRecords": 374,
+      "passports": 22,
+      "reviews": 22,
+      "immutableVersions": 22,
+      "currentPointers": 22,
+      "resolverMappings": 22,
+      "bmsSnapshots": 22,
+      "registrySubmissions": 0,
+      "activeRealProductionConnectors": 0
+    },
+    "tenantExposureInventory": {
+      "referenceV2PrimaryPassports": 22,
+      "referenceResolverMappings": 22,
+      "soodooV2PrimaryPassports": 0,
+      "soodooResolverMappings": 0
+    },
+    "v1PreCutover": "PASS"
+  },
+  "gateSeparation": {
+    "publicReadProjectionIndependentOfGlobalFallback": true,
+    "referenceIsOnlyTenantWithV2PassportsAndMappings": true,
+    "result": "PARTIAL",
+    "failure": "PRODUCTIZED_PAGE_INTERNAL_RESOLVER_HOST_DOES_NOT_MATCH_WWW_MAPPING"
+  },
+  "attempt": {
+    "featureV2PublicRead": true,
+    "featureV2PublicProjection": true,
+    "codeChangePerformed": false,
+    "databaseChangePerformed": false,
+    "sourceDeploymentId": "dpl_6poWp5p95At2hq4jbUAn1hZkQo3y",
+    "attemptDeploymentId": "dpl_2t12LUAwViT4FdMg3KcVeDziMcSv",
+    "attemptDeploymentCreatedAt": "2026-09-29T09:02:13Z",
+    "deployedRcMatch": true,
+    "firstResolver": {
+      "identifier": "DPP-GLR-EBIKE-000001",
+      "httpStatus": 200,
+      "version": 1,
+      "payloadHash": "37018545c5390f27895b08738d30be73e812c66390243fa440d0c94c5fd89d28",
+      "brandPresent": true,
+      "warningPresent": true
+    },
+    "firstProductizedPage": {
+      "identifier": "DPP-GLR-EBIKE-000001",
+      "httpStatus": 404,
+      "result": "FAIL"
+    },
+    "unknownDpp": {
+      "httpStatus": 409,
+      "code": "RESOLVER_NOT_FOUND"
+    },
+    "nonPrimarySoodooExposure": "NONE",
+    "publicDppRoutesPassed": 0,
+    "publicDppRoutesRequired": 22,
+    "publicResolver": "INCOMPLETE_AFTER_FIRST_PASS",
+    "qr": "NOT_RUN_DUE_TO_BLOCKING_PAGE_FAILURE",
+    "productizedUi": "FAIL"
+  },
+  "rollback": {
+    "executed": true,
+    "deploymentRestored": "dpl_6poWp5p95At2hq4jbUAn1hZkQo3y",
+    "featureV2PublicRead": false,
+    "featureV2PublicProjection": false,
+    "verifiedAt": "2026-09-29T09:07:22.693Z",
+    "verification": "PASS",
+    "v1AfterRollback": "PASS",
+    "referenceResolverHttp": 404,
+    "referenceResolverCode": "V2_FEATURE_DISABLED",
+    "migrationHead": "0035",
+    "passports": 22,
+    "immutableVersions": 22,
+    "currentPointers": 22,
+    "resolverMappings": 22,
+    "bmsSnapshots": 22,
+    "registrySubmissions": 0,
+    "activeRealProductionConnectors": 0
+  },
+  "audienceSafety": {
+    "liveCutoverVerificationCompleted": false,
+    "reason": "STOPPED_AT_FIRST_BLOCKING_PRODUCTIZED_PAGE_FAILURE",
+    "lastAcceptedPreCutoverPublicDataLeakage": "NONE",
+    "lastAcceptedPreCutoverSourceVendorPublicLeakage": "NONE",
+    "lastAcceptedPreCutoverPublicBmsLeakage": "NONE"
+  },
+  "observation": {
+    "started": false,
+    "startAt": null,
+    "endNotBefore": null
+  },
+  "boundaries": {
+    "globalV2Primary": false,
+    "referenceTenantV2Primary": false,
+    "soodooV2Primary": false,
+    "otherTenantV2Primary": false,
+    "registrySubmissionPerformed": false,
+    "realCustomerConnectorsActivated": false,
+    "phase7Complete": false,
+    "phase8Entered": false
+  },
+  "nextAction": "EXPLICIT_AUTHORIZATION_REQUIRED_TO_ALIGN_NEXT_PUBLIC_SITE_URL_WITH_WWW_GREANLEAN_COM_OR_BUILD_AND_VERIFY_A_NEW_RC"
+}
