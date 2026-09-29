@@ -150,7 +150,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       if (!active) return;
 
       if (!session?.user) {
-        router.replace(`/login?lang=${locale}`);
+        const returnTo = `${pathname}?lang=${locale}`;
+        router.replace(`/login?lang=${locale}&next=${encodeURIComponent(returnTo)}`);
         return;
       }
 

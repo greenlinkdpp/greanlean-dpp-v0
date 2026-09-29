@@ -83,7 +83,12 @@ test("dashboard and internal APIs require database-backed role and product ident
 });
 
 test("login return paths reject protocol-relative redirects", async () => {
-  const login = await readFile("app/login/page.tsx", "utf8");
-  assert.match(login, /requestedNext\?\.startsWith\("\/"\)/);
-  assert.match(login, /!requestedNext\.startsWith\("\/\/"\)/);
+  const [login, navigation] = await Promise.all([
+    readFile("app/login/page.tsx", "utf8"),
+    readFile("lib/navigation.ts", "utf8"),
+  ]);
+  assert.match(login, /safeLoginReturnPath/);
+  assert.match(navigation, /!requested\.startsWith\("\/"\)/);
+  assert.match(navigation, /requested\.startsWith\("\/\/"\)/);
+  assert.match(navigation, /requested\.includes\("\\\\"\)/);
 });

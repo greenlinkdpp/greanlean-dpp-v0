@@ -55,6 +55,8 @@ const messages = {
     manufacturer: "Manufacturer",
     authority: "Authority",
     language: "中文",
+    home: "GreanLean Home",
+    login: "Platform Login",
     skip: "Skip to passport content",
   },
   zh: {
@@ -91,6 +93,8 @@ const messages = {
     manufacturer: "制造商",
     authority: "监管机构",
     language: "English",
+    home: "GreanLean 首页",
+    login: "平台登录",
     skip: "跳转到护照内容",
   },
 } as const;
@@ -253,7 +257,7 @@ export function ProductizedDppPage({ projection, locale, previewRole, audiencePr
     <main className="min-h-screen bg-[#f4f7f5] text-slate-950">
       <a href="#passport-content" className="sr-only z-50 rounded bg-white p-3 focus:not-sr-only focus:fixed focus:left-3 focus:top-3">{m.skip}</a>
       <header className="border-b border-emerald-950/10 bg-emerald-950 text-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8"><Link href="/" className="min-h-11 py-2 text-xl font-semibold tracking-tight"><span className="brand-wordmark !bg-none !text-white !shadow-none">GREANLEAN</span></Link><Link href={`${basePath}?lang=${otherLocale}${previewQuery}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.language}</Link></div>
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8"><Link href={`/?lang=${locale}`} className="inline-flex min-h-11 items-center gap-3 py-2 text-sm font-semibold tracking-tight"><span className="brand-wordmark !bg-none !text-xl !text-white !shadow-none">GREANLEAN</span><span className="hidden text-emerald-100 sm:inline">{m.home}</span></Link><nav aria-label={locale === "zh" ? "账户与语言" : "Account and language"} className="flex items-center gap-2"><Link href={`/login?lang=${locale}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.login}</Link><Link href={`${basePath}?lang=${otherLocale}${previewQuery}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.language}</Link></nav></div>
       </header>
       {audiencePreviewEnabled ? <div className="border-b border-sky-200 bg-sky-50"><div className="mx-auto max-w-7xl px-5 py-4 sm:px-8"><div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-xs font-bold tracking-[.16em] text-sky-900">{m.preview}</p><p className="mt-1 text-sm text-sky-800">{m.previewWarning}</p></div><nav aria-label={m.preview} className="flex gap-2 overflow-x-auto pb-1">{(["PUBLIC", "REPAIRER", "RECYCLER", "MANUFACTURER", "AUTHORITY"] as PreviewRole[]).map((role) => { const grant = previewGrants?.[role]; return <Link key={role} href={`${basePath}?lang=${locale}&audience=${role}${grant ? `&audienceGrant=${encodeURIComponent(grant)}` : ""}`} className={`inline-flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-semibold ring-1 ring-inset ${previewRole === role ? "bg-sky-900 text-white ring-sky-900" : "bg-white text-sky-900 ring-sky-200"}`}>{m[role.toLowerCase() as keyof typeof m]}</Link>; })}</nav></div></div></div> : null}
       <section className="relative overflow-hidden bg-emerald-950 text-white"><div className="absolute inset-0 opacity-30 dpp-grid" /><div className="relative mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_300px] lg:py-16"><div><div className="flex flex-wrap gap-2"><StatusBadge tone="green">{view.brand}</StatusBadge><StatusBadge tone="blue">{view.category ? humanizeFieldKey(view.category) : m.passport}</StatusBadge><StatusBadge tone="amber">{m.unverified}</StatusBadge></div><p className="mt-7 text-sm font-semibold uppercase tracking-[.2em] text-emerald-300">{m.passport}</p><h1 className="mt-3 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">{view.productName}</h1><p className="mt-5 text-lg text-emerald-100">{view.modelCode} · {projection.passportIdentifier}</p><div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-emerald-100"><span><strong className="text-white">{m.status}:</strong> {projection.status}</span><span><strong className="text-white">{m.updated}:</strong> {dateValue(projection.publishedAt, locale)}</span></div></div><div className="flex items-center justify-center"><div className="rounded-2xl bg-white p-4 text-center text-slate-900 shadow-2xl"><img src={qrUrl} width={220} height={220} alt={`${m.scan}: ${projection.passportIdentifier}`} className="h-auto w-[220px] max-w-full" /><p className="mt-3 max-w-[220px] text-xs font-semibold text-slate-600">{m.scan}</p></div></div></div></section>

@@ -20,7 +20,7 @@ export function PublicHeader() {
           cases: "产品护照案例",
           regulations: "法规与时间线",
           contact: "联系我们",
-          login: "DPP 登录",
+          login: "平台登录",
           menu: "打开导航菜单",
           close: "关闭导航菜单",
         }
@@ -32,7 +32,7 @@ export function PublicHeader() {
           cases: "Passport cases",
           regulations: "Regulations",
           contact: "Contact",
-          login: "DPP login",
+          login: "Platform Login",
           menu: "Open navigation menu",
           close: "Close navigation menu",
         };

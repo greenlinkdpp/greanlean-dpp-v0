@@ -6,6 +6,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { LeadForm } from "@/components/LeadForm";
 import { PublicHeader } from "@/components/PublicHeader";
 import { useLanguage } from "@/components/LanguageProvider";
+import { localizedPath, PRIMARY_V2_DEMO_PATH } from "@/lib/navigation";
 
 type Locale = "zh" | "en";
 
@@ -18,7 +19,8 @@ const COPY = {
       "GreanLean 将法规要求转化为行业字段、证据清单和发布流程，帮助企业建立可扫码、可追溯、可持续更新的数字产品护照。",
     heroSupport:
       "覆盖 ESPR 与欧盟电池法规映射、GS1 标识、BatteryPass 数据校验、访问权限、Registry 对接准备及生命周期数据维护。",
-    heroPrimary: "查看产品护照案例",
+    heroPrimary: "查看 DPP Demo",
+    heroLogin: "平台登录",
     heroAssessment: "电池适用性初评",
     heroSecondary: "了解平台流程",
     heroFacts: [
@@ -259,7 +261,8 @@ const COPY = {
       "GreanLean translates regulatory requirements into sector fields, evidence checklists and publication workflows for scannable, traceable and maintainable product passports.",
     heroSupport:
       "ESPR and EU Battery Regulation mappings, GS1 identifiers, BatteryPass validation, access control, Registry readiness and lifecycle data in one platform.",
-    heroPrimary: "Explore passport cases",
+    heroPrimary: "View DPP Demo",
+    heroLogin: "Platform Login",
     heroAssessment: "Assess battery scope",
     heroSecondary: "See how it works",
     heroFacts: [
@@ -489,7 +492,7 @@ const COPY = {
     footerBattery: "Battery Passport",
     footerCases: "Passport cases",
     footerContact: "Contact",
-    footerLogin: "DPP login",
+    footerLogin: "DPP Platform",
     footerCopyright: "© 2026 GreanLean. All rights reserved.",
   },
 } as const;
@@ -527,12 +530,15 @@ export default function Home() {
               </p>
               <p className="mt-3 max-w-2xl text-base leading-7 text-slate-300">{t.heroSupport}</p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href={`/battery-applicability?lang=${locale}`} className="btn-primary">
+                <Link href={localizedPath(PRIMARY_V2_DEMO_PATH, locale)} className="btn-primary">
+                  {t.heroPrimary}
+                </Link>
+                <Link href={`/login?lang=${locale}`} className="btn-secondary border-white/25 bg-white/10 text-white hover:bg-white hover:text-slate-950">
+                  {t.heroLogin}
+                </Link>
+                <Link href={`/battery-applicability?lang=${locale}`} className="btn-secondary border-white/25 bg-white/10 text-white hover:bg-white hover:text-slate-950">
                   {t.heroAssessment}
                 </Link>
-                <a href="#passport-cases" className="btn-primary">
-                  {t.heroPrimary}
-                </a>
                 <a href="#workflow" className="btn-secondary border-white/25 bg-white/10 text-white hover:bg-white hover:text-slate-950">
                   {t.heroSecondary}
                 </a>
@@ -638,9 +644,9 @@ export default function Home() {
                 <div className="mt-8">
                   <p className="text-sm font-bold text-slate-400">{t.batteryDateLabel}</p>
                   <p className="mt-2 text-3xl font-black text-white">{t.batteryDate}</p>
-                  <a href="#passport-cases" className="btn-primary mt-6">
+                  <Link href={localizedPath(PRIMARY_V2_DEMO_PATH, locale)} className="btn-primary mt-6">
                     {t.batteryCta}
-                  </a>
+                  </Link>
                 </div>
               </div>
 

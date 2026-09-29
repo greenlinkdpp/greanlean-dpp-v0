@@ -5,12 +5,11 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { createSupabaseClient } from "@/lib/supabase";
 import { BrandLogo } from "@/components/BrandLogo";
+import { safeLoginReturnPath } from "@/lib/navigation";
 
 function safeNextPath(locale: string) {
   const requestedNext = new URLSearchParams(window.location.search).get("next");
-  return requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
-    ? requestedNext
-    : `/dashboard?lang=${locale}`;
+  return safeLoginReturnPath(requestedNext, locale === "en" ? "en" : "zh");
 }
 
 function normalizeLoginIdentifier(value: string) {
@@ -134,8 +133,9 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="label">{t.identifier}</label>
+              <label htmlFor="login-identifier" className="label">{t.identifier}</label>
               <input
+                id="login-identifier"
                 name="identifier"
                 type="text"
                 autoCapitalize="none"
@@ -148,8 +148,9 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="label">{t.password}</label>
+              <label htmlFor="login-password" className="label">{t.password}</label>
               <input
+                id="login-password"
                 name="password"
                 type="password"
                 required
