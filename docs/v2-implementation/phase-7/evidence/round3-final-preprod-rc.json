@@ -1,0 +1,60 @@
+{
+  "round": "3",
+  "result": "PASS",
+  "baseline": {
+    "round2RcCommit": "a5c00697eb5a4bf9bbf7f03b7fe2f0102348eff3",
+    "round2RcTree": "07ef978495703df6a94160952bfbabea34a105a7"
+  },
+  "changedAreas": [
+    "candidate and review detail",
+    "approval and publication feedback",
+    "immutable version/current pointer workspace",
+    "resolver and QR workspace",
+    "official public DPP logo integration"
+  ],
+  "preprod": {
+    "project": "greanlean-dpp-preprod",
+    "supabaseRef": "efhiaufukjchxqhbmpvq",
+    "deploymentId": "dpl_At5hfxvkeq4cQsqLTdXBHE67AcYJ",
+    "immutableUrl": "https://greanlean-dpp-preprod-pssgn6gdt-songweinie-1175s-projects.vercel.app",
+    "stableAlias": "https://greanlean-dpp-preprod.vercel.app",
+    "migrationHead": "0036"
+  },
+  "verification": {
+    "candidateWorkspace": "PASS",
+    "reviewWorkspace": "PASS",
+    "approvalWorkflow": "PASS",
+    "publicationWorkflow": "PASS",
+    "immutableVersion": "PASS",
+    "currentPointer": "PASS",
+    "versionHistory": "PASS",
+    "resolverWorkspace": "PASS",
+    "qrWorkspace": "PASS",
+    "publicDppEnglish": "PASS",
+    "publicDppChinese": "PASS",
+    "publicDppMobileChinese": "PASS",
+    "backofficeBrowserQa": "PASS",
+    "restrictedAudienceAnonymousAccess": "DENIED",
+    "publicDataLeakage": "NONE"
+  },
+  "referenceIntegrity": {
+    "models": 8,
+    "skus": 22,
+    "individuals": 22,
+    "claims": 374,
+    "passports": 22,
+    "versions": 22,
+    "currentPointers": 22,
+    "resolverMappings": 22,
+    "bmsSnapshots": 22,
+    "publishedVersionMutation": "NONE"
+  },
+  "production": {
+    "deployed": "NO",
+    "dataWritePerformed": "NO",
+    "trafficSwitched": "NO",
+    "fileImportEnabled": "NO",
+    "registryEnabled": "NO",
+    "observationImpact": "NONE"
+  }
+}
