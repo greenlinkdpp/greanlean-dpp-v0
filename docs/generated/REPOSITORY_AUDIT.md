@@ -1,7 +1,7 @@
 # Repository Audit
 
 审核日期：2026-08-03  
-审核范围：`/Users/david/DPP/greanlean-dpp-v0` 当前工作树  
+审核范围：当前仓库根目录工作树
 基线：`Greanlean_Codex_审核开发执行包_V1.0/`
 
 ## 1. 结论

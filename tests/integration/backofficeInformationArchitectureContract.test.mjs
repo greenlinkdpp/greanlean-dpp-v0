@@ -54,6 +54,13 @@ test("partner navigation exposes V2 only when a server-authorised V2 context exi
   assert.match(shell, /!identity\.isPlatformAdmin && !partnerRouteAllowed/);
 });
 
+test("V2 backoffice defaults to the neutral internal reference Tenant", async () => {
+  const consoleSource = await readFile("components/v2/backoffice/BackofficeConsole.tsx", "utf8");
+
+  assert.match(consoleSource, /item\.tenantCode === "greanlean-reference-mobility"/);
+  assert.doesNotMatch(consoleSource, /tenantName\.toLowerCase\(\)\.includes\("soodoo"\)/i);
+});
+
 test("login accepts the Orintent username alias and dark surfaces use the white logo", async () => {
   const [login, shell, logo] = await Promise.all([
     readFile("app/login/page.tsx", "utf8"),

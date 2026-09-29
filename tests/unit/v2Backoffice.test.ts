@@ -5,7 +5,7 @@ import { backofficeNavigation, dashboardMetrics, mappingStatus, modelRelationshi
 function snapshot(overrides: Partial<BackofficeSnapshot> = {}): BackofficeSnapshot {
   const keys = ["organisations","memberships","partnerAuthorizations","families","models","skus","batches","batchSkuLinks","items","identifiers","dataSources","sourceRecords","mappingProfiles","mappingVersions","mappingRules","transformations","provenance","claims","fields","validationRules","accessPolicies","passports","reviews","versions","currentPointers","resolverMappings","publicationAudit","connectors","connectorDefinitions","connectorJobs","connectorAttempts","connectorReceipts","deadLetters","importSessions","registrySubmissions","bmsSnapshots","connectorAudit","policyAudit"] as const;
   const empty = Object.fromEntries(keys.map((key) => [key, []])) as unknown as BackofficeSnapshot;
-  return { ...empty, generatedAt: "2026-09-27T00:00:00Z", tenant: { id: "tenant-1", name: "SOODOO E-bike" }, ...overrides };
+  return { ...empty, generatedAt: "2026-09-27T00:00:00Z", tenant: { id: "tenant-1", name: "GreanLean Reference Mobility" }, ...overrides };
 }
 
 test("backoffice exposes every required operating area", () => {

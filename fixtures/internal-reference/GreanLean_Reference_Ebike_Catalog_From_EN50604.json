@@ -1,0 +1,569 @@
+{
+  "fixture_classification": "INTERNAL_SYNTHETIC_REFERENCE",
+  "customer_verified": false,
+  "regulatory_submission_allowed": false,
+  "registry_submission_allowed": false,
+  "source_file": "EN-50604(3).xlsx",
+  "source_interpretation_note": "The uploaded workbook is treated only as a product specification/price-list reference. Its filename is not evidence of EN 50604-1 compliance.",
+  "virtual_tenant": {
+    "name": "GreanLean Reference Mobility",
+    "brand": "GreanLean Reference",
+    "organisation_name": "GreanLean Reference Mobility Ltd. (Synthetic)",
+    "classification": "SYNTHETIC_NON_CUSTOMER"
+  },
+  "family": {
+    "code": "GLR-EBIKE-BATTERY",
+    "name": "E-Bike Battery Pack Reference Family"
+  },
+  "catalog_summary": {
+    "model_count": 8,
+    "sku_count": 22,
+    "batch_count": 8,
+    "individual_count_target": 22,
+    "passport_count_target": 22
+  },
+  "models": [
+    {
+      "source_model_code": "TL-EB-P25.2A",
+      "synthetic_model_code": "GLR-P25A",
+      "voltage_v": 25.2,
+      "battery_type": "LI-ION",
+      "cell_format": "18650",
+      "configuration": "7S6P",
+      "source_rows": "6-15",
+      "variants": [
+        {
+          "capacity_ah": 13.2,
+          "cell_capacity_mah": 2200,
+          "rated_energy_wh_derived": 332.64,
+          "synthetic_sku": "GLR-P25A-13P2AH",
+          "synthetic_batch": "DEMO-2026-GLR-P25A",
+          "synthetic_serial": "GLR26-0001",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000001",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 15.6,
+          "cell_capacity_mah": 2600,
+          "rated_energy_wh_derived": 393.12,
+          "synthetic_sku": "GLR-P25A-15P6AH",
+          "synthetic_batch": "DEMO-2026-GLR-P25A",
+          "synthetic_serial": "GLR26-0002",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000002",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 17.4,
+          "cell_capacity_mah": 2900,
+          "rated_energy_wh_derived": 438.48,
+          "synthetic_sku": "GLR-P25A-17P4AH",
+          "synthetic_batch": "DEMO-2026-GLR-P25A",
+          "synthetic_serial": "GLR26-0003",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000003",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        }
+      ],
+      "series_count": 7,
+      "parallel_count": 6,
+      "cell_count": 42
+    },
+    {
+      "source_model_code": "TL-EB-P25.2B",
+      "synthetic_model_code": "GLR-P25B",
+      "voltage_v": 25.2,
+      "battery_type": "LI-ION",
+      "cell_format": "18650",
+      "configuration": "7S8P",
+      "source_rows": "18-27",
+      "variants": [
+        {
+          "capacity_ah": 20.8,
+          "cell_capacity_mah": 2600,
+          "rated_energy_wh_derived": 524.16,
+          "synthetic_sku": "GLR-P25B-20P8AH",
+          "synthetic_batch": "DEMO-2026-GLR-P25B",
+          "synthetic_serial": "GLR26-0004",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000004",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 23.2,
+          "cell_capacity_mah": 2900,
+          "rated_energy_wh_derived": 584.64,
+          "synthetic_sku": "GLR-P25B-23P2AH",
+          "synthetic_batch": "DEMO-2026-GLR-P25B",
+          "synthetic_serial": "GLR26-0005",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000005",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 27.2,
+          "cell_capacity_mah": 3400,
+          "rated_energy_wh_derived": 685.44,
+          "synthetic_sku": "GLR-P25B-27P2AH",
+          "synthetic_batch": "DEMO-2026-GLR-P25B",
+          "synthetic_serial": "GLR26-0006",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000006",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        }
+      ],
+      "series_count": 7,
+      "parallel_count": 8,
+      "cell_count": 56
+    },
+    {
+      "source_model_code": "TL-BOS-E36A",
+      "synthetic_model_code": "GLR-E36A",
+      "voltage_v": 36.0,
+      "battery_type": "LI-ION",
+      "cell_format": "18650",
+      "configuration": "10S4P",
+      "source_rows": "30-35",
+      "variants": [
+        {
+          "capacity_ah": 10.4,
+          "cell_capacity_mah": 2600,
+          "rated_energy_wh_derived": 374.4,
+          "synthetic_sku": "GLR-E36A-10P4AH",
+          "synthetic_batch": "DEMO-2026-GLR-E36A",
+          "synthetic_serial": "GLR26-0007",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000007",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 11.6,
+          "cell_capacity_mah": 2900,
+          "rated_energy_wh_derived": 417.6,
+          "synthetic_sku": "GLR-E36A-11P6AH",
+          "synthetic_batch": "DEMO-2026-GLR-E36A",
+          "synthetic_serial": "GLR26-0008",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000008",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        }
+      ],
+      "series_count": 10,
+      "parallel_count": 4,
+      "cell_count": 40
+    },
+    {
+      "source_model_code": "TL-BOS-E36B",
+      "synthetic_model_code": "GLR-E36B",
+      "voltage_v": 36.0,
+      "battery_type": "LI-ION",
+      "cell_format": "18650",
+      "configuration": "10S4P",
+      "source_rows": "38-43",
+      "variants": [
+        {
+          "capacity_ah": 10.4,
+          "cell_capacity_mah": 2600,
+          "rated_energy_wh_derived": 374.4,
+          "synthetic_sku": "GLR-E36B-10P4AH",
+          "synthetic_batch": "DEMO-2026-GLR-E36B",
+          "synthetic_serial": "GLR26-0009",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000009",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 11.6,
+          "cell_capacity_mah": 2900,
+          "rated_energy_wh_derived": 417.6,
+          "synthetic_sku": "GLR-E36B-11P6AH",
+          "synthetic_batch": "DEMO-2026-GLR-E36B",
+          "synthetic_serial": "GLR26-0010",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000010",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        }
+      ],
+      "series_count": 10,
+      "parallel_count": 4,
+      "cell_count": 40
+    },
+    {
+      "source_model_code": "TL-EB-P36A",
+      "synthetic_model_code": "GLR-P36A",
+      "voltage_v": 36.0,
+      "battery_type": "LI-ION",
+      "cell_format": "18650",
+      "configuration": "10S5P",
+      "source_rows": "46-55",
+      "variants": [
+        {
+          "capacity_ah": 13.0,
+          "cell_capacity_mah": 2600,
+          "rated_energy_wh_derived": 468.0,
+          "synthetic_sku": "GLR-P36A-13P0AH",
+          "synthetic_batch": "DEMO-2026-GLR-P36A",
+          "synthetic_serial": "GLR26-0011",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000011",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 14.5,
+          "cell_capacity_mah": 2900,
+          "rated_energy_wh_derived": 522.0,
+          "synthetic_sku": "GLR-P36A-14P5AH",
+          "synthetic_batch": "DEMO-2026-GLR-P36A",
+          "synthetic_serial": "GLR26-0012",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000012",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 17.0,
+          "cell_capacity_mah": 3400,
+          "rated_energy_wh_derived": 612.0,
+          "synthetic_sku": "GLR-P36A-17P0AH",
+          "synthetic_batch": "DEMO-2026-GLR-P36A",
+          "synthetic_serial": "GLR26-0013",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000013",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        }
+      ],
+      "series_count": 10,
+      "parallel_count": 5,
+      "cell_count": 50
+    },
+    {
+      "source_model_code": "TL-EB-Y36A",
+      "synthetic_model_code": "GLR-Y36A",
+      "voltage_v": 36.0,
+      "battery_type": "LI-ION",
+      "cell_format": "18650",
+      "configuration": "10S5P",
+      "source_rows": "58-67",
+      "variants": [
+        {
+          "capacity_ah": 13.0,
+          "cell_capacity_mah": 2600,
+          "rated_energy_wh_derived": 468.0,
+          "synthetic_sku": "GLR-Y36A-13P0AH",
+          "synthetic_batch": "DEMO-2026-GLR-Y36A",
+          "synthetic_serial": "GLR26-0014",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000014",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 14.5,
+          "cell_capacity_mah": 2900,
+          "rated_energy_wh_derived": 522.0,
+          "synthetic_sku": "GLR-Y36A-14P5AH",
+          "synthetic_batch": "DEMO-2026-GLR-Y36A",
+          "synthetic_serial": "GLR26-0015",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000015",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 17.0,
+          "cell_capacity_mah": 3400,
+          "rated_energy_wh_derived": 612.0,
+          "synthetic_sku": "GLR-Y36A-17P0AH",
+          "synthetic_batch": "DEMO-2026-GLR-Y36A",
+          "synthetic_serial": "GLR26-0016",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000016",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        }
+      ],
+      "series_count": 10,
+      "parallel_count": 5,
+      "cell_count": 50
+    },
+    {
+      "source_model_code": "TL-EB-S24B",
+      "synthetic_model_code": "GLR-S24B",
+      "voltage_v": 24.0,
+      "battery_type": "LI-ION",
+      "cell_format": "18650",
+      "configuration": "7S4P",
+      "source_rows": "70-79",
+      "variants": [
+        {
+          "capacity_ah": 10.4,
+          "cell_capacity_mah": 2600,
+          "rated_energy_wh_derived": 249.6,
+          "synthetic_sku": "GLR-S24B-10P4AH",
+          "synthetic_batch": "DEMO-2026-GLR-S24B",
+          "synthetic_serial": "GLR26-0017",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000017",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 11.6,
+          "cell_capacity_mah": 2900,
+          "rated_energy_wh_derived": 278.4,
+          "synthetic_sku": "GLR-S24B-11P6AH",
+          "synthetic_batch": "DEMO-2026-GLR-S24B",
+          "synthetic_serial": "GLR26-0018",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000018",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 13.6,
+          "cell_capacity_mah": 3400,
+          "rated_energy_wh_derived": 326.4,
+          "synthetic_sku": "GLR-S24B-13P6AH",
+          "synthetic_batch": "DEMO-2026-GLR-S24B",
+          "synthetic_serial": "GLR26-0019",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000019",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        }
+      ],
+      "series_count": 7,
+      "parallel_count": 4,
+      "cell_count": 28
+    },
+    {
+      "source_model_code": "TL-EB-S36B",
+      "synthetic_model_code": "GLR-S36B",
+      "voltage_v": 36.0,
+      "battery_type": "LI-ION",
+      "cell_format": "18650",
+      "configuration": "10S4P",
+      "source_rows": "82-91",
+      "variants": [
+        {
+          "capacity_ah": 10.4,
+          "cell_capacity_mah": 2600,
+          "rated_energy_wh_derived": 374.4,
+          "synthetic_sku": "GLR-S36B-10P4AH",
+          "synthetic_batch": "DEMO-2026-GLR-S36B",
+          "synthetic_serial": "GLR26-0020",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000020",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 11.6,
+          "cell_capacity_mah": 2900,
+          "rated_energy_wh_derived": 417.6,
+          "synthetic_sku": "GLR-S36B-11P6AH",
+          "synthetic_batch": "DEMO-2026-GLR-S36B",
+          "synthetic_serial": "GLR26-0021",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000021",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        },
+        {
+          "capacity_ah": 13.6,
+          "cell_capacity_mah": 3400,
+          "rated_energy_wh_derived": 489.6,
+          "synthetic_sku": "GLR-S36B-13P6AH",
+          "synthetic_batch": "DEMO-2026-GLR-S36B",
+          "synthetic_serial": "GLR26-0022",
+          "synthetic_dpp_id": "DPP-GLR-EBIKE-000022",
+          "source_provenance": {
+            "model_code": "SOURCE_SPREADSHEET",
+            "voltage": "SOURCE_SPREADSHEET",
+            "battery_type": "SOURCE_SPREADSHEET",
+            "cell_format": "SOURCE_SPREADSHEET",
+            "capacity": "SOURCE_SPREADSHEET",
+            "configuration": "SOURCE_SPREADSHEET",
+            "cell_capacity": "SOURCE_SPREADSHEET",
+            "rated_energy_wh": "DERIVED_ARITHMETIC"
+          }
+        }
+      ],
+      "series_count": 10,
+      "parallel_count": 4,
+      "cell_count": 40
+    }
+  ],
+  "global_rules": {
+    "model_strategy": "one Product Model per unique source model code",
+    "sku_strategy": "one SKU per capacity/cell-capacity variant",
+    "batch_strategy": "one synthetic Model-owned Batch per Model, linked to all SKUs of that Model",
+    "individual_strategy": "one synthetic Individual per SKU for end-to-end QA",
+    "passport_strategy": "one Individual-level DPP per synthetic Individual",
+    "do_not_publish_source_vendor_identity": true,
+    "do_not_infer_registered_gtin": true,
+    "do_not_infer_compliance_from_filename": true,
+    "unknown_chemistry_rule": "Do not infer NMC/LFP/NCA; preserve chemistry as generic LI-ION unless synthetic-demo-only placeholder is explicitly used.",
+    "public_warning_required": true
+  }
+}

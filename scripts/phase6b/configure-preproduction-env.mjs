@@ -1,13 +1,14 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { chmod, writeFile } from "node:fs/promises";
+import { dirname } from "node:path";
 import process from "node:process";
 
 const projectRef = "efhiaufukjchxqhbmpvq";
 const productionRef = "lpxdbysgmdsjhxrjzhly";
 const developmentRef = "qlrbrwrpvtnlphajvqao";
 const outputPath = ".env.preproduction.local";
-const nodeBin = "/Users/david/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin";
+const nodeBin = dirname(process.execPath);
 
 if (projectRef === productionRef || projectRef === developmentRef) {
   throw new Error("REFUSED: Pre-Production target collides with a protected project.");

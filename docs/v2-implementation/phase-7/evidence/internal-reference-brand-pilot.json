@@ -1,0 +1,118 @@
+{
+  "status": "PASS",
+  "environment": "HOSTED_PREPROD",
+  "migrationHead": "0035",
+  "fixture": {
+    "sourceFile": "EN-50604(3).xlsx",
+    "fixtureSha256": "018c60c9db81d621aa439d5f801d5aad2756d29be4762bb85d106b2735425222",
+    "classification": "INTERNAL_SYNTHETIC_REFERENCE",
+    "customerVerified": false,
+    "registrySubmissionAllowed": false,
+    "regulatorySubmissionAllowed": false
+  },
+  "tenant": {
+    "id": "bbfcbe5f-9786-4fcb-af32-9dbac33f2a4b",
+    "name": "GreanLean Reference Mobility",
+    "brand": "GreanLean Reference",
+    "organisationId": "43ab1d4c-27de-420c-8773-0dfb5bf643c0",
+    "organisationName": "GreanLean Reference Mobility Ltd. (Synthetic)"
+  },
+  "workflow": {
+    "dataSourceId": "2b456927-f402-4405-a899-18c0aded4840",
+    "mappingVersionId": "7bf09454-5508-44e0-b79e-0626e7df3a26",
+    "schemaDefinitionId": "0fbf0ecc-a3bf-41c2-819e-50f6794eb799",
+    "schemaVersionId": "f5b8bbc2-b3b6-4440-841f-bc6ce3a54e92",
+    "importMapping": "PASS",
+    "validation": "PASS",
+    "publication": "PASS",
+    "resolver": "PASS",
+    "qr": "PASS",
+    "audienceProjection": "PASS",
+    "productizedUi": "PASS",
+    "backoffice": "PASS"
+  },
+  "preprodDeployment": {
+    "id": "dpl_CjY6fVs8rJXv1qC2WUUnvpYQRKgR",
+    "readyState": "READY",
+    "immutableUrl": "https://greanlean-dpp-preprod-1jz39rdvu-songweinie-1175s-projects.vercel.app",
+    "stableAlias": "https://greanlean-dpp-preprod.vercel.app",
+    "projectId": "prj_rPT3dmT1ct9LQytAqyb0rWwm4ILs",
+    "defaultTenantCode": "greanlean-reference-mobility"
+  },
+  "counts": {
+    "families": 1,
+    "models": 8,
+    "skus": 22,
+    "batches": 8,
+    "batchSkuLinks": 22,
+    "individuals": 22,
+    "sourceRecords": 22,
+    "transformations": 22,
+    "provenanceRecords": 374,
+    "canonicalClaims": 374,
+    "passports": 22,
+    "reviews": 22,
+    "versions": 22,
+    "currentPointers": 22,
+    "resolverMappings": 22,
+    "bmsSnapshots": 22,
+    "registrySubmissions": 0
+  },
+  "provenanceCounts": {
+    "sourceSpreadsheetFacts": 154,
+    "derivedArithmeticFacts": 46,
+    "syntheticDemoFieldGroups": 286
+  },
+  "leakage": {
+    "publicDataLeakage": "NONE",
+    "sourceVendorPublicLeakage": "NONE",
+    "unverifiedFalseVerifiedText": "NONE"
+  },
+  "soodoo": {
+    "retained": true,
+    "hardDeleted": false,
+    "activeDemo": false,
+    "defaultDemo": false,
+    "demoStatus": "DEPRECATED_FOR_DEFAULT_DEMO",
+    "retainedForRegression": true
+  },
+  "idempotency": {
+    "status": "PASS",
+    "runsCompared": 2,
+    "countsUnchanged": true,
+    "stableResourceIds": true,
+    "duplicateVersionsCreated": false
+  },
+  "verification": {
+    "fixtureContractTests": 5,
+    "repositoryTests": 229,
+    "migrationTests": 56,
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "resolverChecks": 22,
+    "resolverHttp200": 22,
+    "qrContentType": "image/png",
+    "browserScreenshotCaptured": false,
+    "browserScreenshotNote": "Browser automation timed out; Hosted HTML/API/QR and authenticated Backoffice snapshot checks passed."
+  },
+  "boundaries": {
+    "registrySubmissionPerformed": false,
+    "productionDataWritePerformed": false,
+    "productionDeploymentChanged": false,
+    "productionTrafficSwitched": false,
+    "phase8Entered": false
+  },
+  "productionReadOnlyRecheck": {
+    "migrationHead": "0035",
+    "referenceTenantCount": 0,
+    "homepageHttpStatus": 200,
+    "representativeV1DppHttpStatus": 200,
+    "representativeV1ApiHttpStatus": 200,
+    "loginHttpStatus": 200
+  },
+  "classification": {
+    "technicalReferencePilot": "READY",
+    "realCustomerPilot": "NOT_STARTED"
+  }
+}
