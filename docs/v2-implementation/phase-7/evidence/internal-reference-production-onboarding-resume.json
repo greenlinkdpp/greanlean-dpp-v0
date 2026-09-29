@@ -1,0 +1,177 @@
+{
+  "generatedAt": "2026-09-29T05:31:00Z",
+  "result": "FAIL",
+  "authoringGate": {
+    "result": "PASS",
+    "featureGateSeparation": "PASS",
+    "codeChangePerformed": false,
+    "enabledFlags": [
+      "FEATURE_SERVER_API_V2",
+      "FEATURE_V2_ACCESS_POLICY",
+      "FEATURE_V2_CANONICAL_DATA",
+      "FEATURE_V2_DPP_PASSPORT",
+      "FEATURE_V2_DPP_PUBLICATION",
+      "FEATURE_V2_DPP_REVIEW",
+      "FEATURE_V2_INTEGRATION_CORE",
+      "FEATURE_V2_PARTNER",
+      "FEATURE_V2_PRODUCT_CORE",
+      "FEATURE_V2_PROVENANCE",
+      "FEATURE_V2_PUBLICATION_WRITE",
+      "FEATURE_V2_RESOLUTION_ENGINE",
+      "FEATURE_V2_RESOLVER",
+      "FEATURE_V2_SCHEMA_CORE",
+      "FEATURE_V2_TENANT_API",
+      "FEATURE_V2_TENANT_CORE"
+    ],
+    "publicFlags": {
+      "FEATURE_V2_PUBLIC_READ": false,
+      "FEATURE_V2_PUBLIC_PROJECTION": false
+    },
+    "externalExecutionFlags": {
+      "FEATURE_V2_REGISTRY_TEST": false,
+      "FEATURE_V2_EXTERNAL_CONNECTORS": false,
+      "FEATURE_V2_CONNECTOR_EXECUTION": false
+    },
+    "liveProbe": {
+      "mappingDryRunUnauthenticatedStatus": 401,
+      "mappingDryRunCode": "AUTH_REQUIRED",
+      "publicReferenceResolverStatus": 404,
+      "publicReferenceResolverCode": "V2_FEATURE_DISABLED"
+    }
+  },
+  "releaseCandidate": {
+    "reference": "codex/phase7-internal-reference-confirmed-write-rc",
+    "commit": "b4412f0a32f0e91c3b16f6bc7017f8ee7a9de773",
+    "tree": "166c65c46bdadf9ba4a31759dfd21a2d22d2c1f7",
+    "deployedRcMatch": true
+  },
+  "deployment": {
+    "previousDeploymentId": "dpl_E6SqW2kKTseE1jYajt5k6uutE56p",
+    "newDeploymentId": "dpl_6poWp5p95At2hq4jbUAn1hZkQo3y",
+    "immutableUrl": "https://greanlean-dpp-v0-ljivv75pj-songweinie-1175s-projects.vercel.app",
+    "readyState": "READY",
+    "target": "production",
+    "migrationHead": "0035"
+  },
+  "backup": {
+    "gate": "PASS",
+    "reference": "1811221013",
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "status": "COMPLETED",
+    "completedAt": "2026-09-28T16:53:51.066Z",
+    "checkedAt": "2026-09-29T05:16:01.057Z",
+    "ageHours": 12.37
+  },
+  "preResume": {
+    "partialStateReconciliation": "PASS",
+    "tenantId": "632943cf-520b-47ac-83af-88ca866d4fa5",
+    "sourceRecords": 1,
+    "transformations": 0,
+    "canonicalClaims": 0,
+    "provenanceRecords": 0,
+    "passports": 0,
+    "immutableVersions": 0,
+    "foreignNaturalKeyCollisions": 0,
+    "duplicateHierarchyObjects": 0
+  },
+  "resume": {
+    "result": "FAIL",
+    "failureCheckpoint": "FIRST_RESOLVER_MAPPING",
+    "httpStatus": 409,
+    "code": "RESOLVER_OPEN_REDIRECT",
+    "newWritesStopped": true,
+    "secondResumePerformed": false,
+    "manualResolverWritePerformed": false,
+    "allowlistMutationPerformed": false
+  },
+  "currentCheckpoint": {
+    "tenantId": "632943cf-520b-47ac-83af-88ca866d4fa5",
+    "counts": {
+      "tenants": 1,
+      "organisations": 1,
+      "families": 1,
+      "models": 8,
+      "skus": 22,
+      "batches": 8,
+      "batchSkuLinks": 22,
+      "individuals": 22,
+      "dataSources": 1,
+      "sourceRecords": 22,
+      "transformations": 22,
+      "canonicalClaims": 374,
+      "provenanceRecords": 374,
+      "passports": 1,
+      "reviews": 1,
+      "immutableVersions": 1,
+      "currentPointers": 1,
+      "resolverMappings": 0,
+      "bmsSnapshots": 0,
+      "registrySubmissions": 0
+    },
+    "remainingPlan": {
+      "passports": 21,
+      "reviews": 21,
+      "immutableVersions": 21,
+      "currentPointers": 21,
+      "resolverMappings": 22,
+      "bmsSnapshots": 22
+    },
+    "publicationLedger": [
+      {
+        "passportIdentifier": "DPP-GLR-EBIKE-000001",
+        "passportId": "9bb47327-ce39-4177-b22a-72b1927c92f2",
+        "reviewId": "81fad3e1-a78f-4fec-9528-0756b789c90e",
+        "reviewStatus": "PUBLISHED",
+        "versionId": "10f9f3f0-6268-45cc-819c-bfa3f29cdc2d",
+        "version": 1,
+        "payloadHash": "37018545c5390f27895b08738d30be73e812c66390243fa440d0c94c5fd89d28",
+        "publicationState": "PUBLISHED",
+        "registryState": "NOT_REQUIRED",
+        "currentPointerMatches": true
+      }
+    ],
+    "resolverHostAllowlist": [
+      "127.0.0.1",
+      "dev.dpp.greanlean.test",
+      "greanlean-dpp-preprod.vercel.app",
+      "localhost"
+    ],
+    "requiredResolverHostPresent": false,
+    "duplicatesCreated": 0
+  },
+  "v1Continuity": {
+    "result": "PASS",
+    "migrationHead": "0035",
+    "countsUnchanged": true,
+    "http5xx": 0,
+    "unexpected4xx": 0,
+    "latencyObservation": "OPEN_FOR_PILOT_MONITORING",
+    "sampleCount": 25,
+    "routes": {
+      "homepage": { "success": "5/5", "p50Ms": 751, "p95Ms": 1157 },
+      "v1Dpp": { "success": "5/5", "p50Ms": 1851, "p95Ms": 2911 },
+      "v1Api": { "success": "5/5", "p50Ms": 3333, "p95Ms": 4128 },
+      "auth": { "success": "5/5", "p50Ms": 564, "p95Ms": 2125 },
+      "storage": { "success": "5/5", "p50Ms": 1020, "p95Ms": 1230 }
+    }
+  },
+  "boundaries": {
+    "publicDataLeakage": "NONE",
+    "sourceVendorPublicLeakage": "NONE",
+    "publicBmsLeakage": "NONE",
+    "idempotencyReconciliation": "FAIL",
+    "duplicateObjectsCreated": 0,
+    "globalV2Primary": false,
+    "referenceTenantV2Primary": false,
+    "soodooV2Primary": false,
+    "otherTenantV2Primary": false,
+    "registrySubmissionPerformed": false,
+    "realCustomerConnectorsActivated": false,
+    "formalObservationWindowStarted": false,
+    "technicalReferencePilot": "NOT_READY",
+    "realCustomerPilot": "NOT_STARTED",
+    "phase7Complete": false,
+    "phase8Entered": false
+  },
+  "nextAction": "EXPLICIT_AUTHORIZATION_REQUIRED_TO_ALLOWLIST_WWW_GREANLEAN_COM_AND_RESUME_THE_EXACT_RC"
+}
