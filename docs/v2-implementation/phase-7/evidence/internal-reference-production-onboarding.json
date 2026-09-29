@@ -1,0 +1,112 @@
+{
+  "generatedAt": "2026-09-29T00:46:18Z",
+  "result": "FAIL",
+  "status": "BLOCKED_BEFORE_PRODUCTION_ACTION",
+  "blocker": {
+    "gate": "PRODUCTION_ONBOARDING_TOOL_CONFIRMED_WRITE_PATH",
+    "instructionSection": 7,
+    "finding": "The frozen RC tool has no confirmed-write implementation and throws WRITE MODE LOCKED when the required confirmation argument is present.",
+    "rcFile": "scripts/phase7/build-internal-reference-production-pilot.mjs",
+    "rcLines": [192, 193],
+    "directDatabaseWriteWorkaroundUsed": false
+  },
+  "approvedRc": {
+    "reference": "codex/phase7-internal-reference-pilot-rc",
+    "commit": "84e432cefa7e0aef8db6acc1e321ed94ad7ed40d",
+    "tree": "a57a4b51145aeaab751a5f1587738dc819a875cf",
+    "trackedFileCount": 910,
+    "referenceMatch": true,
+    "commitMatch": true,
+    "treeMatch": true,
+    "fixtureSha256": "018c60c9db81d621aa439d5f801d5aad2756d29be4762bb85d106b2735425222",
+    "fixtureSha256Match": true,
+    "localAbsoluteFixturePathDependency": "NONE"
+  },
+  "production": {
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "currentDeploymentId": "dpl_2n7VMa4Bgs4pxtiXtzJVHQdYApgA",
+    "currentDeploymentState": "READY",
+    "newDeploymentId": null,
+    "deploymentPerformed": false,
+    "migrationHead": "0035",
+    "dataWritePerformed": false,
+    "confirmedWriteArgumentExecuted": false,
+    "freshBackupGate": "NOT_EVALUATED_BLOCKED_BEFORE_MUTATION"
+  },
+  "readOnlyPreflight": {
+    "result": "PASS",
+    "dryRunOnly": true,
+    "productionWriteAllowed": false,
+    "referenceState": {
+      "tenants": 0,
+      "models": 0,
+      "passports": 0
+    },
+    "v1Counts": {
+      "organisations": 3,
+      "projects": 0,
+      "products": 9,
+      "productVersions": 12,
+      "identifierAliases": 6
+    },
+    "collisions": {
+      "dppId": 0,
+      "serial": 0,
+      "sku": 0,
+      "modelCode": 0
+    }
+  },
+  "featureState": {
+    "globalV2Primary": false,
+    "referenceTenantV2Primary": false,
+    "soodooV2Primary": false,
+    "otherTenantV2Primary": false,
+    "registry": "OFF",
+    "registrySubmissionCount": 0,
+    "realCustomerConnectors": "OFF",
+    "activeProductionConnectorCount": 0
+  },
+  "onboardingCounts": {
+    "tenants": 0,
+    "organisations": 0,
+    "families": 0,
+    "models": 0,
+    "skus": 0,
+    "batches": 0,
+    "batchSkuLinks": 0,
+    "individuals": 0,
+    "sourceRecords": 0,
+    "transformations": 0,
+    "canonicalClaims": 0,
+    "provenanceRecords": 0,
+    "passports": 0,
+    "reviews": 0,
+    "immutableVersions": 0,
+    "currentPointers": 0,
+    "resolverMappings": 0,
+    "bmsSnapshots": 0
+  },
+  "verification": {
+    "deployedRcMatch": "NOT_RUN",
+    "v1AfterReferenceRcDeployment": "NOT_RUN",
+    "publicDataLeakage": "NOT_RUN_NO_REFERENCE_DATA",
+    "sourceVendorPublicLeakage": "NOT_RUN_NO_REFERENCE_DATA",
+    "publicBmsLeakage": "NOT_RUN_NO_REFERENCE_DATA",
+    "idempotencyReconciliation": "NOT_RUN",
+    "v1AfterReferenceDataOnboarding": "NOT_RUN"
+  },
+  "classification": {
+    "technicalReferencePilot": "NOT_READY",
+    "realCustomerPilot": "NOT_STARTED"
+  },
+  "boundaries": {
+    "productionTrafficSwitched": false,
+    "registrySubmissionPerformed": false,
+    "realCustomerConnectorsActivated": false,
+    "formalObservationWindowStarted": false,
+    "phase7Complete": false,
+    "phase8Entered": false,
+    "v1DppLatencyObservation": "OPEN_FOR_PILOT_MONITORING"
+  },
+  "requiredRemediation": "Implement and PreProd-verify the complete confirmed-write workflow, freeze and authorize a replacement RC, then re-run the fresh-backup and Production pre-write gates."
+}
