@@ -54,6 +54,8 @@ export default function LoginPage() {
           hub: "DPP 数据中心",
           importFlow: "批量导入流程",
           publish: "公开产品护照发布",
+          forgot: "忘记密码？",
+          resetSuccess: "密码已更新，请使用新密码登录。",
         }
       : {
           badge: "greanlean DPP",
@@ -68,6 +70,8 @@ export default function LoginPage() {
           hub: "DPP data hub",
           importFlow: "Bulk import workflow",
           publish: "Public passport publishing",
+          forgot: "Forgot password?",
+          resetSuccess: "Your password was updated. Sign in with the new password.",
         };
 
   const [loading, setLoading] = useState(false);
@@ -75,6 +79,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     document.title = locale === "zh" ? "登录 DPP 工作台 | GREANLEAN DPP" : "Login | GREANLEAN DPP";
+    if (new URLSearchParams(window.location.search).get("reset") === "success") setMsg(t.resetSuccess);
   }, [locale]);
 
   useEffect(() => {
@@ -183,6 +188,8 @@ export default function LoginPage() {
             <button disabled={loading} className="btn-primary w-full" type="submit">
               {loading ? t.submitting : t.submit}
             </button>
+
+            <a href={`/forgot-password?lang=${locale}`} className="block text-center text-sm font-semibold text-emerald-700 underline underline-offset-4">{t.forgot}</a>
 
             {msg && <p className="text-sm text-red-600">{msg}</p>}
           </form>
