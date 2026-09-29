@@ -1,0 +1,185 @@
+{
+  "generatedAt": "2026-09-29T09:58:07.210Z",
+  "result": "PASS",
+  "siteUrlCorrection": {
+    "usageReview": "PASS",
+    "previousEffectiveOrigin": "https://greanlean.com",
+    "previousValueWasHidden": true,
+    "currentOrigin": "https://www.greanlean.com",
+    "derivedHostname": "www.greanlean.com",
+    "resolverMappingHost": "www.greanlean.com",
+    "resolverAllowlistHost": "www.greanlean.com",
+    "alignment": "PASS",
+    "codeChangePerformed": false,
+    "migrationPerformed": false
+  },
+  "releaseCandidate": {
+    "commit": "b4412f0a32f0e91c3b16f6bc7017f8ee7a9de773",
+    "tree": "166c65c46bdadf9ba4a31759dfd21a2d22d2c1f7",
+    "sourceDeploymentId": "dpl_6poWp5p95At2hq4jbUAn1hZkQo3y",
+    "siteUrlVerificationDeploymentId": "dpl_6cSagM9k5G4Kde6b75Kj5bLB7vua",
+    "cutoverDeploymentId": "dpl_5QLGhryX2wyQ2MDcqYzgfbu5fuV3",
+    "cutoverImmutableUrl": "greanlean-dpp-v0-i36sma6x7-songweinie-1175s-projects.vercel.app",
+    "sourceRcMatch": true
+  },
+  "backupGate": {
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "projectStatus": "ACTIVE_HEALTHY",
+    "migrationHead": "0035",
+    "reference": 1811221013,
+    "status": "COMPLETED",
+    "completedAt": "2026-09-28T16:53:51.066Z",
+    "checkedAt": "2026-09-29T09:41:06Z",
+    "ageHours": 16.8,
+    "pitrEnabled": false,
+    "result": "PASS"
+  },
+  "capabilities": {
+    "featureV2PublicRead": true,
+    "featureV2PublicProjection": true,
+    "featureV2RegistryTest": false,
+    "featureV2ExternalConnectors": false,
+    "featureV2ConnectorExecution": false,
+    "featureV2FileImport": false,
+    "featureV2BmsAdapter": false
+  },
+  "tenantPrimaryState": {
+    "referenceTenantId": "632943cf-520b-47ac-83af-88ca866d4fa5",
+    "referenceV2PrimaryPassports": 22,
+    "globalV2Primary": false,
+    "soodooTenantId": "0c2f6dff-560d-4eeb-be47-1e87a2f710fe",
+    "soodooV2PrimaryPassports": 0,
+    "otherV2PrimaryPassports": 0,
+    "nonPrimaryTenantPublicExposure": "NONE"
+  },
+  "publicVerification": {
+    "firstPassBlockingProbe": "PASS",
+    "publicDppRoutes": "22/22 PASS",
+    "resolverJson": "22/22 PASS",
+    "qr": "22/22 PASS",
+    "allVersions": 1,
+    "allPublicationStates": "PUBLISHED",
+    "allPayloadHashesMatch": true,
+    "publicFieldsPerPassport": 13,
+    "representativeQrDecode": [
+      "DPP-GLR-EBIKE-000001",
+      "DPP-GLR-EBIKE-000010",
+      "DPP-GLR-EBIKE-000022"
+    ],
+    "unknownDpp": { "status": 409, "code": "RESOLVER_NOT_FOUND" },
+    "soodooNonPrimary": { "status": 409, "code": "RESOLVER_NOT_FOUND" },
+    "unapprovedHost": { "status": 400, "code": "P0001", "message": "RESOLVER_NOT_FOUND" },
+    "arbitraryQr": { "status": 400, "code": "QR_TARGET_NOT_APPROVED" },
+    "openRedirectProtection": "PASS"
+  },
+  "productizedUi": {
+    "result": "PASS",
+    "desktop": "PASS",
+    "mobile": "PASS",
+    "english": "PASS",
+    "chinese": "PASS",
+    "rawJsonPrimaryUi": false,
+    "warningContract": "PASS",
+    "nonBlockingObservation": "favicon.ico returned 404 on the desktop English check"
+  },
+  "audienceSafety": {
+    "result": "PASS",
+    "publicDataLeakage": "NONE",
+    "sourceVendorPublicLeakage": "NONE",
+    "publicBmsLeakage": "NONE",
+    "unverifiedFalseVerifiedText": "NONE",
+    "anonymousRestrictedAudienceStatus": 403,
+    "restrictedAudienceCode": "PUBLIC_PROJECTION_DENIED",
+    "acceptedOfflineFieldCounts": {
+      "PUBLIC": 13,
+      "REPAIRER": 16,
+      "RECYCLER": 16,
+      "MANUFACTURER": 17,
+      "AUTHORITY": 16
+    }
+  },
+  "backoffice": {
+    "result": "PASS",
+    "contextHttp": 200,
+    "snapshotHttp": 200,
+    "counts": {
+      "models": 8,
+      "skus": 22,
+      "items": 22,
+      "claims": 374,
+      "passports": 22,
+      "versions": 22,
+      "currentPointers": 22,
+      "resolverMappings": 22,
+      "bmsSnapshots": 22
+    },
+    "foreignTenantHttp": 403,
+    "foreignTenantError": "TENANT_RELATIONSHIP_REQUIRED",
+    "tenantIsolation": "PASS",
+    "credentialsRecorded": false
+  },
+  "v1Continuity": {
+    "result": "PASS",
+    "migrationHead": "0035",
+    "counts": {
+      "products": 9,
+      "productVersions": 12,
+      "batteryModelProfiles": 3,
+      "batteryBatches": 0,
+      "batteryItems": 2,
+      "identifierAliases": 6
+    },
+    "homepage": "PASS",
+    "representativeDpp": "PASS",
+    "representativeApi": "PASS",
+    "loginAuth": "PASS",
+    "storage": "PASS",
+    "legacyAliases": "PASS",
+    "legacyQr": "PASS",
+    "cspHydration": "PASS",
+    "v1DppLatencyObservation": "OPEN_FOR_PILOT_MONITORING"
+  },
+  "performance": {
+    "result": "PASS",
+    "sampleCount": 45,
+    "http5xx": 0,
+    "unexpected4xx": 0,
+    "p95Ms": {
+      "homepage": 1131,
+      "v1Dpp": 2700,
+      "v1Api": 3879,
+      "login": 1167,
+      "auth": 1452,
+      "storage": 1390,
+      "v2Resolver": 720,
+      "v2Page": 1641,
+      "v2Qr": 1022
+    }
+  },
+  "safetyBoundaries": {
+    "registrySubmissions": 0,
+    "activeRealProductionConnectors": 0,
+    "codeChangePerformed": false,
+    "migrationPerformed": false,
+    "databaseWritePerformedDuringRetry": false
+  },
+  "technicalGoLive": {
+    "enabled": true,
+    "at": "2026-09-29T09:58:07.210Z"
+  },
+  "rollback": {
+    "executed": false,
+    "triggered": false,
+    "acceptedDeploymentId": "dpl_6poWp5p95At2hq4jbUAn1hZkQo3y",
+    "databaseRestoreUsed": false
+  },
+  "observation": {
+    "started": true,
+    "startAt": "2026-09-29T09:58:07.210Z",
+    "endNotBefore": "2026-10-06T09:58:07.210Z"
+  },
+  "boundaries": {
+    "phase7Complete": false,
+    "phase8Entered": false
+  }
+}
