@@ -1,0 +1,51 @@
+{
+  "round": "2",
+  "result": "PASS",
+  "baseline": {
+    "round1RcCommit": "1214b90a33c991c511e883d31314dad9f22a07b4",
+    "round1RcTree": "c904b9960905f29808d632392205a2fe2ef439c4"
+  },
+  "preprod": {
+    "project": "greanlean-dpp-preprod",
+    "supabaseRef": "efhiaufukjchxqhbmpvq",
+    "deploymentId": "dpl_H21k1vtFjEpxDryvtmFjQEk4SUGY",
+    "url": "https://greanlean-dpp-preprod.vercel.app",
+    "migrationHead": "0036",
+    "httpSmoke": "PASS"
+  },
+  "workspace": {
+    "productCenter": "PASS",
+    "manualSchemaDrivenEntry": "PASS",
+    "canonicalClaimProvenance": "PASS",
+    "batchSkuIntegrity": "PASS",
+    "csvXlsxPreflight": "PASS",
+    "mappingVersionAndRules": "PASS",
+    "validationGroupsAndCandidateReadiness": "PASS",
+    "unmappedFieldsExplicit": "PASS"
+  },
+  "tests": {
+    "targetedContracts": { "passed": 20, "failed": 0 },
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS"
+  },
+  "referenceTopology": {
+    "models": 8,
+    "skus": 22,
+    "individuals": 22,
+    "claims": 374,
+    "passports": 22,
+    "versions": 22,
+    "currentPointers": 22,
+    "resolverMappings": 22,
+    "bmsSnapshots": 22
+  },
+  "production": {
+    "writePerformed": "NO",
+    "trafficSwitched": "NO",
+    "deploymentChanged": "NO",
+    "v2MigrationApplied": "NO",
+    "registryEnabled": "NO",
+    "fileImportEnabled": "NO"
+  }
+}

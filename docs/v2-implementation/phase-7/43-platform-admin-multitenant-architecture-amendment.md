@@ -47,3 +47,7 @@ The Round 1 shell now follows the approved v0.2 platform-console structure: a de
 `/dashboard/v2` without a `tenant` query is intentionally a context-required state for Platform authority. A Tenant Workspace link carries the canonical Tenant code, while the server re-resolves the Tenant and re-checks the active platform capability before returning the snapshot. The URL is a request for scope, never authority.
 
 The owner wordmark remains the byte-identical approved asset at `public/brand/greanlean-wordmark.png` (SHA-256 `729fc6d0249c8613bd8246dfc58011da42ccdb9c8f9de00874e1d6796c240eec`) and is rendered with CSS containment in the white logo card used by the shell and login.
+
+## Round 2 boundary note
+
+Round 2 extends the accepted Tenant-scoped shell into product-data workspace operations only. The active Tenant remains explicit in the URL and is re-verified by the existing server-side PDP for every read/write. Product Center, manual schema-driven claims, CSV/XLSX preflight, mapping-version drafts, and validation/candidate readiness do not change Review/Approve/Publish, Resolver/QR, Registry, connectors, or Production behavior. Production file import remains disabled.
