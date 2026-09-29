@@ -1,0 +1,162 @@
+{
+  "generatedAt": "2026-09-29T01:45:00Z",
+  "result": {
+    "confirmedWriteWorkflowImplementation": "PASS",
+    "confirmedWritePathComplete": true,
+    "noDirectPublicationBypass": true,
+    "freshBackupGateImplemented": true,
+    "preprodConfirmedWriteVerification": "PASS",
+    "partialResume": "PASS",
+    "confirmedWriteIdempotency": "PASS",
+    "collisionFailClosed": "PASS",
+    "productionReadOnlyBaseline": "PASS",
+    "newConfirmedWriteRcFrozen": true,
+    "rcReproducible": true
+  },
+  "fixture": {
+    "path": "fixtures/internal-reference/GreanLean_Reference_Ebike_Catalog_From_EN50604.json",
+    "sha256": "018c60c9db81d621aa439d5f801d5aad2756d29be4762bb85d106b2735425222",
+    "classification": "INTERNAL_SYNTHETIC_REFERENCE"
+  },
+  "implementation": {
+    "sharedCore": "scripts/phase7/internal-reference-confirmed-write-core.mjs",
+    "productionEntrypoint": "scripts/phase7/build-internal-reference-production-pilot.mjs",
+    "safetyModule": "scripts/phase7/internal-reference-safety.mjs",
+    "confirmationArgument": "--confirm-internal-reference-production-pilot",
+    "directImmutableVersionInsert": false,
+    "directCurrentPointerInsert": false,
+    "registrySubmissionPerformed": false,
+    "productionExecutionPerformed": false
+  },
+  "preprod": {
+    "projectRefFingerprint": "d465ccdd1809",
+    "migrationHead": "0035",
+    "tenantName": "GreanLean Reference Write Verification",
+    "classification": "INTERNAL_SYNTHETIC_WRITE_VERIFICATION",
+    "partialCheckpoint": "PRODUCT_HIERARCHY_COMPLETE",
+    "partialExitCode": 75,
+    "counts": {
+      "families": 1,
+      "models": 8,
+      "skus": 22,
+      "batches": 8,
+      "batchSkuLinks": 22,
+      "individuals": 22,
+      "sourceRecords": 22,
+      "transformations": 22,
+      "provenanceRecords": 374,
+      "canonicalClaims": 374,
+      "passports": 22,
+      "reviews": 22,
+      "immutableVersions": 22,
+      "currentPointers": 22,
+      "resolverMappings": 22,
+      "bmsSnapshots": 22,
+      "registrySubmissions": 0
+    },
+    "idempotentRerun": {
+      "proposedMutationsAfterCompletion": 0,
+      "recordIdManifestBeforeSha256": "c8d9f2e288f38d61c743ee63d28e97cc506369d4550385294fb8518ec9afbd66",
+      "recordIdManifestAfterSha256": "c8d9f2e288f38d61c743ee63d28e97cc506369d4550385294fb8518ec9afbd66",
+      "stable": true
+    },
+    "collisionEvidence": {
+      "dppId": 22,
+      "serial": 22,
+      "sku": 22,
+      "modelCode": 8,
+      "foreignOwnerRejectedBeforeWrite": true
+    },
+    "audience": {
+      "resolverHttp200": 22,
+      "version1": 22,
+      "requiredWarnings": 22,
+      "publicDataLeakage": 0,
+      "sourceVendorPublicLeakage": 0,
+      "publicBmsLeakage": 0,
+      "unverifiedFalseVerifiedText": 0
+    }
+  },
+  "productionReadOnlyBaseline": {
+    "generatedAt": "2026-09-29T01:35:24.587Z",
+    "projectRefFingerprint": "3ce843a277e6",
+    "health": "ACTIVE_HEALTHY",
+    "migrationHead": "0035",
+    "referenceTenantCount": 0,
+    "referenceModelCount": 0,
+    "referencePassportCount": 0,
+    "naturalKeyCollisions": {
+      "dppId": 0,
+      "serial": 0,
+      "sku": 0,
+      "modelCode": 0
+    },
+    "globalV2Primary": false,
+    "registry": "OFF",
+    "realCustomerConnectors": "OFF",
+    "http": {
+      "homepage": 200,
+      "representativeV1Dpp": 200,
+      "representativeV1Api": 200,
+      "login": 200,
+      "auth": 200,
+      "storage": 200
+    },
+    "currentDeploymentId": "dpl_2n7VMa4Bgs4pxtiXtzJVHQdYApgA",
+    "currentDeploymentState": "READY",
+    "deploymentChanged": false
+  },
+  "releaseCandidate": {
+    "reference": "codex/phase7-internal-reference-confirmed-write-rc",
+    "commit": "b4412f0a32f0e91c3b16f6bc7017f8ee7a9de773",
+    "tree": "166c65c46bdadf9ba4a31759dfd21a2d22d2c1f7",
+    "trackedFileCount": 919,
+    "untrackedFileCount": 0,
+    "buildId": "xxeqOFN5jAQTtL3nKFdTg",
+    "migrationHead": "0035",
+    "migrationFileCount": 30,
+    "migrationManifestSha256": "6e34ca7a9b274ccf4cc92881453e0a6a3ccd69b53544fadeba86b7339caa76ab",
+    "changedFiles": [
+      "scripts/phase7/build-internal-reference-preprod.mjs",
+      "scripts/phase7/build-internal-reference-production-pilot.mjs",
+      "scripts/phase7/internal-reference-confirmed-write-core.mjs",
+      "scripts/phase7/internal-reference-safety.mjs",
+      "tests/integration/internalReferenceConfirmedWriteContract.test.mjs"
+    ]
+  },
+  "verification": {
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "unitAndIntegrationTests": {
+      "result": "PASS",
+      "passed": 235,
+      "total": 235
+    },
+    "confirmedWriteContractTests": {
+      "result": "PASS",
+      "passed": 6,
+      "total": 6
+    },
+    "migrationTests": {
+      "result": "PASS",
+      "passed": 56,
+      "total": 56
+    },
+    "productionBuild": "PASS",
+    "credentialScan": "PASS",
+    "localAbsolutePathScan": "PASS",
+    "environmentFileExclusion": "PASS",
+    "generatedArtifactExclusion": "PASS",
+    "debugTemporaryMarkerScan": "PASS"
+  },
+  "stopBoundary": {
+    "productionApplicationDeployed": false,
+    "productionDataWritePerformed": false,
+    "productionTrafficSwitched": false,
+    "technicalReferencePilot": "READY_FOR_PRODUCTION_ONBOARDING",
+    "realCustomerPilot": "NOT_STARTED",
+    "phase7Complete": false,
+    "phase8Entered": false,
+    "nextAction": "WAIT_FOR_EXPLICIT_USER_APPROVAL_TO_RETRY_INTERNAL_REFERENCE_PRODUCTION_DATA_ONBOARDING"
+  }
+}
