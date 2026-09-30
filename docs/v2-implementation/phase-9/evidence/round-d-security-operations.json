@@ -1,0 +1,61 @@
+{
+  "generatedAt": "2026-09-30T15:00:00.000Z",
+  "environment": {
+    "name": "greanlean-dpp-preprod",
+    "projectRef": "efhiaufukjchxqhbmpvq",
+    "deploymentId": "dpl_5SadpxjbA7HEQb2Q2hRtXhiVNjbT",
+    "productionDeployed": false,
+    "productionDataWritePerformed": false,
+    "productionAuthChanged": false
+  },
+  "tenantDeletion": {
+    "target": { "id": "4359cfd6-235b-4b6c-9346-9405a505e61f", "code": "test001", "statusBefore": "ARCHIVED" },
+    "rootCause": "Five tenant-scoped role rows were missed by the former direct-delete dependency check; role.tenant_id is ON DELETE RESTRICT.",
+    "preDeleteDependencies": {
+      "memberships": 0, "organisations": 0, "families": 0, "models": 0, "skus": 0, "batches": 0,
+      "individuals": 0, "dpps": 0, "publishedVersions": 0, "resolverMappings": 0, "demoCatalogRefs": 0,
+      "policyAuditRefs": 0, "platformAuditRefs": 0, "otherForeignKeyRefs": 0, "roles": 5
+    },
+    "result": "PASS",
+    "tenantCountBefore": 2,
+    "tenantCountAfter": 1,
+    "deletedRoleCount": 5,
+    "deleteAuditCount": 1,
+    "orphanMemberships": 0,
+    "remainingTenant": { "code": "greanlean-reference-mobility", "status": "ACTIVE", "models": 8, "passports": 8, "resolverMappings": 17 }
+  },
+  "rls": {
+    "table": "public.greanlean_0012_data_backup",
+    "runtimeReferenceCount": 0,
+    "migrationReferenceCount": 4,
+    "testReferenceCount": 2,
+    "foreignKeyReferenceCount": 0,
+    "viewReferenceCount": 0,
+    "triggerReferenceCount": 0,
+    "resolution": "DROP_UNUSED",
+    "tableExistsAfter": false,
+    "securityAdvisorRecheck": "PASS"
+  },
+  "lead": {
+    "id": "92225b03-3a0e-4643-af49-be976cd1727c",
+    "status": "new",
+    "duplicateCount": 1,
+    "retainedAsEvidence": true
+  },
+  "auth": {
+    "count": 2,
+    "users": ["songweinie@gmail.com", "reference-author@preprod.greanlean.invalid"],
+    "unchanged": true
+  },
+  "hostedRegression": {
+    "homepageHttp": 200,
+    "publicDppHttp200Count": 8,
+    "resolverHttp": 200,
+    "legacyQrFinalHttp": 200,
+    "unauthenticatedTenantDeleteHttp": 401,
+    "invalidLeadHttp": 400,
+    "bmsTrendLabels": 3
+  },
+  "quality": { "lint": "PASS", "typecheck": "PASS", "test": "PASS", "migrationTest": "PASS", "build": "PASS" },
+  "ownerHumanAcceptance": "PENDING"
+}

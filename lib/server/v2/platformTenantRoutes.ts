@@ -58,16 +58,17 @@ export const platformTenantItemHandlers = {
   }),
   DELETE: withApiRoute<{ params: { id: string } }>(async (request, requestContext, route) => {
     const id = requireUuid(route.params.id, "Tenant identifier");
-    const { admin } = await requirePlatformCapability(request, requestContext, "platform.tenant.manage", { resourceType: "TENANT", operation: "platform.tenant.delete" });
-    const [models, passports, memberships] = await Promise.all([
-      admin.from("product_model").select("id", { count: "exact", head: true }).eq("tenant_id", id),
-      admin.from("dpp_passport").select("id", { count: "exact", head: true }).eq("tenant_id", id),
-      admin.from("tenant_membership").select("id", { count: "exact", head: true }).eq("tenant_id", id),
-    ]);
-    const dependencies = { models: models.count || 0, passports: passports.count || 0, memberships: memberships.count || 0 };
-    if (Object.values(dependencies).some(Boolean)) throw new ApiError(409, "TENANT_DELETE_BLOCKED", "A Tenant with business data must be archived, not deleted.", { dependencies, action: "ARCHIVE" });
-    const { error } = await admin.from("tenant").delete().eq("id", id);
-    if (error) throw new ApiError(409, "TENANT_DELETE_FAILED", "The Tenant could not be deleted.");
-    return Response.json({ data: { id, deleted: true } }, { headers: { "Cache-Control": "private, no-store" } });
+    const { admin, platformContext } = await requirePlatformCapability(request, requestContext, "platform.tenant.manage", { resourceType: "TENANT", operation: "platform.tenant.delete" });
+    const { data, error } = await admin.rpc("v2_delete_empty_archived_tenant", {
+      p_tenant_id: id,
+      p_actor_user_id: platformContext.user.id,
+      p_correlation_id: platformContext.correlationId,
+    }).single();
+    if (error || !data) {
+      const code = error?.message?.startsWith("TENANT_DELETE_BLOCKED") ? "TENANT_DELETE_BLOCKED" : "TENANT_DELETE_FAILED";
+      throw new ApiError(409, code, "Only an archived Tenant with no dependent data may be deleted.");
+    }
+    const deleted = data as { deleted_tenant_id: string; deleted_tenant_code: string; deleted_role_count: number };
+    return Response.json({ data: { id: deleted.deleted_tenant_id, code: deleted.deleted_tenant_code, deleted: true, deletedRoleCount: deleted.deleted_role_count } }, { headers: { "Cache-Control": "private, no-store" } });
   }),
 };
