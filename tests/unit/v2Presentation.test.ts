@@ -43,6 +43,7 @@ test("resolver projection normalizes into a presentation view model", () => {
 test("field and unit formatting is human readable", () => {
   assert.equal(humanizeFieldKey("rated_capacity_wh"), "Rated Capacity Wh");
   assert.equal(formatValue(48, "en", "V"), "48 V");
+  assert.equal(formatValue(52, "zh", "%"), "52%");
   assert.equal(formatValue(true, "zh"), "是");
   assert.equal(formatValue({ en: "Organic cotton T-shirt", zh: "有机棉 T 恤" }, "zh"), "有机棉 T 恤");
   assert.equal(formatValue({ en: "Organic cotton T-shirt", zh: "有机棉 T 恤" }, "en"), "Organic cotton T-shirt");
@@ -52,6 +53,9 @@ test("business null states preserve their semantics", () => {
   assert.equal(businessState("UNKNOWN", "en"), "Unknown");
   assert.equal(businessState("NOT_APPLICABLE", "en"), "Not applicable");
   assert.equal(businessState("NOT_AUTHORIZED", "zh"), "无权访问");
+  assert.equal(businessState("PUBLISHED", "zh"), "已发布");
+  assert.equal(businessState("PUBLIC", "zh"), "公开");
+  assert.equal(businessState("SYNTHETIC_DEMO", "zh"), "合成演示数据");
 });
 
 test("unverified provenance is not presented as verified", () => {

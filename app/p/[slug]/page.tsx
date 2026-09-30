@@ -74,7 +74,7 @@ export async function generateMetadata({
       ? productIdentity as Record<string, unknown>
       : {};
     return {
-      title: `${formatValue(product.productName || "Digital Product Passport", locale)} - ${v2.passport.passport_identifier}`,
+      title: { absolute: `${formatValue(product.productName || "Digital Product Passport", locale)} - GreanLean DPP` },
       description: `${formatValue(product.brand || "GreanLean", locale)} Digital Product Passport for ${formatValue(product.modelCode || v2.passport.passport_identifier, locale)}.`,
       robots: { index: false, follow: false },
     };

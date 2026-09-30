@@ -126,7 +126,11 @@ export function businessState(value: unknown, locale: PassportLocale): string | 
     NOT_APPLICABLE: ["Not applicable", "不适用"],
     REDACTED: ["Restricted", "受限"],
     NOT_AUTHORIZED: ["Restricted", "无权访问"],
-    UNVERIFIED: ["Unverified", "未经验证"],
+    UNVERIFIED: ["Unverified", "未验证"],
+    VERIFIED: ["Verified", "已验证"],
+    PUBLISHED: ["Published", "已发布"],
+    PUBLIC: ["Public", "公开"],
+    SYNTHETIC_DEMO: ["Synthetic demo data", "合成演示数据"],
     WITHDRAWN: ["Withdrawn", "已撤回"],
     NO_CURRENT_VERSION: ["Unavailable", "暂无可用版本"],
     RESOLVER_NOT_FOUND: ["Unavailable", "无法解析"],
@@ -146,7 +150,7 @@ export function formatValue(value: unknown, locale: PassportLocale, unit?: strin
   if (state) return state;
   if (value === null || value === undefined || value === "") return locale === "zh" ? "未提供" : "Not provided";
   if (typeof value === "boolean") return value ? (locale === "zh" ? "是" : "Yes") : (locale === "zh" ? "否" : "No");
-  if (typeof value === "number") return `${Number.isInteger(value) && value >= 1900 && value <= 2100 ? String(value) : new Intl.NumberFormat(locale === "zh" ? "zh-CN" : "en-GB", { maximumFractionDigits: 3 }).format(value)}${unit ? ` ${unit}` : ""}`;
+  if (typeof value === "number") return `${Number.isInteger(value) && value >= 1900 && value <= 2100 ? String(value) : new Intl.NumberFormat(locale === "zh" ? "zh-CN" : "en-GB", { maximumFractionDigits: 3 }).format(value)}${unit ? `${unit === "%" ? "" : " "}${unit}` : ""}`;
   return String(value);
 }
 

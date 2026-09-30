@@ -114,6 +114,7 @@ function unitForKey(key: string, locale: PassportLocale): string | null {
   const suffixes: Array<[RegExp, [string, string]]> = [
     [/_pct$/, ["%", "%"]], [/_kg_co2e.*$/, ["kg CO₂e", "kg CO₂e"]], [/_kg$/, ["kg", "kg"]], [/_mohm$/, ["mΩ", "mΩ"]],
     [/_wh$/, ["Wh", "Wh"]], [/_ah$/, ["Ah", "Ah"]], [/_v$/, ["V", "V"]], [/_a$/, ["A", "A"]], [/_w.*$/, ["W", "W"]], [/_c$/, ["°C", "°C"]],
+    [/_gsm$/, ["g/m²", "g/m²"]], [/_mm$/, ["mm", "mm"]], [/_kwh$/, ["kWh", "kWh"]], [/_l$/, ["L", "L"]],
     [/_months$/, ["months", "个月"]], [/_years$/, ["years", "年"]], [/_seconds$/, ["s", "秒"]],
   ];
   const unit = suffixes.find(([pattern]) => pattern.test(key))?.[1];
@@ -122,7 +123,7 @@ function unitForKey(key: string, locale: PassportLocale): string | null {
 
 function labelForKey(key: string, locale: PassportLocale) {
   const labels: Record<string, [string, string]> = {
-    productName: ["Product name", "产品名称"], modelCode: ["Model", "型号"], familyName: ["Product family", "产品系列"],
+    productName: ["Product name", "产品名称"], modelCode: ["Model", "型号"], familyName: ["Product family", "产品系列"], brand: ["Brand", "品牌"],
     serialNumber: ["Serial number", "序列号"], dppId: ["DPP ID", "DPP 标识"], customer_confirmed: ["Customer confirmed", "客户确认"],
     verification_status: ["Verification status", "验证状态"], source_name: ["Source", "来源"], source_type: ["Source type", "来源类型"],
     evidence_status: ["Evidence status", "证据状态"], third_party_verified: ["Third-party verified", "第三方验证"],
@@ -144,7 +145,7 @@ function labelForKey(key: string, locale: PassportLocale) {
     un38_3: ["UN38.3", "UN38.3"], iec_reference: ["IEC reference", "IEC 参考"], ce: ["CE", "CE"], rohs: ["RoHS", "RoHS"], reach: ["REACH", "REACH"], sds: ["SDS / MSDS", "SDS / MSDS"], transport_classification: ["Transport classification", "运输分类"], safety_warning: ["Safety warning", "安全警告"],
     warranty_months: ["Warranty", "保修期"], inspection_interval: ["Recommended inspection interval", "建议检查周期"], serviceability: ["Serviceability", "可维修性"], replaceable_parts: ["Replaceable parts", "可更换零部件"], service_contact: ["Service contact", "售后联系方式"],
     end_of_life_decision: ["End-of-life decision", "报废判定"], collection_route: ["Collection route", "回收方式"], household_waste: ["Household waste", "生活垃圾处理"], transport_notes: ["Transport notes", "运输注意事项"], disassembly_notes: ["Disassembly notes", "拆解注意事项"], second_life: ["Second life", "二次利用说明"],
-    source_system: ["Source system", "来源系统"], responsible_party: ["Responsible party", "责任主体"], updated_at: ["Last updated", "最近更新"], resolver: ["Resolver", "Resolver"], qr: ["QR", "QR"],
+    source: ["Source", "数据来源"], source_system: ["Source system", "来源系统"], responsible_party: ["Responsible party", "责任主体"], updated_at: ["Last updated", "最近更新"], resolver: ["Resolver", "解析地址"], qr: ["QR", "QR"],
     rated_power_kw: ["Rated power", "额定功率"], voltage_platform: ["Voltage platform", "电压平台"], architecture: ["Architecture", "模块/簇/电池包架构"], thermal_management: ["Thermal management", "热管理"], fire_safety: ["Fire safety", "消防与安全"],
     fibre_composition: ["Fibre composition", "纤维组成"], material_pct: ["Material composition", "材料百分比"], dye_chemicals: ["Dyes / chemicals", "染料/化学品"], care_instruction: ["Care instruction", "洗涤与保养"], water_footprint_l: ["Water footprint", "水足迹"],
     connectivity: ["Connectivity", "连接方式"], enclosure_material: ["Enclosure material", "外壳材料"], key_components: ["Key components", "关键零部件"], energy_efficiency: ["Energy efficiency", "能效信息"], firmware: ["Software / firmware", "软件/固件"], weee: ["WEEE / recycling", "WEEE / 回收信息"],
@@ -154,6 +155,10 @@ function labelForKey(key: string, locale: PassportLocale) {
     material_summary: ["Material summary", "材料概述"], packaging_material: ["Packaging material", "包装材料"], hazardous_substances: ["Hazardous substances", "有害物质"], other_recycled_material: ["Other recycled material", "其他再生材料"],
     material_recovery: ["Material recovery", "材料回收"], repair_warning: ["Repair warning", "维修警告"], repairability: ["Repairability", "可维修性"], regulatory_evidence: ["Regulatory evidence", "监管证据"], customer_verified: ["Customer verified", "客户验证"],
     materials: ["Materials", "材料"], manufacturing: ["Manufacturing", "制造"], transport: ["Transport", "运输"], packaging: ["Packaging", "包装"], other: ["Other", "其他"],
+    name: ["Name", "名称"], status: ["Status", "状态"], version: ["Version", "版本"], publishedAt: ["Published at", "发布时间"], audience: ["Audience", "可见对象"],
+    captured_at: ["Captured at", "采集时间"], verified: ["Verified", "已验证"], state_of_charge_pct: ["State of charge", "SOC"], state_of_health_pct: ["State of health", "SOH"], lifecycle_reference: ["Lifecycle reference", "生命周期引用"],
+    material: ["Material", "材料"], weight_gsm: ["Fabric weight", "面料克重"], thickness_mm: ["Thickness", "厚度"], recycled_content_pct: ["Recycled content", "再生材料含量"],
+    internalPassportUuid: ["Internal passport UUID", "内部护照 UUID"], schemaVersionUuid: ["Schema version UUID", "Schema 版本 UUID"], payloadHash: ["Payload hash", "载荷哈希"], public_excludes: ["Public exclusions", "公开范围排除项"],
   };
   const translated = labels[key];
   return translated ? translated[locale === "zh" ? 1 : 0] : humanizeFieldKey(key);
@@ -166,8 +171,13 @@ function localizedValue(value: unknown, locale: PassportLocale, unit?: string | 
     const states: Record<string, string> = {
       Charging: "充电中", Discharging: "放电中", Published: "已发布", PUBLISHED: "已发布",
       "Lithium-ion": "锂离子", "E-bike battery pack": "电动自行车电池包",
+      "10°C to 25°C": "10°C 至 25°C", "-10°C to 45°C": "-10°C 至 45°C",
+      "Organic cotton": "有机棉", "Textile garment": "纺织品", "Consumer electronics": "消费电子",
+      "Recycled ABS": "再生 ABS", "Wood-plastic flooring": "木塑地板", "Alloy steel": "合金钢",
+      "Replaceable bits": "可更换批头", "Hand tool": "手动工具", "Industrial energy storage": "工业储能",
+      SYNTHETIC_DEMO: "合成演示数据", VERIFIED: "已验证", UNVERIFIED: "未验证", PUBLIC: "公开",
       TEST_REPORT: "测试报告", CERTIFICATE: "证书", DECLARATION: "声明", SAFETY: "安全文件",
-      SPECIFICATION: "规格文件", WARRANTY: "质保文件", RECYCLING: "回收文件", ENVIRONMENT: "环境/可持续性文件",
+      SPECIFICATION: "规格文件", WARRANTY: "质保文件", RECYCLING: "回收文件", ENVIRONMENT: "环境/可持续性文件", SERVICE: "服务/维护文件",
     };
     if (states[value]) return states[value];
   }
@@ -245,7 +255,7 @@ function CarbonPanel({ value, locale }: { value: unknown; locale: PassportLocale
   const total = Number(data.total_kg_co2e_per_battery) || Object.values(breakdown).reduce<number>((sum, item) => sum + Number(item || 0), 0);
   return (
     <div>
-      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-4xl font-bold tracking-tight text-slate-950">{formatValue(total, locale, "kg CO₂e")}</p><p className="mt-1 text-sm text-slate-500">{formatValue(data.functional_unit, locale)}</p></div><StatusBadge tone="amber">{data.third_party_verified ? "Verified" : (locale === "zh" ? "未经第三方验证" : "Not third-party verified")}</StatusBadge></div>
+      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-4xl font-bold tracking-tight text-slate-950">{formatValue(total, locale, "kg CO₂e")}</p><p className="mt-1 text-sm text-slate-500">{formatValue(data.functional_unit, locale)}</p></div><StatusBadge tone="amber">{data.third_party_verified ? (locale === "zh" ? "已验证" : "Verified") : (locale === "zh" ? "未经第三方验证" : "Not third-party verified")}</StatusBadge></div>
       <div className="mt-6 space-y-3" role="img" aria-label={locale === "zh" ? "生命周期阶段碳足迹占比" : "Carbon footprint proportions by lifecycle stage"}>
         {Object.entries(breakdown).sort((a, b) => Number(b[1]) - Number(a[1])).map(([key, item]) => {
           const amount = Number(item) || 0;
@@ -319,7 +329,7 @@ export function ProductizedDppPage({ projection, locale, previewRole, audiencePr
       <div className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur"><nav aria-label={locale === "zh" ? "护照章节" : "Passport sections"} className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-5 py-2 sm:px-8">{view.sections.filter((section) => section.id !== "technical").map((section) => <a key={section.id} href={`#${section.id}`} className="inline-flex min-h-11 shrink-0 items-center rounded-lg px-3 text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-emerald-600">{sectionTitle(section.id, m)}</a>)}</nav></div>
       <div id="passport-content" className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:py-14">
         {view.metrics.length ? <section aria-labelledby="key-metrics"><div className="mb-5 flex items-end justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-700">{m.overview}</p><h2 id="key-metrics" className="mt-1 text-2xl font-bold tracking-tight">{m.metrics}</h2></div></div><div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8">{view.metrics.map((metric) => <article key={metric.key} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"><p className="text-xs font-semibold text-slate-500">{metric.label}</p><p className="mt-2 break-words text-xl font-bold tracking-tight">{formatValue(metric.value, locale, metric.unit)}</p></article>)}</div></section> : null}
-        <div className="mt-12 space-y-12">{view.sections.filter((section) => section.id !== "technical").map((section) => <section id={section.id} key={section.id} aria-labelledby={`${section.id}-title`} className="scroll-mt-20"><div className="mb-5"><h2 id={`${section.id}-title`} className="text-2xl font-bold tracking-tight sm:text-3xl">{sectionTitle(section.id, m)}</h2><div className="mt-2 h-1 w-12 rounded-full bg-emerald-600" /></div><div className="grid gap-5">{section.fields.filter((field) => field.fieldCode !== "demo.warning").map((field) => <article key={field.fieldCode} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"><h3 className="font-semibold text-slate-950">{field.metadata.label[locale]}</h3><div className="flex flex-wrap gap-2"><StatusBadge tone="amber">{field.verificationStatus || m.unverified}</StatusBadge></div></div><div className="p-5 sm:p-6"><FieldRenderer field={field} locale={locale} m={m} /></div></article>)}</div></section>)}</div>
+        <div className="mt-12 space-y-12">{view.sections.filter((section) => section.id !== "technical").map((section) => <section id={section.id} key={section.id} aria-labelledby={`${section.id}-title`} className="scroll-mt-20"><div className="mb-5"><h2 id={`${section.id}-title`} className="text-2xl font-bold tracking-tight sm:text-3xl">{sectionTitle(section.id, m)}</h2><div className="mt-2 h-1 w-12 rounded-full bg-emerald-600" /></div><div className="grid gap-5">{section.fields.filter((field) => field.fieldCode !== "demo.warning").map((field) => <article key={field.fieldCode} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"><h3 className="font-semibold text-slate-950">{field.metadata.label[locale]}</h3><div className="flex flex-wrap gap-2"><StatusBadge tone="amber">{localizedValue(field.verificationStatus || m.unverified, locale)}</StatusBadge></div></div><div className="p-5 sm:p-6"><FieldRenderer field={field} locale={locale} m={m} /></div></article>)}</div></section>)}</div>
         <section id="passport" aria-labelledby="passport-title" className="mt-12 scroll-mt-20"><h2 id="passport-title" className="text-2xl font-bold tracking-tight sm:text-3xl">{m.passportSection}</h2><div className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><ValueGrid locale={locale} value={{ dppId: projection.passportIdentifier, status: projection.status, version: projection.version, publishedAt: projection.publishedAt, audience: projection.audience }} /></div></section>
         <details id="technical" className="mt-8 scroll-mt-20 rounded-2xl border border-slate-300 bg-white"><summary className="min-h-14 cursor-pointer px-5 py-4 font-semibold focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:px-6">{m.technical}</summary><div className="border-t border-slate-200 p-5 sm:p-6"><p className="mb-5 text-sm text-slate-600">{m.technicalHint}</p><ValueGrid locale={locale} value={{ internalPassportUuid: projection.passportId, schemaVersionUuid: projection.schemaVersion, payloadHash: projection.payloadHash }} />{view.sections.find((section) => section.id === "technical")?.fields.map((field) => <div key={field.fieldCode} className="mt-6 border-t border-slate-200 pt-5"><h3 className="mb-4 font-semibold">{field.metadata.label[locale]}</h3><FieldRenderer field={field} locale={locale} m={m} /></div>)}</div></details>
       </div>
