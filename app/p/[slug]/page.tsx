@@ -9,7 +9,7 @@ import { createSupabaseAdminClient } from "@/lib/server/supabase";
 import { createAudiencePreviewGrant, isPreprodAudiencePreviewHost, verifyAudiencePreviewGrant } from "@/lib/server/v2/audiencePreview";
 import { resolvePublicPassport } from "@/lib/server/v2/phase4Repository";
 import { projectImmutableDpp } from "@/lib/v2/audienceProjection";
-import { ROLE_TO_AUDIENCE, type PreviewRole } from "@/lib/v2/presentation";
+import { formatValue, ROLE_TO_AUDIENCE, type PreviewRole } from "@/lib/v2/presentation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -67,14 +67,15 @@ export async function generateMetadata({
   const [{ slug }, query = {}] = await Promise.all([params, searchParams]);
   const v2 = await getV2Data(decodeURIComponent(slug));
   if (v2?.kind === "PUBLISHED") {
+    const locale = query.lang === "zh" ? "zh" : "en";
     const publicProjection = projectImmutableDpp(v2.payload, "PUBLIC");
     const productIdentity = publicProjection.fields.find((field) => field.fieldCode === "identity.product")?.value;
     const product = productIdentity && typeof productIdentity === "object" && !Array.isArray(productIdentity)
       ? productIdentity as Record<string, unknown>
       : {};
     return {
-      title: `${String(product.productName || "Digital Product Passport")} - ${v2.passport.passport_identifier}`,
-      description: `${String(product.brand || "GreanLean")} Digital Product Passport for ${String(product.modelCode || v2.passport.passport_identifier)}.`,
+      title: `${formatValue(product.productName || "Digital Product Passport", locale)} - ${v2.passport.passport_identifier}`,
+      description: `${formatValue(product.brand || "GreanLean", locale)} Digital Product Passport for ${formatValue(product.modelCode || v2.passport.passport_identifier, locale)}.`,
       robots: { index: false, follow: false },
     };
   }

@@ -44,6 +44,8 @@ test("field and unit formatting is human readable", () => {
   assert.equal(humanizeFieldKey("rated_capacity_wh"), "Rated Capacity Wh");
   assert.equal(formatValue(48, "en", "V"), "48 V");
   assert.equal(formatValue(true, "zh"), "是");
+  assert.equal(formatValue({ en: "Organic cotton T-shirt", zh: "有机棉 T 恤" }, "zh"), "有机棉 T 恤");
+  assert.equal(formatValue({ en: "Organic cotton T-shirt", zh: "有机棉 T 恤" }, "en"), "Organic cotton T-shirt");
 });
 
 test("business null states preserve their semantics", () => {
