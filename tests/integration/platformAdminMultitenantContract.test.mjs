@@ -59,6 +59,21 @@ test("every platform business write is rebound to an explicit active Tenant", as
   assert.match(login, /PLATFORM_CONSOLE_PATH/);
 });
 
+test("Tenant creation validates the canonical 0027 code contract before a database write", async () => {
+  const [routes, consoleSource, migration] = await Promise.all([
+    read("lib/server/v2/platformTenantRoutes.ts"),
+    read("components/v2/platform/PlatformConsole.tsx"),
+    read("supabase/migrations/0027_v2_phase1_tenant_access_foundation.sql"),
+  ]);
+  assert.match(migration, /\^\[a-z\]\[a-z0-9-\]\{2,62\}\$/);
+  assert.match(routes, /const tenantCodePattern = \/\^\[a-z\]\[a-z0-9-\]\{2,62\}\$\//);
+  assert.match(routes, /TENANT_CODE_INVALID/);
+  assert.match(routes, /TENANT_CODE_CONFLICT/);
+  assert.match(consoleSource, /tenantCodePattern\.test\(newTenant\.code\)/);
+  assert.match(consoleSource, /租户编码必须以小写字母开头/);
+  assert.match(consoleSource, /租户运营概览/);
+});
+
 test("manual claim entry and file preflight retain provenance and controlled states", async () => {
   const [consoleSource, claimRoute] = await Promise.all([
     read("components/v2/backoffice/BackofficeConsole.tsx"),
