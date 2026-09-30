@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-09-30T03:22:00.000Z",
+  "target": "greanlean-dpp-preprod",
+  "scope": "Round A.2 CRUD UI write paths, settings, and Manual Entry navigation only",
+  "existingAndReusedWritePaths": {
+    "tenant": "tenant table; /api/v2/tenants current-Tenant profile API; /api/v2/platform/tenants platform capability API",
+    "organisation": "organisation_v2; organisationRoutes; /api/v2/organisations and item route",
+    "productGraph": "product_family, product_model, sku, product_batch, product_item; shared productRoutes/productRepository",
+    "productOrganisation": "product_organisation_relation; shared product routes; migration 0037 tenant composite FKs",
+    "manualClaim": "canonical_claim; existing Schema-driven ManualClaimWorkspace and canonical-claims route"
+  },
+  "uiWriteSurfaces": [
+    "Platform Tenant create/edit/archive/delete controls",
+    "Settings Tenant profile read/edit/save feedback",
+    "Settings Organisation create/edit/archive/delete controls",
+    "Product Model, Family, SKU, Batch, Individual create/edit/archive/delete controls",
+    "Model responsibility add/unlink/delete controls",
+    "Data Workspace Manual Entry and Import Center peer primary actions"
+  ],
+  "security": {
+    "tenantScopedHeaders": true,
+    "idempotencyForTenantWrites": true,
+    "crossTenantOrganisationBinding": "DENIED by tenant composite foreign keys and PDP context",
+    "crossTenantProductAccess": "DENIED by PDP context and tenant_id filtering",
+    "anonymousWrites": "DENIED by authenticated API boundaries",
+    "rlsWarning": {
+      "table": "public.greanlean_0012_data_backup",
+      "rule": "rls_disabled_in_public",
+      "severity": "WARN",
+      "remains": true
+    }
+  },
+  "fixturePolicy": {
+    "temporaryFixturesCreatedInHostedPreprod": 0,
+    "temporaryFixturesRemaining": 0,
+    "teardown": "A.2 verification uses automated route and policy contracts. Any later hosted temporary fixture must use explicit teardown and restore the documented 1/1/1/2 reference set."
+  },
+  "finalPreprodCounts": {
+    "tenants": 1,
+    "organisations": 1,
+    "productModels": 1,
+    "publicPassports": 1,
+    "authUsers": 2
+  },
+  "production": {
+    "deployed": false,
+    "dataWritePerformed": false,
+    "authChanged": false
+  }
+}
