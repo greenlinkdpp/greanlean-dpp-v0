@@ -96,6 +96,19 @@ function payloadFor(demo, passportId, itemId, schemaVersionId) {
     field("provenance.synthetic", { classification: "INTERNAL_SYNTHETIC_REFERENCE", source: bilingual("Manual / Excel / calculated deterministic demonstration fixture", "手工录入 / Excel / 确定性计算演示数据集"), source_system: bilingual("GreanLean PreProd synthetic fixture", "GreanLean PreProd 合成数据集"), responsible_party: "GreanLean Reference Mobility", updated_at: "2026-09-29T12:00:00.000Z", verification_status: "UNVERIFIED", resolver: `https://${siteHost}/p/${demo.dpp}`, qr: bilingual("Resolver QR target", "Resolver QR 目标") }),
     field("access.policy-demo", { classification: "SYNTHETIC_DEMO", public_excludes: ["internal provenance", "restricted operational data"] }, "INTERNAL"),
   ];
+  if (!isBattery) {
+    const organisations = fields.find((entry) => entry.fieldCode === "enterprise.organisations")?.value;
+    if (organisations && typeof organisations === "object") {
+      delete organisations.pack_assembler; delete organisations.cell_supplier; delete organisations.bms_supplier;
+      organisations.recycler = { name: demo.category === "TEXTILE" ? "EcoWeave Textile Recycling Partner" : demo.category === "CONSUMER_ELECTRONICS" ? "LoopSound Electronics Recovery Partner" : demo.category === "BUILDING_MATERIAL" ? "TerraDeck Materials Recovery Partner" : "ForgeFix Metal Recycling Partner", country_region: "DE" };
+    }
+    const materials = fields.find((entry) => entry.fieldCode === "sustainability.materials")?.value;
+    if (materials && typeof materials === "object") { delete materials.cathode_material; delete materials.anode_material; delete materials.electrolyte_type; }
+    const recycled = fields.find((entry) => entry.fieldCode === "sustainability.recycled-content")?.value;
+    if (recycled && typeof recycled === "object") { delete recycled.recycled_cobalt_pct; delete recycled.recycled_nickel_pct; delete recycled.recycled_lithium_pct; delete recycled.recycled_lead_pct; }
+    const compliance = fields.find((entry) => entry.fieldCode === "compliance.synthetic")?.value;
+    if (compliance && typeof compliance === "object") { delete compliance.un38_3; delete compliance.iec_reference; delete compliance.sds; }
+  }
   if (demo.bms) fields.splice(4, 0, field("bms.snapshot", { ...demo.bms, trends: { soc_24h: bmsTrends(demo.bms.soc_pct).soc_24h, temperature_24h: bmsTrends(demo.bms.temperature_c).temperature_24h, soh_30d: bmsTrends(demo.bms.soh_pct).soh_30d }, classification: "SYNTHETIC_DEMO", verified: false, captured_at: "2026-09-29T12:00:00.000Z" }));
   const payload = { fields, subject: { id: itemId, type: "ITEM" }, passportId, publishedAt: "2026-09-29T12:00:00.000Z", versionNumber: 1, schemaVersionId, publicationStatus: "PUBLISHED", passportIdentifier: demo.dpp };
   payload.candidateHash = hash({ demo: demo.dpp, schemaVersionId, itemId, seed: "round-b1" });
