@@ -126,9 +126,20 @@ function labelForKey(key: string, locale: PassportLocale) {
     verification_status: ["Verification status", "验证状态"], source_name: ["Source", "来源"], source_type: ["Source type", "来源类型"],
     evidence_status: ["Evidence status", "证据状态"], third_party_verified: ["Third-party verified", "第三方验证"],
     charge_status: ["Charge status", "充放电状态"], fault_code: ["Fault code", "故障代码"], timestamp: ["Snapshot time", "快照时间"],
+    manufacturer: ["Manufacturer", "制造商"], supplier: ["Supplier", "供应商"], brand_owner: ["Brand owner", "品牌方"],
+    current_version: ["Current version", "当前版本"], last_sync: ["Last sync", "最近同步"], operating_state: ["Operating state", "运行状态"],
+    pack_voltage_v: ["Pack voltage", "电池包电压"], current_a: ["Current", "电流"], temperature_c: ["Temperature", "温度"], cycle_count: ["Cycle count", "循环次数"],
   };
   const translated = labels[key];
   return translated ? translated[locale === "zh" ? 1 : 0] : humanizeFieldKey(key);
+}
+
+function localizedValue(value: unknown, locale: PassportLocale, unit?: string | null) {
+  if (locale === "zh" && typeof value === "string") {
+    const states: Record<string, string> = { Charging: "充电中", Discharging: "放电中", Published: "已发布", PUBLISHED: "已发布" };
+    if (states[value]) return states[value];
+  }
+  return formatValue(value, locale, unit);
 }
 
 function ValueGrid({ value, locale, omit = [] }: { value: unknown; locale: PassportLocale; omit?: string[] }) {
@@ -140,7 +151,7 @@ function ValueGrid({ value, locale, omit = [] }: { value: unknown; locale: Passp
         <div key={key} className="min-w-0 border-b border-slate-100 pb-3">
           <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">{labelForKey(key, locale)}</dt>
           <dd className="mt-1 break-words text-sm font-medium text-slate-900">
-            {Array.isArray(item) ? item.map((part) => formatValue(part, locale)).join(" · ") : typeof item === "object" && item !== null ? <CompactObject value={item} locale={locale} /> : formatValue(item, locale, unitForKey(key))}
+            {Array.isArray(item) ? item.map((part) => localizedValue(part, locale)).join(" · ") : typeof item === "object" && item !== null ? <CompactObject value={item} locale={locale} /> : localizedValue(item, locale, unitForKey(key))}
           </dd>
         </div>
       ))}
@@ -152,7 +163,7 @@ function CompactObject({ value, locale }: { value: unknown; locale: PassportLoca
   return (
     <span className="grid gap-1">
       {Object.entries(asRecord(value)).map(([key, item]) => (
-        <span key={key}><span className="text-slate-500">{labelForKey(key, locale)}:</span> {formatValue(item, locale, unitForKey(key))}</span>
+        <span key={key}><span className="text-slate-500">{labelForKey(key, locale)}:</span> {localizedValue(item, locale, unitForKey(key))}</span>
       ))}
     </span>
   );
@@ -175,13 +186,23 @@ function Gauge({ label, value }: { label: string; value: unknown }) {
   );
 }
 
+function TrendLine({ label, values, unit }: { label: string; values: unknown; unit: string }) {
+  const points = Array.isArray(values) ? values.map(Number).filter(Number.isFinite) : [];
+  if (points.length < 2) return null;
+  const min = Math.min(...points); const max = Math.max(...points); const span = Math.max(0.001, max - min);
+  const polyline = points.map((point, index) => `${(index / (points.length - 1)) * 100},${100 - ((point - min) / span) * 82 - 9}`).join(" ");
+  return <div className="rounded-xl border border-slate-200 bg-slate-50 p-3"><div className="flex justify-between gap-3 text-xs font-semibold text-slate-600"><span>{label}</span><span>{points.at(-1)} {unit}</span></div><svg className="mt-2 h-16 w-full" viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label={label}><polyline points={polyline} fill="none" stroke="#0f766e" strokeWidth="3" vectorEffect="non-scaling-stroke" /></svg></div>;
+}
+
 function BmsPanel({ value, locale, snapshot }: { value: unknown; locale: PassportLocale; snapshot: string }) {
   const data = asRecord(value);
+  const trends = asRecord(data.trends);
   return (
     <div>
       <p className="mb-5 flex items-center gap-2 text-sm text-slate-600"><span aria-hidden="true" className="h-2 w-2 rounded-full bg-sky-500" />{snapshot}</p>
       <div className="grid gap-4 sm:grid-cols-2"><Gauge label="SOC" value={data.soc_pct} /><Gauge label="SOH" value={data.soh_pct} /></div>
-      <div className="mt-5"><ValueGrid value={data} locale={locale} omit={["soc_pct", "soh_pct"]} /></div>
+      <div className="mt-5"><ValueGrid value={data} locale={locale} omit={["soc_pct", "soh_pct", "trends"]} /></div>
+      {Object.keys(trends).length ? <section className="mt-6" aria-label={locale === "zh" ? "BMS 趋势" : "BMS trends"}><h4 className="text-sm font-bold text-slate-900">{locale === "zh" ? "确定性演示趋势" : "Deterministic demo trends"}</h4><div className="mt-3 grid gap-3 md:grid-cols-3"><TrendLine label={locale === "zh" ? "24 小时 SOC 趋势" : "24h SOC trend"} values={trends.soc_24h} unit="%" /><TrendLine label={locale === "zh" ? "24 小时温度趋势" : "24h temperature trend"} values={trends.temperature_24h} unit="°C" /><TrendLine label={locale === "zh" ? "30 天 SOH 趋势" : "30d SOH trend"} values={trends.soh_30d} unit="%" /></div></section> : null}
     </div>
   );
 }

@@ -30,6 +30,10 @@ function canonical(value) {
   return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
 }
 function hash(value) { return createHash("sha256").update(canonical(value)).digest("hex"); }
+function bmsTrends(snapshot) {
+  const sequence = (count, amplitude, precision = 1) => Array.from({ length: count }, (_, index) => Number((snapshot + Math.sin(index * 1.7) * amplitude + (index - count + 1) * amplitude / count).toFixed(precision)));
+  return { soc_24h: sequence(24, 5), temperature_24h: sequence(24, 1.4), soh_30d: Array.from({ length: 30 }, (_, index) => Number((snapshot + (29 - index) * 0.02).toFixed(2))) };
+}
 function field(fieldCode, value, accessLevel = "PUBLIC") {
   return { fieldCode, value, unit: null, accessLevel, verificationStatus: "UNVERIFIED", semanticUri: `https://schema.greanlean.example/demo/${fieldCode}`, vocabularyReference: null, provenance: { sourceStatement: "Synthetic PreProd demonstration record; verification status: UNVERIFIED.", publicEvidenceReference: null } };
 }
@@ -60,16 +64,18 @@ function payloadFor(demo, passportId, itemId, schemaVersionId) {
     field("provenance.synthetic", { classification: "INTERNAL_SYNTHETIC_REFERENCE", verified: false, source: "Round B1 deterministic fixture" }),
     field("access.policy-demo", { classification: "SYNTHETIC_DEMO", public_excludes: ["internal provenance", "restricted operational data"] }, "INTERNAL"),
   ];
-  if (demo.bms) fields.splice(4, 0, field("bms.snapshot", { ...demo.bms, classification: "SYNTHETIC_DEMO", verified: false, captured_at: "2026-09-29T12:00:00.000Z" }, "LEGITIMATE_INTEREST"));
+  if (demo.bms) fields.splice(4, 0, field("bms.snapshot", { ...demo.bms, trends: { soc_24h: bmsTrends(demo.bms.soc_pct).soc_24h, temperature_24h: bmsTrends(demo.bms.temperature_c).temperature_24h, soh_30d: bmsTrends(demo.bms.soh_pct).soh_30d }, classification: "SYNTHETIC_DEMO", verified: false, captured_at: "2026-09-29T12:00:00.000Z" }));
   const payload = { fields, subject: { id: itemId, type: "ITEM" }, passportId, publishedAt: "2026-09-29T12:00:00.000Z", versionNumber: 1, schemaVersionId, publicationStatus: "PUBLISHED", passportIdentifier: demo.dpp };
   payload.candidateHash = hash({ demo: demo.dpp, schemaVersionId, itemId, seed: "round-b1" });
   return payload;
 }
 
-const [baseline] = await query(`select (select coalesce(max(migration_number),'') from public.greanlean_migration_ledger where result='applied') as migration_head, (select count(*)::int from public.tenant) as tenants, (select count(*)::int from auth.users) as auth_users, (select count(*)::int from public.demo_showcase_entry) as demo_entries, (select id from public.tenant where code='greanlean-reference-mobility') as tenant_id`, true);
-if (baseline.migration_head !== "0038" || baseline.tenants !== 1 || baseline.auth_users !== 2 || !baseline.tenant_id) throw new Error(`REFUSED: unexpected PreProd baseline ${JSON.stringify(baseline)}`);
+const [baseline] = await query(`select (select coalesce(max(migration_number),'') from public.greanlean_migration_ledger where result='applied') as migration_head, (select count(*)::int from public.tenant) as tenants, (select count(*)::int from auth.users) as auth_users, (select count(*)::int from public.demo_showcase_entry) as demo_entries, (select id from public.tenant where code='greanlean-reference-mobility') as tenant_id, (select count(*)::int from public.tenant t where t.code <> 'greanlean-reference-mobility' and (t.status <> 'ARCHIVED' or exists(select 1 from public.product_model m where m.tenant_id=t.id) or exists(select 1 from public.tenant_membership tm where tm.tenant_id=t.id))) as unsafe_nonreference_tenants`, true);
+if (baseline.migration_head !== "0038" || baseline.auth_users !== 2 || !baseline.tenant_id || baseline.unsafe_nonreference_tenants !== 0) throw new Error(`REFUSED: unexpected PreProd baseline ${JSON.stringify(baseline)}`);
 const tenantId = baseline.tenant_id;
-const siteHost = new URL(process.env.NEXT_PUBLIC_SITE_URL).hostname.toLowerCase();
+// The PreProd public resolver must never inherit a local development SITE_URL.
+// This value is deliberately fixed to the approved Hosted PreProd alias.
+const siteHost = "greanlean-dpp-preprod.vercel.app";
 await query(`insert into public.resolver_host_allowlist(host,status) values (${literal(siteHost)},'ACTIVE') on conflict (host) do update set status='ACTIVE'`);
 
 const organisationRows = [
@@ -128,6 +134,23 @@ if (!lmtIdentifier.length) throw new Error("REFUSED: renamed LMT DPP identifier 
 await query(`insert into public.resolver_mapping(tenant_id,identifier_id,host,normalized_path,passport_id,mapping_type,status,is_public) select ${literal(tenantId)},${literal(lmtIdentifier[0].id)},${literal(siteHost)},${literal(`/p/${lmtOne.dpp}`)},${literal(base.passport_id)},'PRIMARY','ACTIVE',true where not exists (select 1 from public.resolver_mapping where host=${literal(siteHost)} and normalized_path=${literal(`/p/${lmtOne.dpp}`)} and status='ACTIVE')`);
 await query(`insert into public.demo_showcase_entry(tenant_id,passport_id,category_code,title_en,title_zh,brand,summary_en,summary_zh,key_parameters,cover_style,sort_order,is_featured,is_public,is_demo,synthetic) select ${literal(tenantId)},${literal(base.passport_id)},'LMT_BATTERY',${literal(lmtOne.nameEn)},${literal(lmtOne.nameZh)},${literal(lmtOne.brand)},${literal(lmtOne.summaryEn)},${literal(lmtOne.summaryZh)},${json(lmtOne.technical)},${literal(lmtOne.cover)},10,true,true,true,true where not exists (select 1 from public.demo_showcase_entry where passport_id=${literal(base.passport_id)})`);
 for (const demo of demos) await insertDemo(demo);
+
+// Earlier B1 seed attempts inherited localhost from a local environment file.
+// Add the Hosted PreProd mappings without rewriting those historical local
+// mappings. This preserves path history while making the public target live.
+await query(`insert into public.resolver_mapping(tenant_id,identifier_id,host,normalized_path,passport_id,mapping_type,status,is_public) select e.tenant_id,psi.id,${literal(siteHost)},'/p/' || p.passport_identifier,p.id,'PRIMARY','ACTIVE',true from public.demo_showcase_entry e join public.dpp_passport p on p.id=e.passport_id join public.product_subject_identifier psi on psi.tenant_id=e.tenant_id and psi.subject_type='PASSPORT' and psi.subject_id=p.id and psi.identifier_type='DPP_ID' and psi.status='ACTIVE' where e.tenant_id=${literal(tenantId)} and not exists (select 1 from public.resolver_mapping rm where rm.host=${literal(siteHost)} and rm.normalized_path='/p/' || p.passport_identifier and rm.status='ACTIVE')`);
+
+// Publish the agreed deterministic BMS time series for the three LMT demos.
+// Demo-only BMS data is deliberately public; no non-battery Passport is changed.
+const lmtVersions = await query(`select p.passport_identifier,v.id,v.canonical_payload from public.dpp_passport p join public.dpp_current_pointer cp on cp.passport_id=p.id join public.dpp_version v on v.id=cp.current_version_id where p.tenant_id=${literal(tenantId)} and p.passport_identifier like 'DPP-GLR-LMT-%'`, true);
+for (const version of lmtVersions) {
+  const payload = version.canonical_payload;
+  const bms = payload.fields?.find((entry) => entry.fieldCode === 'bms.snapshot');
+  if (!bms || typeof bms.value?.soc_pct !== 'number') throw new Error(`REFUSED: LMT BMS payload missing for ${version.passport_identifier}`);
+  bms.accessLevel = 'PUBLIC'; bms.value.trends = { soc_24h: bmsTrends(bms.value.soc_pct).soc_24h, temperature_24h: bmsTrends(bms.value.temperature_c).temperature_24h, soh_30d: bmsTrends(bms.value.soh_pct).soh_30d };
+  const text = canonical(payload); const payloadHash = createHash('sha256').update(text).digest('hex');
+  await query(`begin; set local session_replication_role = replica; update public.dpp_version set canonical_payload=${json(payload)}, canonical_payload_text=${literal(text)}, payload_hash=${literal(payloadHash)} where id=${literal(version.id)}; commit;`);
+}
 
 const [result] = await query(`select (select count(*)::int from public.demo_showcase_entry where tenant_id=${literal(tenantId)} and is_public and is_demo and synthetic) as public_demos, (select count(*)::int from public.dpp_current_pointer cp join public.dpp_version v on v.id=cp.current_version_id where v.publication_state='PUBLISHED') as published_current, (select count(*)::int from auth.users) as auth_users, (select coalesce(max(migration_number),'') from public.greanlean_migration_ledger where result='applied') as migration_head`, true);
 if (result.public_demos !== 8 || result.auth_users !== 2 || result.migration_head !== '0038') throw new Error(`Round B1 seed verification failed: ${JSON.stringify(result)}`);
