@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { createSupabaseClient } from "@/lib/supabase";
 import { useLanguage } from "@/components/LanguageProvider";
 
 type LeadFormProps = {
@@ -92,13 +91,13 @@ export function LeadForm({
     const payload = {
       name: String(form.get("name") || "").trim(),
       company: String(form.get("company") || "").trim(),
-      contact: String(form.get("contact") || "").trim(),
-      industry: String(form.get("industry") || "").trim(),
+      email: String(form.get("contact") || "").trim(),
+      interest: String(form.get("industry") || "GENERAL_CONSULTATION").trim(),
       message: String(form.get("message") || "").trim(),
-      source,
+      website: String(form.get("website") || ""), locale, source,
     };
 
-    if (!payload.name || !payload.contact) {
+    if (!payload.name || !payload.company || !payload.email || !payload.message) {
       setMsg({
         type: "err",
         text: t.required,
@@ -113,15 +112,13 @@ export function LeadForm({
       const timeoutPromise = new Promise<never>((_, reject) => {
         window.setTimeout(() => reject(new Error(t.timeout)), 12000);
       });
-      const insertPromise = createSupabaseClient().from("leads").insert(payload);
-      const result = (await Promise.race([insertPromise, timeoutPromise])) as {
-        error: { message?: string } | null;
-      };
+      const insertPromise = fetch("/api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      const result = (await Promise.race([insertPromise, timeoutPromise])) as Response;
 
-      if (result.error) {
+      if (!result.ok) {
         setMsg({
           type: "err",
-          text: t.failed + (result.error.message || t.timeout),
+          text: t.failed + t.timeout,
         });
       } else {
         formEl.reset();
@@ -180,13 +177,13 @@ export function LeadForm({
       <div>
         <label className="label">{t.industry}</label>
 
-        <select className="input mt-1" name="industry" defaultValue={t[initialIndustry]}>
-          <option>{t.apparel}</option>
-          <option>{t.electronics}</option>
-          <option>{t.battery}</option>
-          <option>{t.furniture}</option>
-          <option>{t.metal}</option>
-          <option>{t.other}</option>
+        <select className="input mt-1" name="industry" defaultValue="GENERAL_CONSULTATION">
+          <option value="BATTERY_PASSPORT">{t.battery}</option>
+          <option value="INDUSTRIAL_BATTERY">{locale === "zh" ? "工业电池" : "Industrial Battery"}</option>
+          <option value="TEXTILE_DPP">{t.apparel}</option>
+          <option value="CONSUMER_ELECTRONICS_DPP">{t.electronics}</option>
+          <option value="OTHER_DPP">{t.other}</option>
+          <option value="GENERAL_CONSULTATION">{locale === "zh" ? "一般咨询" : "General Consultation"}</option>
         </select>
       </div>
 
