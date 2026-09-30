@@ -1,0 +1,77 @@
+{
+  "generatedAt": "2026-09-30",
+  "environment": {
+    "name": "greanlean-dpp-preprod",
+    "projectRef": "efhiaufukjchxqhbmpvq",
+    "baseUrl": "https://greanlean-dpp-preprod.vercel.app",
+    "deploymentId": "dpl_CRUJcpxhYRh4xqZJiNdLagSGyjbP",
+    "deploymentStatus": "READY"
+  },
+  "acceptance": {
+    "roundB22DemoPolish": "PASS",
+    "zhEnglishResidualCount": 0,
+    "demoCardMissingUnitCount": 0,
+    "nonBatteryBatterySemanticLeakage": 0,
+    "publicDppHttp200Count": 8,
+    "objectRenderingRegression": "PASS",
+    "yearFormatRegression": "PASS",
+    "qrResolverRegression": "PASS"
+  },
+  "titles": {
+    "demoZh": "GreanLean 数字产品护照演示展厅",
+    "publicDppZhExamples": [
+      "EcoWeave 有机棉 T 恤 - GreanLean DPP",
+      "GLR-P25A 电动自行车电池包 - GreanLean DPP"
+    ]
+  },
+  "cardUnitExamples": [
+    "14.3 kWh",
+    "180 g/m²",
+    "140 × 25 × 2200 mm",
+    "52%",
+    "25.2 V",
+    "36 V",
+    "48 V"
+  ],
+  "recyclers": {
+    "TEXTILE": "EcoWeave Textile Recycling Partner",
+    "CONSUMER_ELECTRONICS": "LoopSound Electronics Recovery Partner",
+    "BUILDING_MATERIAL": "TerraDeck Materials Recovery Partner",
+    "HARDWARE": "ForgeFix Metal Recycling Partner"
+  },
+  "lmtCarbon": {
+    "DPP-GLR-LMT-000001": { "total": 31.8, "materials": 16.5, "manufacturing": 8.2, "transport": 4.0, "packaging": 1.6, "other": 1.5, "renewableEnergyPct": 34, "sumMatches": true },
+    "DPP-GLR-LMT-000002": { "total": 48.6, "materials": 26.1, "manufacturing": 12.7, "transport": 5.4, "packaging": 2.2, "other": 2.2, "renewableEnergyPct": 42, "sumMatches": true },
+    "DPP-GLR-LMT-000003": { "total": 62.4, "materials": 34.8, "manufacturing": 15.4, "transport": 6.5, "packaging": 2.8, "other": 2.9, "renewableEnergyPct": 47, "sumMatches": true }
+  },
+  "renewableEnergyPct": {
+    "DPP-GLR-LMT-000001": 34,
+    "DPP-GLR-LMT-000002": 42,
+    "DPP-GLR-LMT-000003": 47,
+    "DPP-DEMO-ESS-000001": 55,
+    "DPP-DEMO-TEX-000001": 61,
+    "DPP-DEMO-CE-000001": 46,
+    "DPP-DEMO-BLD-000001": 52,
+    "DPP-DEMO-HW-000001": 39
+  },
+  "hostedMatrix": [
+    { "dpp": "DPP-GLR-LMT-000001", "publicHttp": 200, "qrHttp": 200, "humanResolver": "PASS", "residualCount": 0, "objectObjectCount": 0, "yearThousandsCount": 0 },
+    { "dpp": "DPP-GLR-LMT-000002", "publicHttp": 200, "qrHttp": 200, "humanResolver": "PASS", "residualCount": 0, "objectObjectCount": 0, "yearThousandsCount": 0 },
+    { "dpp": "DPP-GLR-LMT-000003", "publicHttp": 200, "qrHttp": 200, "humanResolver": "PASS", "residualCount": 0, "objectObjectCount": 0, "yearThousandsCount": 0 },
+    { "dpp": "DPP-DEMO-ESS-000001", "publicHttp": 200, "qrHttp": 200, "humanResolver": "PASS", "residualCount": 0, "objectObjectCount": 0, "yearThousandsCount": 0 },
+    { "dpp": "DPP-DEMO-TEX-000001", "publicHttp": 200, "qrHttp": 200, "humanResolver": "PASS", "residualCount": 0, "objectObjectCount": 0, "yearThousandsCount": 0 },
+    { "dpp": "DPP-DEMO-CE-000001", "publicHttp": 200, "qrHttp": 200, "humanResolver": "PASS", "residualCount": 0, "objectObjectCount": 0, "yearThousandsCount": 0 },
+    { "dpp": "DPP-DEMO-BLD-000001", "publicHttp": 200, "qrHttp": 200, "humanResolver": "PASS", "residualCount": 0, "objectObjectCount": 0, "yearThousandsCount": 0 },
+    { "dpp": "DPP-DEMO-HW-000001", "publicHttp": 200, "qrHttp": 200, "humanResolver": "PASS", "residualCount": 0, "objectObjectCount": 0, "yearThousandsCount": 0 }
+  ],
+  "knownIssues": {
+    "tenantDelete": "OPEN",
+    "rlsSecurityBlockerRemains": true,
+    "rlsWarningTable": "public.greanlean_0012_data_backup"
+  },
+  "production": {
+    "deployed": false,
+    "dataWritePerformed": false,
+    "authChanged": false
+  }
+}
