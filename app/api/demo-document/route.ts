@@ -8,6 +8,12 @@ const allowedFiles = new Set([
   "demo-carbon-footprint-declaration.pdf",
 ]);
 
+function isRoundB2DemoFile(file: string) {
+  // These pages deliberately render a safe, generated demonstration viewer;
+  // they never resolve a filesystem path or proxy a remote document.
+  return /^round-b2-[a-z0-9-]+\.html$/.test(file);
+}
+
 function escapeHtml(value: string) {
   return value
     .replaceAll("&", "&amp;")
@@ -21,13 +27,13 @@ export const GET = withApiRoute(async (request) => {
   const url = new URL(request.url);
   const file = url.searchParams.get("file") || "";
   const zh = url.searchParams.get("lang") !== "en";
-  if (!allowedFiles.has(file)) {
+  if (!allowedFiles.has(file) && !isRoundB2DemoFile(file)) {
     return Response.json({ error: "Unknown demo document" }, { status: 404 });
   }
-  const title = zh ? "演示文件占位说明" : "Demo document placeholder";
+  const title = zh ? "演示文件" : "Demo Document";
   const notice = zh
-    ? "该文件仅用于展示电池护照的文件入口。当前没有真实检测报告、实验室签章、证书编号或法规认证。"
-    : "This file only demonstrates a battery-passport document entry. No real test report, laboratory seal, certificate number or regulatory certification is present.";
+    ? "该文件为 GreanLean 数字产品护照演示文件，用于说明证书、规格、环境或服务文件的展示入口；不是真实检测报告、实验室签章、证书编号或法规认证。"
+    : "This is a GreanLean Digital Product Passport demonstration document. It illustrates a certificate, specification, environmental or service-document entry and is not a real test report, laboratory seal, certificate number or regulatory certification.";
   const html = `<!doctype html>
 <html lang="${zh ? "zh-CN" : "en"}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title>

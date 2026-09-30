@@ -23,7 +23,7 @@ type Props = {
 const messages = {
   en: {
     passport: "Digital Product Passport",
-    demo: "Synthetic demonstration",
+    demo: "Demo",
     verified: "Data verification",
     unverified: "Unverified",
     status: "Passport status",
@@ -55,15 +55,15 @@ const messages = {
     manufacturer: "Manufacturer",
     authority: "Authority",
     language: "中文",
-    home: "GreanLean Home",
+    disclaimer: "This page is a GreanLean Digital Product Passport demonstration. The data shown is for platform demonstration purposes and does not represent a real customer product or a formal regulatory submission.",
     login: "Platform Login",
     skip: "Skip to passport content",
   },
   zh: {
     passport: "数字产品护照",
-    demo: "合成演示数据",
+    demo: "Demo",
     verified: "数据验证",
-    unverified: "未经验证",
+    unverified: "未验证",
     status: "护照状态",
     updated: "最后更新",
     scan: "扫码打开稳定护照地址",
@@ -93,7 +93,7 @@ const messages = {
     manufacturer: "制造商",
     authority: "监管机构",
     language: "English",
-    home: "GreanLean 首页",
+    disclaimer: "本页面为 GreanLean 数字产品护照演示页面，所展示数据用于说明平台的数据组织、展示与管理能力，不代表真实客户产品或正式监管申报结果。",
     login: "平台登录",
     skip: "跳转到护照内容",
   },
@@ -129,12 +129,34 @@ function labelForKey(key: string, locale: PassportLocale) {
     manufacturer: ["Manufacturer", "制造商"], supplier: ["Supplier", "供应商"], brand_owner: ["Brand owner", "品牌方"],
     current_version: ["Current version", "当前版本"], last_sync: ["Last sync", "最近同步"], operating_state: ["Operating state", "运行状态"],
     pack_voltage_v: ["Pack voltage", "电池包电压"], current_a: ["Current", "电流"], temperature_c: ["Temperature", "温度"], cycle_count: ["Cycle count", "循环次数"],
+    product_category: ["Product category", "产品类别"], productNameZh: ["Chinese product name", "中文产品名称"], sku: ["SKU", "SKU"], batch_number: ["Batch number", "批次号"],
+    serial_number: ["Serial number", "单件序列号"], gtin_or_demo_identifier: ["GTIN / identifier", "GTIN / 标识"], manufacturing_date: ["Manufacturing date", "生产日期"], market_placement_date: ["Market placement date", "投放市场日期"],
+    pack_assembler: ["Pack assembler", "电池包组装方"], cell_supplier: ["Cell supplier", "电芯供应商"], bms_supplier: ["BMS supplier", "BMS 供应商"], importer: ["Importer", "进口商"], recycler: ["Recycler", "回收商"],
+    country_region: ["Country / region", "国家/地区"], address: ["Address", "地址"], contact: ["Contact", "联系方式"], website: ["Website", "官网"],
+    nominal_voltage_v: ["Nominal voltage", "额定电压"], rated_capacity_ah: ["Rated capacity", "额定容量"], rated_energy_wh: ["Rated energy", "额定能量"], energy_kwh: ["Rated energy", "额定能量"],
+    cell_specification: ["Cell specification", "电芯规格"], cell_format: ["Cell format", "电芯形式"], series_parallel_configuration: ["Series / parallel configuration", "串并联配置"], weight_kg: ["Weight", "重量"], dimensions_mm: ["Dimensions", "尺寸"],
+    ingress_protection: ["Ingress protection", "防护等级"], charge_cutoff_voltage_v: ["Charge cutoff voltage", "充电截止电压"], max_charge_current_a: ["Maximum charge current", "最大充电电流"], max_continuous_discharge_current_a: ["Maximum continuous discharge current", "最大持续放电电流"],
+    operating_temperature_range: ["Operating temperature range", "工作温度范围"], storage_temperature_range: ["Storage temperature range", "储存温度范围"], cycle_life: ["Cycle life", "循环寿命"], design_life_years: ["Design life", "设计寿命"], application: ["Application", "应用场景"], removable: ["Removable", "可拆卸"], replaceable: ["Replaceable", "可更换"],
+    total_kg_co2e_per_battery: ["Total carbon footprint", "碳足迹总值"], functional_unit: ["Functional unit", "功能单位"], calculation_boundary: ["Calculation boundary", "计算边界"], reference_year: ["Reference year", "参考年份"], calculation_method: ["Calculation method", "计算方法"], renewable_energy_pct: ["Renewable energy use", "可再生能源使用比例"],
+    cathode_material: ["Cathode material", "正极材料"], anode_material: ["Anode material", "负极材料"], electrolyte_type: ["Electrolyte", "电解液类别"], copper_pct: ["Copper", "铜"], aluminium_pct: ["Aluminium", "铝"], steel_pct: ["Steel", "钢"], plastic_pct: ["Plastic", "塑料"], electronics_pct: ["Electronic components", "电子元件"],
+    recycled_cobalt_pct: ["Recycled cobalt", "再生钴比例"], recycled_nickel_pct: ["Recycled nickel", "再生镍比例"], recycled_lithium_pct: ["Recycled lithium", "再生锂比例"], recycled_lead_pct: ["Recycled lead", "再生铅比例"], packaging_recyclability: ["Packaging recyclability", "包装可回收性"],
+    un38_3: ["UN38.3", "UN38.3"], iec_reference: ["IEC reference", "IEC 参考"], ce: ["CE", "CE"], rohs: ["RoHS", "RoHS"], reach: ["REACH", "REACH"], sds: ["SDS / MSDS", "SDS / MSDS"], transport_classification: ["Transport classification", "运输分类"], safety_warning: ["Safety warning", "安全警告"],
+    warranty_months: ["Warranty", "保修期"], inspection_interval: ["Recommended inspection interval", "建议检查周期"], serviceability: ["Serviceability", "可维修性"], replaceable_parts: ["Replaceable parts", "可更换零部件"], service_contact: ["Service contact", "售后联系方式"],
+    end_of_life_decision: ["End-of-life decision", "报废判定"], collection_route: ["Collection route", "回收方式"], household_waste: ["Household waste", "生活垃圾处理"], transport_notes: ["Transport notes", "运输注意事项"], disassembly_notes: ["Disassembly notes", "拆解注意事项"], second_life: ["Second life", "二次利用说明"],
+    source_system: ["Source system", "来源系统"], responsible_party: ["Responsible party", "责任主体"], updated_at: ["Last updated", "最近更新"], resolver: ["Resolver", "Resolver"], qr: ["QR", "QR"],
+    rated_power_kw: ["Rated power", "额定功率"], voltage_platform: ["Voltage platform", "电压平台"], architecture: ["Architecture", "模块/簇/电池包架构"], thermal_management: ["Thermal management", "热管理"], fire_safety: ["Fire safety", "消防与安全"],
+    fibre_composition: ["Fibre composition", "纤维组成"], material_pct: ["Material composition", "材料百分比"], dye_chemicals: ["Dyes / chemicals", "染料/化学品"], care_instruction: ["Care instruction", "洗涤与保养"], water_footprint_l: ["Water footprint", "水足迹"],
+    connectivity: ["Connectivity", "连接方式"], enclosure_material: ["Enclosure material", "外壳材料"], key_components: ["Key components", "关键零部件"], energy_efficiency: ["Energy efficiency", "能效信息"], firmware: ["Software / firmware", "软件/固件"], weee: ["WEEE / recycling", "WEEE / 回收信息"],
+    wood_fibre_pct: ["Wood fibre", "木纤维比例"], additive_pct: ["Other additives", "其他添加剂"], wear_resistance: ["Wear resistance", "耐磨性能"], slip_resistance: ["Slip resistance", "防滑性能"], water_absorption_pct: ["Water absorption", "吸水率"], weather_resistance: ["Weather resistance", "耐候性"], flame_rating: ["Fire rating", "阻燃等级"], voc: ["VOC", "VOC"], installation_method: ["Installation method", "安装方法"],
+    steel_type: ["Steel type", "钢材类型"], surface_treatment: ["Surface treatment", "表面处理"], hardness: ["Hardness", "硬度"], corrosion_resistance: ["Corrosion resistance", "耐腐蚀性"], applicable_standard: ["Applicable standard", "适用标准"], production_origin: ["Production origin", "生产地"],
   };
   const translated = labels[key];
   return translated ? translated[locale === "zh" ? 1 : 0] : humanizeFieldKey(key);
 }
 
 function localizedValue(value: unknown, locale: PassportLocale, unit?: string | null) {
+  const localized = asRecord(value);
+  if (typeof localized.en === "string" && typeof localized.zh === "string") return String(localized[locale]);
   if (locale === "zh" && typeof value === "string") {
     const states: Record<string, string> = { Charging: "充电中", Discharging: "放电中", Published: "已发布", PUBLISHED: "已发布" };
     if (states[value]) return states[value];
@@ -151,7 +173,7 @@ function ValueGrid({ value, locale, omit = [] }: { value: unknown; locale: Passp
         <div key={key} className="min-w-0 border-b border-slate-100 pb-3">
           <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">{labelForKey(key, locale)}</dt>
           <dd className="mt-1 break-words text-sm font-medium text-slate-900">
-            {Array.isArray(item) ? item.map((part) => localizedValue(part, locale)).join(" · ") : typeof item === "object" && item !== null ? <CompactObject value={item} locale={locale} /> : localizedValue(item, locale, unitForKey(key))}
+            {Array.isArray(item) ? item.map((part) => localizedValue(part, locale)).join(" · ") : typeof item === "object" && item !== null && !(typeof asRecord(item).en === "string" && typeof asRecord(item).zh === "string") ? <CompactObject value={item} locale={locale} /> : localizedValue(item, locale, unitForKey(key))}
           </dd>
         </div>
       ))}
@@ -163,7 +185,7 @@ function CompactObject({ value, locale }: { value: unknown; locale: PassportLoca
   return (
     <span className="grid gap-1">
       {Object.entries(asRecord(value)).map(([key, item]) => (
-        <span key={key}><span className="text-slate-500">{labelForKey(key, locale)}:</span> {localizedValue(item, locale, unitForKey(key))}</span>
+        <span key={key}><span className="text-slate-500">{labelForKey(key, locale)}:</span> {typeof item === "object" && item !== null && !(typeof asRecord(item).en === "string" && typeof asRecord(item).zh === "string") ? <CompactObject value={item} locale={locale} /> : localizedValue(item, locale, unitForKey(key))}</span>
       ))}
     </span>
   );
@@ -239,14 +261,16 @@ function CompositionPanel({ value, locale }: { value: unknown; locale: PassportL
 function DocumentsPanel({ value, locale, metadataOnly, demoDocument }: { value: unknown; locale: PassportLocale; metadataOnly: string; demoDocument: string }) {
   const documents = Array.isArray(value) ? value.map(asRecord) : [];
   return <div className="grid gap-4 md:grid-cols-2">{documents.map((document, index) => {
-    const url = safeExternalUrl(document.url || document.document_url);
-    return <article key={String(document.document_id || index)} className="rounded-xl border border-slate-200 bg-slate-50 p-5"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">{formatValue(document.document_type, locale)}</p><h4 className="mt-2 font-semibold text-slate-950">{formatValue(document.title, locale)}</h4></div><span aria-hidden="true" className="text-xl">↗</span></div><p className="mt-3 break-all font-mono text-xs text-slate-500">{formatValue(document.document_id, locale)}</p><div className="mt-4 flex flex-wrap gap-2"><StatusBadge>{metadataOnly}</StatusBadge><StatusBadge tone="amber">{demoDocument}</StatusBadge>{document.version ? <StatusBadge>v{String(document.version)}</StatusBadge> : null}</div>{url ? <a href={url} rel="noreferrer noopener" className="mt-4 inline-flex min-h-11 items-center font-semibold text-emerald-700 underline decoration-2 underline-offset-4">{locale === "zh" ? "打开文档" : "Open document"}</a> : null}</article>;
+    const externalUrl = safeExternalUrl(document.url || document.document_url);
+    const demoUrl = typeof document.file === "string" ? `/api/demo-document?file=${encodeURIComponent(document.file)}&lang=${locale}` : null;
+    const url = demoUrl || externalUrl;
+    return <article key={String(document.document_id || index)} className="rounded-xl border border-slate-200 bg-slate-50 p-5"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">{formatValue(document.document_type, locale)}</p><h4 className="mt-2 font-semibold text-slate-950">{formatValue(document.title, locale)}</h4></div><span aria-hidden="true" className="text-xl">↗</span></div><p className="mt-3 break-all font-mono text-xs text-slate-500">{formatValue(document.document_id, locale)}</p><div className="mt-4 flex flex-wrap gap-2"><StatusBadge>{metadataOnly}</StatusBadge><StatusBadge tone="amber">{demoDocument}</StatusBadge>{document.issuer ? <StatusBadge>{formatValue(document.issuer, locale)}</StatusBadge> : null}{document.version ? <StatusBadge>v{String(document.version)}</StatusBadge> : null}</div>{url ? <a href={url} target="_blank" rel="noreferrer noopener" className="mt-4 inline-flex min-h-11 items-center font-semibold text-emerald-700 underline decoration-2 underline-offset-4">{locale === "zh" ? "查看附件" : "View document"}</a> : null}</article>;
   })}</div>;
 }
 
 function TimelinePanel({ value, locale }: { value: unknown; locale: PassportLocale }) {
   const events = Array.isArray(value) ? value.map(asRecord) : [];
-  return <ol className="relative ml-2 border-l-2 border-emerald-200">{events.map((event, index) => <li key={`${String(event.event_type)}-${index}`} className="relative pb-8 pl-7 last:pb-0"><span className="absolute -left-[9px] top-1 h-4 w-4 rounded-full border-4 border-white bg-emerald-600" /><p className="font-semibold text-slate-950">{humanizeFieldKey(String(event.event_type || "Lifecycle event"))}</p><p className="mt-1 text-sm text-slate-600">{dateValue(event.timestamp, locale)} · {formatValue(event.actor, locale)}</p>{event.evidence_id ? <p className="mt-1 font-mono text-xs text-slate-500">{String(event.evidence_id)}</p> : null}</li>)}</ol>;
+  return <ol className="relative ml-2 border-l-2 border-emerald-200">{events.map((event, index) => <li key={`${String(event.event_type || event.type)}-${index}`} className="relative pb-8 pl-7 last:pb-0"><span className="absolute -left-[9px] top-1 h-4 w-4 rounded-full border-4 border-white bg-emerald-600" /><p className="font-semibold text-slate-950">{localizedValue(String(event.event_type || event.type || "Lifecycle event"), locale)}</p><p className="mt-1 text-sm text-slate-600">{dateValue(event.timestamp || event.at, locale)}{event.actor ? ` · ${formatValue(event.actor, locale)}` : ""}{event.status ? ` · ${formatValue(event.status, locale)}` : ""}</p>{event.detail ? <p className="mt-1 text-sm text-slate-600">{formatValue(event.detail, locale)}</p> : null}</li>)}</ol>;
 }
 
 function FieldRenderer({ field, locale, m }: { field: PresentedField; locale: PassportLocale; m: typeof messages.en | typeof messages.zh }) {
@@ -278,10 +302,10 @@ export function ProductizedDppPage({ projection, locale, previewRole, audiencePr
     <main className="min-h-screen bg-[#f4f7f5] text-slate-950">
       <a href="#passport-content" className="sr-only z-50 rounded bg-white p-3 focus:not-sr-only focus:fixed focus:left-3 focus:top-3">{m.skip}</a>
       <header className="border-b border-emerald-950/10 bg-emerald-950 text-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8"><div className="flex items-center gap-3"><BrandLogo href={`/?lang=${locale}`} size="md" variant="light" wordmarkClassName="drop-shadow-sm" /><span className="hidden text-sm font-semibold text-emerald-100 sm:inline">{m.home}</span>{view.synthetic ? <span className="rounded-full border border-amber-200/60 bg-amber-100 px-2.5 py-1 text-xs font-black text-amber-950">{m.demo}</span> : null}</div><nav aria-label={locale === "zh" ? "账户与语言" : "Account and language"} className="flex items-center gap-2"><Link href={`/login?lang=${locale}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.login}</Link><Link href={`${basePath}?lang=${otherLocale}${previewQuery}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.language}</Link></nav></div>
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8"><BrandLogo href="https://www.greanlean.com" size="md" variant="light" wordmarkClassName="drop-shadow-sm" /><nav aria-label={locale === "zh" ? "账户与语言" : "Account and language"} className="flex items-center gap-2"><Link href={`/login?lang=${locale}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.login}</Link><Link href={`${basePath}?lang=${otherLocale}${previewQuery}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.language}</Link></nav></div>
       </header>
       {audiencePreviewEnabled ? <div className="border-b border-sky-200 bg-sky-50"><div className="mx-auto max-w-7xl px-5 py-4 sm:px-8"><div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-xs font-bold tracking-[.16em] text-sky-900">{m.preview}</p><p className="mt-1 text-sm text-sky-800">{m.previewWarning}</p></div><nav aria-label={m.preview} className="flex gap-2 overflow-x-auto pb-1">{(["PUBLIC", "REPAIRER", "RECYCLER", "MANUFACTURER", "AUTHORITY"] as PreviewRole[]).map((role) => { const grant = previewGrants?.[role]; return <Link key={role} href={`${basePath}?lang=${locale}&audience=${role}${grant ? `&audienceGrant=${encodeURIComponent(grant)}` : ""}`} className={`inline-flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-semibold ring-1 ring-inset ${previewRole === role ? "bg-sky-900 text-white ring-sky-900" : "bg-white text-sky-900 ring-sky-200"}`}>{m[role.toLowerCase() as keyof typeof m]}</Link>; })}</nav></div></div></div> : null}
-      <section className="relative overflow-hidden bg-emerald-950 text-white"><div className="absolute inset-0 opacity-30 dpp-grid" /><div className="relative mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_300px] lg:py-16"><div><div className="flex flex-wrap gap-2"><StatusBadge tone="green">{view.brand}</StatusBadge><StatusBadge tone="blue">{view.category ? humanizeFieldKey(view.category) : m.passport}</StatusBadge><StatusBadge tone="amber">{m.unverified}</StatusBadge></div><p className="mt-7 text-sm font-semibold uppercase tracking-[.2em] text-emerald-300">{m.passport}</p><h1 className="mt-3 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">{view.productName}</h1><p className="mt-5 text-lg text-emerald-100">{view.modelCode} · {projection.passportIdentifier}</p><div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-emerald-100"><span><strong className="text-white">{m.status}:</strong> {projection.status}</span><span><strong className="text-white">{m.updated}:</strong> {dateValue(projection.publishedAt, locale)}</span></div></div><div className="flex items-center justify-center"><div className="rounded-2xl bg-white p-4 text-center text-slate-900 shadow-2xl"><img src={qrUrl} width={220} height={220} alt={`${m.scan}: ${projection.passportIdentifier}`} className="h-auto w-[220px] max-w-full" /><p className="mt-3 max-w-[220px] text-xs font-semibold text-slate-600">{m.scan}</p></div></div></div></section>
+      <section className="relative overflow-hidden bg-emerald-950 text-white"><div className="absolute inset-0 opacity-30 dpp-grid" /><div className="relative mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_300px] lg:py-16"><div><div className="flex flex-wrap gap-2"><StatusBadge tone="green">{view.brand}</StatusBadge><StatusBadge tone="blue">{view.category ? (locale === "zh" ? ({ "E-bike battery pack": "LMT 电池", "Industrial energy storage": "工业储能电池", "Textile garment": "纺织品", "Consumer electronics": "消费电子产品", "Wood-plastic flooring": "建筑材料", "Hand tool": "五金产品" }[view.category] || view.category) : view.category) : m.passport}</StatusBadge>{view.synthetic ? <StatusBadge tone="neutral">{m.demo}</StatusBadge> : null}<StatusBadge tone="amber">{m.unverified}</StatusBadge></div><p className="mt-7 text-sm font-semibold uppercase tracking-[.2em] text-emerald-300">{m.passport}</p><h1 className="mt-3 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">{view.productName}</h1><p className="mt-5 text-lg text-emerald-100">{view.modelCode} · {projection.passportIdentifier}</p><div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-emerald-100"><span><strong className="text-white">{m.status}:</strong> {localizedValue(projection.status, locale)}</span><span><strong className="text-white">{m.updated}:</strong> {dateValue(projection.publishedAt, locale)}</span></div></div><div className="flex items-center justify-center"><div className="rounded-2xl bg-white p-4 text-center text-slate-900 shadow-2xl"><img src={qrUrl} width={220} height={220} alt={`${m.scan}: ${projection.passportIdentifier}`} className="h-auto w-[220px] max-w-full" /><p className="mt-3 max-w-[220px] text-xs font-semibold text-slate-600">{m.scan}</p></div></div></div></section>
       <div className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur"><nav aria-label={locale === "zh" ? "护照章节" : "Passport sections"} className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-5 py-2 sm:px-8">{view.sections.filter((section) => section.id !== "technical").map((section) => <a key={section.id} href={`#${section.id}`} className="inline-flex min-h-11 shrink-0 items-center rounded-lg px-3 text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-emerald-600">{sectionTitle(section.id, m)}</a>)}</nav></div>
       <div id="passport-content" className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:py-14">
         {view.metrics.length ? <section aria-labelledby="key-metrics"><div className="mb-5 flex items-end justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-700">{m.overview}</p><h2 id="key-metrics" className="mt-1 text-2xl font-bold tracking-tight">{m.metrics}</h2></div></div><div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8">{view.metrics.map((metric) => <article key={metric.key} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"><p className="text-xs font-semibold text-slate-500">{metric.label}</p><p className="mt-2 break-words text-xl font-bold tracking-tight">{formatValue(metric.value, locale, metric.unit)}</p></article>)}</div></section> : null}
@@ -289,7 +313,7 @@ export function ProductizedDppPage({ projection, locale, previewRole, audiencePr
         <section id="passport" aria-labelledby="passport-title" className="mt-12 scroll-mt-20"><h2 id="passport-title" className="text-2xl font-bold tracking-tight sm:text-3xl">{m.passportSection}</h2><div className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><ValueGrid locale={locale} value={{ dppId: projection.passportIdentifier, status: projection.status, version: projection.version, publishedAt: projection.publishedAt, audience: projection.audience }} /></div></section>
         <details id="technical" className="mt-8 scroll-mt-20 rounded-2xl border border-slate-300 bg-white"><summary className="min-h-14 cursor-pointer px-5 py-4 font-semibold focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:px-6">{m.technical}</summary><div className="border-t border-slate-200 p-5 sm:p-6"><p className="mb-5 text-sm text-slate-600">{m.technicalHint}</p><ValueGrid locale={locale} value={{ internalPassportUuid: projection.passportId, schemaVersionUuid: projection.schemaVersion, payloadHash: projection.payloadHash }} />{view.sections.find((section) => section.id === "technical")?.fields.map((field) => <div key={field.fieldCode} className="mt-6 border-t border-slate-200 pt-5"><h3 className="mb-4 font-semibold">{field.metadata.label[locale]}</h3><FieldRenderer field={field} locale={locale} m={m} /></div>)}</div></details>
       </div>
-      <footer className="border-t border-slate-200 bg-white"><div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 py-8 text-sm text-slate-500 sm:px-8 md:flex-row md:justify-between"><span>GREANLEAN · {m.passport}</span><span>{projection.passportIdentifier} · v{projection.version}</span></div></footer>
+      <footer className="border-t border-slate-200 bg-white"><div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-8 text-sm text-slate-500 sm:px-8"><p className="max-w-4xl leading-6">{view.synthetic ? m.disclaimer : null}</p><div className="flex flex-col gap-2 md:flex-row md:justify-between"><span>GREANLEAN · {m.passport}</span><span>{projection.passportIdentifier} · v{projection.version}</span></div></div></footer>
     </main>
   );
 }

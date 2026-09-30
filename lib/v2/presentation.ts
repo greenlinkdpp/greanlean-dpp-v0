@@ -67,6 +67,7 @@ const metadata: Record<string, PresentationMetadata> = {
   "demo.warning": meta("overview", "Demo classification", "演示数据分类", "key-value", 0, "high"),
   "identity.product": meta("overview", "Product information", "产品信息", "identity", 10, "high"),
   "identity.item": meta("overview", "Item identity", "产品实例标识", "identity", 20, "high"),
+  "enterprise.organisations": meta("overview", "Organisations", "企业主体", "identity", 30, "standard"),
   "technical.specification": meta("specifications", "Technical specifications", "技术规格", "specifications", 10, "high"),
   "performance.durability": meta("performance", "Performance & durability", "性能与耐久性", "specifications", 10, "standard"),
   "bms.snapshot": meta("performance", "Latest available BMS snapshot", "最新可用 BMS 快照", "bms", 5, "high"),
