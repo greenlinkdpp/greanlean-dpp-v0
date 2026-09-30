@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { BrandWordmark } from "@/components/BrandWordmark";
 
 type BrandLogoProps = {
   href?: string;
@@ -17,23 +17,7 @@ export function BrandLogo({
   markClassName = "",
   wordmarkClassName = "",
 }: BrandLogoProps) {
-  const frameSize = size === "lg"
-    ? "h-12 w-[210px]"
-    : size === "sm"
-      ? "h-8 w-[142px]"
-      : "h-10 w-[176px]";
-
-  return (
-    <Link href={href} aria-label="GreanLean" className={`inline-flex shrink-0 ${className}`}>
-      <span className={`relative block ${frameSize} ${markClassName}`}>
-        <img
-          src="/brand/greanlean-wordmark.png"
-          alt="GreanLean"
-          className={`h-full w-full object-contain ${
-            variant === "light" ? "brightness-0 invert" : ""
-          } ${wordmarkClassName}`}
-        />
-      </span>
-    </Link>
-  );
+  // The legacy image remains in the repository for the future formal-logo swap.
+  // It is intentionally not rendered in the Round A UI (no /brand/greanlean-wordmark.png, object-contain, or crop).
+  return <BrandWordmark href={href} size={size} variant={variant} className={`${className} ${markClassName} ${wordmarkClassName}`} />;
 }

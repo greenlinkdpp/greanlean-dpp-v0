@@ -223,9 +223,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-[#0b2824] text-white">
       <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-white/10 bg-[#0b2824] lg:flex lg:flex-col">
         <div className="px-5 pb-2 pt-5">
-          <div className="rounded-[14px] bg-white px-3 py-2 shadow-sm">
-            <BrandLogo href={isPlatformAdmin ? "/dashboard/platform" : "/dashboard/v2"} size="md" />
-          </div>
+          {/* Legacy rounded-[14px] bg-white image-logo shell intentionally retired in Round A. */}
+          <BrandLogo href={isPlatformAdmin ? "/dashboard/platform" : "/dashboard/v2"} size="md" variant="light" />
         </div>
 
         <div className="mx-5 mt-4 rounded-xl border border-white/10 bg-white/[0.06] px-4 py-3">
@@ -278,7 +277,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <div className="min-h-screen bg-[#f6f8f7] text-slate-950">
           <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur lg:hidden">
             <div className="flex items-center justify-between gap-3">
-              <BrandLogo href={isPlatformAdmin ? "/dashboard/platform" : "/dashboard/v2"} size="sm" />
+              <BrandLogo href={isPlatformAdmin ? "/dashboard/platform" : "/dashboard/v2"} size="sm" variant="brand" />
               <LanguageSwitcher />
             </div>
 

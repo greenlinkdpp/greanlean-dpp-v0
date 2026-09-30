@@ -93,26 +93,31 @@ export type NavigationItem = {
   group: "operate" | "data" | "publish" | "govern";
 };
 
-export const backofficeNavigation: NavigationItem[] = [
+/** The six customer-facing workspace destinations. Technical capabilities stay available below Advanced. */
+export const primaryBackofficeNavigation: NavigationItem[] = [
   { section: "dashboard", label: { en: "Operations overview", zh: "运营总览" }, group: "operate" },
-  { section: "tenants", label: { en: "Tenants & access", zh: "租户与权限" }, group: "operate" },
-  { section: "organisations", label: { en: "Organisations", zh: "组织" }, group: "operate" },
+  { section: "models", label: { en: "Product Center", zh: "产品中心" }, group: "operate" },
+  { section: "imports", label: { en: "Data Workspace", zh: "数据工作台" }, group: "data" },
+  { section: "publications", label: { en: "Publication Center", zh: "发布中心" }, group: "publish" },
+  { section: "identifiers", label: { en: "Public Display", zh: "公开展示" }, group: "publish" },
+  { section: "settings", label: { en: "Settings", zh: "设置" }, group: "govern" },
+];
+
+export const advancedBackofficeNavigation: NavigationItem[] = [
   { section: "families", label: { en: "Product families", zh: "产品族" }, group: "operate" },
-  { section: "models", label: { en: "Product models", zh: "产品型号" }, group: "operate" },
   { section: "skus", label: { en: "SKUs", zh: "SKU" }, group: "operate" },
   { section: "batches", label: { en: "Batches", zh: "批次" }, group: "operate" },
   { section: "items", label: { en: "Individual items", zh: "单件产品" }, group: "operate" },
-  { section: "sources", label: { en: "Data sources", zh: "数据源" }, group: "data" },
-  { section: "manual", label: { en: "Manual DPP entry", zh: "手工 DPP 录入" }, group: "data" },
-  { section: "imports", label: { en: "Import workspace", zh: "导入工作台" }, group: "data" },
+  { section: "organisations", label: { en: "Organisation", zh: "企业主体" }, group: "govern" },
+  { section: "tenants", label: { en: "Users & permissions", zh: "用户与权限" }, group: "govern" },
+  { section: "manual", label: { en: "Manual entry", zh: "手工录入" }, group: "data" },
   { section: "mappings", label: { en: "Field mapping", zh: "字段映射" }, group: "data" },
-  { section: "claims", label: { en: "Canonical claims", zh: "规范化声明" }, group: "data" },
+  { section: "claims", label: { en: "Passport field overview", zh: "护照字段总表" }, group: "data" },
   { section: "validation", label: { en: "Data quality", zh: "数据质量" }, group: "data" },
+  { section: "sources", label: { en: "Data sources", zh: "数据来源" }, group: "data" },
   { section: "candidates", label: { en: "Candidates", zh: "候选版本" }, group: "publish" },
   { section: "reviews", label: { en: "Review & approval", zh: "审核与批准" }, group: "publish" },
-  { section: "publications", label: { en: "Publication", zh: "发布" }, group: "publish" },
-  { section: "passports", label: { en: "Passports & versions", zh: "护照与版本" }, group: "publish" },
-  { section: "identifiers", label: { en: "Identifiers & resolver", zh: "标识符与解析器" }, group: "publish" },
+  { section: "passports", label: { en: "Version history", zh: "版本历史" }, group: "publish" },
   { section: "documents", label: { en: "Documents", zh: "文档" }, group: "publish" },
   { section: "lifecycle", label: { en: "Lifecycle", zh: "生命周期" }, group: "publish" },
   { section: "bms", label: { en: "BMS & dynamic data", zh: "BMS 与动态数据" }, group: "govern" },
@@ -120,8 +125,11 @@ export const backofficeNavigation: NavigationItem[] = [
   { section: "integrations", label: { en: "Integrations", zh: "集成" }, group: "govern" },
   { section: "registry", label: { en: "Registry", zh: "注册库" }, group: "govern" },
   { section: "audit", label: { en: "Audit activity", zh: "审计活动" }, group: "govern" },
-  { section: "settings", label: { en: "Settings", zh: "设置" }, group: "govern" },
 ];
+
+// Backwards-compatible complete registry for deep links and existing contracts.
+// The UI uses primaryBackofficeNavigation for the six-item daily workflow.
+export const backofficeNavigation: NavigationItem[] = [...primaryBackofficeNavigation, ...advancedBackofficeNavigation];
 
 export const backofficeCopy = {
   en: {

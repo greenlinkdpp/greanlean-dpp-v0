@@ -27,15 +27,33 @@ export async function platformTenants(admin: AdminClient, context: VerifiedPlatf
   const tenants = await allTenants(admin);
   const selected = tenants.slice(range.from, range.to + 1);
   const ids = selected.map((tenant: any) => tenant.id);
-  const [organisations, models, passports] = await Promise.all([
+  const [organisations, models, skus, batches, items, passports, versions] = await Promise.all([
     ids.length ? admin.from("organisation_v2").select("tenant_id").in("tenant_id", ids) : { data: [] },
     ids.length ? admin.from("product_model").select("tenant_id").in("tenant_id", ids) : { data: [] },
+    ids.length ? admin.from("sku").select("tenant_id").in("tenant_id", ids) : { data: [] },
+    ids.length ? admin.from("product_batch").select("tenant_id").in("tenant_id", ids) : { data: [] },
+    ids.length ? admin.from("product_item").select("tenant_id").in("tenant_id", ids) : { data: [] },
     ids.length ? admin.from("dpp_passport").select("tenant_id").in("tenant_id", ids) : { data: [] },
+    ids.length ? admin.from("dpp_version").select("tenant_id,publication_state").in("tenant_id", ids) : { data: [] },
   ]);
   const count = (rows: any[] | null, tenantId: string) => (rows || []).filter((row) => row.tenant_id === tenantId).length;
+  const published = (tenantId: string) => (versions.data || []).filter((row: any) => row.tenant_id === tenantId && row.publication_state === "PUBLISHED").length;
+  const draftOrReview = (tenantId: string) => (versions.data || []).filter((row: any) => row.tenant_id === tenantId && ["DRAFT", "IN_REVIEW", "READY_FOR_REVIEW"].includes(row.publication_state)).length;
   return {
     actor: { authorityType: "PLATFORM", authorityId: context.assignmentId, roleCode: context.roleCode },
-    rows: selected.map((tenant: any) => ({ ...tenant, organisationCount: count(organisations.data, tenant.id), modelCount: count(models.data, tenant.id), passportCount: count(passports.data, tenant.id) })),
+    rows: selected.map((tenant: any) => ({
+      ...tenant,
+      organisationCount: count(organisations.data, tenant.id),
+      modelCount: count(models.data, tenant.id),
+      skuCount: count(skus.data, tenant.id),
+      batchCount: count(batches.data, tenant.id),
+      itemCount: count(items.data, tenant.id),
+      passportCount: count(passports.data, tenant.id),
+      publishedCount: published(tenant.id),
+      draftReviewCount: draftOrReview(tenant.id),
+      completeness: null,
+      lastUpdated: [tenant.updated_at, ...(models.data || []).filter((row: any) => row.tenant_id === tenant.id).map((row: any) => row.updated_at)].filter(Boolean).sort().at(-1) || null,
+    })),
     pagination: { total: tenants.length, from: range.from, to: Math.min(range.to, Math.max(0, tenants.length - 1)) },
   };
 }
