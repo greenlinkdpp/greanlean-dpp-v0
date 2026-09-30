@@ -1,0 +1,12 @@
+{
+  "round": "C.1",
+  "environment": "greanlean-dpp-preprod",
+  "projectRef": "efhiaufukjchxqhbmpvq",
+  "deploymentId": "dpl_4EpDqLQZaaYScePFtHt9YAfZWFXL",
+  "releaseCandidate": { "commit": "a68f3cf0d0548059c94f176876b9710328b78975", "tree": "4ec0e36e86e46e2c0f5581c7a973c178b5290abd" },
+  "homepageDemoIdentifiers": ["DPP-GLR-LMT-000002", "DPP-DEMO-ESS-000001", "DPP-DEMO-TEX-000001", "DPP-DEMO-CE-000001"],
+  "verification": { "lint": "PASS", "typecheck": "PASS", "applicationTests": 259, "migrationTests": 58, "build": "PASS", "hostedHttp": "PASS", "resolverJsonHttp200Count": 8 },
+  "acceptance": { "homepageDppPlatformPositioning": "PASS", "batteryPassportHighlight": "PASS", "viewAllDemosButton": "PASS", "zhNavDuplicateCount": 0, "enNavDuplicateCount": 0, "enNavZhResidualCount": 0, "mobileHomepageLayout": "PASS_BY_CODE", "mobileNavInteraction": "PENDING_OWNER_BROWSER_REVIEW", "mobileDemoLayout": "PASS_BY_CODE", "mobileHorizontalOverflow": "PENDING_OWNER_BROWSER_REVIEW" },
+  "boundaries": { "productionDeployed": "NO", "productionDataWritePerformed": "NO", "productionAuthChanged": "NO", "knownTenantDeleteIssue": "OPEN", "rlsSecurityBlockerRemains": "YES", "rlsWarningTable": "public.greanlean_0012_data_backup" },
+  "ownerHumanAcceptance": "PENDING"
+}
