@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-09-30",
+  "environment": {
+    "name": "greanlean-dpp-preprod",
+    "projectRef": "efhiaufukjchxqhbmpvq",
+    "baseUrl": "https://greanlean-dpp-preprod.vercel.app",
+    "deploymentId": "dpl_HYJoWpr3sGvESx38JNdUiLA5twTZ",
+    "deploymentStatus": "READY"
+  },
+  "method": "Hosted route requests plus server-rendered HTML response scan. Desktop interactive-browser automation was unavailable because tab creation timed out.",
+  "results": [
+    { "dpp": "DPP-GLR-LMT-000001", "publicHttpStatus": 200, "qrHttpStatus": 200, "humanResolverLocation": "/p/DPP-GLR-LMT-000001?lang=zh", "objectObjectCount": 0, "yearThousandsSeparatorCount": 0, "localhostCount": 0 },
+    { "dpp": "DPP-GLR-LMT-000002", "publicHttpStatus": 200, "qrHttpStatus": 200, "humanResolverLocation": "/p/DPP-GLR-LMT-000002?lang=zh", "objectObjectCount": 0, "yearThousandsSeparatorCount": 0, "localhostCount": 0 },
+    { "dpp": "DPP-GLR-LMT-000003", "publicHttpStatus": 200, "qrHttpStatus": 200, "humanResolverLocation": "/p/DPP-GLR-LMT-000003?lang=zh", "objectObjectCount": 0, "yearThousandsSeparatorCount": 0, "localhostCount": 0 },
+    { "dpp": "DPP-DEMO-ESS-000001", "publicHttpStatus": 200, "qrHttpStatus": 200, "humanResolverLocation": "/p/DPP-DEMO-ESS-000001?lang=zh", "objectObjectCount": 0, "yearThousandsSeparatorCount": 0, "localhostCount": 0 },
+    { "dpp": "DPP-DEMO-TEX-000001", "publicHttpStatus": 200, "qrHttpStatus": 200, "humanResolverLocation": "/p/DPP-DEMO-TEX-000001?lang=zh", "objectObjectCount": 0, "yearThousandsSeparatorCount": 0, "localhostCount": 0 },
+    { "dpp": "DPP-DEMO-CE-000001", "publicHttpStatus": 200, "qrHttpStatus": 200, "humanResolverLocation": "/p/DPP-DEMO-CE-000001?lang=zh", "objectObjectCount": 0, "yearThousandsSeparatorCount": 0, "localhostCount": 0 },
+    { "dpp": "DPP-DEMO-BLD-000001", "publicHttpStatus": 200, "qrHttpStatus": 200, "humanResolverLocation": "/p/DPP-DEMO-BLD-000001?lang=zh", "objectObjectCount": 0, "yearThousandsSeparatorCount": 0, "localhostCount": 0 },
+    { "dpp": "DPP-DEMO-HW-000001", "publicHttpStatus": 200, "qrHttpStatus": 200, "humanResolverLocation": "/p/DPP-DEMO-HW-000001?lang=zh", "objectObjectCount": 0, "yearThousandsSeparatorCount": 0, "localhostCount": 0 }
+  ],
+  "machineResolver": {
+    "route": "/api/v2/resolver/DPP-DEMO-TEX-000001",
+    "httpStatus": 200,
+    "json": true,
+    "passportIdentifier": "DPP-DEMO-TEX-000001"
+  },
+  "totals": {
+    "publicDppHttp200": 8,
+    "demoQrHttp200": 8,
+    "humanResolverRedirects": 8,
+    "visibleObjectObject": 0,
+    "yearThousandsSeparator": 0,
+    "localhostInHostedPages": 0
+  }
+}
