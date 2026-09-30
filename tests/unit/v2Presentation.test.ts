@@ -47,6 +47,8 @@ test("field and unit formatting is human readable", () => {
   assert.equal(formatValue(true, "zh"), "是");
   assert.equal(formatValue({ en: "Organic cotton T-shirt", zh: "有机棉 T 恤" }, "zh"), "有机棉 T 恤");
   assert.equal(formatValue({ en: "Organic cotton T-shirt", zh: "有机棉 T 恤" }, "en"), "Organic cotton T-shirt");
+  assert.equal(formatValue("Lithium-ion", "zh"), "锂离子");
+  assert.equal(formatValue("-10°C to 45°C", "zh"), "-10°C 至 45°C");
 });
 
 test("business null states preserve their semantics", () => {

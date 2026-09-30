@@ -151,6 +151,15 @@ export function formatValue(value: unknown, locale: PassportLocale, unit?: strin
   if (value === null || value === undefined || value === "") return locale === "zh" ? "未提供" : "Not provided";
   if (typeof value === "boolean") return value ? (locale === "zh" ? "是" : "Yes") : (locale === "zh" ? "否" : "No");
   if (typeof value === "number") return `${Number.isInteger(value) && value >= 1900 && value <= 2100 ? String(value) : new Intl.NumberFormat(locale === "zh" ? "zh-CN" : "en-GB", { maximumFractionDigits: 3 }).format(value)}${unit ? `${unit === "%" ? "" : " "}${unit}` : ""}`;
+  if (locale === "zh" && typeof value === "string") {
+    const translated: Record<string, string> = {
+      "Lithium-ion": "锂离子", "E-bike battery pack": "电动自行车电池包", "Industrial energy storage": "工业储能",
+      "Textile garment": "纺织品", "Organic cotton": "有机棉", "Consumer electronics": "消费电子", "Recycled ABS": "再生 ABS",
+      "Wood-plastic flooring": "木塑地板", "Alloy steel": "合金钢", "Replaceable bits": "可更换批头", "Hand tool": "手动工具",
+      "10°C to 25°C": "10°C 至 25°C", "-10°C to 45°C": "-10°C 至 45°C",
+    };
+    if (translated[value]) return translated[value];
+  }
   return String(value);
 }
 
