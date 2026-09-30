@@ -22,6 +22,5 @@ export function buildApprovedResolverUrl(options: {
   if (!options.identifier.trim() || /[/?#]/.test(options.identifier)) {
     throw new Error("RESOLVER_IDENTIFIER_INVALID");
   }
-  return new URL(`/api/v2/resolver/${encodeURIComponent(options.identifier)}`, origin).toString();
+  return new URL(`/r/${encodeURIComponent(options.identifier)}`, origin).toString();
 }
-

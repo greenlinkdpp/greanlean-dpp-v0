@@ -136,11 +136,17 @@ export function businessState(value: unknown, locale: PassportLocale): string | 
 }
 
 export function formatValue(value: unknown, locale: PassportLocale, unit?: string | null) {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const localized = value as Record<string, unknown>;
+    if (typeof localized[locale] === "string") return String(localized[locale]);
+    if (typeof localized.en === "string" || typeof localized.zh === "string") return String(localized[locale] || localized.en || localized.zh);
+    return "";
+  }
   const state = businessState(value, locale);
   if (state) return state;
   if (value === null || value === undefined || value === "") return locale === "zh" ? "未提供" : "Not provided";
   if (typeof value === "boolean") return value ? (locale === "zh" ? "是" : "Yes") : (locale === "zh" ? "否" : "No");
-  if (typeof value === "number") return `${new Intl.NumberFormat(locale === "zh" ? "zh-CN" : "en-GB", { maximumFractionDigits: 3 }).format(value)}${unit ? ` ${unit}` : ""}`;
+  if (typeof value === "number") return `${Number.isInteger(value) && value >= 1900 && value <= 2100 ? String(value) : new Intl.NumberFormat(locale === "zh" ? "zh-CN" : "en-GB", { maximumFractionDigits: 3 }).format(value)}${unit ? ` ${unit}` : ""}`;
   return String(value);
 }
 
@@ -180,7 +186,7 @@ export function normalizeDppProjection(projection: ProjectedDpp, locale: Passpor
   return {
     passport,
     brand: String(identity.brand || technical.brand || "GreanLean"),
-    productName: String(identity.productName || technical.product_name || "Digital Product Passport"),
+    productName: formatValue(identity.productName || technical.product_name || "Digital Product Passport", locale),
     modelCode: String(identity.modelCode || technical.model_code || ""),
     category: String(technical.product_category || ""),
     synthetic: JSON.stringify(byCode.get("demo.warning") || {}).includes("SYNTHETIC_DEMO"),
