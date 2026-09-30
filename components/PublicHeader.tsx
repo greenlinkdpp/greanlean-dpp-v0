@@ -14,8 +14,8 @@ export function PublicHeader() {
     locale === "zh"
       ? {
           home: "首页",
-          platform: "电池护照",
-          industries: "解决方案",
+          platform: "解决方案",
+          industries: "",
           battery: "电池护照",
           cases: "Demo",
           regulations: "实施流程",
@@ -26,8 +26,8 @@ export function PublicHeader() {
         }
       : {
           home: "Home",
-          platform: "Battery Passport",
-          industries: "Solutions",
+          platform: "Solutions",
+          industries: "",
           battery: "Battery Passport",
           cases: "Demo",
           regulations: "Implementation",
@@ -39,12 +39,10 @@ export function PublicHeader() {
 
   const links = [
     [t.home, `/?lang=${locale}`],
-    [t.platform, `/?lang=${locale}#battery-passport`],
-    [t.industries, `/?lang=${locale}#platform`],
+    [t.platform, `/?lang=${locale}#platform`],
     [t.battery, `/?lang=${locale}#battery-passport`],
     [t.cases, `/demo?lang=${locale}`],
     [t.regulations, `/?lang=${locale}#workflow`],
-    [t.contact, `/?lang=${locale}#contact`],
   ];
 
   return (

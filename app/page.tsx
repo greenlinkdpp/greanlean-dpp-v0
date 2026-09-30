@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { LeadForm } from "@/components/LeadForm";
 import { PublicHeader } from "@/components/PublicHeader";
+import { HomepageDemoMix } from "@/components/v2/demo/HomepageDemoMix";
 import { useLanguage } from "@/components/LanguageProvider";
 import { localizedPath, PRIMARY_V2_DEMO_PATH } from "@/lib/navigation";
 
@@ -12,14 +13,14 @@ type Locale = "zh" | "en";
 
 const COPY = {
   zh: {
-    pageTitle: "GreanLean | 电池数字产品护照 Battery Passport",
-    heroEyebrow: "Battery Passport / 数字产品护照",
-    heroTitle: "面向欧盟市场的电池数字产品护照平台",
+    pageTitle: "GreanLean | 数字产品护照 DPP 与 Battery Passport 平台",
+    heroEyebrow: "重点解决方案：Battery Passport",
+    heroTitle: "面向欧盟市场的数字产品护照平台",
     heroBody:
-      "从企业数据收集、碳足迹与合规证据，到 DPP 生成、二维码发布和持续更新，帮助电池企业建立可追溯、可维护的 Battery Passport。",
+      "以电池护照为重点，覆盖产品数据、碳足迹、供应链、生命周期、证据文件与二维码发布，帮助企业构建可追溯、可更新的数字产品护照。",
     heroSupport:
       "以型号、SKU、批次或单件为粒度，统一组织电池数据、证据文件、版本记录和生命周期更新。",
-    heroPrimary: "查看电池护照 Demo",
+    heroPrimary: "查看 DPP Demo",
     heroLogin: "登录平台",
     heroAssessment: "",
     heroSecondary: "了解实施流程",
@@ -92,9 +93,9 @@ const COPY = {
       ["持续维护更新", "追加证书、供应链、维修、运行状态和生命周期事件。"],
     ],
     industriesEyebrow: "扩展能力",
-    industriesTitle: "面向更多 DPP 品类的扩展能力",
+    industriesTitle: "多品类 DPP 扩展能力",
     industriesBody:
-      "GreanLean 的数据模型可扩展到不同产品类别，当前公开示例用于展示平台的可配置能力。",
+      "GreanLean 通过可配置的数据结构与展示逻辑适配不同产品类别；公开 Demo 用于展示平台扩展能力。",
     industries: [
       {
         code: "01",
@@ -138,7 +139,7 @@ const COPY = {
       },
     ],
     batteryEyebrow: "电池护照",
-    batteryTitle: "从 BatteryPass 数据模型到 BMS 运行数据的完整准备",
+    batteryTitle: "重点解决方案：电池护照",
     batteryBody:
       "GreanLean 按型号、批次和单体组织法规字段，输出可供 BatteryPass Schema 校验的 JSON，并为 BMS、EMS、维保和回收系统预留持续更新接口。",
     batteryScopeTitle: "法定适用范围",
@@ -160,11 +161,11 @@ const COPY = {
     batteryMetrics: ["SOC / SOH", "剩余容量", "循环次数", "温度与内阻", "能量吞吐量", "生命周期事件"],
     batteryDateLabel: "电池护照适用日期",
     batteryDate: "2027 年 2 月 18 日",
-    batteryCta: "查看电池护照案例",
-    casesEyebrow: "电池护照 Demo",
-    casesTitle: "从三款轻型交通电池到工业储能，查看已发布护照",
+    batteryCta: "查看电池护照示例",
+    casesEyebrow: "数字产品护照 Demo",
+    casesTitle: "从电池到纺织与消费电子，查看不同产品类别的 DPP",
     casesBody:
-      "当前公开的合成演示复用已发布的 DPP 数据、证据与生命周期结构；不代表真实客户产品或正式监管申报结果。",
+      "从电池到纺织与消费电子，查看 GreanLean 如何针对不同产品类别组织、发布和维护 DPP 数据。",
     viewPassport: "查看护照",
     cases: [
       {
@@ -254,14 +255,14 @@ const COPY = {
     footerCopyright: "© 2026 GreanLean. 保留所有权利。",
   },
   en: {
-    pageTitle: "GreanLean | Battery Passport & Digital Product Passport",
-    heroEyebrow: "Battery Passport / Digital Product Passport",
-    heroTitle: "Battery Passport platform for products entering the EU market",
+    pageTitle: "GreanLean | Digital Product Passport & Battery Passport Platform",
+    heroEyebrow: "Featured Solution · Battery Passport",
+    heroTitle: "Digital Product Passport Platform for the EU Market",
     heroBody:
-      "From enterprise data collection, carbon footprints and compliance evidence to DPP generation, QR publication and ongoing updates, GreanLean helps battery businesses create traceable, maintainable Battery Passports.",
+      "With Battery Passport as a core focus, GreanLean helps companies structure product data, carbon footprint, supply-chain evidence, lifecycle information and publish maintainable DPPs through QR and resolver infrastructure.",
     heroSupport:
       "Organise battery data, evidence, version records and lifecycle updates at model, SKU, batch or individual-item level.",
-    heroPrimary: "View Battery Passport Demo",
+    heroPrimary: "View DPP Demo",
     heroLogin: "Sign in",
     heroAssessment: "",
     heroSecondary: "See Implementation Process",
@@ -334,9 +335,9 @@ const COPY = {
       ["Maintain lifecycle data", "Append certificates, supply-chain, repair, operating and end-of-life events."],
     ],
     industriesEyebrow: "Extension capability",
-    industriesTitle: "Extensible data model for more DPP categories",
+    industriesTitle: "Multi-category DPP extension capability",
     industriesBody:
-      "GreanLean's data model can extend to different product categories. Public examples currently demonstrate configurable platform capability.",
+      "GreanLean adapts to product categories through configurable data structures and presentation logic; public Demos illustrate the platform's extension capability.",
     industries: [
       {
         code: "01",
@@ -380,7 +381,7 @@ const COPY = {
       },
     ],
     batteryEyebrow: "Battery Passport",
-    batteryTitle: "From BatteryPass data models to BMS operating data",
+    batteryTitle: "Featured Solution: Battery Passport",
     batteryBody:
       "GreanLean organises model, batch and item data, exports JSON that can be checked against BatteryPass schemas, and reserves interfaces for BMS, EMS, service and recovery systems.",
     batteryScopeTitle: "Legal scope",
@@ -402,11 +403,11 @@ const COPY = {
     batteryMetrics: ["SOC / SOH", "Remaining capacity", "Cycle count", "Temperature and resistance", "Energy throughput", "Lifecycle events"],
     batteryDateLabel: "Battery passport application date",
     batteryDate: "18 February 2027",
-    batteryCta: "Explore battery passport cases",
-    casesEyebrow: "Battery Passport Demo",
-    casesTitle: "Explore three LMT batteries and an industrial energy-storage passport",
+    batteryCta: "View Battery Passport Example",
+    casesEyebrow: "Digital Product Passport Demo",
+    casesTitle: "Explore DPP data across batteries, textiles and consumer electronics",
     casesBody:
-      "These public synthetic demos reuse published DPP data, evidence and lifecycle structures; they do not represent customer products or regulatory filings.",
+      "See how GreanLean organises, publishes and maintains DPP data for different product categories, from batteries to textiles and consumer electronics.",
     viewPassport: "View Passport",
     cases: [
       {
@@ -672,46 +673,7 @@ export default function Home() {
         <section id="passport-cases" className="bg-slate-50 py-16 lg:py-20">
           <div className="mx-auto max-w-7xl px-6">
             <SectionHeading eyebrow={t.casesEyebrow} title={t.casesTitle} body={t.casesBody} />
-            <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {t.cases.map((item) => (
-                <article key={item.identifier} className="flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md">
-                  <div className="relative h-56 shrink-0 overflow-hidden border-b border-slate-200 bg-slate-100 xl:h-52">
-                    <img src={item.image} alt={item.title} className="absolute inset-0 h-full w-full object-contain p-4" />
-                  </div>
-                  <div className="flex flex-1 flex-col p-5">
-                    <div className="flex min-h-5 flex-wrap gap-2 text-xs font-black">
-                      <span className="text-emerald-700">{item.sector}</span>
-                      <span className="text-slate-300">/</span>
-                      <span className="text-slate-600">{item.category}</span>
-                      <span className="ml-auto text-slate-500">{item.granularity}</span>
-                    </div>
-                    <h3 className="mt-4 min-h-14 text-xl font-black leading-7 text-slate-950">{item.title}</h3>
-                    <p className="mt-3 min-h-24 text-sm font-semibold leading-6 text-slate-600">{item.desc}</p>
-
-                    <dl className="mt-5 grid h-24 shrink-0 grid-cols-3 border-y border-slate-200 py-4">
-                      {item.metrics.map(([value, label]) => (
-                        <div key={label} className="border-r px-2 first:pl-0 last:border-r-0 last:pr-0">
-                          <dd className="break-words text-sm font-black text-slate-950">{value}</dd>
-                          <dt className="mt-1 text-[11px] font-bold leading-4 text-slate-500">{label}</dt>
-                        </div>
-                      ))}
-                    </dl>
-
-                    <div className="mt-4 flex h-16 shrink-0 flex-wrap content-start gap-2 overflow-hidden">
-                      {item.tags.map((tag) => (
-                        <span key={tag} className="border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] font-bold text-slate-600">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <Link href={`/p/${encodeURIComponent(item.identifier)}?lang=${locale}&showcase=1`} className="btn-primary mt-auto w-full">
-                      {t.viewPassport}
-                    </Link>
-                  </div>
-                </article>
-              ))}
-            </div>
+            <div className="mt-10"><HomepageDemoMix locale={locale} /></div>
           </div>
         </section>
 
