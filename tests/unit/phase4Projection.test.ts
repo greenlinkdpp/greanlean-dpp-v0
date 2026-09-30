@@ -56,7 +56,7 @@ test("HTML, JSON-LD and PDF carry the same publication identity", () => {
 
 test("QR target accepts only an approved Resolver origin", () => {
   assert.equal(normalizeResolverPath("//p///DPP-1/"), "/p/DPP-1");
-  assert.equal(buildApprovedResolverUrl({ origin: "https://dev.dpp.greanlean.test", identifier: "DPP-1", approvedHosts: ["dev.dpp.greanlean.test"] }), "https://dev.dpp.greanlean.test/api/v2/resolver/DPP-1");
+  assert.equal(buildApprovedResolverUrl({ origin: "https://dev.dpp.greanlean.test", identifier: "DPP-1", approvedHosts: ["dev.dpp.greanlean.test"] }), "https://dev.dpp.greanlean.test/r/DPP-1");
   assert.throws(() => buildApprovedResolverUrl({ origin: "https://evil.example", identifier: "DPP-1", approvedHosts: ["dev.dpp.greanlean.test"] }), /RESOLVER_OPEN_REDIRECT/);
   assert.throws(() => buildApprovedResolverUrl({ origin: "https://dev.dpp.greanlean.test", identifier: "https:\/\/evil.example", approvedHosts: ["dev.dpp.greanlean.test"] }), /RESOLVER_IDENTIFIER_INVALID/);
 });
