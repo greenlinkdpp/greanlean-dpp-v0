@@ -1,0 +1,63 @@
+{
+  "round": "C",
+  "date": "2026-09-30",
+  "environment": {
+    "name": "greanlean-dpp-preprod",
+    "projectRef": "efhiaufukjchxqhbmpvq",
+    "url": "https://greanlean-dpp-preprod.vercel.app",
+    "deploymentId": "dpl_2q3NuMYY8mYg32PusTVhim6XVCJq",
+    "deploymentStatus": "READY"
+  },
+  "releaseCandidate": {
+    "commit": "67fbc3dcc53f91d8d6bc00eba7f398f660afb200",
+    "tree": "78a0b62d1292069fc8905bc8fe3a53f7a3842df5"
+  },
+  "automatedVerification": {
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "applicationTests": { "status": "PASS", "count": 259 },
+    "migrationTests": { "status": "PASS", "count": 58 },
+    "build": "PASS",
+    "homepageRoutes": {
+      "/?lang=zh": 200,
+      "/?lang=en": 200,
+      "/demo?lang=zh": 200,
+      "/login": 200
+    },
+    "publicDppRoutes": {
+      "DPP-GLR-LMT-000001": 200,
+      "DPP-DEMO-ESS-000001": 200,
+      "DPP-DEMO-BLD-000001": 200,
+      "DPP-DEMO-CE-000001": 200
+    },
+    "resolverJsonHttp200Count": 8
+  },
+  "acceptance": {
+    "homepageBatteryFirstPositioning": "PASS",
+    "heroCtaDemo": "PASS",
+    "heroCtaProcess": "PASS",
+    "loginCta": "PASS",
+    "homepageToDemo": "PASS",
+    "demoToHomepage": "PASS",
+    "homepageToLogin": "PASS",
+    "publicDppToHomepage": "PASS",
+    "zhHomepage": "PASS",
+    "enHomepage": "PASS",
+    "ctaLabelConsistency": "PASS",
+    "languagePreservation": "PASS",
+    "essPowerUnit": "PASS",
+    "essTempRangeZh": "PASS",
+    "buildingDimensionUnit": "PASS",
+    "bluetoothZh": "PASS",
+    "mobileHomepage": "PENDING_OWNER_BROWSER_REVIEW"
+  },
+  "boundaries": {
+    "productionDeployed": "NO",
+    "productionDataWritePerformed": "NO",
+    "productionAuthChanged": "NO",
+    "knownTenantDeleteIssue": "OPEN",
+    "rlsSecurityBlockerRemains": "YES",
+    "rlsWarningTable": "public.greanlean_0012_data_backup"
+  },
+  "ownerHumanAcceptance": "PENDING"
+}
