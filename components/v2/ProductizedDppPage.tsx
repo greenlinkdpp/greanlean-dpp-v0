@@ -66,7 +66,7 @@ const messages = {
     unverified: "未验证",
     status: "护照状态",
     updated: "最后更新",
-    scan: "扫码打开稳定护照地址",
+    scan: "扫码查看数字产品护照",
     metrics: "关键指标",
     overview: "概览",
     specifications: "技术规格",
@@ -110,13 +110,14 @@ function dateValue(value: unknown, locale: PassportLocale) {
   return new Intl.DateTimeFormat(locale === "zh" ? "zh-CN" : "en-GB", { dateStyle: "medium", timeStyle: value.includes("T") ? "short" : undefined }).format(date);
 }
 
-function unitForKey(key: string): string | null {
-  const suffixes: Array<[RegExp, string]> = [
-    [/_pct$/, "%"], [/_kg_co2e.*$/, "kg CO₂e"], [/_kg$/, "kg"], [/_mohm$/, "mΩ"],
-    [/_wh$/, "Wh"], [/_ah$/, "Ah"], [/_v$/, "V"], [/_a$/, "A"], [/_w.*$/, "W"], [/_c$/, "°C"],
-    [/_months$/, "months"], [/_years$/, "years"], [/_seconds$/, "s"],
+function unitForKey(key: string, locale: PassportLocale): string | null {
+  const suffixes: Array<[RegExp, [string, string]]> = [
+    [/_pct$/, ["%", "%"]], [/_kg_co2e.*$/, ["kg CO₂e", "kg CO₂e"]], [/_kg$/, ["kg", "kg"]], [/_mohm$/, ["mΩ", "mΩ"]],
+    [/_wh$/, ["Wh", "Wh"]], [/_ah$/, ["Ah", "Ah"]], [/_v$/, ["V", "V"]], [/_a$/, ["A", "A"]], [/_w.*$/, ["W", "W"]], [/_c$/, ["°C", "°C"]],
+    [/_months$/, ["months", "个月"]], [/_years$/, ["years", "年"]], [/_seconds$/, ["s", "秒"]],
   ];
-  return suffixes.find(([pattern]) => pattern.test(key))?.[1] || null;
+  const unit = suffixes.find(([pattern]) => pattern.test(key))?.[1];
+  return unit ? unit[locale === "zh" ? 1 : 0] : null;
 }
 
 function labelForKey(key: string, locale: PassportLocale) {
@@ -149,6 +150,10 @@ function labelForKey(key: string, locale: PassportLocale) {
     connectivity: ["Connectivity", "连接方式"], enclosure_material: ["Enclosure material", "外壳材料"], key_components: ["Key components", "关键零部件"], energy_efficiency: ["Energy efficiency", "能效信息"], firmware: ["Software / firmware", "软件/固件"], weee: ["WEEE / recycling", "WEEE / 回收信息"],
     wood_fibre_pct: ["Wood fibre", "木纤维比例"], additive_pct: ["Other additives", "其他添加剂"], wear_resistance: ["Wear resistance", "耐磨性能"], slip_resistance: ["Slip resistance", "防滑性能"], water_absorption_pct: ["Water absorption", "吸水率"], weather_resistance: ["Weather resistance", "耐候性"], flame_rating: ["Fire rating", "阻燃等级"], voc: ["VOC", "VOC"], installation_method: ["Installation method", "安装方法"],
     steel_type: ["Steel type", "钢材类型"], surface_treatment: ["Surface treatment", "表面处理"], hardness: ["Hardness", "硬度"], corrosion_resistance: ["Corrosion resistance", "耐腐蚀性"], applicable_standard: ["Applicable standard", "适用标准"], production_origin: ["Production origin", "生产地"],
+    chemistry: ["Chemistry", "化学体系"], classification: ["Classification", "分类"], colour: ["Colour", "颜色"], durability: ["Durability", "耐久性"], maintenance_interval: ["Maintenance interval", "维护周期"],
+    material_summary: ["Material summary", "材料概述"], packaging_material: ["Packaging material", "包装材料"], hazardous_substances: ["Hazardous substances", "有害物质"], other_recycled_material: ["Other recycled material", "其他再生材料"],
+    material_recovery: ["Material recovery", "材料回收"], repair_warning: ["Repair warning", "维修警告"], repairability: ["Repairability", "可维修性"], regulatory_evidence: ["Regulatory evidence", "监管证据"], customer_verified: ["Customer verified", "客户验证"],
+    materials: ["Materials", "材料"], manufacturing: ["Manufacturing", "制造"], transport: ["Transport", "运输"], packaging: ["Packaging", "包装"], other: ["Other", "其他"],
   };
   const translated = labels[key];
   return translated ? translated[locale === "zh" ? 1 : 0] : humanizeFieldKey(key);
@@ -158,7 +163,12 @@ function localizedValue(value: unknown, locale: PassportLocale, unit?: string | 
   const localized = asRecord(value);
   if (typeof localized.en === "string" && typeof localized.zh === "string") return String(localized[locale]);
   if (locale === "zh" && typeof value === "string") {
-    const states: Record<string, string> = { Charging: "充电中", Discharging: "放电中", Published: "已发布", PUBLISHED: "已发布" };
+    const states: Record<string, string> = {
+      Charging: "充电中", Discharging: "放电中", Published: "已发布", PUBLISHED: "已发布",
+      "Lithium-ion": "锂离子", "E-bike battery pack": "电动自行车电池包",
+      TEST_REPORT: "测试报告", CERTIFICATE: "证书", DECLARATION: "声明", SAFETY: "安全文件",
+      SPECIFICATION: "规格文件", WARRANTY: "质保文件", RECYCLING: "回收文件", ENVIRONMENT: "环境/可持续性文件",
+    };
     if (states[value]) return states[value];
   }
   return formatValue(value, locale, unit);
@@ -173,7 +183,7 @@ function ValueGrid({ value, locale, omit = [] }: { value: unknown; locale: Passp
         <div key={key} className="min-w-0 border-b border-slate-100 pb-3">
           <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">{labelForKey(key, locale)}</dt>
           <dd className="mt-1 break-words text-sm font-medium text-slate-900">
-            {Array.isArray(item) ? item.map((part) => localizedValue(part, locale)).join(" · ") : typeof item === "object" && item !== null && !(typeof asRecord(item).en === "string" && typeof asRecord(item).zh === "string") ? <CompactObject value={item} locale={locale} /> : localizedValue(item, locale, unitForKey(key))}
+            {Array.isArray(item) ? item.map((part) => localizedValue(part, locale)).join(" · ") : typeof item === "object" && item !== null && !(typeof asRecord(item).en === "string" && typeof asRecord(item).zh === "string") ? <CompactObject value={item} locale={locale} /> : localizedValue(item, locale, unitForKey(key, locale))}
           </dd>
         </div>
       ))}
@@ -185,7 +195,7 @@ function CompactObject({ value, locale }: { value: unknown; locale: PassportLoca
   return (
     <span className="grid gap-1">
       {Object.entries(asRecord(value)).map(([key, item]) => (
-        <span key={key}><span className="text-slate-500">{labelForKey(key, locale)}:</span> {typeof item === "object" && item !== null && !(typeof asRecord(item).en === "string" && typeof asRecord(item).zh === "string") ? <CompactObject value={item} locale={locale} /> : localizedValue(item, locale, unitForKey(key))}</span>
+        <span key={key}><span className="text-slate-500">{labelForKey(key, locale)}:</span> {typeof item === "object" && item !== null && !(typeof asRecord(item).en === "string" && typeof asRecord(item).zh === "string") ? <CompactObject value={item} locale={locale} /> : localizedValue(item, locale, unitForKey(key, locale))}</span>
       ))}
     </span>
   );
@@ -264,7 +274,7 @@ function DocumentsPanel({ value, locale, metadataOnly, demoDocument }: { value: 
     const externalUrl = safeExternalUrl(document.url || document.document_url);
     const demoUrl = typeof document.file === "string" ? `/api/demo-document?file=${encodeURIComponent(document.file)}&lang=${locale}` : null;
     const url = demoUrl || externalUrl;
-    return <article key={String(document.document_id || index)} className="rounded-xl border border-slate-200 bg-slate-50 p-5"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">{formatValue(document.document_type, locale)}</p><h4 className="mt-2 font-semibold text-slate-950">{formatValue(document.title, locale)}</h4></div><span aria-hidden="true" className="text-xl">↗</span></div><p className="mt-3 break-all font-mono text-xs text-slate-500">{formatValue(document.document_id, locale)}</p><div className="mt-4 flex flex-wrap gap-2"><StatusBadge>{metadataOnly}</StatusBadge><StatusBadge tone="amber">{demoDocument}</StatusBadge>{document.issuer ? <StatusBadge>{formatValue(document.issuer, locale)}</StatusBadge> : null}{document.version ? <StatusBadge>v{String(document.version)}</StatusBadge> : null}</div>{url ? <a href={url} target="_blank" rel="noreferrer noopener" className="mt-4 inline-flex min-h-11 items-center font-semibold text-emerald-700 underline decoration-2 underline-offset-4">{locale === "zh" ? "查看附件" : "View document"}</a> : null}</article>;
+    return <article key={String(document.document_id || index)} className="rounded-xl border border-slate-200 bg-slate-50 p-5"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">{localizedValue(document.document_type, locale)}</p><h4 className="mt-2 font-semibold text-slate-950">{formatValue(document.title, locale)}</h4></div><span aria-hidden="true" className="text-xl">↗</span></div><p className="mt-3 break-all font-mono text-xs text-slate-500">{formatValue(document.document_id, locale)}</p><div className="mt-4 flex flex-wrap gap-2"><StatusBadge>{metadataOnly}</StatusBadge><StatusBadge tone="amber">{demoDocument}</StatusBadge>{document.issuer ? <StatusBadge>{formatValue(document.issuer, locale)}</StatusBadge> : null}{document.version ? <StatusBadge>v{String(document.version)}</StatusBadge> : null}</div>{url ? <a href={url} target="_blank" rel="noreferrer noopener" className="mt-4 inline-flex min-h-11 items-center font-semibold text-emerald-700 underline decoration-2 underline-offset-4">{locale === "zh" ? "查看附件" : "View document"}</a> : null}</article>;
   })}</div>;
 }
 
