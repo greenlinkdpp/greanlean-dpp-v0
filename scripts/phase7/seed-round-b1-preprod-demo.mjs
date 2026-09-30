@@ -152,6 +152,53 @@ for (const version of lmtVersions) {
   await query(`begin; set local session_replication_role = replica; update public.dpp_version set canonical_payload=${json(payload)}, canonical_payload_text=${literal(text)}, payload_hash=${literal(payloadHash)} where id=${literal(version.id)}; commit;`);
 }
 
+// The showcase must be a real Phase 3 graph as well as a public Phase 4 graph.
+// Give every synthetic ITEM one canonical, unverified provenance claim.  Older
+// B1 records already had their public payloads, but some categories had no
+// canonical provenance rows at all.  New schema versions are additive and are
+// used only as the canonical metadata authority; published DPP versions remain
+// immutable.
+let [claimSource] = await query(`select id from public.data_source where tenant_id=${literal(tenantId)} and name='Round B1 deterministic fixture' limit 1`, true);
+if (!claimSource) [claimSource] = await query(`insert into public.data_source(tenant_id,source_type,name,system_identifier,trust_level,status,residency_classification,connector_reference) values (${literal(tenantId)},'JSON','Round B1 deterministic fixture','round-b1-deterministic-fixture','UNVERIFIED','ACTIVE','INTERNAL','round-b1-preprod-only') returning id`);
+
+const claimFieldBySchema = new Map();
+async function claimFieldFor(schemaDefinitionId) {
+  if (claimFieldBySchema.has(schemaDefinitionId)) return claimFieldBySchema.get(schemaDefinitionId);
+  let [field] = await query(`select fd.id,fd.schema_version_id from public.field_definition fd join public.schema_version sv on sv.id=fd.schema_version_id where sv.schema_definition_id=${literal(schemaDefinitionId)} and sv.status='published' and fd.field_code='provenance.synthetic' and 'ITEM'=any(fd.subject_levels) order by sv.created_at desc limit 1`, true);
+  if (!field) {
+    let [definition] = await query(`select code from public.schema_definition where id=${literal(schemaDefinitionId)}`, true);
+    if (!definition) throw new Error(`REFUSED: schema definition ${schemaDefinitionId} is absent.`);
+    let [version] = await query(`select id from public.schema_version where schema_definition_id=${literal(schemaDefinitionId)} and version='1.0.1' limit 1`, true);
+    if (!version) [version] = await query(`insert into public.schema_version(schema_definition_id,version,source_version,json_schema,checksum_sha256,effective_from,status) values (${literal(schemaDefinitionId)},'1.0.1','round-b1-claim-provenance',${json({ type: 'object', title: `${definition.code} canonical demo provenance` })},${literal(hash({ schema: definition.code, version: '1.0.1', field: 'provenance.synthetic' }))},current_date,'draft') returning id`);
+    [field] = await query(`select id,schema_version_id from public.field_definition where schema_version_id=${literal(version.id)} and field_code='provenance.synthetic' limit 1`, true);
+    if (!field) [field] = await query(`insert into public.field_definition(schema_version_id,field_code,json_pointer,label_en,label_zh,description_en,description_zh,data_type,data_behavior,data_granularity,access_level_code,requirement_status,evidence_requirement,sort_order,semantic_name,semantic_uri,cardinality,subject_levels,verification_requirement,display_metadata,resolution_policy) values (${literal(version.id)},'provenance.synthetic','/provenance/synthetic','Data provenance','数据来源','Synthetic demonstration provenance only.','仅限合成演示数据来源。','object','STATIC','ITEM','PUBLIC','CONFIRMED_MANDATORY','{}'::jsonb,900,'https://schema.greanlean.example/demo/provenance.synthetic','https://schema.greanlean.example/demo/provenance.synthetic','SINGLE',array['ITEM'],'{"verified":false}'::jsonb,'{"synthetic":true}'::jsonb,'ITEM_PREFERRED') returning id,schema_version_id`);
+    await query(`update public.schema_version set status='published',published_at=coalesce(published_at,now()) where id=${literal(version.id)} and status='draft'`);
+  }
+  claimFieldBySchema.set(schemaDefinitionId, field);
+  return field;
+}
+
+const demoItems = await query(`select p.passport_identifier,p.subject_id,p.schema_definition_id from public.demo_showcase_entry e join public.dpp_passport p on p.id=e.passport_id where e.tenant_id=${literal(tenantId)} and e.is_public and e.is_demo and e.synthetic order by p.passport_identifier`, true);
+if (demoItems.length !== 8) throw new Error(`REFUSED: expected 8 public demos before canonical provenance repair, found ${demoItems.length}.`);
+for (const demoItem of demoItems) {
+  const claimField = await claimFieldFor(demoItem.schema_definition_id);
+  let [sourceRecord] = await query(`select id from public.source_record where tenant_id=${literal(tenantId)} and data_source_id=${literal(claimSource.id)} and external_record_id=${literal(`round-b1:${demoItem.passport_identifier}`)} limit 1`, true);
+  const sourcePayload = { classification: 'SYNTHETIC_DEMO', dpp_id: demoItem.passport_identifier, source: 'Round B1 deterministic fixture' };
+  if (!sourceRecord) [sourceRecord] = await query(`insert into public.source_record(tenant_id,data_source_id,external_record_id,subject_type,subject_id,subject_hint,payload_mode,payload_json,payload_hash,observed_at,classification,status) values (${literal(tenantId)},${literal(claimSource.id)},${literal(`round-b1:${demoItem.passport_identifier}`)},'ITEM',${literal(demoItem.subject_id)},${json({ dpp_id: demoItem.passport_identifier })},'RAW_STORED',${json(sourcePayload)},${literal(hash(sourcePayload))},'2026-09-29T12:00:00.000Z','INTERNAL','PROCESSED') returning id`);
+  let [provenance] = await query(`select id from public.provenance_record where tenant_id=${literal(tenantId)} and subject_type='ITEM' and subject_id=${literal(demoItem.subject_id)} and field_definition_id=${literal(claimField.id)} limit 1`, true);
+  if (!provenance) [provenance] = await query(`insert into public.provenance_record(tenant_id,subject_type,subject_id,field_definition_id,data_source_id,source_record_id,raw_value_reference,normalized_value_reference,observed_at,verification_status,verification_method,evidence_references,source_disclosure) values (${literal(tenantId)},'ITEM',${literal(demoItem.subject_id)},${literal(claimField.id)},${literal(claimSource.id)},${literal(sourceRecord.id)},${json({ fixture: 'round-b1', dpp_id: demoItem.passport_identifier })},${json({ classification: 'SYNTHETIC_DEMO' })},'2026-09-29T12:00:00.000Z','UNVERIFIED','SYNTHETIC_FIXTURE','[]'::jsonb,'KNOWN') returning id`);
+  const [claim] = await query(`select id from public.canonical_claim where tenant_id=${literal(tenantId)} and subject_type='ITEM' and subject_id=${literal(demoItem.subject_id)} and field_definition_id=${literal(claimField.id)} limit 1`, true);
+  if (!claim) await query(`insert into public.canonical_claim(tenant_id,subject_type,subject_id,field_definition_id,schema_version_id,resolution_state,value_json,verification_status,provenance_record_id) values (${literal(tenantId)},'ITEM',${literal(demoItem.subject_id)},${literal(claimField.id)},${literal(claimField.schema_version_id)},'OVERRIDE',${json({ classification: 'SYNTHETIC_DEMO', source: 'Round B1 deterministic fixture', verified: false })},'UNVERIFIED',${literal(provenance.id)})`);
+}
+
+// The original LMT demo pre-dated the B1 organisation-link loop.  Backfill the
+// same minimal, synthetic relations used by the other showcase entries.
+const [baseModel] = await query(`select i.model_id from public.product_item i where i.id=${literal(base.item_id)} and i.tenant_id=${literal(tenantId)}`, true);
+if (!baseModel) throw new Error('REFUSED: the primary LMT demo ITEM has no product model.');
+for (const [organisationName, relationType] of [["GreanLean Reference Mobility Ltd.", "MANUFACTURER"], ["GreanLean Reference Mobility Ltd.", "BRAND_OWNER"], ["GreanLean Europe Demo GmbH", "IMPORTER"], ["Circular Battery Demo Recycling GmbH", "RECYCLER"], ["GreenCell Demo Technology Co., Ltd.", "CELL_SUPPLIER"], ["GreenBMS Demo Electronics Co., Ltd.", "BMS_SUPPLIER"]]) {
+  await query(`insert into public.product_organisation_relation(tenant_id,product_model_id,organisation_id,relation_type,status) values (${literal(tenantId)},${literal(baseModel.model_id)},${literal(orgId.get(organisationName))},${literal(relationType)},'ACTIVE') on conflict do nothing`);
+}
+
 const [result] = await query(`select (select count(*)::int from public.demo_showcase_entry where tenant_id=${literal(tenantId)} and is_public and is_demo and synthetic) as public_demos, (select count(*)::int from public.dpp_current_pointer cp join public.dpp_version v on v.id=cp.current_version_id where v.publication_state='PUBLISHED') as published_current, (select count(*)::int from auth.users) as auth_users, (select coalesce(max(migration_number),'') from public.greanlean_migration_ledger where result='applied') as migration_head`, true);
 if (result.public_demos !== 8 || result.auth_users !== 2 || result.migration_head !== '0038') throw new Error(`Round B1 seed verification failed: ${JSON.stringify(result)}`);
 process.stdout.write(JSON.stringify({ result: "PASS", target: "greanlean-dpp-preprod", ...result, productionWritePerformed: false, productionTrafficSwitched: false }) + "\n");
