@@ -1,0 +1,58 @@
+{
+  "generatedAt": "2026-09-30T02:13:32Z",
+  "round": "A",
+  "scope": "preproduction",
+  "target": {
+    "project": "greanlean-dpp-preprod",
+    "projectRefFingerprint": "d465ccdd1809",
+    "stableUrl": "https://greanlean-dpp-preprod.vercel.app",
+    "deploymentId": "dpl_9pbcDxidArV5LAVkw8LQrq8Bff5Y",
+    "immutableUrl": "https://greanlean-dpp-preprod-99nijmyk3-songweinie-1175s-projects.vercel.app"
+  },
+  "sourceCommit": "c38a10c9e7f7d449e5f657b1cdbcaddfe2c995ea",
+  "sourceTree": "7b0af34275d41b8aa286dc43d556f152ef81686a",
+  "ui": {
+    "brandWordmark": "GreanLean",
+    "whiteBackgroundImageLogoRendered": false,
+    "primaryNavigation": ["总览", "产品中心", "数据工作台", "发布中心", "公开展示", "设置"],
+    "primaryNavigationCount": 6,
+    "productCenterUnified": true,
+    "productDrilldown": "Family > Model > SKU / Batch > Individual",
+    "manualEntryLeftRailPx": 260,
+    "canonicalClaimsLabelZh": "护照字段总表",
+    "resolutionLabelsZh": {
+      "INHERIT": "继承",
+      "OVERRIDE": "本级覆盖",
+      "CLEAR": "清空",
+      "NOT_APPLICABLE": "不适用",
+      "UNKNOWN": "未知"
+    },
+    "importMappingUnified": true,
+    "importSteps": ["上传文件", "文件预检", "字段映射", "数据完整度", "导入预览", "确认导入", "导入结果"]
+  },
+  "security": {
+    "tenantIsolationPreserved": true,
+    "pdpPreserved": true,
+    "rlsChanged": false,
+    "productionRlsAlertChanged": false,
+    "productionPromotionBlockerRetained": true
+  },
+  "checks": {
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "unitIntegration": { "result": "PASS", "count": 249 },
+    "migrationContracts": "PASS",
+    "productionBuild": "PASS",
+    "anonymousPlatformContext": { "status": 401, "result": "DENIED" },
+    "stableHomepageTextWordmark": "PASS",
+    "ownerBrowserReview": "PENDING_OWNER_REVIEW"
+  },
+  "productionBoundary": {
+    "deployed": false,
+    "dataWritePerformed": false,
+    "trafficSwitched": false,
+    "fileImportEnabled": false,
+    "registryEnabled": false
+  },
+  "result": "READY_FOR_OWNER_REVIEW"
+}
