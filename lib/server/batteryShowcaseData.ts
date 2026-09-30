@@ -118,6 +118,32 @@ const PROFILES: Record<string, BatteryShowcaseProfile> = {
       },
     ],
   },
+  "DPP-GLR-LMT-000001": {
+    itemId: "glr-lmt-item-000001", gtin: "06900000010004", batchIdentifier: "GLR-LMT-2026-01", serialIdentifier: "GLR-P25A-000001", uniqueProductIdentifier: "https://greanlean.com/p/DPP-GLR-LMT-000001",
+    presentation: { chemistry: "NMC", ratedCapacityAh: 15, ratedEnergyKWh: 0.72, nominalVoltageV: 48, modelIdentifier: "GLR-P25A", serialNumber: "GLR-P25A-000001" },
+    metrics: [
+      { code: "SOC", labelZh: "荷电状态", labelEn: "State of charge", unit: "%", value: 78 },
+      { code: "SOH_VOLUNTARY", labelZh: "健康状态", labelEn: "State of health", unit: "%", value: 96 },
+      { code: "VOLTAGE", labelZh: "电压", labelEn: "Voltage", unit: "V", value: 27.4 },
+      { code: "CURRENT", labelZh: "电流", labelEn: "Current", unit: "A", value: -2.8 },
+      { code: "TEMPERATURE", labelZh: "电池温度", labelEn: "Battery temperature", unit: "°C", value: 29.6 },
+      { code: "FULL_CYCLE_COUNT", labelZh: "完整循环次数", labelEn: "Full cycle count", unit: "次", value: 124 },
+    ], historyCodes: ["SOC", "SOH_VOLUNTARY", "TEMPERATURE"], lifecycleEvents: [{ type: "COMMISSIONING", daysAgo: 124, noteZh: "合成演示设备投运。", noteEn: "Synthetic demo device commissioned." }],
+  },
+  "DPP-GLR-LMT-000002": {
+    itemId: "glr-lmt-item-000002", gtin: "06900000010011", batchIdentifier: "GLR-LMT-2026-02", serialIdentifier: "GLR-S36B-000002", uniqueProductIdentifier: "https://greanlean.com/p/DPP-GLR-LMT-000002",
+    presentation: { chemistry: "NMC", ratedCapacityAh: 18, ratedEnergyKWh: 0.9, nominalVoltageV: 48, modelIdentifier: "GLR-S36B", serialNumber: "GLR-S36B-000002" },
+    metrics: [
+      { code: "SOC", labelZh: "荷电状态", labelEn: "State of charge", unit: "%", value: 64 }, { code: "SOH_VOLUNTARY", labelZh: "健康状态", labelEn: "State of health", unit: "%", value: 94 }, { code: "VOLTAGE", labelZh: "电压", labelEn: "Voltage", unit: "V", value: 38.9 }, { code: "CURRENT", labelZh: "电流", labelEn: "Current", unit: "A", value: -4.1 }, { code: "TEMPERATURE", labelZh: "电池温度", labelEn: "Battery temperature", unit: "°C", value: 31.2 }, { code: "FULL_CYCLE_COUNT", labelZh: "完整循环次数", labelEn: "Full cycle count", unit: "次", value: 212 },
+    ], historyCodes: ["SOC", "SOH_VOLUNTARY", "TEMPERATURE"], lifecycleEvents: [{ type: "COMMISSIONING", daysAgo: 212, noteZh: "合成演示设备投运。", noteEn: "Synthetic demo device commissioned." }],
+  },
+  "DPP-GLR-LMT-000003": {
+    itemId: "glr-lmt-item-000003", gtin: "06900000010028", batchIdentifier: "GLR-LMT-2026-03", serialIdentifier: "GLR-X48C-000003", uniqueProductIdentifier: "https://greanlean.com/p/DPP-GLR-LMT-000003",
+    presentation: { chemistry: "LFP", ratedCapacityAh: 20, ratedEnergyKWh: 0.96, nominalVoltageV: 48, modelIdentifier: "GLR-X48C", serialNumber: "GLR-X48C-000003" },
+    metrics: [
+      { code: "SOC", labelZh: "荷电状态", labelEn: "State of charge", unit: "%", value: 86 }, { code: "SOH_VOLUNTARY", labelZh: "健康状态", labelEn: "State of health", unit: "%", value: 98 }, { code: "VOLTAGE", labelZh: "电压", labelEn: "Voltage", unit: "V", value: 52.7 }, { code: "CURRENT", labelZh: "电流", labelEn: "Current", unit: "A", value: 3.1 }, { code: "TEMPERATURE", labelZh: "电池温度", labelEn: "Battery temperature", unit: "°C", value: 27.8 }, { code: "FULL_CYCLE_COUNT", labelZh: "完整循环次数", labelEn: "Full cycle count", unit: "次", value: 76 },
+    ], historyCodes: ["SOC", "SOH_VOLUNTARY", "TEMPERATURE"], lifecycleEvents: [{ type: "COMMISSIONING", daysAgo: 76, noteZh: "合成演示设备投运。", noteEn: "Synthetic demo device commissioned." }],
+  },
 };
 
 function isoDaysAgo(now: Date, daysAgo: number) {

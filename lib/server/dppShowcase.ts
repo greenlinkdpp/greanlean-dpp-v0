@@ -14,6 +14,9 @@ export const DPP_SHOWCASE_IDENTIFIERS = new Set([
   "DPP-GV-ESS-14K3-000001",
   "DPP-SFJK-31-1-REC",
   "DPP-CE-EARBUDS-001",
+  "DPP-GLR-LMT-000001",
+  "DPP-GLR-LMT-000002",
+  "DPP-GLR-LMT-000003",
 ]);
 
 export function isDppShowcaseIdentifier(identifier: string) {

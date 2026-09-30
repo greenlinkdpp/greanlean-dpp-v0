@@ -21,6 +21,8 @@ export const PLATFORM_CAPABILITIES = [
   "platform.resolver.manage",
   "platform.audit.view",
   "platform.operations.view",
+  "platform.demo.view",
+  "platform.demo.manage",
 ] as const;
 
 export type PlatformCapability = typeof PLATFORM_CAPABILITIES[number];

@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-09-29T23:10:00.000Z",
+  "target": {
+    "environment": "greanlean-dpp-preprod",
+    "projectRef": "efhiaufukjchxqhbmpvq",
+    "productionWritePerformed": false,
+    "productionTrafficSwitched": false
+  },
+  "b0": {
+    "tenantCodeValidation": "PASS",
+    "chineseLocalisation": "IMPLEMENTED",
+    "browserCreateEditDelete": "WAIVED_BY_OWNER",
+    "rlsFinding": "LIKELY_UNUSED_BACKUP_TABLE"
+  },
+  "migration": {
+    "number": "0038",
+    "checksumSha256": "10849df0b69980448318f6512c915f48712fc5d78ad039c461a1760d79aaf6e9",
+    "headAfter": "0038",
+    "demoCatalogRls": true,
+    "platformCapabilities": ["platform.demo.view", "platform.demo.manage"]
+  },
+  "preprodBaseline": {
+    "tenants": 1,
+    "authUsers": 2,
+    "publicSyntheticDemoEntries": 8,
+    "nonBatteryBmsFields": 0
+  },
+  "deployment": {
+    "id": "dpl_Wqkq7ebyYapmW1bHWkH7as5Bu34b",
+    "immutableUrl": "https://greanlean-dpp-preprod-iqaetcj9o-songweinie-1175s-projects.vercel.app",
+    "stableAlias": "https://greanlean-dpp-preprod.vercel.app",
+    "status": "READY"
+  },
+  "verification": {
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "migrationTests": { "result": "PASS", "count": 58 },
+    "build": "PASS",
+    "localProductionBuildDemoRoute": { "path": "/demo?lang=zh", "status": 200, "result": "PASS" },
+    "externalPublicResolver": "NETWORK_ENVIRONMENT_UNVERIFIED"
+  },
+  "demoDpps": [
+    "DPP-GLR-LMT-000001",
+    "DPP-GLR-LMT-000002",
+    "DPP-GLR-LMT-000003",
+    "DPP-DEMO-ESS-000001",
+    "DPP-DEMO-TEX-000001",
+    "DPP-DEMO-CE-000001",
+    "DPP-DEMO-BLD-000001",
+    "DPP-DEMO-HW-000001"
+  ]
+}
