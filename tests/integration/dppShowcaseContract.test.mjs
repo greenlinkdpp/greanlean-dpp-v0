@@ -2,21 +2,15 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-test("only the four published product cases can request the public showcase projection", async () => {
+test("the legacy showcase projection remains allowlisted while the homepage foregrounds the published battery demo catalog", async () => {
   const showcase = await readFile("lib/server/dppShowcase.ts", "utf8");
   const home = await readFile("app/page.tsx", "utf8");
   const page = await readFile("app/p/[slug]/page.tsx", "utf8");
 
-  for (const identifier of [
-    "DPP-LMT-BAT-48V15AH",
-    "DPP-GV-ESS-14K3-000001",
-    "DPP-SFJK-31-1-REC",
-    "DPP-CE-EARBUDS-001",
-  ]) {
+  for (const identifier of ["DPP-LMT-BAT-48V15AH", "DPP-GV-ESS-14K3-000001", "DPP-SFJK-31-1-REC", "DPP-CE-EARBUDS-001"]) {
     assert.match(showcase, new RegExp(identifier));
-    assert.match(home, new RegExp(identifier));
   }
-  assert.doesNotMatch(showcase, /DPP-TEX-TSHIRT-001/);
+  for (const identifier of ["DPP-GLR-LMT-000001", "DPP-GLR-LMT-000002", "DPP-GLR-LMT-000003", "DPP-DEMO-ESS-000001"]) assert.match(home, new RegExp(identifier));
   assert.doesNotMatch(home, /DPP-TEX-TSHIRT-001/);
   assert.match(showcase, /isDppShowcaseIdentifier\(identifier\)/);
   assert.match(home, /showcase=1/);

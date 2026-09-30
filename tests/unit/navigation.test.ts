@@ -7,8 +7,8 @@ import {
   V2_BACKOFFICE_PATH,
 } from "../../lib/navigation.ts";
 
-test("canonical linkage paths preserve the selected language", () => {
-  assert.equal(localizedPath(PRIMARY_V2_DEMO_PATH, "zh"), "/p/DPP-GLR-EBIKE-000001?lang=zh");
+test("public demo entry paths preserve the selected language", () => {
+  assert.equal(localizedPath(PRIMARY_V2_DEMO_PATH, "zh"), "/demo?lang=zh");
   assert.equal(localizedPath(V2_BACKOFFICE_PATH, "en"), "/dashboard/v2?lang=en");
 });
 

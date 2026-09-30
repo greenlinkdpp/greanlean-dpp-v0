@@ -171,7 +171,7 @@ function localizedValue(value: unknown, locale: PassportLocale, unit?: string | 
     const states: Record<string, string> = {
       Charging: "充电中", Discharging: "放电中", Published: "已发布", PUBLISHED: "已发布",
       "Lithium-ion": "锂离子", "E-bike battery pack": "电动自行车电池包",
-      "10°C to 25°C": "10°C 至 25°C", "-10°C to 45°C": "-10°C 至 45°C",
+      "10°C to 25°C": "10°C 至 25°C", "-10°C to 45°C": "-10°C 至 45°C", "0°C to 45°C": "0°C 至 45°C", "Bluetooth": "蓝牙",
       "Organic cotton": "有机棉", "Textile garment": "纺织品", "Consumer electronics": "消费电子",
       "Recycled ABS": "再生 ABS", "Wood-plastic flooring": "木塑地板", "Alloy steel": "合金钢",
       "Replaceable bits": "可更换批头", "Hand tool": "手动工具", "Industrial energy storage": "工业储能",

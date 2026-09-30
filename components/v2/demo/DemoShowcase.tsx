@@ -42,7 +42,7 @@ function parameterValue(key: string, value: unknown, zh: boolean) {
     "Industrial energy storage": "工业储能", "Lithium-ion": "锂离子", "E-bike battery pack": "电动自行车电池包",
     "Textile garment": "纺织品", "Organic cotton": "有机棉",
   } : {};
-  const raw = translated[String(value)] || String(value);
+  const raw = translated[String(value)] || (zh && key === "connectivity" && String(value) === "Bluetooth" ? "蓝牙" : String(value));
   const units: Record<string, string> = {
     nominal_voltage_v: "V", rated_capacity_ah: "Ah", rated_energy_wh: "Wh", energy_kwh: "kWh",
     weight_kg: "kg", weight_gsm: "g/m²", thickness_mm: "mm", dimensions_mm: "mm",

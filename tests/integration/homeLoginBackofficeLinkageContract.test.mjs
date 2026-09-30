@@ -7,11 +7,11 @@ const read = (path) => readFile(new URL(path, root), "utf8");
 
 test("homepage and footer use the canonical Reference Demo and localized login", async () => {
   const [home, routes] = await Promise.all([read("app/page.tsx"), read("lib/navigation.ts")]);
-  assert.match(routes, /PRIMARY_V2_DEMO_PATH = "\/p\/DPP-GLR-EBIKE-000001"/);
-  assert.match(home, /View DPP Demo/);
-  assert.match(home, /查看 DPP Demo/);
-  assert.match(home, /Platform Login/);
-  assert.match(home, /平台登录/);
+  assert.match(routes, /PRIMARY_V2_DEMO_PATH = "\/demo"/);
+  assert.match(home, /View Battery Passport Demo/);
+  assert.match(home, /查看电池护照 Demo/);
+  assert.match(home, /Sign in/);
+  assert.match(home, /登录平台/);
   assert.match(home, /footerLogin, `\/login\?lang=\$\{locale\}`/);
 });
 

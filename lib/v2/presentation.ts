@@ -156,7 +156,7 @@ export function formatValue(value: unknown, locale: PassportLocale, unit?: strin
       "Lithium-ion": "锂离子", "E-bike battery pack": "电动自行车电池包", "Industrial energy storage": "工业储能",
       "Textile garment": "纺织品", "Organic cotton": "有机棉", "Consumer electronics": "消费电子", "Recycled ABS": "再生 ABS",
       "Wood-plastic flooring": "木塑地板", "Alloy steel": "合金钢", "Replaceable bits": "可更换批头", "Hand tool": "手动工具",
-      "10°C to 25°C": "10°C 至 25°C", "-10°C to 45°C": "-10°C 至 45°C",
+      "10°C to 25°C": "10°C 至 25°C", "-10°C to 45°C": "-10°C 至 45°C", "0°C to 45°C": "0°C 至 45°C", "Bluetooth": "蓝牙",
     };
     if (translated[value]) return translated[value];
   }

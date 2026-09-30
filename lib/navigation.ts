@@ -1,6 +1,8 @@
 export type NavigationLocale = "en" | "zh";
 
-export const PRIMARY_V2_DEMO_PATH = "/p/DPP-GLR-EBIKE-000001";
+// The public entry point is the published Demo catalog.  It deliberately avoids
+// selecting one legacy passport as the product's primary outward experience.
+export const PRIMARY_V2_DEMO_PATH = "/demo";
 export const V2_BACKOFFICE_PATH = "/dashboard/v2";
 export const PLATFORM_CONSOLE_PATH = "/dashboard/platform";
 

@@ -14,36 +14,36 @@ export function PublicHeader() {
     locale === "zh"
       ? {
           home: "首页",
-          platform: "DPP 平台",
-          industries: "行业方案",
+          platform: "电池护照",
+          industries: "解决方案",
           battery: "电池护照",
-          cases: "产品护照案例",
-          regulations: "法规与时间线",
+          cases: "Demo",
+          regulations: "实施流程",
           contact: "联系我们",
-          login: "平台登录",
+          login: "登录平台",
           menu: "打开导航菜单",
           close: "关闭导航菜单",
         }
       : {
           home: "Home",
-          platform: "DPP platform",
-          industries: "Industries",
+          platform: "Battery Passport",
+          industries: "Solutions",
           battery: "Battery Passport",
-          cases: "Passport cases",
-          regulations: "Regulations",
+          cases: "Demo",
+          regulations: "Implementation",
           contact: "Contact",
-          login: "Platform Login",
+          login: "Sign in",
           menu: "Open navigation menu",
           close: "Close navigation menu",
         };
 
   const links = [
     [t.home, `/?lang=${locale}`],
-    [t.platform, `/?lang=${locale}#platform`],
-    [t.industries, `/?lang=${locale}#industries`],
+    [t.platform, `/?lang=${locale}#battery-passport`],
+    [t.industries, `/?lang=${locale}#platform`],
     [t.battery, `/?lang=${locale}#battery-passport`],
-    [t.cases, `/?lang=${locale}#passport-cases`],
-    [t.regulations, `/?lang=${locale}#regulations`],
+    [t.cases, `/demo?lang=${locale}`],
+    [t.regulations, `/?lang=${locale}#workflow`],
     [t.contact, `/?lang=${locale}#contact`],
   ];
 
