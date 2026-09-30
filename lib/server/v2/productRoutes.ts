@@ -11,6 +11,7 @@ import {
   listProductRows,
   loadProductRow,
   updateProductRow,
+  deleteProductRow,
 } from "./productRepository";
 import { requireV2PolicyContext } from "./security";
 
@@ -125,5 +126,21 @@ export function createProductItemHandlers(configuration: ProductRouteConfigurati
       headers: { "Cache-Control": "private, no-store", "X-Idempotent-Replay": String(result.replay) },
     });
   });
-  return { GET, PATCH };
+  const DELETE = withApiRoute<RouteContext>(async (request, requestContext, route) => {
+    const id = requireUuid(route.params.id, "Product resource identifier");
+    const idempotencyKey = requireIdempotencyKey(request);
+    const { policyContext, admin } = await requireV2PolicyContext(request, requestContext, {
+      capability: writeCapability,
+      resourceType: configuration.resourceType,
+      resourceId: id,
+      purpose: configuration.entityName + ".delete",
+    }, { productFeature: true });
+    const result = await executeIdempotentWrite({
+      admin, context: policyContext, requestPath: requestContext.path, idempotencyKey,
+      payload: { id, action: "DELETE" },
+      operation: async () => ({ status: 200, data: await deleteProductRow(admin, policyContext, configuration.table, id, configuration.notFoundCode) }),
+    });
+    return Response.json(result.data, { status: result.status, headers: { "Cache-Control": "private, no-store", "X-Idempotent-Replay": String(result.replay) } });
+  });
+  return { GET, PATCH, DELETE };
 }

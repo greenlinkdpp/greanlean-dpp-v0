@@ -85,6 +85,7 @@ export type BackofficeSnapshot = {
   bmsSnapshots: BackofficeRow[];
   connectorAudit: BackofficeRow[];
   policyAudit: BackofficeRow[];
+  productOrganisationRelations: BackofficeRow[];
 };
 
 export type NavigationItem = {

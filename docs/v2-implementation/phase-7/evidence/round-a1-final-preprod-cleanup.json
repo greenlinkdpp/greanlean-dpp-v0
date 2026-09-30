@@ -1,0 +1,124 @@
+{
+  "generatedAt": "2026-09-30T03:08:00.946Z",
+  "mode": "APPLY",
+  "target": "greanlean-dpp-preprod",
+  "before": {
+    "tenants": 5,
+    "organisations": 6,
+    "families": 5,
+    "models": 32,
+    "skus": 49,
+    "batches": 21,
+    "batch_sku_links": 47,
+    "items": 54,
+    "passports": 51,
+    "versions": 53,
+    "current_pointers": 49,
+    "claims": 800,
+    "provenance": 801,
+    "source_records": 50,
+    "mapping_profiles": 6,
+    "mapping_versions": 8,
+    "mapping_rules": 42,
+    "reviews": 55,
+    "resolver_mappings": 71,
+    "bms_snapshots": 48,
+    "audit_records": 222,
+    "platform_roles": 2,
+    "tenant_memberships": 18,
+    "migration_head": "0037"
+  },
+  "keepSet": {
+    "tenantCode": "greanlean-reference-mobility",
+    "dpp": "DPP-GLR-EBIKE-000001",
+    "graph": {
+      "passport_id": "d55e8c05-fc92-4782-b1a9-77aab67e5bf7",
+      "passport_identifier": "DPP-GLR-EBIKE-000001",
+      "subject_type": "ITEM",
+      "item_id": "5f8d7384-0e90-49a2-baec-59dcb4eb84c9",
+      "sku_id": "bef7418a-97f3-4e11-9199-d0c1f3784f50",
+      "batch_id": "f2056735-3927-4fe6-afe9-fc34bac5a8fb",
+      "model_id": "645a5d57-b12e-475a-bf5f-22068614d683",
+      "family_id": "6afd4b3c-9a00-4ab7-9550-b87946465725",
+      "model_code": "GLR-P25A",
+      "family_code": "glr-ebike-battery"
+    },
+    "authEmails": [
+      "songweinie@gmail.com",
+      "reference-author@preprod.greanlean.invalid"
+    ]
+  },
+  "deleteSet": {
+    "tenantCodes": [
+      "greanlean-reference-write-verification",
+      "phase1-tenant-a",
+      "phase1-tenant-b",
+      "soodoo-e-bike"
+    ],
+    "authEmails": [
+      "admin-b@phase5.greanlean.invalid",
+      "admin@phase5.greanlean.invalid",
+      "author@phase4.greanlean.invalid",
+      "partner-user@phase1.greanlean.invalid",
+      "phase7-platform-operator@preprod.greanlean.invalid",
+      "phase7-soodoo-author@greanlean.example",
+      "phase7-soodoo-publisher@greanlean.example",
+      "platform-user@phase1.greanlean.invalid",
+      "publisher@phase4.greanlean.invalid",
+      "read-only@phase2.greanlean.invalid",
+      "read-only@phase4.greanlean.invalid",
+      "read-only@phase5.greanlean.invalid",
+      "reference-publisher@preprod.greanlean.invalid",
+      "reference-reviewer@preprod.greanlean.invalid",
+      "reference-write-verification-author@preprod.greanlean.invalid",
+      "reference-write-verification-publisher@preprod.greanlean.invalid",
+      "reference-write-verification-reviewer@preprod.greanlean.invalid",
+      "reviewer@phase4.greanlean.invalid",
+      "user-a@phase1.greanlean.invalid",
+      "user-b@phase1.greanlean.invalid"
+    ]
+  },
+  "safety": {
+    "unknownTenants": 0,
+    "unknownUsers": 0,
+    "productionWritePerformed": false,
+    "productionAuthChanged": false
+  },
+  "after": {
+    "tenants": 1,
+    "organisations": 1,
+    "families": 1,
+    "models": 1,
+    "skus": 1,
+    "batches": 1,
+    "batch_sku_links": 1,
+    "items": 1,
+    "passports": 1,
+    "versions": 1,
+    "current_pointers": 1,
+    "claims": 17,
+    "provenance": 374,
+    "source_records": 22,
+    "mapping_profiles": 1,
+    "mapping_versions": 1,
+    "mapping_rules": 17,
+    "reviews": 1,
+    "resolver_mappings": 1,
+    "bms_snapshots": 22,
+    "audit_records": 161,
+    "platform_roles": 1,
+    "tenant_memberships": 1,
+    "migration_head": "0037"
+  },
+  "authUsersKept": [
+    "reference-author@preprod.greanlean.invalid",
+    "songweinie@gmail.com"
+  ],
+  "result": "PASS",
+  "persistentPreprodReference": {
+    "tenant": "greanlean-reference-mobility",
+    "model": "GLR-P25A",
+    "dpp": "DPP-GLR-EBIKE-000001"
+  },
+  "ephemeralFixtureTeardownPolicy": "IMPLEMENTED: temporary Tenant/Auth/Product fixtures must use isolated database, transaction rollback, or explicit teardown; hosted PreProd retains only this documented reference set."
+}

@@ -27,13 +27,13 @@ test("login and unauthenticated dashboard preserve a safe V2 return target", asy
   assert.match(shell, /next=\$\{encodeURIComponent\(returnTo\)\}/);
 });
 
-test("Backoffice and public DPP expose localized utility links without Tenant IDs", async () => {
+test("Backoffice removes redundant header escapes while public DPP retains its safe utility links", async () => {
   const [backoffice, dpp] = await Promise.all([
     read("components/v2/backoffice/BackofficeConsole.tsx"),
     read("components/v2/ProductizedDppPage.tsx"),
   ]);
-  assert.match(backoffice, /Back to website/);
-  assert.match(backoffice, /View public Demo/);
+  assert.doesNotMatch(backoffice, /Back to website/);
+  assert.doesNotMatch(backoffice, /View public Demo/);
   assert.doesNotMatch(backoffice, /\/p\/\$\{selected\.tenantId\}/);
   assert.match(dpp, /GreanLean Home/);
   assert.match(dpp, /Platform Login/);

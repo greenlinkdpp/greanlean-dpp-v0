@@ -49,7 +49,7 @@ export async function loadBackofficeSnapshot(admin: AdminClient, context: Verifi
     identifiers, dataSources, sourceRecords, mappingProfiles, mappingVersions, mappingRules, transformations,
     provenance, claims, passports, reviews, versions, currentPointers, resolverMappings, publicationAudit,
     connectors, connectorJobs, connectorAttempts, connectorReceipts, deadLetters, importSessions,
-    registrySubmissions, bmsSnapshots, connectorAudit, policyAudit,
+    registrySubmissions, bmsSnapshots, connectorAudit, policyAudit, productOrganisationRelations,
   ] = await Promise.all([
     rows(admin, "organisation_v2", "id,parent_organisation_id,organisation_type,legal_name,trading_name,country,registration_identifier,vat_number,eori,address,status,created_at,updated_at", tenantId),
     rows(admin, "tenant_membership", "id,role_id,status,valid_from,valid_until,created_at,updated_at", tenantId),
@@ -85,6 +85,7 @@ export async function loadBackofficeSnapshot(admin: AdminClient, context: Verifi
     rows(admin, "bms_aggregation_snapshot", "id,connector_instance_id,item_id,device_external_id,window_start,window_end,algorithm_version,sample_count,aggregate_json,threshold_events,canonical_claim_id,created_at", tenantId, { order: "window_end", limit: 200 }),
     rows(admin, "connector_audit_event", "id,event_type,connector_instance_id,connector_job_id,correlation_id,safe_metadata,created_at", tenantId, { order: "created_at", limit: 200 }),
     rows(admin, "policy_decision_audit", "id,actor_type,partner_id,capability_code,resource_type,resource_id,purpose,decision,reason_code,effective_scope,policy_version,correlation_id,request_path,created_at", tenantId, { order: "created_at", limit: 200 }),
+    rows(admin, "product_organisation_relation", "id,product_model_id,sku_id,organisation_id,relation_type,status,created_at,updated_at", tenantId),
   ]);
 
   const fieldIds = Array.from(new Set<string>([
@@ -138,5 +139,6 @@ export async function loadBackofficeSnapshot(admin: AdminClient, context: Verifi
     importSessions: can("connector.view") ? importSessions : [], registrySubmissions: can("registry.view") ? registrySubmissions : [],
     bmsSnapshots: can("connector.view") ? bmsSnapshots : [], connectorAudit: can("connector.view") ? connectorAudit : [],
     policyAudit: can("tenant.manage") || capabilities.has("platform.audit.view") ? policyAudit : [],
+    productOrganisationRelations: can("product.view") ? productOrganisationRelations : [],
   };
 }
