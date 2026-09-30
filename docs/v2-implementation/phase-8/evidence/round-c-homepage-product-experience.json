@@ -5,12 +5,12 @@
     "name": "greanlean-dpp-preprod",
     "projectRef": "efhiaufukjchxqhbmpvq",
     "url": "https://greanlean-dpp-preprod.vercel.app",
-    "deploymentId": "dpl_2q3NuMYY8mYg32PusTVhim6XVCJq",
+    "deploymentId": "dpl_ANC8i3EGbZrMpWP21XYiYMvGJg4z",
     "deploymentStatus": "READY"
   },
   "releaseCandidate": {
-    "commit": "67fbc3dcc53f91d8d6bc00eba7f398f660afb200",
-    "tree": "78a0b62d1292069fc8905bc8fe3a53f7a3842df5"
+    "commit": "7f7c4771599f604dd032641b4c1a6233f344c7c5",
+    "tree": "f9594062afa7d1ba155c0106eaab5d6a23ca2c40"
   },
   "automatedVerification": {
     "lint": "PASS",

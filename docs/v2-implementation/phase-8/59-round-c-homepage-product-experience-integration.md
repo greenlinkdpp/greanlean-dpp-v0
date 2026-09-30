@@ -2,7 +2,7 @@
 
 Date: 2026-09-30  
 Environment: `greanlean-dpp-preprod` only (`efhiaufukjchxqhbmpvq`)  
-Deployment: `dpl_2q3NuMYY8mYg32PusTVhim6XVCJq`
+Deployment: `dpl_ANC8i3EGbZrMpWP21XYiYMvGJg4z`
 
 ## Delivered
 
@@ -11,6 +11,7 @@ Deployment: `dpl_2q3NuMYY8mYg32PusTVhim6XVCJq`
 - Foregrounded the three published LMT examples and one industrial-energy example on the homepage; the later industry section now describes extension capability, not equal commercial readiness.
 - Kept the existing public Demo catalog and public-DPP routes as the source of published product data; homepage cards are a deliberately narrow display projection.
 - Aligned public header links, Demo-to-home, language routes, and login routes.
+- Corrected the public-DPP wordmark to return to the same localized Homepage.
 - Applied the ESS `7.2 kW` / Chinese `0°C 至 45°C`, building-material `mm`, and Chinese Bluetooth display corrections through the shared seed and presentation paths.
 - Added targeted Round C contract tests. No migration was added or changed.
 
