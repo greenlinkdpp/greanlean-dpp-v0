@@ -54,3 +54,22 @@ test("Round H1 localizes operational UI and separates current publication from n
   assert.match(consoleSource, /referenceTenant = selected\?\.tenantCode === "greanlean-reference-mobility"/);
   assert.match(copy, /synthetic: "参考数据"/);
 });
+
+test("Round H1.2 localizes authenticated dashboard residuals without changing stored values", async () => {
+  const [backoffice, platform] = await Promise.all([
+    read("components/v2/backoffice/BackofficeConsole.tsx"),
+    read("components/v2/platform/PlatformConsole.tsx"),
+  ]);
+  for (const mapping of [
+    /ACTIVE: "启用"/, /ITEM: "单件产品"/, /PUBLISHED: "已发布"/, /NOT_READY: "未就绪"/, /CURRENT: "当前"/,
+    /"Platform Operator": "平台运营人员"/, /organisation_name: "企业主体名称"/,
+    /schema_version_id: "Schema 版本 ID"/, /payload_hash: "载荷哈希"/,
+  ]) assert.match(backoffice, mapping);
+  assert.match(backoffice, /displayValue\("updated_at", tenant\.updated_at, locale\)/);
+  assert.match(backoffice, /tenantCode === "greanlean-reference-mobility" && <Status value="REFERENCE_DATA"/);
+  assert.match(backoffice, /currentPublicationState/);
+  assert.match(backoffice, /候选就绪度/);
+  assert.match(backoffice, /latestPublishedAt/);
+  assert.match(platform, /platformDisplayValue/);
+  assert.match(platform, /Intl\.DateTimeFormat/);
+});
