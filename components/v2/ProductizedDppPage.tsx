@@ -23,7 +23,6 @@ type Props = {
 const messages = {
   en: {
     passport: "Digital Product Passport",
-    demo: "Demo",
     verified: "Data verification",
     unverified: "Unverified",
     status: "Passport status",
@@ -54,13 +53,12 @@ const messages = {
     manufacturer: "Manufacturer",
     authority: "Authority",
     language: "中文",
-    disclaimer: "This GreanLean Digital Product Passport Demo is provided to illustrate the platform’s data structure, presentation and management capabilities. The data does not represent a real customer product or a formal regulatory submission.",
+    disclaimer: "The content shown on this page illustrates GreanLean's data organization, presentation and management capabilities. It does not represent a real customer product or a formal regulatory submission.",
     login: "Platform Login",
     skip: "Skip to passport content",
   },
   zh: {
     passport: "数字产品护照",
-    demo: "Demo",
     verified: "数据验证",
     unverified: "未验证",
     status: "护照状态",
@@ -91,7 +89,7 @@ const messages = {
     manufacturer: "制造商",
     authority: "监管机构",
     language: "English",
-    disclaimer: "本页面为 GreanLean 数字产品护照 Demo，用于展示平台的数据组织、展示与管理能力。页面数据不代表真实客户产品或正式监管申报结果。",
+    disclaimer: "本页展示内容用于说明 GreanLean 平台的数据组织、展示与管理能力，不代表真实客户产品或正式监管申报结果。",
     login: "平台登录",
     skip: "跳转到护照内容",
   },
@@ -173,7 +171,7 @@ function localizedValue(value: unknown, locale: PassportLocale, unit?: string | 
       "Organic cotton": "有机棉", "Textile garment": "纺织品", "Consumer electronics": "消费电子",
       "Recycled ABS": "再生 ABS", "Wood-plastic flooring": "木塑地板", "Alloy steel": "合金钢",
       "Replaceable bits": "可更换批头", "Hand tool": "手动工具", "Industrial energy storage": "工业储能",
-      SYNTHETIC_DEMO: "GreanLean", INTERNAL_SYNTHETIC_REFERENCE: "GreanLean", SYNTHETIC_FIXTURE: "GreanLean", VERIFIED: "已验证", UNVERIFIED: "未验证", PUBLIC: "公开",
+      SYNTHETIC_DEMO: "GreanLean", INTERNAL_SYNTHETIC_REFERENCE: "GreanLean", SYNTHETIC_FIXTURE: "GreanLean", VERIFIED: "已验证", UNVERIFIED: "未验证", PUBLIC: "公开", NOT_APPLICABLE: "不适用",
       TEST_REPORT: "测试报告", CERTIFICATE: "证书", DECLARATION: "声明", SAFETY: "安全文件",
       SPECIFICATION: "规格文件", WARRANTY: "质保文件", RECYCLING: "回收文件", ENVIRONMENT: "环境/可持续性文件", SERVICE: "服务/维护文件",
     };
@@ -186,13 +184,41 @@ function localizedValue(value: unknown, locale: PassportLocale, unit?: string | 
  * provenance enums in storage for audit and internal workflow purposes. */
 function publicCopy(value: string, locale: PassportLocale) {
   const replacements: Array<[string, string]> = locale === "zh"
-    ? [["合成演示数据", "GreanLean 数据"], ["合成演示事件。", "记录事件。"], ["合成演示流程", "服务流程"], ["合成演示", "GreanLean"], ["合成数据集", "GreanLean 数据集"], ["演示数据集", "GreanLean 数据集"], ["仅限演示运输分类", "运输分类信息"], ["演示声明", "声明"], ["提供演示 SDS / MSDS", "提供 SDS / MSDS"], ["演示安全与储存指引", "产品安全与储存指引"], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]]
-    : [["Synthetic demonstration data", "GreanLean data"], ["Synthetic demo event.", "Recorded event."], ["Deterministic demo", "Documented"], ["deterministic demo", "documented"], ["Reference Demo", "GreanLean"], ["synthetic data set", "GreanLean data set"], ["Synthetic reference", "GreanLean"], ["Demo declaration", "Declaration"], ["Demo SDS / MSDS", "SDS / MSDS"], ["Demonstration transport classification only", "Transport classification"], ["product-specific demo safety and storage guidance", "product-specific safety and storage guidance"], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]];
+    ? [["合成演示数据", "产品数据"], ["合成演示事件。", "记录事件。"], ["合成演示事件", "记录事件"], ["已记录演示事件", "已记录"], ["合成演示流程", "服务流程"], ["合成演示", ""], ["合成数据集", "数据集"], ["演示数据集", "数据集"], ["仅限演示运输分类", "运输分类信息"], ["演示运输指引", "运输指引"], ["演示安全步骤", "安全步骤"], ["演示安全与储存指引", "产品安全与储存指引"], ["演示声明", "声明"], ["提供演示 SDS / MSDS", "提供 SDS / MSDS"], ["演示出具方", "出具方"], ["演示产地", "产地"], ["演示参考", "参考信息"], ["演示固件", "固件"], ["演示 / 未验证", "未验证"], ["仅用于演示", "参考信息"], ["演示程序", "文件化程序"], ["授权回收渠道 — 演示", "授权回收渠道"], ["确定性演示公式", "确定性计算方法"], [" — 演示", ""], ["— 演示", ""], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]]
+    : [["Synthetic demonstration data", "Product data"], ["Synthetic demo event.", "Recorded event."], ["Synthetic demonstration event.", "Recorded event."], ["Recorded demo event", "Recorded"], ["Deterministic demo formula", "Deterministic calculation method"], ["Deterministic demo", "Documented"], ["deterministic demo", "documented"], ["Reference Demo", "GreanLean"], ["synthetic data set", "data set"], ["Synthetic reference", "Reference information"], ["Demo declaration", "Declaration"], ["Demo SDS / MSDS", "SDS / MSDS"], ["Demo issuer", "Issuer"], ["Demo / unverified", "Unverified"], ["Demonstration only", "Reference information"], ["demo origin", "origin"], ["demo reference", "reference information"], ["demo firmware", "firmware"], ["Demonstration transport classification only", "Transport classification"], ["demo transport guidance", "transport guidance"], ["demo safety steps", "safety steps"], ["demonstrated safety steps", "documented safety steps"], ["product-specific demo safety and storage guidance", "product-specific safety and storage guidance"], ["demo procedure", "documented procedure"], [" — demo", ""], ["— demo", ""], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]];
   return replacements.reduce((result, [from, to]) => result.replaceAll(from, to), value);
 }
 
+function isPlaceholderIdentifier(key: string, value: unknown) {
+  if (key !== "gtin_or_demo_identifier") return false;
+  const text = JSON.stringify(value).toLowerCase();
+  return text.includes("internal demonstration identifier") || text.includes("内部演示标识") || text.includes("placeholder");
+}
+
+const applicationByPassport: Record<string, { en: string; zh: string }> = {
+  "DPP-GLR-LMT-000001": { en: "Urban commuting", zh: "城市通勤" },
+  "DPP-GLR-LMT-000002": { en: "Extended urban riding", zh: "城市长续航骑行" },
+  "DPP-GLR-LMT-000003": { en: "Fleet and cargo operations", zh: "车队与货运运营" },
+  "DPP-DEMO-ESS-000001": { en: "Commercial and industrial energy storage", zh: "工商业储能" },
+  "DPP-DEMO-TEX-000001": { en: "Everyday apparel", zh: "日常服装" },
+  "DPP-DEMO-CE-000001": { en: "Personal wireless audio", zh: "个人无线音频" },
+  "DPP-DEMO-BLD-000001": { en: "Outdoor and building decking", zh: "户外与建筑铺装" },
+  "DPP-DEMO-HW-000001": { en: "Precision assembly and maintenance", zh: "精密装配与维护" },
+};
+
+function withPublicDisplayOverrides(projection: ProjectedDpp): ProjectedDpp {
+  const application = applicationByPassport[projection.passportIdentifier];
+  if (!application) return projection;
+  return {
+    ...projection,
+    fields: projection.fields.map((field) => field.fieldCode === "technical.specification"
+      ? { ...field, value: { ...asRecord(field.value), application } }
+      : field),
+  };
+}
+
 function ValueGrid({ value, locale, omit = [] }: { value: unknown; locale: PassportLocale; omit?: string[] }) {
-  const entries = Object.entries(asRecord(value)).filter(([key]) => !omit.includes(key));
+  const entries = Object.entries(asRecord(value)).filter(([key, item]) => !omit.includes(key) && !isPlaceholderIdentifier(key, item));
   if (!entries.length) return <p className="text-sm text-slate-500">{formatValue(value, locale)}</p>;
   return (
     <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
@@ -318,7 +344,7 @@ function sectionTitle(id: string, m: typeof messages.en | typeof messages.zh) {
 }
 
 export function ProductizedDppPage({ projection, locale, previewRole, audiencePreviewEnabled, previewGrants }: Props) {
-  const view = normalizeDppProjection(projection, locale);
+  const view = normalizeDppProjection(withPublicDisplayOverrides(projection), locale);
   const m = messages[locale];
   const otherLocale = locale === "en" ? "zh" : "en";
   const basePath = `/p/${encodeURIComponent(projection.passportIdentifier)}`;
@@ -332,10 +358,10 @@ export function ProductizedDppPage({ projection, locale, previewRole, audiencePr
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8"><BrandLogo href={`/?lang=${locale}`} size="md" variant="light" wordmarkClassName="drop-shadow-sm" /><nav aria-label={locale === "zh" ? "账户与语言" : "Account and language"} className="flex items-center gap-2"><Link href={`/login?lang=${locale}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.login}</Link><Link href={`${basePath}?lang=${otherLocale}${previewQuery}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.language}</Link></nav></div>
       </header>
       {audiencePreviewEnabled ? <div className="border-b border-sky-200 bg-sky-50"><div className="mx-auto max-w-7xl px-5 py-4 sm:px-8"><div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-xs font-bold tracking-[.16em] text-sky-900">{m.preview}</p><p className="mt-1 text-sm text-sky-800">{m.previewWarning}</p></div><nav aria-label={m.preview} className="flex gap-2 overflow-x-auto pb-1">{(["PUBLIC", "REPAIRER", "RECYCLER", "MANUFACTURER", "AUTHORITY"] as PreviewRole[]).map((role) => { const grant = previewGrants?.[role]; return <Link key={role} href={`${basePath}?lang=${locale}&audience=${role}${grant ? `&audienceGrant=${encodeURIComponent(grant)}` : ""}`} className={`inline-flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-semibold ring-1 ring-inset ${previewRole === role ? "bg-sky-900 text-white ring-sky-900" : "bg-white text-sky-900 ring-sky-200"}`}>{m[role.toLowerCase() as keyof typeof m]}</Link>; })}</nav></div></div></div> : null}
-      <section className="relative overflow-hidden bg-emerald-950 text-white"><div className="absolute inset-0 opacity-30 dpp-grid" /><div className="relative mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_300px] lg:py-16"><div><div className="flex flex-wrap gap-2"><StatusBadge tone="green">{view.brand}</StatusBadge><StatusBadge tone="blue">{view.category ? (locale === "zh" ? ({ "E-bike battery pack": "LMT 电池", "Industrial energy storage": "工业储能电池", "Textile garment": "纺织品", "Consumer electronics": "消费电子产品", "Wood-plastic flooring": "建筑材料", "Hand tool": "五金产品" }[view.category] || view.category) : view.category) : m.passport}</StatusBadge>{view.synthetic ? <StatusBadge tone="neutral">{m.demo}</StatusBadge> : null}<StatusBadge tone="amber">{m.unverified}</StatusBadge></div><p className="mt-7 text-sm font-semibold uppercase tracking-[.2em] text-emerald-300">{m.passport}</p><h1 className="mt-3 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">{view.productName}</h1><p className="mt-5 text-lg text-emerald-100">{view.modelCode} · {projection.passportIdentifier}</p><div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-emerald-100"><span><strong className="text-white">{m.status}:</strong> {localizedValue(projection.status, locale)}</span><span><strong className="text-white">{m.updated}:</strong> {dateValue(projection.publishedAt, locale)}</span></div></div><div className="flex items-center justify-center"><div className="rounded-2xl bg-white p-4 text-center text-slate-900 shadow-2xl"><img src={qrUrl} width={220} height={220} alt={`${m.scan}: ${projection.passportIdentifier}`} className="h-auto w-[220px] max-w-full" /><p className="mt-3 max-w-[220px] text-xs font-semibold text-slate-600">{m.scan}</p></div></div></div></section>
+      <section className="relative overflow-hidden bg-emerald-950 text-white"><div className="absolute inset-0 opacity-30 dpp-grid" /><div className="relative mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_300px] lg:py-16"><div><div className="flex flex-wrap gap-2"><StatusBadge tone="green">{view.brand}</StatusBadge><StatusBadge tone="blue">{view.category ? (locale === "zh" ? ({ "E-bike battery pack": "LMT 电池", "Industrial energy storage": "工业储能电池", "Textile garment": "纺织品", "Consumer electronics": "消费电子产品", "Wood-plastic flooring": "建筑材料", "Hand tool": "五金产品" }[view.category] || view.category) : view.category) : m.passport}</StatusBadge><StatusBadge tone="amber">{m.unverified}</StatusBadge></div><p className="mt-7 text-sm font-semibold uppercase tracking-[.2em] text-emerald-300">{m.passport}</p><h1 className="mt-3 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">{view.productName}</h1><p className="mt-5 text-lg text-emerald-100">{view.modelCode} · {projection.passportIdentifier}</p><div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-emerald-100"><span><strong className="text-white">{m.status}:</strong> {localizedValue(projection.status, locale)}</span><span><strong className="text-white">{m.updated}:</strong> {dateValue(projection.publishedAt, locale)}</span></div></div><div className="flex items-center justify-center"><div className="rounded-2xl bg-white p-4 text-center text-slate-900 shadow-2xl"><img src={qrUrl} width={220} height={220} alt={`${m.scan}: ${projection.passportIdentifier}`} className="h-auto w-[220px] max-w-full" /><p className="mt-3 max-w-[220px] text-xs font-semibold text-slate-600">{m.scan}</p></div></div></div></section>
       <div className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur"><nav aria-label={locale === "zh" ? "护照章节" : "Passport sections"} className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-5 py-2 sm:px-8">{view.sections.filter((section) => section.id !== "technical").map((section) => <a key={section.id} href={`#${section.id}`} className="inline-flex min-h-11 shrink-0 items-center rounded-lg px-3 text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-emerald-600">{sectionTitle(section.id, m)}</a>)}</nav></div>
       <div id="passport-content" className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:py-14">
-        {view.metrics.length ? <section aria-labelledby="key-metrics"><div className="mb-5 flex items-end justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-700">{m.overview}</p><h2 id="key-metrics" className="mt-1 text-2xl font-bold tracking-tight">{m.metrics}</h2></div></div><div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8">{view.metrics.map((metric) => <article key={metric.key} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"><p className="text-xs font-semibold text-slate-500">{metric.label}</p><p className="mt-2 break-words text-xl font-bold tracking-tight">{formatValue(metric.value, locale, metric.unit)}</p></article>)}</div></section> : null}
+        {view.metrics.length ? <section aria-labelledby="key-metrics"><div className="mb-5 flex items-end justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-700">{m.overview}</p><h2 id="key-metrics" className="mt-1 text-2xl font-bold tracking-tight">{m.metrics}</h2></div></div><div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8">{view.metrics.map((metric) => <article key={metric.key} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"><p className="text-xs font-semibold text-slate-500">{metric.label}</p><p className="mt-2 break-words text-xl font-bold tracking-tight">{localizedValue(metric.value, locale, metric.unit)}</p></article>)}</div></section> : null}
         <div className="mt-12 space-y-12">{view.sections.filter((section) => section.id !== "technical").map((section) => <section id={section.id} key={section.id} aria-labelledby={`${section.id}-title`} className="scroll-mt-20"><div className="mb-5"><h2 id={`${section.id}-title`} className="text-2xl font-bold tracking-tight sm:text-3xl">{sectionTitle(section.id, m)}</h2><div className="mt-2 h-1 w-12 rounded-full bg-emerald-600" /></div><div className="grid gap-5">{section.fields.filter((field) => field.fieldCode !== "demo.warning" && field.fieldCode !== "provenance.synthetic").map((field) => <article key={field.fieldCode} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"><h3 className="font-semibold text-slate-950">{field.metadata.label[locale]}</h3><div className="flex flex-wrap gap-2"><StatusBadge tone="amber">{localizedValue(field.verificationStatus || m.unverified, locale)}</StatusBadge></div></div><div className="p-5 sm:p-6"><FieldRenderer field={field} locale={locale} m={m} /></div></article>)}</div></section>)}</div>
         <section id="passport" aria-labelledby="passport-title" className="mt-12 scroll-mt-20"><h2 id="passport-title" className="text-2xl font-bold tracking-tight sm:text-3xl">{m.passportSection}</h2><div className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><ValueGrid locale={locale} value={{ dppId: projection.passportIdentifier, status: projection.status, version: projection.version, publishedAt: projection.publishedAt, audience: projection.audience }} /></div></section>
         <details id="technical" className="mt-8 scroll-mt-20 rounded-2xl border border-slate-300 bg-white"><summary className="min-h-14 cursor-pointer px-5 py-4 font-semibold focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:px-6">{m.technical}</summary><div className="border-t border-slate-200 p-5 sm:p-6"><p className="mb-5 text-sm text-slate-600">{m.technicalHint}</p><ValueGrid locale={locale} value={{ internalPassportUuid: projection.passportId, schemaVersionUuid: projection.schemaVersion, payloadHash: projection.payloadHash }} />{view.sections.find((section) => section.id === "technical")?.fields.map((field) => <div key={field.fieldCode} className="mt-6 border-t border-slate-200 pt-5"><h3 className="mb-4 font-semibold">{field.metadata.label[locale]}</h3><FieldRenderer field={field} locale={locale} m={m} /></div>)}</div></details>

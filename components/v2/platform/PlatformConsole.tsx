@@ -78,12 +78,12 @@ export function PlatformConsole() {
   const t = locale === "zh" ? {
     eyebrow: "平台运营", title: "平台总览", role: "平台管理员 · 全部租户",
     tenant: "当前租户", chooseTenant: "请选择租户", enter: "进入租户工作区", tenants: "租户运营概览", products: "产品中心", dpps: "DPP 列表",
-    operations: "需要关注", empty: "暂无记录", scope: "跨租户读取始终保留数据归属。进入业务工作区前，必须显式选择并验证当前租户。", demos: "演示展厅管理",
+    operations: "需要关注", empty: "暂无记录", scope: "跨租户读取始终保留数据归属。进入业务工作区前，必须显式选择并验证当前租户。", demos: "参考数据展厅管理",
     models: "产品型号", passports: "DPP 护照", attention: "运营异常", action: "操作", noSelection: "尚未选择租户，不会建立业务写入上下文。",
   } : {
     eyebrow: "Platform Operations", title: "Platform Overview", role: "Platform Admin · All Tenants",
     tenant: "Active Tenant", chooseTenant: "Select a Tenant", enter: "Enter Tenant workspace", tenants: "Tenant operating progress", products: "Product Center", dpps: "DPP inventory",
-    operations: "Needs attention", empty: "No records", scope: "Cross-Tenant reads retain ownership. An Active Tenant must be explicitly selected and verified before entering a business workspace.", demos: "Demo Showcase management",
+    operations: "Needs attention", empty: "No records", scope: "Cross-Tenant reads retain ownership. An Active Tenant must be explicitly selected and verified before entering a business workspace.", demos: "Reference Showcase management",
     models: "Product models", passports: "DPP passports", attention: "Operational exceptions", action: "Action", noSelection: "No Tenant selected; no business-write context has been established.",
   };
 

@@ -7,7 +7,7 @@ const read = (path) => readFile(new URL(path, root), "utf8");
 
 test("Round C.1 gives the homepage a DPP-platform position with a published multi-category demo mix", async () => {
   const [home, mix, navigation, header] = await Promise.all([read("app/page.tsx"), read("components/v2/demo/HomepageDemoMix.tsx"), read("lib/navigation.ts"), read("components/PublicHeader.tsx")]);
-  for (const copy of ["面向欧盟市场的数字产品护照平台", "查看 DPP Demo", "了解实施流程", "登录平台", "Digital Product Passport Platform for the EU Market", "View DPP Demo", "See Implementation Process", "Sign in"]) assert.match(home, new RegExp(copy));
+  for (const copy of ["面向欧盟市场的数字产品护照平台", "查看 DPP", "了解实施流程", "登录平台", "Digital Product Passport Platform for the EU Market", "View DPP", "See Implementation Process", "Sign in"]) assert.match(home, new RegExp(copy));
   for (const id of ["DPP-GLR-LMT-000002", "DPP-DEMO-ESS-000001", "DPP-DEMO-TEX-000001", "DPP-DEMO-CE-000001"]) assert.match(mix, new RegExp(id));
   assert.match(navigation, /PRIMARY_V2_DEMO_PATH = "\/demo"/);
   assert.match(header, /`\/demo\?lang=\$\{locale\}`/);

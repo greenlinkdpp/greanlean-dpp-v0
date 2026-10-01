@@ -167,7 +167,7 @@ export default function LoginPage() {
                 autoCapitalize="none"
                 autoComplete="username"
                 spellCheck={false}
-                placeholder={locale === "zh" ? "例如：orintent" : "e.g. orintent"}
+                placeholder={locale === "zh" ? "请输入账号" : "Enter your account"}
                 required
                 className="input mt-1"
               />

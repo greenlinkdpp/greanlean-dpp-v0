@@ -51,6 +51,38 @@ function stringValue(value: unknown) {
   return String(value);
 }
 
+const chineseValues: Record<string, string> = {
+  ACTIVE: "启用", APPROVED: "已批准", ARCHIVED: "已归档", COMPLETED: "已完成", CURRENT: "当前",
+  CURRENT_PUBLICATION: "当前已发布", DRAFT: "草稿", FAILED: "失败", IN_REVIEW: "审核中", ITEM: "单件产品",
+  MANUFACTURER: "制造商", BRAND_OWNER: "品牌方", SUPPLIER: "供应商", IMPORTER: "进口商", RECYCLER: "回收商",
+  CERTIFIER: "认证机构", CELL_SUPPLIER: "电芯供应商", BMS_SUPPLIER: "BMS 供应商", PACK_MANUFACTURER: "电池包制造商",
+  NOT_APPLICABLE: "不适用", NOT_READY: "未就绪", PASS: "通过", PRODUCTION: "生产环境", PUBLISHED: "已发布",
+  READY_FOR_REVIEW: "可提交审核", READY_WITH_WARNINGS: "已就绪（有提示）", REJECTED: "已驳回", VALID: "有效",
+  BLOCKING: "阻断", WARNING: "警告", INFO: "信息", MAPPED: "已映射", UNMAPPED: "未映射",
+  "resolver_mapping.create": "创建解析映射", "publication.publish": "发布护照", "review.approve": "批准审核",
+  "review.submit": "提交审核", "passport.create": "创建护照",
+};
+
+function displayValue(key: string, value: unknown, locale: "en" | "zh") {
+  const raw = stringValue(value);
+  if (locale === "zh" && chineseValues[raw]) return chineseValues[raw];
+  if (/(?:_at|date|window_end)$/.test(key) && raw !== "—") {
+    const date = new Date(raw);
+    if (!Number.isNaN(date.getTime())) return new Intl.DateTimeFormat(locale === "zh" ? "zh-CN" : "en-GB", { dateStyle: "medium", timeStyle: "short" }).format(date);
+  }
+  return raw;
+}
+
+function localizedEmpty(empty: string, locale: "en" | "zh") {
+  if (locale !== "zh") return empty;
+  const labels: Record<string, string> = {
+    "No issues": "暂无问题", "No imports": "暂无导入记录", "No candidates": "暂无候选版本", "No SKUs": "暂无 SKU", "No batches": "暂无批次",
+    "No items": "暂无单件产品", "No identifiers": "暂无标识符", "No data sources": "暂无数据源", "No claims": "暂无声明",
+    "No passports": "暂无护照", "No history": "暂无历史记录", "No records": "暂无记录", "No recent activity": "暂无近期活动",
+  };
+  return labels[empty] || empty;
+}
+
 function statusTone(value: unknown) {
   const status = String(value || "").toUpperCase();
   if (["ACTIVE", "APPROVED", "PUBLISHED", "COMPLETED", "VALID", "PASS"].some((item) => status.includes(item))) return "bg-emerald-50 text-emerald-800 ring-emerald-200";
@@ -59,7 +91,8 @@ function statusTone(value: unknown) {
 }
 
 function Status({ value }: { value: unknown }) {
-  return <span className={`inline-flex px-2 py-1 text-[11px] font-black uppercase ring-1 ${statusTone(value)}`}>{stringValue(value)}</span>;
+  const { locale } = useLanguage();
+  return <span className={`inline-flex px-2 py-1 text-[11px] font-black uppercase ring-1 ${statusTone(value)}`}>{displayValue("status", value, locale)}</span>;
 }
 
 function Panel({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
@@ -72,10 +105,10 @@ function Panel({ title, subtitle, children }: { title: string; subtitle?: string
 function DataTable({ rows, keys, query, empty }: { rows: BackofficeRow[]; keys: string[]; query: string; empty: string }) {
   const { locale } = useLanguage();
   const filtered = rows.filter((row) => !query || JSON.stringify(row).toLowerCase().includes(query.toLowerCase()));
-  if (!filtered.length) return <div className="border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center text-sm font-semibold text-slate-500">{empty}</div>;
+  if (!filtered.length) return <div className="border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center text-sm font-semibold text-slate-500">{localizedEmpty(empty, locale)}</div>;
   return <div className="overflow-x-auto border border-slate-200"><table className="min-w-full divide-y divide-slate-200 text-left text-sm">
     <thead className="bg-slate-50"><tr>{keys.map((key) => <th key={key} className="whitespace-nowrap px-4 py-3 text-[11px] font-black uppercase tracking-wide text-slate-500">{fieldLabel(key, locale)}</th>)}</tr></thead>
-    <tbody className="divide-y divide-slate-100">{filtered.map((row, index) => <tr key={String(row.id || index)} className="hover:bg-emerald-50/30">{keys.map((key) => <td key={key} className="max-w-xs truncate px-4 py-3 font-medium text-slate-700">{key.includes("status") || key === "state" || key === "result" ? <Status value={row[key]} /> : stringValue(row[key])}</td>)}</tr>)}</tbody>
+    <tbody className="divide-y divide-slate-100">{filtered.map((row, index) => <tr key={String(row.id || index)} className="hover:bg-emerald-50/30">{keys.map((key) => <td key={key} className="max-w-xs truncate px-4 py-3 font-medium text-slate-700">{key.includes("status") || key === "state" || key === "result" || key === "candidate_readiness" ? <Status value={row[key]} /> : displayValue(key, row[key], locale)}</td>)}</tr>)}</tbody>
   </table></div>;
 }
 
@@ -86,6 +119,7 @@ function fieldLabel(key: string, locale: "en" | "zh") {
     model_code: "Model", passport_identifier: "DPP ID", subject_type: "Subject", currentVersion: "Version",
     publicationState: "Publication state", updated_at: "Updated", status: "Status", name: "Name", source_type: "Type",
     trust_level: "Trust level", file_format: "File format", created_at: "Created", committed_at: "Committed",
+    readiness: "Readiness", candidate_readiness: "Publication status", content_hash: "Content hash", current: "Current", relation_type: "Responsibility",
   };
   const chinese: Record<string, string> = {
     field: "字段名称", resolved_value: "当前值", canonical_unit: "单位", resolution_state: "状态",
@@ -102,6 +136,7 @@ function fieldLabel(key: string, locale: "en" | "zh") {
     device_external_id: "设备外部标识", sample_count: "样本数", window_end: "窗口结束时间", algorithm_version: "算法版本",
     environment: "环境", last_successful_sync_at: "最近成功同步", operation: "操作", state: "状态", completed_at: "完成时间",
     event_type: "事件类型", result: "结果", correlation_id: "关联标识", access_level_code: "访问级别", purpose_required: "是否需要用途",
+    readiness: "就绪状态", candidate_readiness: "发布状态", content_hash: "内容哈希", current: "当前版本", relation_type: "责任类型",
   };
   return (locale === "zh" ? chinese : english)[key] || key.replaceAll("_", " ");
 }
@@ -147,7 +182,7 @@ function ModelPage({ snapshot, modelId, locale, tenantCode, context, token, onRe
   }));
   return <div className="space-y-6">
     <Panel title={stringValue(model.name)} subtitle={`${stringValue(model.model_code)} · ${stringValue(model.product_category)}`}>
-      <div className="grid gap-4 sm:grid-cols-4">{[["Status", model.status], ["Manufacturer", organisation?.legal_name || "—"], ["Claims", modelClaims.length], ["Candidate readiness", readiness]].map(([label, value]) => <div key={String(label)} className="bg-slate-50 p-4"><p className="text-xs font-black uppercase text-slate-500">{String(label)}</p><p className="mt-2 font-black">{stringValue(value)}</p></div>)}</div>
+      <div className="grid gap-4 sm:grid-cols-4">{[[locale === "zh" ? "状态" : "Status", model.status], [locale === "zh" ? "制造商" : "Manufacturer", organisation?.legal_name || "—"], [locale === "zh" ? "声明" : "Claims", modelClaims.length], [locale === "zh" ? "当前发布状态" : "Current publication status", readiness]].map(([label, value]) => <div key={String(label)} className="bg-slate-50 p-4"><p className="text-xs font-black uppercase text-slate-500">{String(label)}</p><p className="mt-2 font-black">{displayValue("status", value, locale)}</p></div>)}</div>
     </Panel>
     <Panel title={locale === "zh" ? "责任主体" : "Responsible organisations"} subtitle={locale === "zh" ? "当前租户内可复用的企业主体；删除时保留依赖和发布保护。" : "Reusable Organisations in the active Tenant; dependencies and published data stay delete-protected."}>
       <DataTable rows={responsibilityRows} keys={["relation_type", "organisation_name", "sku_id", "status"]} query="" empty={locale === "zh" ? "尚未配置额外责任主体" : "No additional responsibility relationships"} />
@@ -165,7 +200,7 @@ function ProductOrganisationActions({ snapshot, modelId, context, token, locale,
   const [organisationId, setOrganisationId] = useState(""); const [relationType, setRelationType] = useState("MANUFACTURER"); const [message, setMessage] = useState("");
   const relations = snapshot.productOrganisationRelations.filter((row) => row.product_model_id === modelId);
   async function write(path: string, method: string, payload?: BackofficeRow) { const response = await fetch(path, { method, headers: { Authorization: `Bearer ${token}`, "x-tenant-id": context.tenantId, "idempotency-key": crypto.randomUUID(), "content-type": "application/json" }, body: payload ? JSON.stringify(payload) : undefined }); const body = await response.json().catch(() => ({})); setMessage(response.ok ? (locale === "zh" ? "责任主体已保存。" : "Responsible party saved.") : String(body?.error?.message || "Relationship operation failed.")); if (response.ok) onRefresh(); }
-  return <div className="mt-4 border-t border-slate-100 pt-4"><div className="grid gap-2 sm:grid-cols-3"><select value={organisationId} onChange={(event) => setOrganisationId(event.target.value)} className="border border-slate-300 px-3 py-2 text-sm"><option value="">{locale === "zh" ? "选择企业主体" : "Select Organisation"}</option>{snapshot.organisations.filter((row) => row.status === "ACTIVE").map((row) => <option key={String(row.id)} value={String(row.id)}>{stringValue(row.legal_name || row.trading_name)}</option>)}</select><select value={relationType} onChange={(event) => setRelationType(event.target.value)} className="border border-slate-300 px-3 py-2 text-sm">{["MANUFACTURER","BRAND_OWNER","SUPPLIER","IMPORTER","RECYCLER","CERTIFIER","CELL_SUPPLIER","BMS_SUPPLIER","PACK_MANUFACTURER"].map((value) => <option key={value}>{value}</option>)}</select><button disabled={!organisationId || !context.capabilities.includes("product.edit")} onClick={() => void write("/api/v2/product-organisation-relations", "POST", { product_model_id: modelId, organisation_id: organisationId, relation_type: relationType, status: "ACTIVE" })} className="bg-slate-950 px-3 py-2 text-sm font-black text-white disabled:bg-slate-300">{locale === "zh" ? "添加主体" : "Add party"}</button></div><div className="mt-3 space-y-1">{relations.map((relation) => <div key={String(relation.id)} className="flex items-center justify-between text-xs"><span>{stringValue(relation.relation_type)} · {stringValue(snapshot.organisations.find((row) => row.id === relation.organisation_id)?.legal_name)}</span><div className="flex gap-2"><button onClick={() => void write(`/api/v2/product-organisation-relations/${relation.id}`, "PATCH", { status: "ARCHIVED" })} className="font-black text-amber-800">{locale === "zh" ? "解除" : "Unlink"}</button><button onClick={() => void write(`/api/v2/product-organisation-relations/${relation.id}`, "DELETE")} className="font-black text-red-700">{locale === "zh" ? "删除" : "Delete"}</button></div></div>)}</div>{message && <p className="mt-2 text-xs font-bold text-slate-600">{message}</p>}</div>;
+  return <div className="mt-4 border-t border-slate-100 pt-4"><div className="grid gap-2 sm:grid-cols-3"><select value={organisationId} onChange={(event) => setOrganisationId(event.target.value)} className="border border-slate-300 px-3 py-2 text-sm"><option value="">{locale === "zh" ? "选择企业主体" : "Select Organisation"}</option>{snapshot.organisations.filter((row) => row.status === "ACTIVE").map((row) => <option key={String(row.id)} value={String(row.id)}>{stringValue(row.legal_name || row.trading_name)}</option>)}</select><select value={relationType} onChange={(event) => setRelationType(event.target.value)} className="border border-slate-300 px-3 py-2 text-sm">{["MANUFACTURER","BRAND_OWNER","SUPPLIER","IMPORTER","RECYCLER","CERTIFIER","CELL_SUPPLIER","BMS_SUPPLIER","PACK_MANUFACTURER"].map((value) => <option key={value} value={value}>{displayValue("relation_type", value, locale)}</option>)}</select><button disabled={!organisationId || !context.capabilities.includes("product.edit")} onClick={() => void write("/api/v2/product-organisation-relations", "POST", { product_model_id: modelId, organisation_id: organisationId, relation_type: relationType, status: "ACTIVE" })} className="bg-slate-950 px-3 py-2 text-sm font-black text-white disabled:bg-slate-300">{locale === "zh" ? "添加主体" : "Add party"}</button></div><div className="mt-3 space-y-1">{relations.map((relation) => <div key={String(relation.id)} className="flex items-center justify-between text-xs"><span>{displayValue("relation_type", relation.relation_type, locale)} · {stringValue(snapshot.organisations.find((row) => row.id === relation.organisation_id)?.legal_name)}</span><div className="flex gap-2"><button onClick={() => void write(`/api/v2/product-organisation-relations/${relation.id}`, "PATCH", { status: "ARCHIVED" })} className="font-black text-amber-800">{locale === "zh" ? "解除" : "Unlink"}</button><button onClick={() => void write(`/api/v2/product-organisation-relations/${relation.id}`, "DELETE")} className="font-black text-red-700">{locale === "zh" ? "删除" : "Delete"}</button></div></div>)}</div>{message && <p className="mt-2 text-xs font-bold text-slate-600">{message}</p>}</div>;
 }
 
 function ProductCenter({ snapshot, context, token, locale, tenantCode, onRefresh }: { snapshot: BackofficeSnapshot; context: BackofficeContext; token: string; locale: "en" | "zh"; tenantCode: string; onRefresh: () => void }) {
@@ -368,8 +403,8 @@ function DataWorkspaceLanding({ snapshot, context, token, locale, onRefresh }: {
 function ValidationWorkspace({ snapshot, locale }: { snapshot: BackofficeSnapshot; locale: "en" | "zh" }) {
   const issues: BackofficeRow[] = snapshot.reviews.flatMap((review) => { const summary = review.validation_summary; const record = summary && typeof summary === "object" && !Array.isArray(summary) ? summary as Record<string, unknown> : {}; const raw = Array.isArray(record.issues) ? record.issues : []; return raw.map((issue) => ({ ...(issue as BackofficeRow), subject_type: review.subject_type, subject_id: review.subject_id })); });
   const groups = ["BLOCKING", "WARNING", "INFO", "PASS"].map((severity) => ({ severity, rows: issues.filter((row) => String(row.severity || row.level || "INFO").toUpperCase() === severity) }));
-  const readiness = snapshot.reviews.map((review) => ({ ...review, candidate_readiness: review.status === "IN_REVIEW" ? "READY_FOR_REVIEW" : review.status === "APPROVED" ? "READY_WITH_WARNINGS" : "NOT_READY" }));
-  return <div className="space-y-6"><Panel title={locale === "zh" ? "校验问题分组" : "Grouped validation issues"} subtitle={locale === "zh" ? "BLOCKING、WARNING、INFO、PASS 明确分组；未通过不代表可发布。" : "BLOCKING, WARNING, INFO, and PASS are explicit groups; validation does not publish anything."}><div className="grid gap-4 sm:grid-cols-4">{groups.map((group) => <div key={group.severity} className="border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-black uppercase text-slate-500">{group.severity}</p><p className="mt-2 text-2xl font-black">{group.rows.length}</p></div>)}</div>{groups.map((group) => <div key={group.severity} className="mt-4"><h3 className="mb-2 text-sm font-black">{group.severity}</h3><DataTable rows={group.rows} keys={["code", "message", "subject_type", "subject_id"]} query="" empty="No issues" /></div>)}</Panel><Panel title={locale === "zh" ? "候选就绪度" : "Candidate readiness"}><DataTable rows={readiness} keys={["subject_type", "subject_id", "status", "candidate_readiness", "generated_at"]} query="" empty="No candidates" /></Panel></div>;
+  const readiness = snapshot.reviews.map((review) => ({ ...review, candidate_readiness: review.status === "IN_REVIEW" ? "READY_FOR_REVIEW" : review.status === "APPROVED" ? "READY_WITH_WARNINGS" : review.status === "PUBLISHED" ? "CURRENT_PUBLICATION" : "NOT_READY" }));
+  return <div className="space-y-6"><Panel title={locale === "zh" ? "校验问题分组" : "Grouped validation issues"} subtitle={locale === "zh" ? "BLOCKING、WARNING、INFO、PASS 明确分组；未通过不代表可发布。" : "BLOCKING, WARNING, INFO, and PASS are explicit groups; validation does not publish anything."}><div className="grid gap-4 sm:grid-cols-4">{groups.map((group) => <div key={group.severity} className="border border-slate-200 bg-slate-50 p-4"><p className="text-xs font-black uppercase text-slate-500">{displayValue("status", group.severity, locale)}</p><p className="mt-2 text-2xl font-black">{group.rows.length}</p></div>)}</div>{groups.map((group) => <div key={group.severity} className="mt-4"><h3 className="mb-2 text-sm font-black">{displayValue("status", group.severity, locale)}</h3><DataTable rows={group.rows} keys={["code", "message", "subject_type", "subject_id"]} query="" empty="No issues" /></div>)}</Panel><Panel title={locale === "zh" ? "下一候选与当前发布状态" : "Next candidate and current publication status"} subtitle={locale === "zh" ? "已发布版本显示为当前发布；仅下一候选版本显示待审核或未就绪。" : "Published versions are shown as current; review readiness applies only to the next candidate."}><DataTable rows={readiness} keys={["subject_type", "subject_id", "status", "candidate_readiness", "generated_at"]} query="" empty="No candidates" /></Panel></div>;
 }
 
 function ManualClaimWorkspace({ snapshot, context, token, locale, onRefresh }: { snapshot: BackofficeSnapshot; context: BackofficeContext; token: string; locale: "en" | "zh"; onRefresh: () => void }) {
@@ -480,6 +515,7 @@ export function BackofficeConsole({ section: requested = "dashboard", modelId }:
   useEffect(() => { if (token && selectedId) void refresh(token, selectedId); }, [selectedId]); // eslint-disable-line react-hooks/exhaustive-deps
   const title = [...backofficeNavigation, ...advancedBackofficeNavigation].find((item) => item.section === section)?.label[locale] || copy.productName;
   const rows = useMemo(() => { if (!snapshot) return []; const key = sectionData[section]; if (!key) return []; const value = snapshot[key]; return Array.isArray(value) ? value as BackofficeRow[] : []; }, [section, snapshot]);
+  const referenceTenant = selected?.tenantCode === "greanlean-reference-mobility";
   if (loading && !snapshot) return <div className="grid min-h-[55vh] place-items-center"><p className="font-bold text-slate-500">{copy.loading}</p></div>;
   if (!snapshot || !selected) {
     const requiresExplicitTenant = contexts.some((item) => item.authorityType === "PLATFORM") && !searchParams.get("tenant");
@@ -507,7 +543,7 @@ export function BackofficeConsole({ section: requested = "dashboard", modelId }:
     return <Panel title={title} subtitle={`${rows.length} ${locale === "zh" ? "条记录" : "records"}`}><DataTable rows={rows} keys={columns[section] || ["id", "status", "created_at"]} query={query} empty={copy.noData} /></Panel>;
   };
   return <div className="mx-auto max-w-[1600px] space-y-5">
-    <header className="border border-slate-200 bg-white p-5 shadow-sm"><div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between"><div><div className="flex flex-wrap items-center gap-2"><p className="text-xs font-black uppercase tracking-widest text-emerald-700">{copy.productName}</p><Status value={selected.authorityType === "PLATFORM" ? (locale === "zh" ? "平台管理员" : "Platform Admin") : copy.synthetic} /></div><h1 className="mt-2 text-2xl font-black">{title}</h1><p className="mt-1 text-sm font-semibold text-slate-500">{locale === "zh" ? "当前租户" : "Active Tenant"}: <span className="font-black text-slate-950">{selected.tenantName}</span> · {selected.roleName}</p></div><div className="flex flex-wrap gap-2"><select aria-label={locale === "zh" ? "当前租户" : "Tenant"} value={selected.tenantId} onChange={(event) => { const next = contexts.find((item) => item.tenantId === event.target.value); if (!next) return; setSelectedId(next.tenantId); router.replace(`${window.location.pathname}?tenant=${encodeURIComponent(next.tenantCode)}&lang=${locale}`); }} className="border border-slate-300 bg-white px-3 py-2 text-sm font-bold">{contexts.map((item) => <option key={`${item.authorityType}-${item.authorityId}-${item.tenantId}`} value={item.tenantId}>{item.tenantName}</option>)}</select><input aria-label={copy.search} value={query} onChange={(event) => setQuery(event.target.value)} placeholder={copy.search} className="min-w-64 border border-slate-300 px-3 py-2 text-sm"/><button onClick={() => void refresh()} className="border border-slate-300 px-4 py-2 text-sm font-black">{copy.refresh}</button></div></div>
+    <header className="border border-slate-200 bg-white p-5 shadow-sm"><div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between"><div><div className="flex flex-wrap items-center gap-2"><p className="text-xs font-black uppercase tracking-widest text-emerald-700">{copy.productName}</p><Status value={selected.authorityType === "PLATFORM" ? (locale === "zh" ? "平台管理员" : "Platform Admin") : referenceTenant ? copy.synthetic : "ACTIVE"} /></div><h1 className="mt-2 text-2xl font-black">{title}</h1><p className="mt-1 text-sm font-semibold text-slate-500">{locale === "zh" ? "当前租户" : "Active Tenant"}: <span className="font-black text-slate-950">{selected.tenantName}</span> · {selected.roleName}</p></div><div className="flex flex-wrap gap-2"><select aria-label={locale === "zh" ? "当前租户" : "Tenant"} value={selected.tenantId} onChange={(event) => { const next = contexts.find((item) => item.tenantId === event.target.value); if (!next) return; setSelectedId(next.tenantId); router.replace(`${window.location.pathname}?tenant=${encodeURIComponent(next.tenantCode)}&lang=${locale}`); }} className="border border-slate-300 bg-white px-3 py-2 text-sm font-bold">{contexts.map((item) => <option key={`${item.authorityType}-${item.authorityId}-${item.tenantId}`} value={item.tenantId}>{item.tenantName}</option>)}</select><input aria-label={copy.search} value={query} onChange={(event) => setQuery(event.target.value)} placeholder={copy.search} className="min-w-64 border border-slate-300 px-3 py-2 text-sm"/><button onClick={() => void refresh()} className="border border-slate-300 px-4 py-2 text-sm font-black">{copy.refresh}</button></div></div>
       <nav aria-label={locale === "zh" ? "租户工作区主导航" : "Tenant workspace primary navigation"} className="mt-5 grid grid-cols-2 gap-2 border-t border-slate-100 pt-4 sm:grid-cols-3 xl:grid-cols-6">{primaryBackofficeNavigation.map((item) => <Link key={item.section} href={`/dashboard/v2/${item.section}?tenant=${encodeURIComponent(selected.tenantCode)}&lang=${locale}`} className={`rounded-lg px-3 py-3 text-center text-xs font-black ${item.section === section ? "bg-slate-950 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}>{item.label[locale]}</Link>)}</nav><details className="mt-3 border-t border-slate-100 pt-3"><summary className="cursor-pointer text-xs font-black uppercase tracking-wide text-slate-500">{locale === "zh" ? "高级功能" : "Advanced"}</summary><div className="mt-3 flex flex-wrap gap-2">{advancedBackofficeNavigation.map((item) => <Link key={item.section} href={`/dashboard/v2/${item.section}?tenant=${encodeURIComponent(selected.tenantCode)}&lang=${locale}`} className={`rounded-lg px-3 py-2 text-xs font-bold ${item.section === section ? "bg-emerald-100 text-[#134d44]" : "bg-slate-50 text-slate-600 hover:bg-slate-100"}`}>{item.label[locale]}</Link>)}</div></details>
     </header>
     {error && <div className="border border-amber-200 bg-amber-50 p-3 text-sm font-bold text-amber-900">{error}</div>}

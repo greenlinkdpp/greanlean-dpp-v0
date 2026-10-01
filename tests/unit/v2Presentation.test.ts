@@ -40,6 +40,23 @@ test("resolver projection normalizes into a presentation view model", () => {
   assert.ok(view.sections.some((section) => section.id === "sustainability"));
 });
 
+test("ESS key metrics reuse approved technical and durability values", () => {
+  const essPayload: ImmutableDppPayload = {
+    ...payload,
+    passportIdentifier: "DPP-DEMO-ESS-000001",
+    fields: [
+      { fieldCode: "identity.product", accessLevel: "PUBLIC", value: { brand: "GreanLean", productName: "Energy storage system" } },
+      { fieldCode: "technical.specification", accessLevel: "PUBLIC", value: { energy_kwh: 14.3, rated_power_kw: 7.2, cycle_life: 6000 } },
+      { fieldCode: "performance.durability", accessLevel: "PUBLIC", value: { state_of_charge_pct: 61, state_of_health_pct: 95, cycle_count: 148 } },
+    ],
+  };
+  const view = normalizeDppProjection(projectImmutableDpp(essPayload, "PUBLIC"), "en");
+  assert.deepEqual(view.metrics.map(({ label, value, unit }) => [label, value, unit]), [
+    ["Energy capacity", 14.3, "kWh"], ["Rated power", 7.2, "kW"], ["Cycle life", 6000, ""],
+    ["SOC", 61, "%"], ["SOH", 95, "%"], ["Cycle count", 148, ""],
+  ]);
+});
+
 test("field and unit formatting is human readable", () => {
   assert.equal(humanizeFieldKey("rated_capacity_wh"), "Rated Capacity Wh");
   assert.equal(formatValue(48, "en", "V"), "48 V");

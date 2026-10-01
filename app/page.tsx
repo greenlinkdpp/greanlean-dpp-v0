@@ -20,7 +20,7 @@ const COPY = {
       "以电池护照为重点，覆盖产品数据、碳足迹、供应链、生命周期、证据文件与二维码发布，帮助企业构建可追溯、可更新的数字产品护照。",
     heroSupport:
       "以型号、SKU、批次或单件为粒度，统一组织电池数据、证据文件、版本记录和生命周期更新。",
-    heroPrimary: "查看 DPP Demo",
+    heroPrimary: "查看 DPP",
     heroLogin: "登录平台",
     heroAssessment: "",
     heroSecondary: "了解实施流程",
@@ -95,7 +95,7 @@ const COPY = {
     industriesEyebrow: "扩展能力",
     industriesTitle: "多品类 DPP 扩展能力",
     industriesBody:
-      "GreanLean 通过可配置的数据结构与展示逻辑适配不同产品类别；公开 Demo 用于展示平台扩展能力。",
+      "GreanLean 通过可配置的数据结构与展示逻辑适配不同产品类别，展示平台的跨行业扩展能力。",
     industries: [
       {
         code: "01",
@@ -161,8 +161,8 @@ const COPY = {
     batteryMetrics: ["SOC / SOH", "剩余容量", "循环次数", "温度与内阻", "能量吞吐量", "生命周期事件"],
     batteryDateLabel: "电池护照适用日期",
     batteryDate: "2027 年 2 月 18 日",
-    batteryCta: "查看电池护照示例",
-    casesEyebrow: "数字产品护照 Demo",
+    batteryCta: "查看电池护照",
+    casesEyebrow: "数字产品护照",
     casesTitle: "从电池到纺织与消费电子，查看不同产品类别的 DPP",
     casesBody:
       "从电池到纺织与消费电子，查看 GreanLean 如何针对不同产品类别组织、发布和维护 DPP 数据。",
@@ -262,7 +262,7 @@ const COPY = {
       "With Battery Passport as a core focus, GreanLean helps companies structure product data, carbon footprint, supply-chain evidence, lifecycle information and publish maintainable DPPs through QR and resolver infrastructure.",
     heroSupport:
       "Organise battery data, evidence, version records and lifecycle updates at model, SKU, batch or individual-item level.",
-    heroPrimary: "View DPP Demo",
+    heroPrimary: "View DPP",
     heroLogin: "Sign in",
     heroAssessment: "",
     heroSecondary: "See Implementation Process",
@@ -337,7 +337,7 @@ const COPY = {
     industriesEyebrow: "Extension capability",
     industriesTitle: "Multi-category DPP extension capability",
     industriesBody:
-      "GreanLean adapts to product categories through configurable data structures and presentation logic; public Demos illustrate the platform's extension capability.",
+      "GreanLean adapts to product categories through configurable data structures and presentation logic, illustrating the platform's cross-sector capabilities.",
     industries: [
       {
         code: "01",
@@ -403,8 +403,8 @@ const COPY = {
     batteryMetrics: ["SOC / SOH", "Remaining capacity", "Cycle count", "Temperature and resistance", "Energy throughput", "Lifecycle events"],
     batteryDateLabel: "Battery passport application date",
     batteryDate: "18 February 2027",
-    batteryCta: "View Battery Passport Example",
-    casesEyebrow: "Digital Product Passport Demo",
+    batteryCta: "View Battery Passport",
+    casesEyebrow: "Digital Product Passports",
     casesTitle: "Explore DPP data across batteries, textiles and consumer electronics",
     casesBody:
       "See how GreanLean organises, publishes and maintains DPP data for different product categories, from batteries to textiles and consumer electronics.",
@@ -415,7 +415,7 @@ const COPY = {
         category: "LMT battery",
         granularity: "Item level",
         title: "GLR-P25A E-bike Battery Pack",
-        desc: "Synthetic LMT battery demo with product identity, carbon footprint, evidence and lifecycle data.",
+        desc: "LMT battery passport with product identity, carbon footprint, evidence and lifecycle data.",
         image: "/images/lmt-ebike-battery-48v15ah.png",
         identifier: "DPP-GLR-LMT-000001",
         metrics: [["25.2 V", "Nominal voltage"], ["13.2 Ah", "Rated capacity"], ["31.8 kg CO₂e", "Carbon footprint"]],
@@ -426,7 +426,7 @@ const COPY = {
         category: "LMT battery",
         granularity: "Item level",
         title: "GLR-S36B E-bike Battery Pack",
-        desc: "Synthetic LMT battery demo with operating data, performance and versioned passport information.",
+        desc: "LMT battery passport with operating data, performance and versioned passport information.",
         image: "/images/lmt-ebike-battery-48v15ah.png",
         identifier: "DPP-GLR-LMT-000002",
         metrics: [["36 V", "Nominal voltage"], ["18 Ah", "Rated capacity"], ["48.6 kg CO₂e", "Carbon footprint"]],
@@ -437,7 +437,7 @@ const COPY = {
         category: "LMT battery",
         granularity: "Item level",
         title: "GLR-X48C E-bike Battery Pack",
-        desc: "Synthetic LMT battery demo with traceable materials, cycle data and charging state.",
+        desc: "LMT battery passport with traceable materials, cycle data and charging state.",
         image: "/images/lmt-ebike-battery-48v15ah.png",
         identifier: "DPP-GLR-LMT-000003",
         metrics: [["48 V", "Nominal voltage"], ["20 Ah", "Rated capacity"], ["62.4 kg CO₂e", "Carbon footprint"]],
@@ -448,7 +448,7 @@ const COPY = {
         category: "Industrial energy storage",
         granularity: "Item level",
         title: "GreenVault 14.3 kWh Energy Storage Module",
-        desc: "Synthetic industrial battery demo with carbon, service-safety and operating data.",
+        desc: "Industrial battery passport with carbon, service-safety and operating data.",
         image: "/images/green-vault-ess-14-3.png",
         identifier: "DPP-DEMO-ESS-000001",
         metrics: [["14.3 kWh", "Rated energy"], ["LFP", "Chemistry"], ["7.2 kW", "Rated power"]],
@@ -798,7 +798,7 @@ function HomeFooter({ t, locale }: { t: (typeof COPY)[Locale]; locale: Locale })
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5 text-sm font-semibold text-slate-500">
           <span>{t.footerCopyright}</span>
-          <span>{locale === "zh" ? "演示数据用于说明 GreanLean 平台的数据组织、展示与管理能力，不代表真实客户产品或正式监管申报结果。" : "Demo data illustrates GreanLean's data organisation, presentation and management capabilities; it is not a customer product or regulatory filing."}</span>
+          <span>{locale === "zh" ? "本页展示内容用于说明 GreanLean 平台的数据组织、展示与管理能力，不代表真实客户产品或正式监管申报结果。" : "The content shown on this page illustrates GreanLean's data organization, presentation and management capabilities. It does not represent a real customer product or a formal regulatory submission."}</span>
         </div>
       </div>
     </footer>

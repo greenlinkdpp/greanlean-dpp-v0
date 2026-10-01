@@ -177,21 +177,29 @@ export function normalizeDppProjection(projection: ProjectedDpp, locale: Passpor
   const byCode = new Map(fields.map((field) => [field.fieldCode, field.value]));
   const identity = record(byCode.get("identity.product"));
   const technical = record(byCode.get("technical.specification"));
-  const bms = byCode.get("bms.snapshot");
+  const bms = record(byCode.get("bms.snapshot"));
+  const performance = record(byCode.get("performance.durability"));
   const metricConfig = [
     ["voltage", technical, "nominal_voltage_v", locale === "zh" ? "额定电压" : "Nominal voltage", "V"],
     ["capacity", technical, "rated_capacity_ah", locale === "zh" ? "额定容量" : "Rated capacity", "Ah"],
-    ["energy", technical, "rated_capacity_wh", locale === "zh" ? "额定能量" : "Rated energy", "Wh"],
+    ["energy-capacity", technical, "rated_capacity_wh", locale === "zh" ? "额定能量" : "Rated energy", "Wh"],
+    ["energy-kwh", technical, "energy_kwh", locale === "zh" ? "储能容量" : "Energy capacity", "kWh"],
+    ["energy", technical, "rated_energy_wh", locale === "zh" ? "额定能量" : "Rated energy", "Wh"],
+    ["power", technical, "rated_power_kw", locale === "zh" ? "额定功率" : "Rated power", "kW"],
+    ["cycle-life", technical, "cycle_life", locale === "zh" ? "循环寿命" : "Cycle life", ""],
     ["chemistry", technical, "chemistry", locale === "zh" ? "化学体系" : "Chemistry", ""],
     ["soc", bms, "soc_pct", "SOC", "%"],
     ["soh", bms, "soh_pct", "SOH", "%"],
     ["cycles", bms, "cycle_count", locale === "zh" ? "循环次数" : "Cycle count", ""],
+    ["soc-durability", performance, "state_of_charge_pct", "SOC", "%"],
+    ["soh-durability", performance, "state_of_health_pct", "SOH", "%"],
+    ["cycles-durability", performance, "cycle_count", locale === "zh" ? "循环次数" : "Cycle count", ""],
     ["warranty", technical, "warranty_months", locale === "zh" ? "质保" : "Warranty", locale === "zh" ? "个月" : "months"],
   ] as const;
   const metrics = metricConfig.flatMap(([key, source, path, label, unit]) => {
     const value = pathValue(source, path);
     return value === undefined || value === null ? [] : [{ key, value, unit, label }];
-  });
+  }).filter((metric, index, all) => all.findIndex((candidate) => candidate.label === metric.label) === index);
   const sections = SECTION_ORDER.map((id) => ({
     id,
     fields: fields.filter((field) => field.metadata.section === id).sort((a, b) => a.metadata.order - b.metadata.order),

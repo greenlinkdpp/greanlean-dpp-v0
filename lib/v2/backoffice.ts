@@ -135,7 +135,7 @@ export const backofficeNavigation: NavigationItem[] = [...primaryBackofficeNavig
 export const backofficeCopy = {
   en: {
     productName: "V2 Operations Console",
-    synthetic: "Synthetic PreProd",
+    synthetic: "Reference data",
     verifiedBoundary: "Customer verification pending",
     search: "Search this workspace",
     refresh: "Refresh data",
@@ -154,7 +154,7 @@ export const backofficeCopy = {
   },
   zh: {
     productName: "V2 运营控制台",
-    synthetic: "PreProd 合成数据",
+    synthetic: "参考数据",
     verifiedBoundary: "客户核验待完成",
     search: "搜索当前工作区",
     refresh: "刷新数据",

@@ -43,7 +43,7 @@ test("Round B2.2 showcase localizes values and supplies display units", () => {
 });
 
 test("Round B2.2 uses the approved localized absolute titles", () => {
-  assert.match(demoPage, /GreanLean 数字产品护照演示展厅/);
+  assert.match(demoPage, /GreanLean 产品护照展厅/);
   assert.match(publicPage, /GreanLean DPP/);
   assert.match(demoPage, /title:\s*\{\s*absolute:/);
   assert.match(publicPage, /title:\s*\{\s*absolute:/);

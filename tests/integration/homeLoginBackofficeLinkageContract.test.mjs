@@ -5,11 +5,12 @@ import test from "node:test";
 const root = new URL("../../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 
-test("homepage and footer use the canonical Reference Demo and localized login", async () => {
+test("homepage and footer use neutral product-passport wording and localized login", async () => {
   const [home, routes] = await Promise.all([read("app/page.tsx"), read("lib/navigation.ts")]);
   assert.match(routes, /PRIMARY_V2_DEMO_PATH = "\/demo"/);
-  assert.match(home, /View DPP Demo/);
-  assert.match(home, /查看 DPP Demo/);
+  assert.match(home, /View DPP/);
+  assert.match(home, /查看 DPP/);
+  assert.doesNotMatch(home, /View DPP Demo|查看 DPP Demo/);
   assert.match(home, /Sign in/);
   assert.match(home, /登录平台/);
   assert.match(home, /footerLogin, `\/login\?lang=\$\{locale\}`/);
