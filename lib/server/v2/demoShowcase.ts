@@ -22,7 +22,9 @@ export async function loadPublicDemoShowcase(): Promise<PublicDemoShowcaseEntry[
   const { data: entries, error } = await admin.from("demo_showcase_entry")
     .select("id,passport_id,category_code,title_en,title_zh,brand,summary_en,summary_zh,key_parameters,cover_style,is_featured,sort_order")
     .eq("is_public", true).eq("is_demo", true).eq("synthetic", true)
-    .order("category_code").order("sort_order");
+    // sort_order is a deliberate cross-category product order. Category codes
+    // are labels, not an alphabetical presentation contract.
+    .order("sort_order").order("id");
   if (error || !entries?.length) return [];
   const passportIds = entries.map((entry: any) => entry.passport_id);
   const [{ data: passports }, { data: pointers }, { data: versions }] = await Promise.all([
