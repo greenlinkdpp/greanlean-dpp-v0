@@ -186,8 +186,8 @@ function localizedValue(value: unknown, locale: PassportLocale, unit?: string | 
  * provenance enums in storage for audit and internal workflow purposes. */
 function publicCopy(value: string, locale: PassportLocale) {
   const replacements: Array<[string, string]> = locale === "zh"
-    ? [["合成演示数据", "GreanLean 数据"], ["合成演示事件。", "记录事件。"], ["合成数据集", "GreanLean 数据集"], ["演示数据集", "GreanLean 数据集"], ["仅限演示运输分类", "运输分类信息"], ["演示声明", "声明"], ["提供演示 SDS / MSDS", "提供 SDS / MSDS"], ["演示安全与储存指引", "产品安全与储存指引"], ["合成演示流程", "服务流程"], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]]
-    : [["Synthetic demonstration data", "GreanLean data"], ["Synthetic demo event.", "Recorded event."], ["synthetic data set", "GreanLean data set"], ["Synthetic reference", "GreanLean"], ["Demo declaration", "Declaration"], ["Demo SDS / MSDS", "SDS / MSDS"], ["Demonstration transport classification only", "Transport classification"], ["product-specific demo safety and storage guidance", "product-specific safety and storage guidance"], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]];
+    ? [["合成演示数据", "GreanLean 数据"], ["合成演示事件。", "记录事件。"], ["合成演示流程", "服务流程"], ["合成演示", "GreanLean"], ["合成数据集", "GreanLean 数据集"], ["演示数据集", "GreanLean 数据集"], ["仅限演示运输分类", "运输分类信息"], ["演示声明", "声明"], ["提供演示 SDS / MSDS", "提供 SDS / MSDS"], ["演示安全与储存指引", "产品安全与储存指引"], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]]
+    : [["Synthetic demonstration data", "GreanLean data"], ["Synthetic demo event.", "Recorded event."], ["deterministic demo", "documented"], ["Reference Demo", "GreanLean"], ["synthetic data set", "GreanLean data set"], ["Synthetic reference", "GreanLean"], ["Demo declaration", "Declaration"], ["Demo SDS / MSDS", "SDS / MSDS"], ["Demonstration transport classification only", "Transport classification"], ["product-specific demo safety and storage guidance", "product-specific safety and storage guidance"], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]];
   return replacements.reduce((result, [from, to]) => result.replaceAll(from, to), value);
 }
 
