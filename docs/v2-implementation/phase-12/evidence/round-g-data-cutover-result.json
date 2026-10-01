@@ -1,0 +1,18 @@
+{
+  "result": "PASS",
+  "productionProjectRef": "lpxdbysgmdsjhxrjzhly",
+  "migrationHead": "0039",
+  "legacyDppCount": 0,
+  "approvedDppCount": 8,
+  "publishedVersionCount": 8,
+  "resolverMappingCount": 8,
+  "demoCatalogCount": 8,
+  "authUserCount": 5,
+  "tenantCount": 2,
+  "disabledPublicationUserTriggerCount": 0,
+  "rlsDisabledPublicTables": [],
+  "broadPolicies": [],
+  "orphanOrganisationCount": 0,
+  "orphanMembershipCount": 0,
+  "productionMigrationPerformedByRoundG": false
+}

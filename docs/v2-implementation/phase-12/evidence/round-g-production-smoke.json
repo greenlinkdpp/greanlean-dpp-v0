@@ -1,0 +1,35 @@
+{
+  "result": "PASS",
+  "verifiedAt": "2026-10-01T11:47:18.776Z",
+  "origin": "https://www.greanlean.com",
+  "releaseCommit": "669212d6dee0fec37a6294eed318f29f8142046e",
+  "releaseTree": "b1e6bfc1592626c982559a499dff7d99c4abdd2a",
+  "deploymentId": "dpl_3vvBj9RELNrcMrRZXCVinaaf4AYp",
+  "identifiers": [
+    "DPP-GLR-LMT-000001",
+    "DPP-GLR-LMT-000002",
+    "DPP-GLR-LMT-000003",
+    "DPP-DEMO-ESS-000001",
+    "DPP-DEMO-TEX-000001",
+    "DPP-DEMO-CE-000001",
+    "DPP-DEMO-BLD-000001",
+    "DPP-DEMO-HW-000001"
+  ],
+  "checks": {
+    "catalogCountAndOrder": "PASS",
+    "corePages": "PASS",
+    "bilingualPassportPages": "PASS",
+    "humanResolverRedirects": "PASS",
+    "machineResolvers": "PASS",
+    "qrImages": "PASS",
+    "forbiddenPublicCopy": "PASS_ZERO_HITS",
+    "securityHeaders": "PASS"
+  },
+  "maximumObservedDurationMs": {
+    "corePage": 2683,
+    "passportPage": 2928,
+    "humanResolver": 1076,
+    "machineResolver": 1901,
+    "qr": 1479
+  }
+}
