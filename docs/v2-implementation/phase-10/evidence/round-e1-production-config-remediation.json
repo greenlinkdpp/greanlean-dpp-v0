@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-09-30",
+  "scope": "Round E.1; PreProd catalog copy and Production read-only remediation audit",
+  "preprod": {
+    "projectRef": "efhiaufukjchxqhbmpvq",
+    "deploymentId": "dpl_3APBa7vZqSqFmdHd154xt4End3xr",
+    "catalogCopyUpdatedCards": 8,
+    "hostedDemoZhHttp": 200,
+    "hostedDemoEnHttp": 200,
+    "hostedHomepageHttp": 200,
+    "hostedPublicDppHttp200Count": 8,
+    "hostedResolverHttp": 200,
+    "catalogOrder": ["DPP-GLR-LMT-000001", "DPP-GLR-LMT-000002", "DPP-GLR-LMT-000003", "DPP-DEMO-ESS-000001", "DPP-DEMO-TEX-000001", "DPP-DEMO-CE-000001", "DPP-DEMO-BLD-000001", "DPP-DEMO-HW-000001"]
+  },
+  "productionReadOnly": {
+    "projectRef": "lpxdbysgmdsjhxrjzhly",
+    "migrationHead": "0035",
+    "publicUrlAudit": {"homepage": 200, "demo": 404, "publicDpp": 404, "resolver": 409},
+    "backupTable": {"exists": true, "rows": 23, "foreignKeys": 0, "views": 0, "triggers": 0},
+    "migrationPrerequisites": {"requiredTableCount": 10, "requiredFunctionCount": 4, "eligibleLegacyPlatformAdminCount": 1, "productModelCount": 8, "organisationV2Count": 1}
+  },
+  "migrationChecksums": {
+    "0036": "ba077080223b6b462465a57a0594c8bb20e5d7b9051d02a232fbfa0c188316a5",
+    "0037": "8b9f406d4ef62ae8c05ed3803c71f2ed3caa1150367b735f793e71c7e5760d5b",
+    "0038": "10849df0b69980448318f6512c915f48712fc5d78ad039c461a1760d79aaf6e9",
+    "0039": "6d2cd48d24d16f426ca41685dec70484e5c3d0bdfc6a6a8ce6a1afa84e9355fb"
+  },
+  "productionMutation": {"deployed": false, "migrationsExecuted": false, "dataWritePerformed": false, "authChanged": false, "environmentChanged": false}
+}

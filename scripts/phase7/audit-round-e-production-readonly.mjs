@@ -11,12 +11,14 @@ async function query(sql) {
 const tables = await query("select table_name from information_schema.tables where table_schema='public' and table_type='BASE TABLE' order by table_name");
 const names = new Set(tables.map((row) => row.table_name));
 const count = async (table) => names.has(table) ? Number((await query(`select count(*)::int as count from public.${table}`))[0]?.count || 0) : null;
-const [migration, rlsDisabled, broadPolicies, authUsers, tenantCount, organisationCount, modelCount, dppCount, publishedVersions, resolverMappings, leadCount, demoCount] = await Promise.all([
+const [migration, rlsDisabled, broadPolicies, authUsers, tenantCount, organisationCount, modelCount, dppCount, publishedVersions, resolverMappings, leadCount, demoCount, obsoleteBackupRows, obsoleteBackupConsumers] = await Promise.all([
   names.has("greanlean_migration_ledger") ? query("select max(migration_number) as head from public.greanlean_migration_ledger where result='applied'") : [],
   query("select n.nspname as schema_name,c.relname as table_name from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relkind='r' and not c.relispartition and not c.relrowsecurity order by c.relname"),
   query("select tablename, policyname, cmd from pg_policies where schemaname='public' and (coalesce(qual,'') ~* 'using\\s*\\(\\s*true\\s*\\)' or coalesce(with_check,'') ~* 'with\\s+check\\s*\\(\\s*true\\s*\\)') order by tablename, policyname"),
   query("select count(*)::int as count from auth.users"), count("tenant"), count("organisation_v2"), count("product_model"), count("dpp_passport"),
   names.has("dpp_version") ? query("select count(*)::int as count from public.dpp_version where publication_state='PUBLISHED'") : [], count("resolver_mapping"), count("leads"), count("demo_showcase_entry"),
+  count("greanlean_0012_data_backup"),
+  names.has("greanlean_0012_data_backup") ? query("select (select count(*)::int from information_schema.table_constraints where table_schema='public' and table_name='greanlean_0012_data_backup' and constraint_type='FOREIGN KEY') as foreign_keys, (select count(*)::int from information_schema.view_table_usage where view_schema='public' and table_schema='public' and table_name='greanlean_0012_data_backup') as views, (select count(*)::int from information_schema.triggers where event_object_schema='public' and event_object_table='greanlean_0012_data_backup') as triggers") : [],
 ]);
 const [tenants, membershipSummary, orphanOrganisations, orphanMemberships] = await Promise.all([
   names.has("tenant") ? query("select code, status from public.tenant order by code") : [],
@@ -30,5 +32,6 @@ const result = {
   authUsers: authUsers[0]?.count ?? null, tenantCount, organisationCount, modelCount, dppCount,
   publishedVersions: publishedVersions[0]?.count ?? null, resolverMappings: resolverMappings, leadTableExists: names.has("leads"), leadCount, demoCatalogExists: names.has("demo_showcase_entry"), demoCount,
   tenants, membershipSummary, orphanOrganisations: orphanOrganisations[0]?.count ?? null, orphanMemberships: orphanMemberships[0]?.count ?? null,
+  obsoleteBackupTableExists: names.has("greanlean_0012_data_backup"), obsoleteBackupRows, obsoleteBackupConsumers: obsoleteBackupConsumers[0] || null,
 };
 process.stdout.write(`${JSON.stringify(result)}\n`);
