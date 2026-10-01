@@ -1,0 +1,19 @@
+{
+  "result": "PASS",
+  "namespace_uuid": "c8d1c20a-f166-5bcf-b199-d7dba9092c9b",
+  "id_map_source_row_count": 145,
+  "id_map_unmapped_insert_row_count": 0,
+  "id_map_duplicate_target_id_count": 0,
+  "id_map_cross_table_collision_count": 0,
+  "id_map_recompute_mismatch_count": 0,
+  "resolver_promotion_row_count": 8,
+  "transaction_result": "ROLLED_BACK",
+  "post_rollback": {
+    "legacy_dpps": 22,
+    "legacy_resolvers": 22,
+    "approved_dpps": 0,
+    "auth_users": 5,
+    "tenants": 2
+  },
+  "management_result": []
+}

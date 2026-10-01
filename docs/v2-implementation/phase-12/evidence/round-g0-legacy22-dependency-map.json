@@ -1,0 +1,612 @@
+{
+  "generated_at": "2026-10-01T10:36:48.547Z",
+  "round": "G0",
+  "read_only": true,
+  "target_passport_identifiers": [
+    "DPP-GLR-EBIKE-000001",
+    "DPP-GLR-EBIKE-000002",
+    "DPP-GLR-EBIKE-000003",
+    "DPP-GLR-EBIKE-000004",
+    "DPP-GLR-EBIKE-000005",
+    "DPP-GLR-EBIKE-000006",
+    "DPP-GLR-EBIKE-000007",
+    "DPP-GLR-EBIKE-000008",
+    "DPP-GLR-EBIKE-000009",
+    "DPP-GLR-EBIKE-000010",
+    "DPP-GLR-EBIKE-000011",
+    "DPP-GLR-EBIKE-000012",
+    "DPP-GLR-EBIKE-000013",
+    "DPP-GLR-EBIKE-000014",
+    "DPP-GLR-EBIKE-000015",
+    "DPP-GLR-EBIKE-000016",
+    "DPP-GLR-EBIKE-000017",
+    "DPP-GLR-EBIKE-000018",
+    "DPP-GLR-EBIKE-000019",
+    "DPP-GLR-EBIKE-000020",
+    "DPP-GLR-EBIKE-000021",
+    "DPP-GLR-EBIKE-000022"
+  ],
+  "dependencies": [
+    {
+      "conname": "connector_attempt_job_tenant_fk",
+      "table_name": "connector_attempt",
+      "fk_columns": "{job_id,tenant_id}",
+      "parent_table": "connector_job",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "shared/global reference; retain",
+      "delete_order": 40
+    },
+    {
+      "conname": "connector_audit_job_tenant_fk",
+      "table_name": "connector_audit_event",
+      "fk_columns": "{connector_job_id,tenant_id}",
+      "parent_table": "connector_job",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "shared/global reference; retain",
+      "delete_order": 40
+    },
+    {
+      "conname": "connector_dead_letter_job_tenant_fk",
+      "table_name": "connector_dead_letter",
+      "fk_columns": "{job_id,tenant_id}",
+      "parent_table": "connector_job",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "shared/global reference; retain",
+      "delete_order": 40
+    },
+    {
+      "conname": "connector_import_job_tenant_fk",
+      "table_name": "connector_import_session",
+      "fk_columns": "{connector_job_id,tenant_id}",
+      "parent_table": "connector_job",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "shared/global reference; retain",
+      "delete_order": 40
+    },
+    {
+      "conname": "connector_job_instance_tenant_fk",
+      "table_name": "connector_job",
+      "fk_columns": "{connector_instance_id,tenant_id}",
+      "parent_table": "connector_instance",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "connector_job_mapping_tenant_fk",
+      "table_name": "connector_job",
+      "fk_columns": "{mapping_version_id,tenant_id}",
+      "parent_table": "mapping_version",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "connector_job_passport_tenant_fk",
+      "table_name": "connector_job",
+      "fk_columns": "{passport_id,tenant_id}",
+      "parent_table": "dpp_passport",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "connector_job_requested_by_fkey",
+      "table_name": "connector_job",
+      "fk_columns": "{requested_by}",
+      "parent_table": "users",
+      "parent_columns": "{id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "connector_job_tenant_id_fkey",
+      "table_name": "connector_job",
+      "fk_columns": "{tenant_id}",
+      "parent_table": "tenant",
+      "parent_columns": "{id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "connector_job_version_tenant_fk",
+      "table_name": "connector_job",
+      "fk_columns": "{version_id,tenant_id}",
+      "parent_table": "dpp_version",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "connector_receipt_job_tenant_fk",
+      "table_name": "connector_receipt",
+      "fk_columns": "{job_id,tenant_id}",
+      "parent_table": "connector_job",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "shared/global reference; retain",
+      "delete_order": 40
+    },
+    {
+      "conname": "demo_showcase_entry_created_by_fkey",
+      "table_name": "demo_showcase_entry",
+      "fk_columns": "{created_by}",
+      "parent_table": "users",
+      "parent_columns": "{id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "demo_showcase_entry_passport_id_fkey",
+      "table_name": "demo_showcase_entry",
+      "fk_columns": "{passport_id}",
+      "parent_table": "dpp_passport",
+      "parent_columns": "{id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "demo_showcase_entry_tenant_id_fkey",
+      "table_name": "demo_showcase_entry",
+      "fk_columns": "{tenant_id}",
+      "parent_table": "tenant",
+      "parent_columns": "{id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "dpp_current_pointer_passport_tenant_fk",
+      "table_name": "dpp_current_pointer",
+      "fk_columns": "{passport_id,tenant_id}",
+      "parent_table": "dpp_passport",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 10
+    },
+    {
+      "conname": "dpp_current_pointer_tenant_id_fkey",
+      "table_name": "dpp_current_pointer",
+      "fk_columns": "{tenant_id}",
+      "parent_table": "tenant",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 10
+    },
+    {
+      "conname": "dpp_current_pointer_updated_by_fkey",
+      "table_name": "dpp_current_pointer",
+      "fk_columns": "{updated_by}",
+      "parent_table": "users",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 10
+    },
+    {
+      "conname": "dpp_current_pointer_version_fk",
+      "table_name": "dpp_current_pointer",
+      "fk_columns": "{current_version_id,passport_id,tenant_id}",
+      "parent_table": "dpp_version",
+      "parent_columns": "{id,passport_id,tenant_id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 10
+    },
+    {
+      "conname": "dpp_publication_audit_actor_user_id_fkey",
+      "table_name": "dpp_publication_audit",
+      "fk_columns": "{actor_user_id}",
+      "parent_table": "users",
+      "parent_columns": "{id}",
+      "row_count": 110,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 20
+    },
+    {
+      "conname": "dpp_publication_audit_new_current_version_id_fkey",
+      "table_name": "dpp_publication_audit",
+      "fk_columns": "{new_current_version_id}",
+      "parent_table": "dpp_version",
+      "parent_columns": "{id}",
+      "row_count": 110,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 20
+    },
+    {
+      "conname": "dpp_publication_audit_passport_id_fkey",
+      "table_name": "dpp_publication_audit",
+      "fk_columns": "{passport_id}",
+      "parent_table": "dpp_passport",
+      "parent_columns": "{id}",
+      "row_count": 110,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 20
+    },
+    {
+      "conname": "dpp_publication_audit_previous_current_version_id_fkey",
+      "table_name": "dpp_publication_audit",
+      "fk_columns": "{previous_current_version_id}",
+      "parent_table": "dpp_version",
+      "parent_columns": "{id}",
+      "row_count": 110,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 20
+    },
+    {
+      "conname": "dpp_publication_audit_resolver_mapping_id_fkey",
+      "table_name": "dpp_publication_audit",
+      "fk_columns": "{resolver_mapping_id}",
+      "parent_table": "resolver_mapping",
+      "parent_columns": "{id}",
+      "row_count": 110,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 20
+    },
+    {
+      "conname": "dpp_publication_audit_review_task_id_fkey",
+      "table_name": "dpp_publication_audit",
+      "fk_columns": "{review_task_id}",
+      "parent_table": "dpp_review_task",
+      "parent_columns": "{id}",
+      "row_count": 110,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 20
+    },
+    {
+      "conname": "dpp_publication_audit_schema_version_id_fkey",
+      "table_name": "dpp_publication_audit",
+      "fk_columns": "{schema_version_id}",
+      "parent_table": "schema_version",
+      "parent_columns": "{id}",
+      "row_count": 110,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 20
+    },
+    {
+      "conname": "dpp_publication_audit_tenant_id_fkey",
+      "table_name": "dpp_publication_audit",
+      "fk_columns": "{tenant_id}",
+      "parent_table": "tenant",
+      "parent_columns": "{id}",
+      "row_count": 110,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 20
+    },
+    {
+      "conname": "dpp_publication_audit_version_id_fkey",
+      "table_name": "dpp_publication_audit",
+      "fk_columns": "{version_id}",
+      "parent_table": "dpp_version",
+      "parent_columns": "{id}",
+      "row_count": 110,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 20
+    },
+    {
+      "conname": "dpp_review_passport_tenant_fk",
+      "table_name": "dpp_review_task",
+      "fk_columns": "{passport_id,tenant_id}",
+      "parent_table": "dpp_passport",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 60
+    },
+    {
+      "conname": "dpp_review_published_version_fk",
+      "table_name": "dpp_review_task",
+      "fk_columns": "{published_version_id,passport_id,tenant_id}",
+      "parent_table": "dpp_version",
+      "parent_columns": "{id,passport_id,tenant_id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 60
+    },
+    {
+      "conname": "dpp_review_task_reviewed_by_fkey",
+      "table_name": "dpp_review_task",
+      "fk_columns": "{reviewed_by}",
+      "parent_table": "users",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 60
+    },
+    {
+      "conname": "dpp_review_task_schema_version_id_fkey",
+      "table_name": "dpp_review_task",
+      "fk_columns": "{schema_version_id}",
+      "parent_table": "schema_version",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 60
+    },
+    {
+      "conname": "dpp_review_task_submitted_by_fkey",
+      "table_name": "dpp_review_task",
+      "fk_columns": "{submitted_by}",
+      "parent_table": "users",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 60
+    },
+    {
+      "conname": "dpp_review_task_tenant_id_fkey",
+      "table_name": "dpp_review_task",
+      "fk_columns": "{tenant_id}",
+      "parent_table": "tenant",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 60
+    },
+    {
+      "conname": "dpp_version_created_by_fkey",
+      "table_name": "dpp_version",
+      "fk_columns": "{created_by}",
+      "parent_table": "users",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 50
+    },
+    {
+      "conname": "dpp_version_legacy_publication_id_fkey",
+      "table_name": "dpp_version",
+      "fk_columns": "{legacy_publication_id}",
+      "parent_table": "dpp_publication",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 50
+    },
+    {
+      "conname": "dpp_version_passport_tenant_fk",
+      "table_name": "dpp_version",
+      "fk_columns": "{passport_id,tenant_id}",
+      "parent_table": "dpp_passport",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 50
+    },
+    {
+      "conname": "dpp_version_published_by_fkey",
+      "table_name": "dpp_version",
+      "fk_columns": "{published_by}",
+      "parent_table": "users",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 50
+    },
+    {
+      "conname": "dpp_version_review_tenant_fk",
+      "table_name": "dpp_version",
+      "fk_columns": "{review_task_id,tenant_id}",
+      "parent_table": "dpp_review_task",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 50
+    },
+    {
+      "conname": "dpp_version_schema_version_id_fkey",
+      "table_name": "dpp_version",
+      "fk_columns": "{schema_version_id}",
+      "parent_table": "schema_version",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 50
+    },
+    {
+      "conname": "dpp_version_supersedes_passport_fk",
+      "table_name": "dpp_version",
+      "fk_columns": "{supersedes_version_id,passport_id,tenant_id}",
+      "parent_table": "dpp_version",
+      "parent_columns": "{id,passport_id,tenant_id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 50
+    },
+    {
+      "conname": "dpp_version_tenant_id_fkey",
+      "table_name": "dpp_version",
+      "fk_columns": "{tenant_id}",
+      "parent_table": "tenant",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 50
+    },
+    {
+      "conname": "dpp_version_withdrawn_by_fkey",
+      "table_name": "dpp_version",
+      "fk_columns": "{withdrawn_by}",
+      "parent_table": "users",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 50
+    },
+    {
+      "conname": "registry_submission_v2_tenant_id_fkey",
+      "table_name": "registry_submission_v2",
+      "fk_columns": "{tenant_id}",
+      "parent_table": "tenant",
+      "parent_columns": "{id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "registry_v2_external_mapping_tenant_fk",
+      "table_name": "registry_submission_v2",
+      "fk_columns": "{external_identifier_mapping_id,tenant_id}",
+      "parent_table": "external_identifier_mapping",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "registry_v2_instance_tenant_fk",
+      "table_name": "registry_submission_v2",
+      "fk_columns": "{connector_instance_id,tenant_id}",
+      "parent_table": "connector_instance",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "registry_v2_job_tenant_fk",
+      "table_name": "registry_submission_v2",
+      "fk_columns": "{connector_job_id,tenant_id}",
+      "parent_table": "connector_job",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "registry_v2_version_passport_tenant_fk",
+      "table_name": "registry_submission_v2",
+      "fk_columns": "{version_id,passport_id,tenant_id}",
+      "parent_table": "dpp_version",
+      "parent_columns": "{id,passport_id,tenant_id}",
+      "row_count": 0,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 40
+    },
+    {
+      "conname": "resolver_mapping_created_by_fkey",
+      "table_name": "resolver_mapping",
+      "fk_columns": "{created_by}",
+      "parent_table": "users",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 30
+    },
+    {
+      "conname": "resolver_mapping_identifier_tenant_fk",
+      "table_name": "resolver_mapping",
+      "fk_columns": "{identifier_id,tenant_id}",
+      "parent_table": "product_subject_identifier",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 30
+    },
+    {
+      "conname": "resolver_mapping_passport_tenant_fk",
+      "table_name": "resolver_mapping",
+      "fk_columns": "{passport_id,tenant_id}",
+      "parent_table": "dpp_passport",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 30
+    },
+    {
+      "conname": "resolver_mapping_target_tenant_fk",
+      "table_name": "resolver_mapping",
+      "fk_columns": "{target_mapping_id,tenant_id}",
+      "parent_table": "resolver_mapping",
+      "parent_columns": "{id,tenant_id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 30
+    },
+    {
+      "conname": "resolver_mapping_tenant_id_fkey",
+      "table_name": "resolver_mapping",
+      "fk_columns": "{tenant_id}",
+      "parent_table": "tenant",
+      "parent_columns": "{id}",
+      "row_count": 22,
+      "classification": "exclusive to selected DPP scope when row_count > 0",
+      "delete_order": 30
+    }
+  ],
+  "cyclic_pairs": [
+    {
+      "from": "dpp_version.review_task_id",
+      "to": "dpp_review_task.id"
+    },
+    {
+      "from": "dpp_review_task.published_version_id",
+      "to": "dpp_version.id",
+      "nullable_bridge": true
+    }
+  ],
+  "review_version_rows": {
+    "review_task_ids": [
+      "00498fc2-00f7-4864-ad0e-13e4e5583127",
+      "0b1c6df2-3cb9-4524-8903-bada6d9972f1",
+      "3700a068-71f1-487f-a1bf-b7feb2e797ec",
+      "39e706a2-f609-4d12-84c3-7c0d75e8ba65",
+      "3f14be64-0390-4a2b-adca-a215a7154d59",
+      "50f9acb5-ff9a-41a1-8528-997e66a859f6",
+      "55513fb4-4ccd-4bef-94e5-514ffb2b7f30",
+      "5d3fd221-dfa7-427e-93e6-56805bbf5eed",
+      "73effd0a-ad41-49cc-a251-eaf8a5beb8fa",
+      "7c057c09-4d13-4e7e-bef9-6f29ee122d63",
+      "7e6b70f2-e5f4-4f91-8895-5d2122d5a550",
+      "81fad3e1-a78f-4fec-9528-0756b789c90e",
+      "9faa0fec-c955-48f9-ae16-e8edc28e4867",
+      "a5b1f37d-8682-48d1-98c5-495da96f5b77",
+      "a78eacf1-9847-424b-bd2e-b74b4b1916b4",
+      "abedcf01-1549-4975-9665-29e437ba3d3b",
+      "b0819212-a50d-479a-a33c-c0f4d838f42b",
+      "e47ae4fa-4f18-4f7e-8fe4-556270b5bb4d",
+      "e944743c-62ac-40cf-9de1-50a771d8dd6e",
+      "f18068e2-e76d-4bf4-8eb3-431e5852e5df",
+      "f46ee6ae-5761-47d7-a0d8-2684bba319c8",
+      "fa9ecbb3-882a-448e-9926-d4b37c57ce4c"
+    ],
+    "version_ids": [
+      "081283f9-d90b-4cc2-914b-fa69b84c9ac2",
+      "10f9f3f0-6268-45cc-819c-bfa3f29cdc2d",
+      "1d946667-077e-4458-bdb9-e75d5eaee71d",
+      "2726f9a9-61b4-4623-896d-9c7d91c6a74a",
+      "317488ca-7934-4c86-9742-ecd7044624af",
+      "38827f0a-6785-427c-907d-002525f11716",
+      "4b0b923b-48b6-4226-a90a-19f47cc84b05",
+      "578d4614-c227-4f6f-b1f8-a0e1d9e6ea86",
+      "77d99819-fb80-4aa8-b48e-0b7924008030",
+      "7bc90902-b10f-4fed-b680-d8e07f06704a",
+      "8888d51d-1fab-4efb-bd9b-77e282b2a6aa",
+      "a2bf4339-01d2-4113-ab90-0590835d2158",
+      "a5c6fcab-1182-47f6-aaed-6191c6e73424",
+      "af9194e8-6f39-4657-a99a-de7bb30211ee",
+      "cb2c77b2-930d-45d2-96f3-73f249e845e1",
+      "d0e68bc0-830e-499a-9559-e2f41a19706b",
+      "d5f16ca5-3dac-4dab-b2b4-5edd7513746a",
+      "d76b3360-83f4-4aa5-8fb2-931e32413290",
+      "e5e0603b-8b1d-4bac-a09c-942b89b44645",
+      "e64f039d-58eb-4739-915a-525053d87923",
+      "f1850d5d-231d-46d1-aa29-da4194e229d1",
+      "fd134cda-8836-4954-8416-7e50b6fbd681"
+    ]
+  }
+}

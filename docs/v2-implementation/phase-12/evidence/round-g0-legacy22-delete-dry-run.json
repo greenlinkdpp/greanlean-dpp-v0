@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-10-01T10:36:48.548Z",
+  "round": "G0",
+  "read_only": true,
+  "mutation_performed": false,
+  "rows_to_delete_by_table": {
+    "dpp_passport": 22,
+    "dpp_current_pointer": 22,
+    "dpp_publication_audit": 110,
+    "dpp_review_task": 22,
+    "dpp_version": 22,
+    "resolver_mapping": 22,
+    "connector_job": 0,
+    "demo_showcase_entry": 0,
+    "registry_submission_v2": 0
+  },
+  "rows_to_keep_shared_by_table": {
+    "tenant": 1,
+    "schema_definition": 0,
+    "schema_version": 0
+  },
+  "rows_to_keep_global_by_table": {
+    "auth_users": "all",
+    "tenant": "all"
+  },
+  "non_target_dpp_affected": 0,
+  "auth_rows_affected": 0,
+  "tenant_rows_affected": 0,
+  "required_cycle_bridge": "Set dpp_review_task.published_version_id to NULL only in the authorised delete transaction before deleting linked dpp_version / review task rows."
+}

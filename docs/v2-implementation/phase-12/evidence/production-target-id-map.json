@@ -1,0 +1,1456 @@
+{
+  "generated_at": "2026-10-01T11:20:39.910Z",
+  "namespace_uuid": "c8d1c20a-f166-5bcf-b199-d7dba9092c9b",
+  "mappings": [
+    {
+      "source_environment": "preprod",
+      "source_table": "tenant",
+      "source_primary_key": "bbfcbe5f-9786-4fcb-af32-9dbac33f2a4b",
+      "target_environment": "production",
+      "target_table": "tenant",
+      "target_primary_key": "632943cf-520b-47ac-83af-88ca866d4fa5",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "greanlean-reference-mobility"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_definition",
+      "source_primary_key": "0fbf0ecc-a3bf-41c2-819e-50f6794eb799",
+      "target_environment": "production",
+      "target_table": "schema_definition",
+      "target_primary_key": "fb93b70d-36f4-4d38-9ac1-524fb3dd059e",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "greanlean.reference.ebike-battery"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_version",
+      "source_primary_key": "f5b8bbc2-b3b6-4440-841f-bc6ce3a54e92",
+      "target_environment": "production",
+      "target_table": "schema_version",
+      "target_primary_key": "992c711f-ece6-4f05-86a7-4936348c3a91",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "greanlean.reference.ebike-battery@1.0.0"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_definition",
+      "source_primary_key": "1d0009d1-d32c-44c1-a395-1471afe774f3",
+      "target_environment": "production",
+      "target_table": "schema_definition",
+      "target_primary_key": "6243cb81-64fa-516a-b747-6fe1dd32a223",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-industrial_battery"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_version",
+      "source_primary_key": "9f400831-3959-464b-b1dc-6c6b6b237214",
+      "target_environment": "production",
+      "target_table": "schema_version",
+      "target_primary_key": "40267cdb-6099-5454-8f44-5c4a367e7a2a",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-industrial_battery@1.0.0"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_definition",
+      "source_primary_key": "92b4df4b-64a3-4ec7-ba74-9ce3abe1d557",
+      "target_environment": "production",
+      "target_table": "schema_definition",
+      "target_primary_key": "846d1a5b-dd54-5eeb-bfee-bc9201b5ca5d",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-consumer_electronics"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_version",
+      "source_primary_key": "4583c545-6f61-4bba-bdac-b259c56e79bc",
+      "target_environment": "production",
+      "target_table": "schema_version",
+      "target_primary_key": "9b75c558-40eb-5ee1-8c8c-c91a6d20b6c8",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-consumer_electronics@1.0.0"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_definition",
+      "source_primary_key": "b0eea50d-0691-4bc0-ae7c-8182e63150c7",
+      "target_environment": "production",
+      "target_table": "schema_definition",
+      "target_primary_key": "090e539c-dec8-569e-90d5-b9129db237a2",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-building_material"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_version",
+      "source_primary_key": "b125c91c-0693-4f6c-b69f-e71044805423",
+      "target_environment": "production",
+      "target_table": "schema_version",
+      "target_primary_key": "637eb3fd-5bcd-5bb7-93c1-4987de00cd24",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-building_material@1.0.0"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_definition",
+      "source_primary_key": "ccb65fb3-e61e-40a2-92df-88dedf5cb855",
+      "target_environment": "production",
+      "target_table": "schema_definition",
+      "target_primary_key": "9ea67ba0-a55a-5334-9b57-1ba817b01cad",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-hardware"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_version",
+      "source_primary_key": "2903780e-1b2f-4ed3-990b-a6c6a8c7e42f",
+      "target_environment": "production",
+      "target_table": "schema_version",
+      "target_primary_key": "a6c66cf8-2156-5be4-89e6-b3ba118e1ee1",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-hardware@1.0.0"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_definition",
+      "source_primary_key": "e6eb8c5b-a804-459d-86bc-c2f559aa68f8",
+      "target_environment": "production",
+      "target_table": "schema_definition",
+      "target_primary_key": "bd674bed-7b4a-590b-ab17-49daf243ae33",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-textile"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "schema_version",
+      "source_primary_key": "0fb14610-a374-45a3-af2f-c74dab993072",
+      "target_environment": "production",
+      "target_table": "schema_version",
+      "target_primary_key": "f0166eff-f6d8-519c-8382-7401366aad39",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-textile@1.0.0"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "organisation_v2",
+      "source_primary_key": "381f7c26-2712-48ec-a4fd-1b8e4f21f1b6",
+      "target_environment": "production",
+      "target_table": "organisation_v2",
+      "target_primary_key": "b9489d4e-99c3-5595-9c7e-8c872cffd0c6",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "TerraDeck Materials Recovery Partner"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "organisation_v2",
+      "source_primary_key": "43ab1d4c-27de-420c-8773-0dfb5bf643c0",
+      "target_environment": "production",
+      "target_table": "organisation_v2",
+      "target_primary_key": "1e5180f0-ca7f-484a-a1b9-c74d1cb5e4eb",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "GreanLean Reference Mobility Ltd. (Synthetic)"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "organisation_v2",
+      "source_primary_key": "47df05da-8f5e-4d7c-9dfa-98247e793609",
+      "target_environment": "production",
+      "target_table": "organisation_v2",
+      "target_primary_key": "4d2805b7-a7ef-5008-bed9-b49b9f652476",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "ForgeFix Metal Recycling Partner"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "organisation_v2",
+      "source_primary_key": "5c91713e-d75c-4e59-a6c8-2da8e17fd1da",
+      "target_environment": "production",
+      "target_table": "organisation_v2",
+      "target_primary_key": "d06e0e01-ab6c-5178-bc23-79c881c1eaff",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "EcoWeave Textile Recycling Partner"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "organisation_v2",
+      "source_primary_key": "8c628eb0-3c33-4f24-9c8e-62ac9b294ca6",
+      "target_environment": "production",
+      "target_table": "organisation_v2",
+      "target_primary_key": "edb273f1-c5dd-5f3b-82c5-5e357168f935",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "GreenCell Demo Technology Co., Ltd."
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "organisation_v2",
+      "source_primary_key": "9c37c038-eac5-44d2-b1f5-52632fc51e76",
+      "target_environment": "production",
+      "target_table": "organisation_v2",
+      "target_primary_key": "4d5baf25-5fbe-528b-a966-6e9df1fec47b",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "GreanLean Europe Demo GmbH"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "organisation_v2",
+      "source_primary_key": "b3a8076f-04dc-46b8-9cd0-1b76c6c0c245",
+      "target_environment": "production",
+      "target_table": "organisation_v2",
+      "target_primary_key": "1b44d6cc-af7f-501f-90cd-5a0999094dbe",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "LoopSound Electronics Recovery Partner"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "organisation_v2",
+      "source_primary_key": "b5ba5999-3939-4310-879d-278b242d0ed0",
+      "target_environment": "production",
+      "target_table": "organisation_v2",
+      "target_primary_key": "f5b3b79e-3c0a-536a-bbe8-16c3e4e54c2e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "GreanLean Reference Mobility Ltd."
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "organisation_v2",
+      "source_primary_key": "b7cee2f9-771f-40fb-b5f5-1ae247a0cc13",
+      "target_environment": "production",
+      "target_table": "organisation_v2",
+      "target_primary_key": "f5184b31-961a-52b2-bc96-e6a8426f736a",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "Circular Battery Demo Recycling GmbH"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "organisation_v2",
+      "source_primary_key": "c72a4f2a-1860-4d58-865c-7214624fce09",
+      "target_environment": "production",
+      "target_table": "organisation_v2",
+      "target_primary_key": "db2e782e-f605-593d-8800-af8f363fbf9e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "GreenBMS Demo Electronics Co., Ltd."
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_family",
+      "source_primary_key": "327a9c7e-839f-48c8-b0fe-56392e070da5",
+      "target_environment": "production",
+      "target_table": "product_family",
+      "target_primary_key": "7f7a9149-8983-525c-a3fc-3f9ecef3cf9e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "hardware"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_family",
+      "source_primary_key": "3594c0f2-b0f4-49d1-a75e-f504fbe0b085",
+      "target_environment": "production",
+      "target_table": "product_family",
+      "target_primary_key": "c690af8e-8d24-50dc-aa5f-e403a1c9968f",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "consumer-electronics"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_family",
+      "source_primary_key": "6afd4b3c-9a00-4ab7-9550-b87946465725",
+      "target_environment": "production",
+      "target_table": "product_family",
+      "target_primary_key": "e239f458-ea4b-4832-a9b8-9018e8dddd6c",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "glr-ebike-battery"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_family",
+      "source_primary_key": "ca7baf9d-0d46-42ac-9a4d-43ba854d269b",
+      "target_environment": "production",
+      "target_table": "product_family",
+      "target_primary_key": "1da9d0ee-0ca9-5042-b60b-ef19a3d4c05e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "industrial-energy"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_family",
+      "source_primary_key": "d065a741-2dce-43b6-bc78-ac7e700a6d61",
+      "target_environment": "production",
+      "target_table": "product_family",
+      "target_primary_key": "1e80a43f-5d03-5515-855b-be3725866c14",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "building-material"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_family",
+      "source_primary_key": "ed96a94f-8a27-4c62-b251-cbeaadcee0a9",
+      "target_environment": "production",
+      "target_table": "product_family",
+      "target_primary_key": "7a244f40-a987-516d-8a08-3d2aa74d2ab3",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "textile"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_family",
+      "source_primary_key": "ff2ac6f5-14d4-462d-a5a7-bb3f424b2f05",
+      "target_environment": "production",
+      "target_table": "product_family",
+      "target_primary_key": "56dbca7a-4434-51d6-84b8-80e959546aa5",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "lmt-battery"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_model",
+      "source_primary_key": "1126de9e-19f7-488c-a428-71f0c3d2868c",
+      "target_environment": "production",
+      "target_table": "product_model",
+      "target_primary_key": "9c9651da-2806-5f0b-ae0f-03a52116a9db",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "EW-OC-TSHIRT"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_model",
+      "source_primary_key": "4d856092-752f-4b2d-9eb3-5ce454a24e57",
+      "target_environment": "production",
+      "target_table": "product_model",
+      "target_primary_key": "0c7a0613-0ef9-5053-846d-0e215f142b7d",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "FF-HW-HEX-01"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_model",
+      "source_primary_key": "645a5d57-b12e-475a-bf5f-22068614d683",
+      "target_environment": "production",
+      "target_table": "product_model",
+      "target_primary_key": "e25d4de5-5d3e-4366-bee5-8a7e1f3746fc",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "GLR-P25A"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_model",
+      "source_primary_key": "70d405d9-d17f-47b8-acb5-ddfcdffff1ff",
+      "target_environment": "production",
+      "target_table": "product_model",
+      "target_primary_key": "5ffeed9a-102c-5064-b881-3f08a6eb19ab",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "GV-ESS-14K3"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_model",
+      "source_primary_key": "72e47d3c-5a4c-4188-b63f-f29e2c17959e",
+      "target_environment": "production",
+      "target_table": "product_model",
+      "target_primary_key": "f52245b9-3b99-52a8-8483-63da4280009b",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "LS-EARBUDS-01"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_model",
+      "source_primary_key": "75da2de1-1921-4fda-81b2-07a2e374055d",
+      "target_environment": "production",
+      "target_table": "product_model",
+      "target_primary_key": "4f6a0426-f005-4c3f-9bf4-9f04f11a8801",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "GLR-S36B"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_model",
+      "source_primary_key": "7b68055b-8de5-44ab-8e25-caa6bd7bb205",
+      "target_environment": "production",
+      "target_table": "product_model",
+      "target_primary_key": "1d73cd17-2dc8-527b-87ad-2376a369bfda",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "GLR-X48C"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_model",
+      "source_primary_key": "f3db9c3c-c796-439a-927f-55e763d77572",
+      "target_environment": "production",
+      "target_table": "product_model",
+      "target_primary_key": "7e771fe5-5e65-5b26-a57a-0a2063feba10",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "TD-WPC-140"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "sku",
+      "source_primary_key": "bef7418a-97f3-4e11-9199-d0c1f3784f50",
+      "target_environment": "production",
+      "target_table": "sku",
+      "target_primary_key": "13c086a2-b8a6-4dd9-8d05-a54e6b1c1e37",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "GLR-P25A-13P2AH"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_batch",
+      "source_primary_key": "f2056735-3927-4fe6-afe9-fc34bac5a8fb",
+      "target_environment": "production",
+      "target_table": "product_batch",
+      "target_primary_key": "43ad201f-b754-45eb-9ced-cd15c7ba668d",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "DEMO-2026-GLR-P25A"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_item",
+      "source_primary_key": "494d4526-ff17-457c-99dc-4d51973c3dea",
+      "target_environment": "production",
+      "target_table": "product_item",
+      "target_primary_key": "e275f663-d53f-58b6-a813-f02a3ab323d8",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "GLR-S36B-DEMO-0001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_item",
+      "source_primary_key": "4bdf8217-24b0-42b5-a5c4-5d3ce0e6f38b",
+      "target_environment": "production",
+      "target_table": "product_item",
+      "target_primary_key": "12465964-b2ba-5611-8140-a93294226030",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "EW-OC-TSHIRT-DEMO-0001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_item",
+      "source_primary_key": "5f8d7384-0e90-49a2-baec-59dcb4eb84c9",
+      "target_environment": "production",
+      "target_table": "product_item",
+      "target_primary_key": "836def99-06b0-480b-a166-076744c3f091",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "GLR26-0001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_item",
+      "source_primary_key": "6bc942e2-8ab5-45c8-9516-6093baf88a67",
+      "target_environment": "production",
+      "target_table": "product_item",
+      "target_primary_key": "3e456c4c-51b4-5bdd-952d-6a2c133fc0aa",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "FF-HW-HEX-01-DEMO-0001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_item",
+      "source_primary_key": "982b6545-f9c5-446b-b2a5-cc1d4b14b1a4",
+      "target_environment": "production",
+      "target_table": "product_item",
+      "target_primary_key": "82025378-585b-52db-9448-98988b894f7c",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "LS-EARBUDS-01-DEMO-0001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_item",
+      "source_primary_key": "cb3d2404-54ce-4843-af1a-0dd65e7654f9",
+      "target_environment": "production",
+      "target_table": "product_item",
+      "target_primary_key": "9f4824da-b82d-5798-af4e-54f7ac91155a",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "TD-WPC-140-DEMO-0001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_item",
+      "source_primary_key": "d9a62612-9da1-4fd8-a038-fab84c29e6f8",
+      "target_environment": "production",
+      "target_table": "product_item",
+      "target_primary_key": "86734335-8450-5d0c-8f55-72255737095a",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "GLR-X48C-DEMO-0001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_item",
+      "source_primary_key": "e420d0c9-3946-49d6-9171-31d254dc6491",
+      "target_environment": "production",
+      "target_table": "product_item",
+      "target_primary_key": "1b09e1dd-3c85-59de-aae3-5edb6e1efbee",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "GV-ESS-14K3-DEMO-0001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "06b2e134-a613-48f9-8680-39660d45e426",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "4316797d-7e86-44bb-a293-a77d8df5b6b4",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "GLR26-0001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "1a662fb2-26dd-43d9-ba7c-316789d645af",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "37c51728-7a94-5194-92db-c9924ab2e369",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-BLD-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "3a0a7d6d-3cf4-451a-8254-3da71cdefbfb",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "36048bc3-2991-5ef5-809c-187fa6773801",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-CE-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "559ef086-3312-4e23-a3de-0ae7af38a961",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "cf917b83-206e-40a5-83bc-de83ccc38bfe",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "GLR-P25A-13P2AH"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "8fb4cee6-abd8-4c9c-812b-19115e773205",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "eb6e8b4b-9867-56cd-8bef-991f4389fb86",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-GLR-LMT-000002"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "c8326d17-2000-453d-81cf-11e6494c1e0a",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "4c32391f-105f-5a7d-ad09-d65eedcb7054",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-GLR-LMT-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "cba19f21-8cb7-4736-9288-3867c35f3aea",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "0ae15355-e769-4e30-bfa5-1e29df9f7a31",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "DEMO-2026-GLR-P25A"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "dda0cf62-f48b-4fd2-994d-72d75f2e331e",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "1ebbbb36-5af0-5420-b667-a3eecc666bb4",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-ESS-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "e3d14ed2-3192-4d93-a34e-84146b096872",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "eb59540c-3a23-4152-b373-7afabe035d02",
+      "mapping_type": "REUSE_EXISTING",
+      "business_identifier": "GLR-P25A"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "ef7da5ba-98e7-44c2-914c-e924a780b5ed",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "4c38d2d5-c947-5e9b-8b35-759acb3e665e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-TEX-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "f5e984ca-df4f-4623-bbc8-ab9180b40883",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "85c66017-d349-50bb-9b1b-19fef7bd5c9e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-HW-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_subject_identifier",
+      "source_primary_key": "ff14c01d-8491-4f8f-b58f-7b846fe297fc",
+      "target_environment": "production",
+      "target_table": "product_subject_identifier",
+      "target_primary_key": "34e971cf-0efb-5d31-afb5-4ffa631e1dcd",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-GLR-LMT-000003"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "07756773-2ab9-4ad2-8efe-6eb1bf835be0",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "f652de54-d866-5faa-8a84-c5c69bbd22e1",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "091c9119-a6eb-4fc9-b9c2-406a6731d628",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "a88e3c3e-26e4-5abe-b848-bdfdfe9c1dac",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "0f3201cd-d63f-4004-942a-4597e0c8c899",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "6408bd9a-a96e-57eb-83d2-5e2a7d609d3d",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "12628141-a5fa-4bd8-8984-94e0d4ff0517",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "cf22b6c4-a596-578a-80bb-e6a4626a07eb",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "19ca5549-b4e3-405c-acd5-557618561acb",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "a63282be-ad15-5a20-91bc-27d19bf9da4a",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "1e16c46b-25af-4845-94f2-bcff58db5481",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "96f6338f-d59c-5279-a81a-012b9017f126",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "1e377123-8481-4948-bbc6-acd9e54c6039",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "ee97dc2a-66ac-5a40-ab59-bb7d0a7c590d",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "20a9a0df-05f2-4f39-89a4-77a4551ecb0c",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "d8942839-55b7-58dd-b8ed-b320f06984f9",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "21067b54-96cf-4a60-b7bf-575f4105ed6f",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "405d0b0a-cb72-5b73-b5db-7ca1ae890166",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "4f950ecb-d79a-45b9-a77a-c467676aa0b7",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "615eddc0-b8ff-57f0-ac85-ad12d2665e4d",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "588b54ce-061c-4e40-941a-6a1efb65e494",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "5bb6dd39-69b1-574a-a815-fcc2629e24f4",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "599fa77e-353c-4c13-b832-43c18501070e",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "185c13b0-3bfb-5e5a-a563-6df54011eeb8",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "5c65d72c-0490-4b67-a0ee-439666f7caaa",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "79ae7e61-a11c-5c85-b202-6da783150dfb",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "5cf0d9be-acbb-4a62-83ae-9dc709abb6fd",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "d287b04a-50bf-5991-8eb1-451b8865f824",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "686f61d9-2e4e-4c5b-846e-193587b13acc",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "f162db2d-10c6-56a4-9be6-99aecb30f168",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "6ac9edd1-a66b-4dbb-bc9f-aef877dfa5d5",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "f2dc3f61-17a9-5ca4-a912-651682d1de5b",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "76ae68b6-0f4a-4984-98c7-7bf36b01ac54",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "1ef65988-372a-5086-95d9-f3dca14ca766",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "77b826e8-ec6b-4bab-82f5-4ccb7433f354",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "8f5c41f0-a9d1-5d77-8f21-5c1976286a49",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "77dcf9e4-0893-4155-a72d-25acd1686d1a",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "3e85bbb5-11ab-59c0-8c36-78dcfa97dd9e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "8038e1a6-9239-49ae-8a00-040bb47dd2cb",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "7caa1fc8-573d-5510-9e34-160bfcbc7fe3",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "83763454-6a42-4ff0-a4f4-485c55fd6e69",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "88270d5b-0276-5e90-a59b-bf76ef74a0b9",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "8f04cdf1-6e9b-46cc-ae5b-c1d0cd01501d",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "bcba1abb-bd8c-582e-a7c3-6a417e98ed30",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "a4267032-bc04-4b6f-a47b-c20caed4c680",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "50cb5200-b35b-55e9-b6c5-813da8121bb6",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "a63d64ba-fcc0-4266-b806-21cbbbaf6bd9",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "64bbb6f0-2675-573a-b6f6-78047cc54619",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "b014805c-d9c7-4f1f-9363-a91d3bbd6d70",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "8cc4ed64-c7f1-52cd-8e5e-3647cd5f2ebc",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "ba863cb6-c872-4195-8f5c-2cceaac63add",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "17ba809e-06cb-5afd-8f27-e17a9f3a4100",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "ca877069-9390-4cf5-bdc6-130af218c53f",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "aa12c4f0-460c-5471-ad63-3283ad448108",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "cc198aab-8c4b-49eb-bdb2-755e7243ee46",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "c76a0976-8c53-50e7-b0d8-55dd2895cb21",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "d900bd06-aafc-459e-b10c-1458aa93bebc",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "8ab59db5-7808-5494-a65e-cd642781511f",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "d9cb2c04-c2fc-47a9-b92c-9fcf64e98a17",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "f9685e30-d8c5-576b-ae99-17477c8b9039",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "da903729-8800-4388-aab2-bcd322bd5900",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "e3beb949-5513-549b-991b-0d4c2637ae28",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "dae17af5-0010-4bc4-b0fd-53e2101446a8",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "9ab41ab1-bcb4-58d2-9add-3fddcccd4969",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "e2569fe8-f2f5-4ec4-8dc9-c0396c9f8072",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "b2793eb7-9fcb-5f80-be4a-c213a48c7fad",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "e2ec36e4-62d7-4b7e-bc49-99e2ac0773d1",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "9473ac73-73eb-5631-a153-ad6199d6aa1b",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "ee4533dc-e950-41a2-a692-294148c2efd8",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "e7d85674-07d2-5368-a5c1-51007d0d74f2",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "eea54df8-dc3d-4204-80f3-af6cb5b582a9",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "f5bd521d-6db7-5d4d-8c3a-628179e82b1d",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "f0cf66cd-98e7-4372-b186-fc9e136fc7da",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "7c61bf42-3962-5736-8019-d245f4d7fac6",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "fb5bb992-2937-418f-b538-75757b0bb894",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "df257e4d-b4f4-5899-9f30-1e4b153d39b4",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "fca10d30-a07d-438c-b86e-b00417cac958",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "c4b9dae9-4f28-5595-aa5c-2c504f85db6c",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "product_organisation_relation",
+      "source_primary_key": "fcde1fa8-c521-4c49-9050-4eb86048d2ae",
+      "target_environment": "production",
+      "target_table": "product_organisation_relation",
+      "target_primary_key": "83e3f362-005d-552a-acec-6ebdb0c9d076",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_passport",
+      "source_primary_key": "6078c947-e3ea-478f-acd6-f6cfcc3c237d",
+      "target_environment": "production",
+      "target_table": "dpp_passport",
+      "target_primary_key": "b0f9837e-94e9-5742-89c6-fabf4edb379a",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-GLR-LMT-000002"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_passport",
+      "source_primary_key": "79602a95-bbc9-4008-8c85-d58b328a43cc",
+      "target_environment": "production",
+      "target_table": "dpp_passport",
+      "target_primary_key": "b11849df-c7cd-538c-bf5d-9518a8a9954e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-CE-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_passport",
+      "source_primary_key": "83683553-0873-4905-a416-3598997b8e7d",
+      "target_environment": "production",
+      "target_table": "dpp_passport",
+      "target_primary_key": "22af7265-b677-5464-8de9-c28827aa334c",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-ESS-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_passport",
+      "source_primary_key": "8f79fddd-fdc5-4110-83c5-e42d3562ab58",
+      "target_environment": "production",
+      "target_table": "dpp_passport",
+      "target_primary_key": "9af3a185-c634-548d-baaf-c4ceafc22ada",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-HW-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_passport",
+      "source_primary_key": "d55e8c05-fc92-4782-b1a9-77aab67e5bf7",
+      "target_environment": "production",
+      "target_table": "dpp_passport",
+      "target_primary_key": "aaffa2f8-687f-595b-b7e2-ba855a80a406",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-GLR-LMT-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_passport",
+      "source_primary_key": "d78a2827-a6a0-4809-8c70-54ef1c825d87",
+      "target_environment": "production",
+      "target_table": "dpp_passport",
+      "target_primary_key": "8fa368fc-f7aa-513a-9853-2e3ce0e452e3",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-GLR-LMT-000003"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_passport",
+      "source_primary_key": "ee9ad63f-4a95-4ecd-b5b6-93ca6d2ec6d6",
+      "target_environment": "production",
+      "target_table": "dpp_passport",
+      "target_primary_key": "76113b45-f020-5c96-9874-734229b2d744",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-BLD-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_passport",
+      "source_primary_key": "f83f112e-d8e8-4f35-9d8f-6e720f58dd15",
+      "target_environment": "production",
+      "target_table": "dpp_passport",
+      "target_primary_key": "3beea6cc-582d-5033-b992-26d8c0498930",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-TEX-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_review_task",
+      "source_primary_key": "32c5835b-e5e0-47db-93a9-aea284347007",
+      "target_environment": "production",
+      "target_table": "dpp_review_task",
+      "target_primary_key": "1faa0363-f820-5dcf-a17b-785d38c41de0",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-DPP-DEMO-TEX-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_review_task",
+      "source_primary_key": "6187d497-066c-4c19-9ca3-56ca0a86047d",
+      "target_environment": "production",
+      "target_table": "dpp_review_task",
+      "target_primary_key": "bb56b6e7-78a9-5d24-98bb-ed63b6687865",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-DPP-GLR-LMT-000002"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_review_task",
+      "source_primary_key": "9016de28-5115-470b-8632-231f3106ec6b",
+      "target_environment": "production",
+      "target_table": "dpp_review_task",
+      "target_primary_key": "04827efb-bb92-567b-a7c6-a89d681b30db",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-DPP-GLR-LMT-000003"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_review_task",
+      "source_primary_key": "90c94e57-60b6-4d87-a45b-a48cd58e22cc",
+      "target_environment": "production",
+      "target_table": "dpp_review_task",
+      "target_primary_key": "e7725b59-7abd-5d58-9c76-190e4be1187f",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-DPP-DEMO-CE-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_review_task",
+      "source_primary_key": "d2d1d446-6be0-4e1b-82ca-32d8a23e2e37",
+      "target_environment": "production",
+      "target_table": "dpp_review_task",
+      "target_primary_key": "c0560af2-88c5-5f61-bc8f-ee29e65c3d2e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "reference-bc74df6613db44300207"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_review_task",
+      "source_primary_key": "d7adc174-c234-4309-a4cb-b15b0298c353",
+      "target_environment": "production",
+      "target_table": "dpp_review_task",
+      "target_primary_key": "94af3be5-10a7-56bb-91a4-ae40fbc914c8",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-DPP-DEMO-ESS-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_review_task",
+      "source_primary_key": "e29810ff-0330-4814-8014-16ff67919889",
+      "target_environment": "production",
+      "target_table": "dpp_review_task",
+      "target_primary_key": "7a1cc64b-c431-5c35-91da-3ae4cebb2326",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-DPP-DEMO-HW-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_review_task",
+      "source_primary_key": "f9a062ad-af53-4270-81d7-bd0705915259",
+      "target_environment": "production",
+      "target_table": "dpp_review_task",
+      "target_primary_key": "2271dd9c-84c8-5174-a502-fe48b8102f6c",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "round-b1-DPP-DEMO-BLD-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_version",
+      "source_primary_key": "0308c9ca-837f-4320-8bf5-50951e0ff985",
+      "target_environment": "production",
+      "target_table": "dpp_version",
+      "target_primary_key": "5d583441-3577-5c71-9584-e22ffd5fa9fd",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_version",
+      "source_primary_key": "21e30dab-efe9-4c47-849a-7966ad033957",
+      "target_environment": "production",
+      "target_table": "dpp_version",
+      "target_primary_key": "ad692405-367d-5b0c-bf0a-88c2ba544d60",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_version",
+      "source_primary_key": "260913fc-9d2f-4766-9199-46c7a52d6397",
+      "target_environment": "production",
+      "target_table": "dpp_version",
+      "target_primary_key": "0211a138-f8d0-5b15-9de9-56fa8071e484",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_version",
+      "source_primary_key": "453175c3-db35-422e-91bb-84618919313a",
+      "target_environment": "production",
+      "target_table": "dpp_version",
+      "target_primary_key": "e09f540b-aec4-58df-989c-6d1d5316606b",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_version",
+      "source_primary_key": "56980312-c4b8-4e50-ac93-4e181008e28c",
+      "target_environment": "production",
+      "target_table": "dpp_version",
+      "target_primary_key": "f8dd4e86-c685-580e-a2ad-69926e96bb39",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_version",
+      "source_primary_key": "ad12b29f-afb5-41ce-89a4-f9e6b37e91b7",
+      "target_environment": "production",
+      "target_table": "dpp_version",
+      "target_primary_key": "a328c43f-3d7f-58da-9bbf-4dc9db5e1508",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_version",
+      "source_primary_key": "ad24f6f3-ad8c-4f67-95e8-10d7a7ba9f0a",
+      "target_environment": "production",
+      "target_table": "dpp_version",
+      "target_primary_key": "9f73e36c-c76e-5f46-8eb0-a6e65123c9f7",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_version",
+      "source_primary_key": "d1fc00c3-aaa7-4aed-a334-0743ce3be200",
+      "target_environment": "production",
+      "target_table": "dpp_version",
+      "target_primary_key": "bebe6dba-26d7-5fa5-a931-a01201a7ea99",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_publication_audit",
+      "source_primary_key": "3828ad25-5d83-4418-bd7d-21c9a7baa5e1",
+      "target_environment": "production",
+      "target_table": "dpp_publication_audit",
+      "target_primary_key": "9cbef78a-c72e-5aa3-bab6-88c014dffa4d",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "reference-b0fa0235a806e83f17d1"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_publication_audit",
+      "source_primary_key": "aa60d734-36c9-4edc-af40-1539c5c67498",
+      "target_environment": "production",
+      "target_table": "dpp_publication_audit",
+      "target_primary_key": "58db5a8a-a684-5fb6-81f2-613f2ce992fb",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "reference-2bb5947f888730ca179d"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_publication_audit",
+      "source_primary_key": "c1c4838e-d671-480b-a064-26753a6c5253",
+      "target_environment": "production",
+      "target_table": "dpp_publication_audit",
+      "target_primary_key": "5d8cb9cc-320c-525a-a140-457758088b45",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "reference-bc74df6613db44300207"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_publication_audit",
+      "source_primary_key": "c2482d0e-f01b-427f-a503-faa6fc897ad1",
+      "target_environment": "production",
+      "target_table": "dpp_publication_audit",
+      "target_primary_key": "7b84c03c-3e5e-5168-b3f3-86e617b580ac",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "reference-8a180fb963fccd93be9c"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "dpp_publication_audit",
+      "source_primary_key": "eaee1cbc-1a0f-47f6-bee6-46582c4a2c49",
+      "target_environment": "production",
+      "target_table": "dpp_publication_audit",
+      "target_primary_key": "8bcfa776-85ce-5d75-9ed9-0e7d696b8a6e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "reference-079f3884076605ce17ab"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "demo_showcase_entry",
+      "source_primary_key": "23ca36c4-743c-45bb-b74e-cf6363cca0a7",
+      "target_environment": "production",
+      "target_table": "demo_showcase_entry",
+      "target_primary_key": "e858357e-223e-5585-88ca-afed5d9b6f2a",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "demo_showcase_entry",
+      "source_primary_key": "45930113-77e4-4e1f-a474-386c9b6b7487",
+      "target_environment": "production",
+      "target_table": "demo_showcase_entry",
+      "target_primary_key": "0d7eca3d-5cb4-52c6-845f-49f51925d120",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "demo_showcase_entry",
+      "source_primary_key": "5337369c-c24b-40a9-9b10-7d2f2ebf228b",
+      "target_environment": "production",
+      "target_table": "demo_showcase_entry",
+      "target_primary_key": "44d9e49c-1b97-563a-85f5-8c801aa8f1d0",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "demo_showcase_entry",
+      "source_primary_key": "758ede34-f53b-4586-a3e1-7e94f50fff8c",
+      "target_environment": "production",
+      "target_table": "demo_showcase_entry",
+      "target_primary_key": "7f477cce-9466-50e5-8aed-3cfb320d998e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "demo_showcase_entry",
+      "source_primary_key": "8c31aec1-a09c-4298-b542-faf1fc79ed66",
+      "target_environment": "production",
+      "target_table": "demo_showcase_entry",
+      "target_primary_key": "67c65f78-ef02-575a-9fd9-8dbef7780017",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "demo_showcase_entry",
+      "source_primary_key": "b7c2ffd4-37e5-4b2c-b8cd-ad9f5b7cf8ce",
+      "target_environment": "production",
+      "target_table": "demo_showcase_entry",
+      "target_primary_key": "222ba238-4b37-519a-af51-f4f2d488abd4",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "demo_showcase_entry",
+      "source_primary_key": "e12e49e7-10a1-44ec-84b2-d01abcdebf4f",
+      "target_environment": "production",
+      "target_table": "demo_showcase_entry",
+      "target_primary_key": "b37c8661-1715-50a0-8f25-81cd8c456655",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "demo_showcase_entry",
+      "source_primary_key": "ebbe235d-3693-44c1-95bb-35e8f8086214",
+      "target_environment": "production",
+      "target_table": "demo_showcase_entry",
+      "target_primary_key": "9e9857de-8c7d-5391-ac86-0fc2ed2f1e7c",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": null
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "resolver_mapping",
+      "source_primary_key": "19f5e3e9-4647-4060-a104-468847747bd4",
+      "target_environment": "production",
+      "target_table": "resolver_mapping",
+      "target_primary_key": "c42b4cbc-8072-5ca3-99e5-419dbd197e8e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-GLR-LMT-000002"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "resolver_mapping",
+      "source_primary_key": "2239ea40-6139-41f1-897d-340cd1371c88",
+      "target_environment": "production",
+      "target_table": "resolver_mapping",
+      "target_primary_key": "a293d637-2816-5f5d-a852-e2875c89722e",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-TEX-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "resolver_mapping",
+      "source_primary_key": "2c3f1672-0a87-4c7f-bd39-223ca41b8096",
+      "target_environment": "production",
+      "target_table": "resolver_mapping",
+      "target_primary_key": "5c0543f6-6a56-5803-b27e-b8629b1e8278",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-GLR-LMT-000003"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "resolver_mapping",
+      "source_primary_key": "2ef04939-3168-485f-a9e0-cc8d4fd5d8d8",
+      "target_environment": "production",
+      "target_table": "resolver_mapping",
+      "target_primary_key": "19686921-2166-58f7-b549-758d839fd62f",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-BLD-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "resolver_mapping",
+      "source_primary_key": "985a337c-3d5d-416c-b3c1-55bb0f224bab",
+      "target_environment": "production",
+      "target_table": "resolver_mapping",
+      "target_primary_key": "46d832a2-640a-5ae7-b3ef-cbcc58169c81",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-ESS-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "resolver_mapping",
+      "source_primary_key": "b4b4102f-94e4-4525-b9e1-da4b2a24956e",
+      "target_environment": "production",
+      "target_table": "resolver_mapping",
+      "target_primary_key": "65079d86-2906-5ef2-9146-5f3b8e6a92eb",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-GLR-LMT-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "resolver_mapping",
+      "source_primary_key": "ce6e9238-c172-4a1e-a487-5e187d314aa8",
+      "target_environment": "production",
+      "target_table": "resolver_mapping",
+      "target_primary_key": "3670af38-988e-55cd-8f52-2ac1bff770d8",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-HW-000001"
+    },
+    {
+      "source_environment": "preprod",
+      "source_table": "resolver_mapping",
+      "source_primary_key": "e12e8bcf-13a9-4779-bae4-84d3acef5834",
+      "target_environment": "production",
+      "target_table": "resolver_mapping",
+      "target_primary_key": "09a6b172-f5e1-5bf8-8b42-d111d32bd7f2",
+      "mapping_type": "UUIDV5_INSERT",
+      "business_identifier": "DPP-DEMO-CE-000001"
+    }
+  ]
+}

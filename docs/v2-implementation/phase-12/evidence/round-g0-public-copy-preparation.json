@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-10-01T10:36:48.564Z",
+  "round": "G0",
+  "read_only": true,
+  "banned_internal_terms": [
+    "演示数据",
+    "合成",
+    "合成数据",
+    "合成演示",
+    "测试数据",
+    "示例数据",
+    "Synthetic Demo",
+    "Synthetic Demo Data",
+    "Demo Data",
+    "Reference Demo",
+    "Reference Data",
+    "deterministic demo",
+    "mock",
+    "fixture",
+    "placeholder"
+  ],
+  "rendering_rule": "Apply the resolved card content below during Round G import/rendering; source JSON remains unchanged in this read-only evidence package.",
+  "disclaimer": {
+    "zh": "本页面为 GreanLean 数字产品护照 Demo，用于展示平台的数据组织、展示与管理能力。页面数据不代表真实客户产品或正式监管申报结果。",
+    "en": "This GreanLean Digital Product Passport Demo is provided to illustrate the platform’s data structure, presentation and management capabilities. The data does not represent a real customer product or a formal regulatory submission."
+  },
+  "approved_order": [
+    "DPP-GLR-LMT-000001",
+    "DPP-GLR-LMT-000002",
+    "DPP-GLR-LMT-000003",
+    "DPP-DEMO-ESS-000001",
+    "DPP-DEMO-TEX-000001",
+    "DPP-DEMO-CE-000001",
+    "DPP-DEMO-BLD-000001",
+    "DPP-DEMO-HW-000001"
+  ],
+  "resolved_cards": [
+    {
+      "passport_identifier": "DPP-GLR-LMT-000001",
+      "title": "GLR-P25A",
+      "description_en": "A lightweight e-bike battery pack designed for urban commuting.",
+      "description_zh": "为城市通勤设计的轻型电助力单车电池包。",
+      "sort_order": 1
+    },
+    {
+      "passport_identifier": "DPP-GLR-LMT-000002",
+      "title": "GLR-S36B",
+      "description_en": "A high-energy-density NMC battery pack for extended urban riding.",
+      "description_zh": "采用高能量密度 NMC 电芯，适用于城市长续航骑行。",
+      "sort_order": 2
+    },
+    {
+      "passport_identifier": "DPP-GLR-LMT-000003",
+      "title": "GLR-X48C",
+      "description_en": "A high-load battery pack designed for cargo and fleet operations.",
+      "description_zh": "面向货运与车队运营的高负载电池包。",
+      "sort_order": 3
+    },
+    {
+      "passport_identifier": "DPP-DEMO-ESS-000001",
+      "title": "GreenVault",
+      "description_en": "A 14.3 kWh LFP energy storage module for commercial and industrial applications.",
+      "description_zh": "工商业场景的 14.3 kWh 磷酸铁锂储能模块。",
+      "sort_order": 4
+    },
+    {
+      "passport_identifier": "DPP-DEMO-TEX-000001",
+      "title": "EcoWeave",
+      "description_en": "An organic cotton basic T-shirt made with comfortable 180 g/m² fabric.",
+      "description_zh": "有机棉基础款 T 恤，采用 180 g/m² 舒适面料。",
+      "sort_order": 5
+    },
+    {
+      "passport_identifier": "DPP-DEMO-CE-000001",
+      "title": "LoopSound",
+      "description_en": "Bluetooth wireless headphones with a recycled ABS enclosure.",
+      "description_zh": "采用再生 ABS 外壳的蓝牙无线耳机。",
+      "sort_order": 6
+    },
+    {
+      "passport_identifier": "DPP-DEMO-BLD-000001",
+      "title": "TerraDeck",
+      "description_en": "Wood-plastic composite flooring with 52% recycled content.",
+      "description_zh": "再生材料含量 52% 的木塑复合地板。",
+      "sort_order": 7
+    },
+    {
+      "passport_identifier": "DPP-DEMO-HW-000001",
+      "title": "ForgeFix",
+      "description_en": "A precision alloy-steel tool set with replaceable bits.",
+      "description_zh": "批头可更换的合金钢精密工具套装。",
+      "sort_order": 8
+    }
+  ]
+}

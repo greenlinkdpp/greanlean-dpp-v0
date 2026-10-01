@@ -1,0 +1,214 @@
+{
+  "generated_at": "2026-10-01T10:36:48.563Z",
+  "round": "G0",
+  "read_only": true,
+  "read_only_prepared": true,
+  "source_project_ref": "efhiaufukjchxqhbmpvq",
+  "target_project_ref": "lpxdbysgmdsjhxrjzhly",
+  "target_tenant": {
+    "action": "REUSE_EXISTING",
+    "source": "Production read-only lookup",
+    "id": "632943cf-520b-47ac-83af-88ca866d4fa5",
+    "code": "greanlean-reference-mobility"
+  },
+  "insertion_order": [
+    "tenant (reuse/create)",
+    "organisation_v2",
+    "product_family",
+    "product_model",
+    "sku",
+    "product_batch",
+    "product_item",
+    "product_subject_identifier",
+    "product_organisation_relation",
+    "dpp_passport",
+    "dpp_review_task",
+    "dpp_version",
+    "dpp_current_pointer",
+    "dpp_publication_audit",
+    "resolver_mapping",
+    "demo_showcase_entry"
+  ],
+  "table_plan": [
+    {
+      "table": "tenant",
+      "rows_to_insert": 0,
+      "rows_to_reuse": 1,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "organisation_v2",
+      "rows_to_insert": 10,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "product_family",
+      "rows_to_insert": 7,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "product_model",
+      "rows_to_insert": 8,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "sku",
+      "rows_to_insert": 1,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "product_batch",
+      "rows_to_insert": 1,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "product_item",
+      "rows_to_insert": 8,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "product_subject_identifier",
+      "rows_to_insert": 12,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "product_organisation_relation",
+      "rows_to_insert": 40,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "dpp_passport",
+      "rows_to_insert": 8,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "dpp_current_pointer",
+      "rows_to_insert": 8,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "dpp_publication_audit",
+      "rows_to_insert": 5,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "dpp_review_task",
+      "rows_to_insert": 8,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "dpp_version",
+      "rows_to_insert": 8,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "resolver_mapping",
+      "rows_to_insert": 17,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "demo_showcase_entry",
+      "rows_to_insert": 8,
+      "rows_to_reuse": 0,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "schema_definition",
+      "rows_to_insert": 0,
+      "rows_to_reuse": 13,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    },
+    {
+      "table": "schema_version",
+      "rows_to_insert": 0,
+      "rows_to_reuse": 27,
+      "rows_to_update": 0,
+      "source_key": "PreProd primary key plus business identifier",
+      "target_key": "Production UUID generated/resolved by mapping",
+      "mapping_rule": "Business-key lookup first; create only if no approved target exists"
+    }
+  ],
+  "resolved_existing_mappings": [
+    {
+      "type": "product_model.model_code",
+      "value": "GLR-P25A",
+      "action": "REUSE_EXISTING"
+    },
+    {
+      "type": "product_model.model_code",
+      "value": "GLR-S36B",
+      "action": "REUSE_EXISTING"
+    },
+    {
+      "type": "product_item.serial_number",
+      "value": "GLR26-0001",
+      "action": "REUSE_EXISTING"
+    }
+  ],
+  "collisions": []
+}
