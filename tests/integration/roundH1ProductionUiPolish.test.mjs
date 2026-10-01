@@ -37,6 +37,9 @@ test("Round H1 uses approved display-only application scenarios for all eight pa
   assert.match(passport, /withPublicDisplayOverrides/);
   assert.match(passport, /sanitizePublicValue/);
   assert.match(passport, /return sanitizePublicValue\(displayProjection\)/);
+  assert.match(passport, /"SYNTHETIC_DEMO", "SYNTHETIC_REFERENCE", "SYNTHETIC_FIXTURE"/);
+  assert.match(passport, /"synthetic demonstration event", "recorded event"/);
+  assert.match(passport, /showNeutralDisclaimer = view\.synthetic \|\| Boolean\(applicationByPassport/);
 });
 
 test("Round H1 localizes operational UI and separates current publication from next-candidate readiness", async () => {
