@@ -1,4 +1,4 @@
-const OFFICIAL_PATH = /^\/(?:api\/v2\/resolver\/[^/]+|p\/[^/]+|01\/[^/]+)$/;
+const OFFICIAL_PATH = /^\/(?:api\/v2\/resolver\/[^/]+|r\/[^/]+|p\/[^/]+|01\/[^/]+)$/;
 
 function normalizeQrHost(host: string) {
   return host.trim().toLowerCase().replace(/:\d+$/, "");

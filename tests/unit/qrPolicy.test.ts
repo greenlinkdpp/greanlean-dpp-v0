@@ -9,6 +9,7 @@ test("official QR policy accepts only approved DPP and Resolver paths", () => {
     validateOfficialQrTarget(`${origin}/api/v2/resolver/DPP-1`, origin, hosts),
     `${origin}/api/v2/resolver/DPP-1`,
   );
+  assert.equal(validateOfficialQrTarget(`${origin}/r/DPP-1`, origin, hosts), `${origin}/r/DPP-1`);
   assert.equal(validateOfficialQrTarget(`${origin}/p/DPP-1`, origin, hosts), `${origin}/p/DPP-1`);
   assert.equal(validateOfficialQrTarget(`${origin}/01/09506000134352`, origin, hosts), `${origin}/01/09506000134352`);
 });
