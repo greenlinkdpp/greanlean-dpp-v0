@@ -35,6 +35,8 @@ test("Round H1 uses approved display-only application scenarios for all eight pa
     "DPP-DEMO-TEX-000001", "DPP-DEMO-CE-000001", "DPP-DEMO-BLD-000001", "DPP-DEMO-HW-000001",
   ]) assert.match(passport, new RegExp(`"${identifier}"`));
   assert.match(passport, /withPublicDisplayOverrides/);
+  assert.match(passport, /sanitizePublicValue/);
+  assert.match(passport, /return sanitizePublicValue\(displayProjection\)/);
 });
 
 test("Round H1 localizes operational UI and separates current publication from next-candidate readiness", async () => {

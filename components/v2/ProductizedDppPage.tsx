@@ -184,9 +184,18 @@ function localizedValue(value: unknown, locale: PassportLocale, unit?: string | 
  * provenance enums in storage for audit and internal workflow purposes. */
 function publicCopy(value: string, locale: PassportLocale) {
   const replacements: Array<[string, string]> = locale === "zh"
-    ? [["合成演示数据", "产品数据"], ["合成演示事件。", "记录事件。"], ["合成演示事件", "记录事件"], ["已记录演示事件", "已记录"], ["合成演示流程", "服务流程"], ["合成演示", ""], ["合成数据集", "数据集"], ["演示数据集", "数据集"], ["仅限演示运输分类", "运输分类信息"], ["演示运输指引", "运输指引"], ["演示安全步骤", "安全步骤"], ["演示安全与储存指引", "产品安全与储存指引"], ["演示声明", "声明"], ["提供演示 SDS / MSDS", "提供 SDS / MSDS"], ["演示出具方", "出具方"], ["演示产地", "产地"], ["演示参考", "参考信息"], ["演示固件", "固件"], ["演示 / 未验证", "未验证"], ["仅用于演示", "参考信息"], ["演示程序", "文件化程序"], ["授权回收渠道 — 演示", "授权回收渠道"], ["确定性演示公式", "确定性计算方法"], [" — 演示", ""], ["— 演示", ""], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]]
-    : [["Synthetic demonstration data", "Product data"], ["Synthetic demo event.", "Recorded event."], ["Synthetic demonstration event.", "Recorded event."], ["Recorded demo event", "Recorded"], ["Deterministic demo formula", "Deterministic calculation method"], ["Deterministic demo", "Documented"], ["deterministic demo", "documented"], ["Reference Demo", "GreanLean"], ["synthetic data set", "data set"], ["Synthetic reference", "Reference information"], ["Demo declaration", "Declaration"], ["Demo SDS / MSDS", "SDS / MSDS"], ["Demo issuer", "Issuer"], ["Demo / unverified", "Unverified"], ["Demonstration only", "Reference information"], ["demo origin", "origin"], ["demo reference", "reference information"], ["demo firmware", "firmware"], ["Demonstration transport classification only", "Transport classification"], ["demo transport guidance", "transport guidance"], ["demo safety steps", "safety steps"], ["demonstrated safety steps", "documented safety steps"], ["product-specific demo safety and storage guidance", "product-specific safety and storage guidance"], ["demo procedure", "documented procedure"], [" — demo", ""], ["— demo", ""], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]];
+    ? [["合成演示数据", "产品数据"], ["合成演示事件。", "记录事件。"], ["合成演示事件", "记录事件"], ["已记录演示事件", "已记录"], ["合成演示流程", "服务流程"], ["合成演示", ""], ["合成数据集", "数据集"], ["演示数据集", "数据集"], ["仅限演示运输分类", "运输分类信息"], ["演示运输指引", "运输指引"], ["演示安全步骤", "安全步骤"], ["演示安全与储存指引", "产品安全与储存指引"], ["演示声明", "声明"], ["提供演示 SDS / MSDS", "提供 SDS / MSDS"], ["演示出具方", "出具方"], ["演示合规文件", "合规文件"], ["演示指南", "服务指南"], ["演示产地", "产地"], ["演示参考", "参考信息"], ["演示固件", "固件"], ["演示 / 未验证", "未验证"], ["仅用于演示", "参考信息"], ["演示程序", "文件化程序"], ["授权回收渠道 — 演示", "授权回收渠道"], ["确定性演示公式", "确定性计算方法"], [" — 演示", ""], ["— 演示", ""], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"], ["演示", "参考"]]
+    : [["Synthetic demonstration data", "Product data"], ["Synthetic Demo", "Product information"], ["Synthetic demo event.", "Recorded event."], ["Synthetic demonstration event.", "Recorded event."], ["Recorded demo event", "Recorded"], ["Deterministic demo formula", "Deterministic calculation method"], ["Deterministic demo", "Documented"], ["deterministic demo", "documented"], ["Reference Demo", "GreanLean"], ["synthetic data set", "data set"], ["Synthetic reference", "Reference information"], ["Demo declaration", "Declaration"], ["Demo SDS / MSDS", "SDS / MSDS"], ["Demo issuer", "Issuer"], ["Demo / unverified", "Unverified"], ["Demonstration only", "Reference information"], ["demo origin", "origin"], ["demo reference", "reference information"], ["demo firmware", "firmware"], ["Demonstration transport classification only", "Transport classification"], ["demo transport guidance", "transport guidance"], ["demo safety steps", "safety steps"], ["demonstrated safety steps", "documented safety steps"], ["product-specific demo safety and storage guidance", "product-specific safety and storage guidance"], ["demo procedure", "documented procedure"], [" — demo", ""], ["— demo", ""], [" Demo ", " Reference "], ["Demo ", "Reference "], [" demo ", " reference "], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]];
   return replacements.reduce((result, [from, to]) => result.replaceAll(from, to), value);
+}
+
+function sanitizePublicValue(value: unknown): unknown {
+  if (typeof value === "string") return publicCopy(publicCopy(value, "zh"), "en");
+  if (Array.isArray(value)) return value.map(sanitizePublicValue);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, sanitizePublicValue(item)]));
+  }
+  return value;
 }
 
 function isPlaceholderIdentifier(key: string, value: unknown) {
@@ -208,13 +217,13 @@ const applicationByPassport: Record<string, { en: string; zh: string }> = {
 
 function withPublicDisplayOverrides(projection: ProjectedDpp): ProjectedDpp {
   const application = applicationByPassport[projection.passportIdentifier];
-  if (!application) return projection;
-  return {
+  const displayProjection = {
     ...projection,
     fields: projection.fields.map((field) => field.fieldCode === "technical.specification"
-      ? { ...field, value: { ...asRecord(field.value), application } }
+      ? { ...field, value: { ...asRecord(field.value), ...(application ? { application } : {}) } }
       : field),
   };
+  return sanitizePublicValue(displayProjection) as ProjectedDpp;
 }
 
 function ValueGrid({ value, locale, omit = [] }: { value: unknown; locale: PassportLocale; omit?: string[] }) {
