@@ -64,6 +64,8 @@ test("Round H1.2 localizes authenticated dashboard residuals without changing st
     /ACTIVE: "启用"/, /ITEM: "单件产品"/, /PUBLISHED: "已发布"/, /NOT_READY: "未就绪"/, /CURRENT: "当前"/,
     /"Platform Operator": "平台运营人员"/, /organisation_name: "企业主体名称"/,
     /schema_version_id: "Schema 版本 ID"/, /payload_hash: "载荷哈希"/,
+    /CONSUMER_ELECTRONICS: "消费电子产品"/, /INDUSTRIAL_BATTERY: "工业储能电池"/,
+    /BUILDING_MATERIAL: "建筑材料"/, /LMT_BATTERY: "LMT 电池"/,
   ]) assert.match(backoffice, mapping);
   assert.match(backoffice, /displayValue\("updated_at", tenant\.updated_at, locale\)/);
   assert.match(backoffice, /tenantCode === "greanlean-reference-mobility" && <Status value="REFERENCE_DATA"/);

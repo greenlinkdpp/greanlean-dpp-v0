@@ -61,10 +61,11 @@ const chineseValues: Record<string, string> = {
   BLOCKING: "阻断", WARNING: "警告", INFO: "信息", MAPPED: "已映射", UNMAPPED: "未映射",
   REFERENCE_DATA: "参考数据", "Platform Operator": "平台运营人员", PLATFORM_OPERATOR: "平台运营人员",
   HARDWARE: "五金产品", TEXTILE: "纺织品", BATTERY: "电池", ELECTRONICS: "电子产品", FURNITURE: "家具",
+  CONSUMER_ELECTRONICS: "消费电子产品", INDUSTRIAL_BATTERY: "工业储能电池", BUILDING_MATERIAL: "建筑材料", LMT_BATTERY: "LMT 电池",
   "E-BIKE": "电动自行车", EBIKE: "电动自行车", BICYCLE: "自行车", FOOTWEAR: "鞋类",
   "E-bike battery pack": "电动自行车电池包", "Industrial energy storage": "工业储能", "Textile garment": "纺织服装",
   "Consumer electronics": "消费电子产品", "Wood-plastic flooring": "木塑地板", "Hand tool": "手工具",
-  READY_TO_PUBLISH: "可发布",
+  "E-Bike Battery Pack Reference Family": "电动自行车电池包参考产品族", READY_TO_PUBLISH: "可发布",
   "resolver_mapping.create": "创建解析映射", "publication.publish": "发布护照", "review.approve": "批准审核",
   "review.submit": "提交审核", "passport.create": "创建护照",
 };
@@ -75,7 +76,7 @@ function displayValue(key: string, value: unknown, locale: "en" | "zh") {
     if (chineseValues[raw]) return chineseValues[raw];
     if (raw.includes("(Synthetic)")) return raw.replace("(Synthetic)", "（参考数据）");
     if (key === "name" || key === "product_category") {
-      const categoryTokens: Record<string, string> = { HARDWARE: "五金产品", TEXTILE: "纺织品", BATTERY: "电池", ELECTRONICS: "电子产品", FURNITURE: "家具", EBIKE: "电动自行车", BICYCLE: "自行车", FOOTWEAR: "鞋类" };
+      const categoryTokens: Record<string, string> = { CONSUMER_ELECTRONICS: "消费电子产品", INDUSTRIAL_BATTERY: "工业储能电池", BUILDING_MATERIAL: "建筑材料", LMT_BATTERY: "LMT 电池", HARDWARE: "五金产品", TEXTILE: "纺织品", BATTERY: "电池", ELECTRONICS: "电子产品", FURNITURE: "家具", EBIKE: "电动自行车", BICYCLE: "自行车", FOOTWEAR: "鞋类" };
       const localized = Object.entries(categoryTokens).reduce((label, [token, translated]) => label.replace(new RegExp(`\\b${token}\\b`, "g"), translated), raw.replace(/\bDemo\b/g, "参考数据"));
       if (localized !== raw) return localized;
     }
