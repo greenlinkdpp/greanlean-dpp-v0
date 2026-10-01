@@ -1,0 +1,76 @@
+{
+  "result": "PASS",
+  "auditTimestamp": "2026-10-01T13:46:56Z",
+  "readOnly": true,
+  "productionEnvironmentIdentity": "PASS",
+  "productionProjectRef": "lpxdbysgmdsjhxrjzhly",
+  "productionMigrationHead": "0039",
+  "approvedIdentifiers": [
+    "DPP-GLR-LMT-000001",
+    "DPP-GLR-LMT-000002",
+    "DPP-GLR-LMT-000003",
+    "DPP-DEMO-ESS-000001",
+    "DPP-DEMO-TEX-000001",
+    "DPP-DEMO-CE-000001",
+    "DPP-DEMO-BLD-000001",
+    "DPP-DEMO-HW-000001"
+  ],
+  "counts": {
+    "dpp_passport": 8,
+    "resolver_mapping": 8,
+    "demo_showcase_entry": 8,
+    "dpp_current_pointer": 8,
+    "dpp_version": 8,
+    "dpp_review_task": 8,
+    "published_dpp_version": 8,
+    "active_dpp_identifier": 8,
+    "runtime_static_or_fallback_primary_records": 0,
+    "legacy_DPP_GLR_EBIKE": 0,
+    "total_dpp_passport": 8
+  },
+  "sources": {
+    "publicDppPrimary": "v2_phase6c_resolve_public_passport -> dpp_version.canonical_payload",
+    "publicDppUnified": true,
+    "demoCatalog": "demo_showcase_entry joined to dpp_passport/dpp_current_pointer/PUBLISHED dpp_version",
+    "humanResolver": "route parameter + request origin; no database lookup",
+    "machineResolver": "v2_phase6c_resolve_public_passport RPC",
+    "dashboardPublications": "authenticated Tenant-filtered backoffice snapshot from dpp_passport/dpp_review_task/dpp_version/dpp_current_pointer"
+  },
+  "previousAudit": {
+    "source": "scripts/phase7/generate-round-g4-2-cutover.mjs pre-cutover guard and post-ROLLBACK baseline",
+    "observedLegacy": 22,
+    "observedApproved": 0,
+    "queryScopeMismatch": false,
+    "reconciliation": "Temporal mismatch: valid pre-COMMIT evidence was compared with post-COMMIT runtime state."
+  },
+  "runtimeChecks": {
+    "lmtPublicPage": 200,
+    "essPublicPage": 200,
+    "textilePublicPage": 200,
+    "lmtHumanResolver": 302,
+    "essHumanResolver": 302,
+    "textileHumanResolver": 302,
+    "lmtMachineResolver": 200,
+    "essMachineResolver": 200,
+    "textileMachineResolver": 200,
+    "machineResolverQueryCount": 1,
+    "demoCatalogCount": 8
+  },
+  "classifications": {
+    "approved8StaticFixtureUsage": true,
+    "approved8StaticFixtureIsPrimaryData": false,
+    "approved8FallbackUsage": false,
+    "publicDppMixedSource": true,
+    "publicRuntimeUsesProductionProject": "PASS",
+    "dashboardRuntimeUsesProductionProject": "PASS",
+    "resolverRuntimeUsesProductionProject": "PASS",
+    "checklistRuntimeReconciliation": "PASS",
+    "databaseCutoverRequired": "NO",
+    "g4_2Recommendation": "CANCEL"
+  },
+  "invariants": {
+    "productionMutationPerformed": false,
+    "productionApplicationDeployed": false
+  },
+  "nextAction": "Do not rerun G4.2. Preserve the current eight-row V2 publication graph and use this audit as the post-cutover source-of-truth baseline."
+}

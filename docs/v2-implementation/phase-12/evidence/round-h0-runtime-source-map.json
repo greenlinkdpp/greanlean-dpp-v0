@@ -1,0 +1,81 @@
+{
+  "auditTimestamp": "2026-10-01T13:46:56Z",
+  "production": {
+    "domain": "https://www.greanlean.com",
+    "supabaseProjectRef": "lpxdbysgmdsjhxrjzhly",
+    "migrationHead": "0039"
+  },
+  "publicDpp": {
+    "route": "app/p/[slug]/page.tsx",
+    "component": "PublicDppPage -> ProductizedDppPage",
+    "loader": "getV2Data -> resolvePublicPassport",
+    "client": "createSupabaseAdminClient",
+    "rpc": "v2_phase6c_resolve_public_passport",
+    "tables": [
+      "resolver_host_allowlist",
+      "resolver_mapping",
+      "product_subject_identifier",
+      "dpp_passport",
+      "dpp_current_pointer",
+      "dpp_version"
+    ],
+    "primaryPayload": "dpp_version.canonical_payload",
+    "unifiedAcrossApproved8": true,
+    "legacyFallbackAvailable": true,
+    "legacyFallbackUsedByApproved8": false,
+    "v2UnresolvedFailsClosed": true
+  },
+  "demoCatalog": {
+    "route": "app/demo/page.tsx",
+    "loader": "lib/server/v2/demoShowcase.ts::loadPublicDemoShowcase",
+    "primaryTable": "demo_showcase_entry",
+    "requiredJoins": ["dpp_passport", "dpp_current_pointer", "dpp_version"],
+    "sortSource": "demo_showcase_entry.sort_order",
+    "localizedCopySource": ["demo_showcase_entry.title_en/title_zh", "demo_showcase_entry.summary_en/summary_zh"],
+    "staticCatalogUsed": false,
+    "fallbackCatalogUsed": false,
+    "resolverMappingUsed": false
+  },
+  "humanResolver": {
+    "route": "app/r/[identifier]/route.ts",
+    "source": "route parameter and request origin",
+    "databaseLookup": false,
+    "behavior": "302 to same-origin /p/<encoded identifier>, preserving only zh/en lang"
+  },
+  "machineResolver": {
+    "route": "app/api/v2/resolver/[identifier]/route.ts",
+    "loader": "resolvePublicPassport",
+    "rpc": "v2_phase6c_resolve_public_passport",
+    "databaseQueryCount": 1,
+    "fallbackUsed": false
+  },
+  "dashboardPublications": {
+    "route": "app/dashboard/v2/[section]/page.tsx",
+    "component": "components/v2/backoffice/BackofficeConsole.tsx",
+    "api": "/api/v2/backoffice/snapshot",
+    "repository": "lib/server/v2/backofficeRepository.ts::loadBackofficeSnapshot",
+    "tables": ["dpp_passport", "dpp_review_task", "dpp_version", "dpp_current_pointer"],
+    "tenantFilter": "verified x-tenant-id policy context",
+    "publishedLogic": "dpp_version.publication_state === PUBLISHED",
+    "readinessLogic": "current version state, then dpp_review_task.status"
+  },
+  "representativeSections": {
+    "overview": "dpp_version.canonical_payload identity.product/technical.specification/performance.durability",
+    "identifiers": "dpp_passport.passport_identifier + canonical identity.item",
+    "carbon": "canonical sustainability.carbon-footprint",
+    "lifecycle": "canonical lifecycle.events",
+    "documents": "canonical documents.public metadata + static generated demo-document viewer",
+    "bms": "canonical bms.snapshot for LMT; no runtime fallback",
+    "footerDisclaimer": "static localized ProductizedDppPage copy"
+  },
+  "staticRuntimeFiles": [
+    "components/v2/ProductizedDppPage.tsx",
+    "app/api/demo-document/route.ts",
+    "components/v2/demo/HomepageDemoMix.tsx",
+    "app/page.tsx"
+  ],
+  "dormantApprovedIdHelpers": [
+    "lib/server/dppShowcase.ts",
+    "lib/server/batteryShowcaseData.ts"
+  ]
+}
