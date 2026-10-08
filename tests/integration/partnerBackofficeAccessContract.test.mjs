@@ -24,3 +24,20 @@ test("partner backoffice access is role-gated, product-scoped, and excludes plat
   assert.match(editor, /PartnerPreviewPanel/);
   assert.match(editor, /isPlatformAdmin \? \(/);
 });
+
+test("Orintent V2 pilot upgrade grants DPP management without approval or publication authority", async () => {
+  const [install, verify, rollback] = await Promise.all([
+    readFile("supabase/bundles/orintent_v2_dpp_manager_install.sql", "utf8"),
+    readFile("supabase/bundles/orintent_v2_dpp_manager_verify.sql", "utf8"),
+    readFile("supabase/bundles/orintent_v2_dpp_manager_rollback.sql", "utf8"),
+  ]);
+
+  assert.match(install, /orintent@greanlean\.com/);
+  assert.match(install, /greanlean-reference-mobility/);
+  assert.match(install, /code = 'dpp_manager'/);
+  assert.match(install, /on conflict \(tenant_id, user_id\)/);
+  for (const capability of ["dpp.approve", "dpp.publish", "dpp.withdraw", "membership.manage", "tenant.manage"]) {
+    assert.match(verify, new RegExp(capability.replace(".", "\\.")));
+  }
+  assert.match(rollback, /delete from public\.tenant_membership/);
+});

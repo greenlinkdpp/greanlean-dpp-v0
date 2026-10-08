@@ -107,6 +107,8 @@ test("builds one ordered page model and inserts the battery module at step five"
   ]);
   assert.equal(model.sections[4].id, "battery-health");
   assert.equal(model.heroMetrics.length, 4);
+  assert.equal(model.qr.target, "https://example.com/p/DPP-BATTERY-1?lang=zh");
+  assert.equal(model.qr.image, "/api/qr?data=%2Fp%2FDPP-BATTERY-1");
 });
 
 test("localizes underscore-delimited battery category codes", () => {

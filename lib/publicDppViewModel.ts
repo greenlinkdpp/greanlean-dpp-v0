@@ -1,3 +1,5 @@
+import { canonicalQrRequestTarget } from "./qrTarget.ts";
+
 export type DppLocale = "zh" | "en";
 export type DppAudience =
   | "PUBLIC"
@@ -1236,7 +1238,7 @@ export function buildPublicDppViewModel(data: any, options: BuildOptions): Publi
     sections,
     qr: {
       target: options.dppUrl,
-      image: `/api/qr?data=${encodeURIComponent(options.dppUrl)}`,
+      image: `/api/qr?data=${encodeURIComponent(canonicalQrRequestTarget(options.dppUrl))}`,
     },
     pdfUrl: `/api/dpp-export?format=pdf&lang=${locale}&product=${productReference}`,
   };

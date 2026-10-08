@@ -8,6 +8,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/components/LanguageProvider";
 import { buildGs1DigitalLink } from "@/lib/dppCompliance";
+import { canonicalQrRequestTarget } from "@/lib/qrTarget";
 
 type Locale = "en" | "zh";
 type Props = { data: any; dppUrl: string };
@@ -1042,7 +1043,7 @@ export function PublicDppClient({ data, dppUrl }: Props) {
       baseUrl: dppOrigin,
     });
   const qrTargetUrl = gs1DigitalLink || dppUrl;
-  const qrUrl = `/api/qr?url=${encodeURIComponent(qrTargetUrl)}`;
+  const qrUrl = `/api/qr?url=${encodeURIComponent(canonicalQrRequestTarget(dppUrl))}`;
 
   const compositionMaterials = useMemo(() => {
     return materials
