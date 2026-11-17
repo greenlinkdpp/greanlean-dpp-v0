@@ -17,16 +17,25 @@ test("the legacy showcase projection remains allowlisted while the homepage fore
   assert.match(page, /loadShowcaseDppData\(identifier\)/);
 });
 
-test("showcase projection removes internal provenance and keeps normal access resolution intact", async () => {
+test("showcase projection is presentation-only and cannot elevate anonymous access", async () => {
   const showcase = await readFile("lib/server/dppShowcase.ts", "utf8");
+  const exportRoute = await readFile("app/api/dpp-export/route.ts", "utf8");
+  const publicBatteryRoute = await readFile("app/api/battery-dpp/public/[identifier]/route.ts", "utf8");
   const access = await readFile("components/AccessAwareDppPage.tsx", "utf8");
   const output = await readFile("components/UnifiedDppPage.tsx", "utf8");
 
   assert.match(showcase, /sourceRecord/);
   assert.match(showcase, /sourceTables/);
   assert.match(showcase, /blockchainAnchors:\s*\[\]/);
+  assert.match(showcase, /createSupabasePublicServerClient\(\)/);
+  assert.doesNotMatch(showcase, /createSupabaseAdminClient|loadBatteryOperatingProjection/);
+  assert.match(exportRoute, /createSupabasePublicServerClient\(\)/);
+  assert.match(exportRoute, /"PUBLIC"/);
+  assert.doesNotMatch(exportRoute, /createSupabaseAdminClient|"INTERNAL"/);
+  assert.doesNotMatch(publicBatteryRoute, /showcase.*INTERNAL|INTERNAL.*showcase/);
+  assert.match(publicBatteryRoute, /requireAuthenticatedUser\(request\)/);
   assert.match(access, /if \(showcase\)/);
-  assert.match(access, /audience = "AUTHORITY_ONLY"/);
+  assert.doesNotMatch(access, /if \(showcase\) \{\s*audience = "AUTHORITY_ONLY"/);
   assert.match(access, /resolveDppAccess|\/api\/dpp-access/);
   assert.match(output, /format=canonical&showcase=1/);
 });
@@ -47,7 +56,10 @@ test("showcase pages keep field-level access labels without a standalone access 
 
   assert.match(output, /!showcase && \(!accessControl \|\| isPreview\)/);
   assert.match(output, /showAccessLabels=\{showcase\}/);
-  assert.match(battery, /showcase \? <DppAccessBadge audience=\{field\.accessLevel \|\| "PUBLIC"\}/);
+  assert.match(battery, /<BatteryPassport71/);
+  const batteryFields = await readFile("components/battery/BatteryPassport71.tsx", "utf8");
+  assert.match(batteryFields, /professional: "专业授权"/);
+  assert.match(batteryFields, /regulator: "监管授权"/);
   assert.match(badge, /公众可见/);
   assert.match(badge, /专业授权/);
   assert.match(badge, /监管授权/);

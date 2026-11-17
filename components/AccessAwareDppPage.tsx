@@ -246,9 +246,7 @@ export function AccessAwareDppPage({
   const loginHref = `/login?lang=${locale}&next=${encodeURIComponent(loginNextPath)}`;
   let audience: DppAudience = "PUBLIC";
   let isPreview = false;
-  if (showcase) {
-    audience = "AUTHORITY_ONLY";
-  } else if (access.status === "granted") {
+  if (!showcase && access.status === "granted") {
     audience = access.audience;
     isPreview = access.preview;
   }

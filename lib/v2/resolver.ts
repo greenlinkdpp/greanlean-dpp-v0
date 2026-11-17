@@ -1,3 +1,5 @@
+import { demoDigitalLinkPath } from "../demoDigitalLinks.ts";
+
 export const MAX_RESOLVER_REDIRECT_DEPTH = 8;
 
 export function normalizeResolverHost(host: string) {
@@ -22,5 +24,6 @@ export function buildApprovedResolverUrl(options: {
   if (!options.identifier.trim() || /[/?#]/.test(options.identifier)) {
     throw new Error("RESOLVER_IDENTIFIER_INVALID");
   }
-  return new URL(`/r/${encodeURIComponent(options.identifier)}`, origin).toString();
+  const path = demoDigitalLinkPath(options.identifier) || `/r/${encodeURIComponent(options.identifier)}`;
+  return new URL(path, origin).toString();
 }

@@ -17,6 +17,7 @@ test("Round C carries localized public-demo corrections through the shared displ
   const [seed, showcase, presentation] = await Promise.all([read("scripts/phase7/seed-round-b1-preprod-demo.mjs"), read("components/v2/demo/DemoShowcase.tsx"), read("lib/v2/presentation.ts")]);
   assert.match(seed, /dimensions_mm: "140 × 25 × 2200 mm"/);
   assert.match(seed, /rated_power_kw: 7\.2/);
-  assert.match(showcase, /String\(value\) === "Bluetooth" \? "蓝牙"/);
+  assert.match(showcase, /Bluetooth: "蓝牙"/);
+  assert.match(showcase, /demoText\(language, String\(value\), translated\[String\(value\)\]\)/);
   assert.match(presentation, /"0°C to 45°C": "0°C 至 45°C"/);
 });

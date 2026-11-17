@@ -1,5 +1,8 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { demoLocale, demoText, demoBilingualText, sourceLocale, type DemoLocale } from "@/lib/demo/language";
+import { loadDemoLanguage } from "@/lib/demo/loadLanguage";
 import { AccessAwareDppPage } from "@/components/AccessAwareDppPage";
 import { ProductizedDppPage } from "@/components/v2/ProductizedDppPage";
 import { loadPublicDppData } from "@/lib/dpp/publicDppRepository";
@@ -19,9 +22,22 @@ type PageSearchParams = {
   lang?: string;
   preview?: string;
   showcase?: string;
+  demo?: string;
   audience?: string;
   audienceGrant?: string;
 };
+
+const demoIdentifiers = new Set([
+  "DPP-GLR-LMT-000001", "DPP-GLR-LMT-000002", "DPP-GLR-LMT-000003", "DPP-DEMO-ESS-000001",
+  "DPP-DEMO-GOLF-000001", "DPP-DEMO-TEX-000001", "DPP-DEMO-CE-000001", "DPP-DEMO-BLD-000001",
+  "DPP-DEMO-HW-000001",
+]);
+
+function demoPassportLanguage(query: PageSearchParams, passport: { passport_identifier: string }) {
+  const demo = demoIdentifiers.has(passport.passport_identifier) || query.demo === "1";
+  const fallback = query.lang === "zh" ? "zh" : "en";
+  return { demo, locale: demo ? demoLocale(query.lang, fallback) : fallback } as const;
+}
 
 const PREVIEW_ROLES = new Set<PreviewRole>(["PUBLIC", "REPAIRER", "RECYCLER", "MANUFACTURER", "AUTHORITY"]);
 
@@ -39,7 +55,9 @@ async function getData(identifier: string, includeDraft = false) {
   return loadPublicDppData(createSupabaseClient(), identifier, includeDraft);
 }
 
-async function getV2Data(identifier: string) {
+// Share one live resolution between metadata and body within this request only.
+// No cross-request cache: withdrawals and access changes remain immediately visible.
+const getV2Data = cache(async (identifier: string) => {
   if (process.env.FEATURE_V2_RESOLVER !== "true" || process.env.FEATURE_V2_PUBLIC_PROJECTION !== "true") return null;
   const admin = createSupabaseAdminClient();
   const site = new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000");
@@ -55,7 +73,7 @@ async function getV2Data(identifier: string) {
     }
     return null;
   }
-}
+});
 
 export async function generateMetadata({
   params,
@@ -67,15 +85,28 @@ export async function generateMetadata({
   const [{ slug }, query = {}] = await Promise.all([params, searchParams]);
   const v2 = await getV2Data(decodeURIComponent(slug));
   if (v2?.kind === "PUBLISHED") {
-    const locale = query.lang === "zh" ? "zh" : "en";
+    const { locale } = demoPassportLanguage(query, v2.passport);
+    const language = await loadDemoLanguage(locale);
     const publicProjection = projectImmutableDpp(v2.payload, "PUBLIC");
     const productIdentity = publicProjection.fields.find((field) => field.fieldCode === "identity.product")?.value;
     const product = productIdentity && typeof productIdentity === "object" && !Array.isArray(productIdentity)
       ? productIdentity as Record<string, unknown>
       : {};
+    if (locale === "en" || locale === "zh") {
+      return {
+        title: { absolute: `${formatValue(product.productName || "Digital Product Passport", locale)} - GreanLean DPP` },
+        description: `${formatValue(product.brand || "GreanLean", locale)} Digital Product Passport for ${formatValue(product.modelCode || v2.passport.passport_identifier, locale)}.`,
+        robots: { index: false, follow: false },
+      };
+    }
+    const name = product.productName;
+    const productName = typeof name === "object" && name !== null
+      ? demoBilingualText(language, name as Partial<Record<DemoLocale, string>>)
+      : demoText(language, formatValue(name || "Digital Product Passport", sourceLocale(locale)));
+    const passportTitle = demoText(language, "Digital Product Passport", "数字产品护照");
     return {
-      title: { absolute: `${formatValue(product.productName || "Digital Product Passport", locale)} - GreanLean DPP` },
-      description: `${formatValue(product.brand || "GreanLean", locale)} Digital Product Passport for ${formatValue(product.modelCode || v2.passport.passport_identifier, locale)}.`,
+      title: { absolute: `${productName} - GreanLean DPP` },
+      description: `${passportTitle} · ${formatValue(product.brand || "GreanLean", sourceLocale(locale))} · ${formatValue(product.modelCode || v2.passport.passport_identifier, sourceLocale(locale))}`,
       robots: { index: false, follow: false },
     };
   }
@@ -149,7 +180,14 @@ export default async function PublicDppPage({
       ? Object.fromEntries(Array.from(PREVIEW_ROLES).map((role) => [role, createAudiencePreviewGrant(v2.passport.passport_identifier, role, expiry)]))
       : undefined;
     const projection = projectImmutableDpp(v2.payload, ROLE_TO_AUDIENCE[previewRole]);
-    return <ProductizedDppPage projection={projection} locale={query.lang === "zh" ? "zh" : "en"} previewRole={previewRole} audiencePreviewEnabled={previewEnabled} previewGrants={previewGrants} />;
+    const { demo, locale } = demoPassportLanguage(query, v2.passport);
+    return <ProductizedDppPage
+      projection={projection}
+      language={await loadDemoLanguage(locale)} demo={demo}
+      previewRole={previewRole}
+      audiencePreviewEnabled={previewEnabled}
+      previewGrants={previewGrants}
+    />;
   }
   const showcaseData = query.showcase === "1"
     ? await loadShowcaseDppData(identifier)

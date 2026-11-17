@@ -137,6 +137,10 @@ export function UnifiedDppPage({
     setCollapsed((current) => ({ ...current, [id]: !current[id] }));
   }
 
+  if (isBatteryProduct && exportIdentifier && audience === "PUBLIC" && !isPreview) {
+    return <BatteryPublicProjection identifier={String(exportIdentifier)} audience="public" locale={locale} showcase={showcase} fullPage />;
+  }
+
   const heroIdentity = [
     [locale === "zh" ? "DPP ID" : "DPP ID", viewModel.identity.dppId],
     [locale === "zh" ? "型号 / SKU" : "Model / SKU", viewModel.identity.model],

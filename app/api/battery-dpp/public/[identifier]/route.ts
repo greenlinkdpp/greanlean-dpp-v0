@@ -14,14 +14,8 @@ export const GET = withApiRoute<RouteContext>(async (request, context, route) =>
   const url = new URL(request.url);
   const audience = url.searchParams.get("audience");
   const decodedIdentifier = decodeURIComponent(route.params.identifier);
-  const showcase = url.searchParams.get("showcase") === "1" && new Set([
-    "DPP-LMT-BAT-48V15AH",
-    "DPP-GV-ESS-14K3-000001",
-  ]).has(decodedIdentifier);
   let accessLevel: "PUBLIC" | "LEGITIMATE_INTEREST" | "AUTHORITY_ONLY" | "INTERNAL" = "PUBLIC";
-  if (showcase) {
-    accessLevel = "INTERNAL";
-  } else if (audience && !["public", "consumer"].includes(audience)) {
+  if (audience && !["public", "consumer"].includes(audience.toLowerCase())) {
     const { accessToken } = await requireAuthenticatedUser(request);
     const result = await resolveDppAccess(
       createServerAuthClient(accessToken),
@@ -39,6 +33,6 @@ export const GET = withApiRoute<RouteContext>(async (request, context, route) =>
   const database = accessLevel === "PUBLIC"
     ? createSupabasePublicServerClient()
     : createSupabaseAdminClient();
-  const result = await loadBatteryProjection(database, decodedIdentifier, accessLevel, { includeMissing: showcase });
+  const result = await loadBatteryProjection(database, decodedIdentifier, accessLevel, { includeMissing: false });
   return Response.json(result, { headers: { "Cache-Control": "no-store" } });
 });

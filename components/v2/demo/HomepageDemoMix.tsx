@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { PublicDemoShowcaseEntry } from "@/lib/server/v2/demoShowcase";
+import { productPassportHref } from "@/lib/dppNavigation";
 
 const selected = ["DPP-GLR-LMT-000002", "DPP-DEMO-ESS-000001", "DPP-DEMO-TEX-000001", "DPP-DEMO-CE-000001"];
 
@@ -35,7 +36,7 @@ export function HomepageDemoMix({ locale }: { locale: "zh" | "en" }) {
         <div className="flex items-start justify-between gap-3"><div><p className="text-xs font-black uppercase tracking-wide text-emerald-700">{entry.categoryCode.replaceAll("_", " ")}</p><h3 className="mt-2 text-xl font-black text-slate-950">{zh ? entry.titleZh : entry.titleEn}</h3></div></div>
         {(entry.categoryCode === "LMT_BATTERY" || entry.categoryCode === "INDUSTRIAL_BATTERY") ? <p className="mt-3 text-xs font-black text-emerald-700">{zh ? "重点：Battery Passport" : "Featured: Battery Passport"}</p> : null}
         <dl className="mt-5 grid grid-cols-2 gap-3 border-y border-slate-100 py-4">{Object.entries(entry.keyParameters).slice(0, 3).map(([key, raw]) => <div key={key}><dt className="text-[10px] font-black uppercase tracking-wide text-slate-400">{label(key, zh)}</dt><dd className="mt-1 text-sm font-bold text-slate-700">{value(key, raw, zh)}</dd></div>)}</dl>
-        <Link href={`/p/${encodeURIComponent(entry.passportIdentifier)}?lang=${locale}`} className="btn-primary mt-auto w-full">{zh ? "查看护照" : "View Passport"}</Link>
+        <Link href={productPassportHref(entry.passportIdentifier, locale)} className="btn-primary mt-auto w-full">{zh ? "查看护照" : "View Passport"}</Link>
       </article>)}
     </div><div className="order-1 mb-4 flex justify-end"><Link href={`/demo?lang=${locale}`} className="inline-flex min-h-10 items-center rounded-lg border border-slate-300 bg-white px-4 text-sm font-bold text-slate-700 hover:border-emerald-600 hover:text-emerald-800">{zh ? "查看全部产品护照 →" : "View All Product Passports →"}</Link></div></div>
   </div>;

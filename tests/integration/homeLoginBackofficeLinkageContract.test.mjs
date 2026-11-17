@@ -36,8 +36,8 @@ test("Backoffice removes redundant header escapes while public DPP keeps a brand
   assert.doesNotMatch(backoffice, /Back to website/);
   assert.doesNotMatch(backoffice, /View public Demo/);
   assert.doesNotMatch(backoffice, /\/p\/\$\{selected\.tenantId\}/);
-  assert.match(dpp, /BrandLogo href=\{`\/\?lang=\$\{locale\}`\}/);
+  assert.match(dpp, /BrandLogo href=\{`\/\?lang=\$\{sourceLocale\(locale\)\}`\}/);
   assert.doesNotMatch(dpp, /GreanLean Home/);
   assert.match(dpp, /Platform Login/);
-  assert.match(dpp, /`\/login\?lang=\$\{locale\}`/);
+  assert.match(dpp, /`\/login\?lang=\$\{sourceLocale\(locale\)\}`/);
 });

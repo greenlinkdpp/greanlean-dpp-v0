@@ -1,0 +1,993 @@
+{
+  "passportIdentifier": "DPP-DEMO-GOLF-000001",
+  "modelCode": "GLR-GC51-105",
+  "classification": "SYNTHETIC_DEMO",
+  "source": "Existing public reference-battery showcase conventions, adjusted to 51.2V / 105Ah; no customer data",
+  "notice": {
+    "zh": "展厅示例数据，仅用于产品护照展示。",
+    "en": "Showcase sample data, for passport presentation only."
+  },
+  "rows": [
+    {
+      "number": 1,
+      "cells": [
+        {
+          "zh": "护照标识符",
+          "en": "Passport identifier",
+          "value": "DPP-DEMO-GOLF-000001"
+        },
+        {
+          "zh": "GS1 Digital Link",
+          "en": "GS1 Digital Link",
+          "value": "https://www.greanlean.com/01/09520000000110/21/GC51105-DEMO-0001"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "cells": [
+        {
+          "zh": "责任主体",
+          "en": "Responsible operator",
+          "value": "GreanLean Reference Mobility Ltd."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "cells": [
+        {
+          "zh": "制造商",
+          "en": "Manufacturer",
+          "value": "GreanLean Reference Mobility Ltd."
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "cells": [
+        {
+          "zh": "邮政地址",
+          "en": "Postal address",
+          "value": "Demoallee 7, Berlin, Germany"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "cells": [
+        {
+          "zh": "网站",
+          "en": "Website",
+          "value": "https://www.greanlean.com"
+        },
+        {
+          "zh": "邮箱",
+          "en": "Email",
+          "value": "support@greanlean.invalid"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "cells": [
+        {
+          "zh": "电池类别",
+          "en": "Battery category",
+          "value": {
+            "zh": "工业动力电池",
+            "en": "Industrial traction battery"
+          }
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "cells": [
+        {
+          "zh": "产品型号",
+          "en": "Model",
+          "value": "GLR-GC51-105"
+        },
+        {
+          "zh": "批次号",
+          "en": "Batch",
+          "value": "GC51105-B2611"
+        },
+        {
+          "zh": "单品序列号",
+          "en": "Serial number",
+          "value": "GC51105-DEMO-0001"
+        },
+        {
+          "zh": "GTIN",
+          "en": "GTIN",
+          "value": "09520000000110"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "cells": [
+        {
+          "zh": "生产地点",
+          "en": "Manufacturing location",
+          "value": {
+            "zh": "中国广东省深圳市",
+            "en": "Shenzhen, Guangdong, China"
+          }
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "cells": [
+        {
+          "zh": "生产年月",
+          "en": "Manufacturing month",
+          "value": "2026-11"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "cells": [
+        {
+          "zh": "电池净重",
+          "en": "Net mass",
+          "value": 46,
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "cells": [
+        {
+          "zh": "额定容量",
+          "en": "Rated capacity",
+          "value": 105,
+          "unit": "Ah"
+        },
+        {
+          "zh": "额定电压",
+          "en": "Nominal voltage",
+          "value": 51.2,
+          "unit": "V"
+        },
+        {
+          "zh": "额定能量",
+          "en": "Rated energy",
+          "value": 5376,
+          "unit": "Wh"
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "cells": [
+        {
+          "zh": "化学体系",
+          "en": "Chemistry",
+          "value": "LFP / LiFePO₄"
+        },
+        {
+          "zh": "电芯形式",
+          "en": "Cell format",
+          "value": {
+            "zh": "方形铝壳电芯 · 16S1P",
+            "en": "Prismatic aluminium-case cells · 16S1P"
+          }
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "cells": [
+        {
+          "zh": "物质信息",
+          "en": "Substance information",
+          "value": {
+            "zh": "锂盐电解液及碳酸酯溶剂；完整成分以产品 SDS 为准。",
+            "en": "Lithium-salt electrolyte and carbonate solvents; consult the product SDS for full composition."
+          }
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "cells": [
+        {
+          "zh": "应急处置",
+          "en": "Emergency response",
+          "value": {
+            "zh": "执行产品 SDS 和现场应急预案，由受训人员处置。",
+            "en": "Trained personnel must follow the product SDS and site emergency plan."
+          }
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "cells": [
+        {
+          "zh": "关键原材料",
+          "en": "Critical raw materials",
+          "value": {
+            "zh": "锂、天然石墨、铜、铝",
+            "en": "Lithium, natural graphite, copper and aluminium"
+          }
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "cells": [
+        {
+          "zh": "材料组成",
+          "en": "Material composition",
+          "value": {
+            "zh": "磷酸铁锂电芯、石墨负极、电解液、铝壳、铜连接件、BMS 与绝缘材料；参见第12、13、15项。",
+            "en": "LFP cells, graphite anode, electrolyte, aluminium enclosure, copper connectors, BMS and insulation; see items 12, 13 and 15."
+          }
+        }
+      ]
+    },
+    {
+      "number": 17,
+      "cells": [
+        {
+          "zh": "碳足迹参考值",
+          "en": "Reference carbon footprint",
+          "value": 117.29,
+          "unit": "kg CO₂e"
+        },
+        {
+          "zh": "核算边界",
+          "en": "Boundary",
+          "value": {
+            "zh": "原材料、制造、运输及包装",
+            "en": "Materials, manufacturing, transport and packaging"
+          }
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "cells": [
+        {
+          "zh": "标签信息",
+          "en": "Label information",
+          "value": {
+            "zh": "117.29 kg CO₂e / 电池包；5.376 kWh",
+            "en": "117.29 kg CO₂e / battery pack; 5.376 kWh"
+          }
+        }
+      ]
+    },
+    {
+      "number": 19,
+      "cells": [
+        {
+          "zh": "采购管理",
+          "en": "Sourcing controls",
+          "value": {
+            "zh": "供应商识别、原材料追溯、风险评估及年度复核。",
+            "en": "Supplier identification, raw-material traceability, risk assessment and annual review."
+          }
+        }
+      ]
+    },
+    {
+      "number": 20,
+      "cells": [
+        {
+          "zh": "再生钴",
+          "en": "Recycled cobalt",
+          "value": 0,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 21,
+      "cells": [
+        {
+          "zh": "再生锂",
+          "en": "Recycled lithium",
+          "value": 3,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 22,
+      "cells": [
+        {
+          "zh": "再生镍",
+          "en": "Recycled nickel",
+          "value": 0,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 23,
+      "cells": [
+        {
+          "zh": "再生铅",
+          "en": "Recycled lead",
+          "value": 0,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 24,
+      "cells": [
+        {
+          "zh": "可再生来源材料",
+          "en": "Renewable-source material",
+          "value": 2,
+          "unit": "%"
+        },
+        {
+          "zh": "范围",
+          "en": "Scope",
+          "value": {
+            "zh": "含适用的纸基包装材料",
+            "en": "Including applicable fibre-based packaging"
+          }
+        }
+      ]
+    },
+    {
+      "number": 25,
+      "cells": [
+        {
+          "zh": "额定容量",
+          "en": "Rated capacity",
+          "value": 105,
+          "unit": "Ah"
+        },
+        {
+          "zh": "关联项",
+          "en": "Related item",
+          "value": {
+            "zh": "见第11项",
+            "en": "See item 11"
+          }
+        }
+      ]
+    },
+    {
+      "number": 26,
+      "cells": [
+        {
+          "zh": "最低工作电压",
+          "en": "Minimum operating voltage",
+          "value": 40,
+          "unit": "V"
+        },
+        {
+          "zh": "参考温度",
+          "en": "Reference temperature",
+          "value": "25 ± 2 °C"
+        }
+      ]
+    },
+    {
+      "number": 27,
+      "cells": [
+        {
+          "zh": "标称电压",
+          "en": "Nominal voltage",
+          "value": 51.2,
+          "unit": "V"
+        },
+        {
+          "zh": "参考温度",
+          "en": "Reference temperature",
+          "value": "25 ± 2 °C"
+        }
+      ]
+    },
+    {
+      "number": 28,
+      "cells": [
+        {
+          "zh": "最高充电电压",
+          "en": "Maximum charge voltage",
+          "value": 58.4,
+          "unit": "V"
+        }
+      ]
+    },
+    {
+      "number": 29,
+      "cells": [
+        {
+          "zh": "初始功率能力",
+          "en": "Initial power capability",
+          "value": 7680,
+          "unit": "W"
+        }
+      ]
+    },
+    {
+      "number": 30,
+      "cells": [
+        {
+          "zh": "连续放电功率",
+          "en": "Continuous discharge power",
+          "value": 7680,
+          "unit": "W"
+        },
+        {
+          "zh": "最大连续放电电流",
+          "en": "Maximum continuous discharge current",
+          "value": 150,
+          "unit": "A"
+        },
+        {
+          "zh": "最大充电电流",
+          "en": "Maximum charge current",
+          "value": 50,
+          "unit": "A"
+        }
+      ]
+    },
+    {
+      "number": 31,
+      "cells": [
+        {
+          "zh": "预期循环寿命",
+          "en": "Expected cycle life",
+          "value": 3500,
+          "unit": "cycles"
+        }
+      ]
+    },
+    {
+      "number": 32,
+      "cells": [
+        {
+          "zh": "参考条件",
+          "en": "Reference conditions",
+          "value": {
+            "zh": "25±2°C，0.5C 充电 / 1C 放电，80% DOD，终止容量保持率80%。",
+            "en": "25±2°C, 0.5C charge / 1C discharge, 80% DOD, 80% end-of-life capacity retention."
+          }
+        }
+      ]
+    },
+    {
+      "number": 33,
+      "cells": [
+        {
+          "zh": "容量衰竭阈值",
+          "en": "Capacity exhaustion threshold",
+          "value": {
+            "zh": "当前工业电池类别不适用",
+            "en": "Not applicable to this industrial battery category"
+          }
+        }
+      ]
+    },
+    {
+      "number": 34,
+      "cells": [
+        {
+          "zh": "闲置储存温度",
+          "en": "Idle storage temperature",
+          "value": "10–25",
+          "unit": "°C"
+        }
+      ]
+    },
+    {
+      "number": 35,
+      "cells": [
+        {
+          "zh": "商业质保期",
+          "en": "Commercial warranty",
+          "value": 60,
+          "unit": "months"
+        }
+      ]
+    },
+    {
+      "number": 36,
+      "cells": [
+        {
+          "zh": "初始往返效率",
+          "en": "Initial round-trip efficiency",
+          "value": 95,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 37,
+      "cells": [
+        {
+          "zh": "50%循环寿命时效率",
+          "en": "Efficiency at 50% cycle life",
+          "value": 92,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 38,
+      "cells": [
+        {
+          "zh": "电芯初始内阻",
+          "en": "Initial cell resistance",
+          "value": 0.0003,
+          "unit": "Ω"
+        },
+        {
+          "zh": "电池包初始内阻",
+          "en": "Initial pack resistance",
+          "value": 0.008,
+          "unit": "Ω"
+        }
+      ]
+    },
+    {
+      "number": 39,
+      "cells": [
+        {
+          "zh": "试验充电倍率",
+          "en": "Test charge C-rate",
+          "value": 0.5,
+          "unit": "C"
+        }
+      ]
+    },
+    {
+      "number": 40,
+      "cells": [
+        {
+          "zh": "试验放电倍率",
+          "en": "Test discharge C-rate",
+          "value": 1,
+          "unit": "C"
+        }
+      ]
+    },
+    {
+      "number": 41,
+      "cells": [
+        {
+          "zh": "分类收集",
+          "en": "Separate collection",
+          "value": {
+            "zh": "废电池分类收集，不与生活垃圾混合处理。",
+            "en": "Collect waste batteries separately; do not dispose of them with household waste."
+          }
+        }
+      ]
+    },
+    {
+      "number": 42,
+      "cells": [
+        {
+          "zh": "镉与铅标识",
+          "en": "Cadmium and lead markings",
+          "value": {
+            "zh": "配方不主动添加镉或铅；标识按材料声明确认。",
+            "en": "No intentionally added cadmium or lead; confirm markings against material declarations."
+          }
+        }
+      ]
+    },
+    {
+      "number": 43,
+      "cells": [
+        {
+          "zh": "符合性声明",
+          "en": "Declaration of conformity",
+          "value": {
+            "title": {
+              "zh": "欧盟符合性声明模板（未签署）",
+              "en": "EU declaration template (unsigned)"
+            },
+            "url": "/api/demo-document?file=round-b2-golf-cart-declaration.html"
+          }
+        }
+      ]
+    },
+    {
+      "number": 44,
+      "cells": [
+        {
+          "zh": "回收渠道",
+          "en": "Collection route",
+          "value": "Circular Battery Demo Recycling GmbH"
+        },
+        {
+          "zh": "处理流程",
+          "en": "Process",
+          "value": {
+            "zh": "退役登记 → 状态评估 → 分类收集 → 梯次利用或材料回收。",
+            "en": "Retirement record → condition assessment → separate collection → second-life use or material recovery."
+          }
+        }
+      ]
+    },
+    {
+      "number": 45,
+      "cells": [
+        {
+          "zh": "使用说明",
+          "en": "Operating instructions",
+          "value": {
+            "title": {
+              "zh": "磷酸铁锂电池使用与维护指南",
+              "en": "LFP battery use and maintenance guide"
+            },
+            "url": "/api/demo-document?file=round-b2-golf-cart-manual.html"
+          }
+        }
+      ]
+    },
+    {
+      "number": 46,
+      "cells": [
+        {
+          "zh": "正极",
+          "en": "Cathode",
+          "value": "LiFePO₄"
+        },
+        {
+          "zh": "负极",
+          "en": "Anode",
+          "value": {
+            "zh": "石墨",
+            "en": "Graphite"
+          }
+        },
+        {
+          "zh": "电解质",
+          "en": "Electrolyte",
+          "value": "LiPF₆ / carbonate"
+        }
+      ]
+    },
+    {
+      "number": 47,
+      "cells": [
+        {
+          "zh": "BMS编号",
+          "en": "BMS part number",
+          "value": "GC51105-BMS-150A"
+        },
+        {
+          "zh": "壳体编号",
+          "en": "Enclosure part number",
+          "value": "GC51105-CASE"
+        },
+        {
+          "zh": "端子编号",
+          "en": "Terminal part number",
+          "value": "GC51105-TERM"
+        },
+        {
+          "zh": "备件联系邮箱",
+          "en": "Spare-parts contact",
+          "value": "support@greanlean.invalid"
+        }
+      ]
+    },
+    {
+      "number": 48,
+      "cells": [
+        {
+          "zh": "拆解与服务",
+          "en": "Disassembly and service",
+          "value": {
+            "zh": "仅限授权服务人员，依据产品维修手册执行电源隔离、检查和部件更换。",
+            "en": "Authorized service personnel must follow the product manual for electrical isolation, inspection and component replacement."
+          }
+        }
+      ]
+    },
+    {
+      "number": 49,
+      "cells": [
+        {
+          "zh": "安全措施",
+          "en": "Safety measures",
+          "value": {
+            "zh": "使用绝缘工具及适用防护装备；禁止短路、挤压和超温充放电；异常时停止使用。",
+            "en": "Use insulated tools and suitable PPE; prevent short circuits, crushing and out-of-range operation; stop use if abnormal."
+          }
+        }
+      ]
+    },
+    {
+      "number": 50,
+      "cells": [
+        {
+          "zh": "测试项目",
+          "en": "Test scope",
+          "value": "UN 38.3 / IEC 62619"
+        },
+        {
+          "zh": "报告状态",
+          "en": "Report status",
+          "value": {
+            "zh": "报告待提供",
+            "en": "Report pending"
+          }
+        }
+      ]
+    },
+    {
+      "number": 51,
+      "cells": [
+        {
+          "zh": "运行期额定容量",
+          "en": "In-use rated capacity",
+          "value": 105,
+          "unit": "Ah"
+        }
+      ]
+    },
+    {
+      "number": 52,
+      "cells": [
+        {
+          "zh": "容量衰减",
+          "en": "Capacity fade",
+          "value": 2,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 53,
+      "cells": [
+        {
+          "zh": "当前功率能力",
+          "en": "Current power capability",
+          "value": 7526.4,
+          "unit": "W"
+        }
+      ]
+    },
+    {
+      "number": 54,
+      "cells": [
+        {
+          "zh": "功率衰减",
+          "en": "Power fade",
+          "value": 2,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 55,
+      "cells": [
+        {
+          "zh": "运行期内阻",
+          "en": "In-use resistance",
+          "value": 0.0084,
+          "unit": "Ω"
+        }
+      ]
+    },
+    {
+      "number": 56,
+      "cells": [
+        {
+          "zh": "内阻增幅",
+          "en": "Resistance increase",
+          "value": 5,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 57,
+      "cells": [
+        {
+          "zh": "当前往返效率",
+          "en": "Current round-trip efficiency",
+          "value": 94.5,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 58,
+      "cells": [
+        {
+          "zh": "往返效率衰减",
+          "en": "Round-trip efficiency fade",
+          "value": 0.5263,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 59,
+      "cells": [
+        {
+          "zh": "预计剩余循环次数",
+          "en": "Estimated remaining cycles",
+          "value": 3374,
+          "unit": "cycles"
+        }
+      ]
+    },
+    {
+      "number": 60,
+      "cells": [
+        {
+          "zh": "预计剩余日历寿命",
+          "en": "Estimated remaining calendar life",
+          "value": 7.9,
+          "unit": "years"
+        }
+      ]
+    },
+    {
+      "number": 61,
+      "cells": [
+        {
+          "zh": "SOCE",
+          "en": "SOCE",
+          "value": {
+            "zh": "当前工业电池类别不适用",
+            "en": "Not applicable to this industrial battery category"
+          }
+        }
+      ]
+    },
+    {
+      "number": 62,
+      "cells": [
+        {
+          "zh": "剩余容量",
+          "en": "Remaining capacity",
+          "value": 102.9,
+          "unit": "Ah"
+        },
+        {
+          "zh": "容量保持率",
+          "en": "Capacity retention",
+          "value": 98,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 63,
+      "cells": [
+        {
+          "zh": "剩余功率能力",
+          "en": "Remaining power capability",
+          "value": 7526.4,
+          "unit": "W"
+        }
+      ]
+    },
+    {
+      "number": 64,
+      "cells": [
+        {
+          "zh": "剩余往返效率",
+          "en": "Remaining round-trip efficiency",
+          "value": 94.5,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "number": 65,
+      "cells": [
+        {
+          "zh": "当前自放电率",
+          "en": "Current self-discharge rate",
+          "value": 1.5,
+          "unit": "% / month"
+        },
+        {
+          "zh": "相对初始值变化",
+          "en": "Change from initial value",
+          "value": 0.2,
+          "unit": "percentage points"
+        }
+      ]
+    },
+    {
+      "number": 66,
+      "cells": [
+        {
+          "zh": "欧姆内阻",
+          "en": "Ohmic resistance",
+          "value": 0.0084,
+          "unit": "Ω"
+        }
+      ]
+    },
+    {
+      "number": 67,
+      "cells": [
+        {
+          "zh": "使用状态",
+          "en": "Operating status",
+          "value": {
+            "zh": "原始用途 · 在役",
+            "en": "Original application · in service"
+          }
+        }
+      ]
+    },
+    {
+      "number": 68,
+      "cells": [
+        {
+          "zh": "累计充放电循环",
+          "en": "Charge/discharge cycles",
+          "value": 126,
+          "unit": "cycles"
+        }
+      ]
+    },
+    {
+      "number": 69,
+      "cells": [
+        {
+          "zh": "观察期",
+          "en": "Observation period",
+          "value": "2026-11-01 – 2026-11-09"
+        },
+        {
+          "zh": "异常事件",
+          "en": "Negative events",
+          "value": {
+            "zh": "记录中无异常事件",
+            "en": "No negative events in the record"
+          }
+        }
+      ]
+    },
+    {
+      "number": 70,
+      "cells": [
+        {
+          "zh": "运行温度",
+          "en": "Operating temperature",
+          "value": 29.4,
+          "unit": "°C"
+        },
+        {
+          "zh": "记录时间",
+          "en": "Recorded at",
+          "value": "2026-11-09 09:00 UTC+8"
+        }
+      ]
+    },
+    {
+      "number": 71,
+      "cells": [
+        {
+          "zh": "当前SOC",
+          "en": "Current SOC",
+          "value": 82,
+          "unit": "%"
+        },
+        {
+          "zh": "记录时间",
+          "en": "Recorded at",
+          "value": "2026-11-09 09:00 UTC+8"
+        }
+      ]
+    }
+  ]
+}

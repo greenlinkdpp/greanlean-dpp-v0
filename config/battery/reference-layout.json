@@ -1,0 +1,489 @@
+{
+  "referenceUrl": "https://passport.greanlean.com/i/0f3b50d9-cb36-4c5c-922c-6ce94e0b636e/",
+  "sections": [
+    {
+      "id": "identity",
+      "zh": "企业与电池标识",
+      "en": "Product & identity",
+      "subZh": "产品身份、生产与责任主体",
+      "subEn": "Product identity and manufacturer"
+    },
+    {
+      "id": "specs_materials",
+      "zh": "基础参数与材料",
+      "en": "Technical & materials",
+      "subZh": "额定参数、材料及安全信息",
+      "subEn": "Nominal specifications and materials"
+    },
+    {
+      "id": "footprint_recycled",
+      "zh": "环境与再生含量",
+      "en": "Sustainability",
+      "subZh": "环境与材料可持续性",
+      "subEn": "Sustainability and renewable material"
+    },
+    {
+      "id": "performance",
+      "zh": "电性能与寿命",
+      "en": "Performance & durability",
+      "subZh": "电性能、循环寿命及测试条件",
+      "subEn": "Electrical performance and durability"
+    },
+    {
+      "id": "safety_conformity",
+      "zh": "标识安全与认证",
+      "en": "Safety & compliance",
+      "subZh": "产品标签、符合性及废电池管理",
+      "subEn": "Markings, conformity and waste handling"
+    },
+    {
+      "id": "repair_recycling",
+      "zh": "拆解维修与回收",
+      "en": "Repair & service",
+      "subZh": "备件、维修与拆解信息",
+      "subEn": "Repair, spare parts and dismantling"
+    },
+    {
+      "id": "dynamic_health",
+      "zh": "动态性能与健康",
+      "en": "In-use performance",
+      "subZh": "单品性能与动态参数",
+      "subEn": "Individual battery performance"
+    },
+    {
+      "id": "operation",
+      "zh": "状态与运行记录",
+      "en": "Lifecycle",
+      "subZh": "产品生命周期状态",
+      "subEn": "Lifecycle status"
+    }
+  ],
+  "fields": [
+    {
+      "number": 1,
+      "section": "identity",
+      "labelZh": "护照唯一标识符",
+      "labelEn": "Passport unique identifier"
+    },
+    {
+      "number": 2,
+      "section": "identity",
+      "labelZh": "护照责任主体/登记主体身份",
+      "labelEn": "Identity of party registering/responsible for passport"
+    },
+    {
+      "number": 3,
+      "section": "identity",
+      "labelZh": "制造商名称/注册商号/商标",
+      "labelEn": "Manufacturer name, registered trade name or trademark"
+    },
+    {
+      "number": 4,
+      "section": "identity",
+      "labelZh": "制造商邮政地址与单一联系点",
+      "labelEn": "Manufacturer postal address and single contact point"
+    },
+    {
+      "number": 5,
+      "section": "identity",
+      "labelZh": "制造商网站和电子邮箱（如有）",
+      "labelEn": "Manufacturer web and email if available"
+    },
+    {
+      "number": 6,
+      "section": "identity",
+      "labelZh": "电池类别（LMT）",
+      "labelEn": "Battery category"
+    },
+    {
+      "number": 7,
+      "section": "identity",
+      "labelZh": "产品型号、批次及序列号",
+      "labelEn": "Model, batch & serial"
+    },
+    {
+      "number": 8,
+      "section": "identity",
+      "labelZh": "电池制造工厂地理位置",
+      "labelEn": "Place of manufacture (battery plant)"
+    },
+    {
+      "number": 9,
+      "section": "identity",
+      "labelZh": "制造年月",
+      "labelEn": "Manufacturing month and year"
+    },
+    {
+      "number": 10,
+      "section": "specs_materials",
+      "labelZh": "完整电池包净重",
+      "labelEn": "Battery weight"
+    },
+    {
+      "number": 11,
+      "section": "specs_materials",
+      "labelZh": "成品电池额定容量（Ah/Wh）",
+      "labelEn": "Battery capacity"
+    },
+    {
+      "number": 12,
+      "section": "specs_materials",
+      "labelZh": "电池化学体系",
+      "labelEn": "Battery chemistry"
+    },
+    {
+      "number": 13,
+      "section": "specs_materials",
+      "labelZh": "除汞、镉、铅外的危险物质",
+      "labelEn": "Hazardous substances other than Hg, Cd and Pb"
+    },
+    {
+      "number": 14,
+      "section": "specs_materials",
+      "labelZh": "可用灭火剂",
+      "labelEn": "Usable extinguishing agent"
+    },
+    {
+      "number": 15,
+      "section": "specs_materials",
+      "labelZh": "关键原材料（质量分数 >0.1%）",
+      "labelEn": "Critical raw materials (>0.1% w/w)"
+    },
+    {
+      "number": 16,
+      "section": "specs_materials",
+      "labelZh": "电池材料组成（重复项）",
+      "labelEn": "Battery composition (duplicate)"
+    },
+    {
+      "number": 17,
+      "section": "footprint_recycled",
+      "labelZh": "碳足迹声明",
+      "labelEn": "Carbon footprint declaration"
+    },
+    {
+      "number": 18,
+      "section": "footprint_recycled",
+      "labelZh": "碳足迹标签",
+      "labelEn": "Carbon footprint label"
+    },
+    {
+      "number": 19,
+      "section": "footprint_recycled",
+      "labelZh": "电池尽职调查信息",
+      "labelEn": "Battery due diligence information"
+    },
+    {
+      "number": 20,
+      "section": "footprint_recycled",
+      "labelZh": "再生钴含量",
+      "labelEn": "Recycled cobalt content"
+    },
+    {
+      "number": 21,
+      "section": "footprint_recycled",
+      "labelZh": "再生锂含量",
+      "labelEn": "Recycled lithium content"
+    },
+    {
+      "number": 22,
+      "section": "footprint_recycled",
+      "labelZh": "再生镍含量",
+      "labelEn": "Recycled nickel content"
+    },
+    {
+      "number": 23,
+      "section": "footprint_recycled",
+      "labelZh": "再生铅含量",
+      "labelEn": "Recycled lead content"
+    },
+    {
+      "number": 24,
+      "section": "footprint_recycled",
+      "labelZh": "可再生来源材料比例",
+      "labelEn": "Renewable-origin material share"
+    },
+    {
+      "number": 25,
+      "section": "performance",
+      "labelZh": "额定容量（与第11项重复）",
+      "labelEn": "Rated capacity (duplicate of #11)"
+    },
+    {
+      "number": 26,
+      "section": "performance",
+      "labelZh": "最低电压及温度范围",
+      "labelEn": "Minimum voltage incl. temperature range if relevant"
+    },
+    {
+      "number": 27,
+      "section": "performance",
+      "labelZh": "标称电压及温度范围",
+      "labelEn": "Nominal voltage incl. temperature range if relevant"
+    },
+    {
+      "number": 28,
+      "section": "performance",
+      "labelZh": "最高电压及温度范围",
+      "labelEn": "Maximum voltage incl. temperature range if relevant"
+    },
+    {
+      "number": 29,
+      "section": "performance",
+      "labelZh": "初始功率能力（W）",
+      "labelEn": "Original power capability (W)"
+    },
+    {
+      "number": 30,
+      "section": "performance",
+      "labelZh": "功率限值及相关温度条件",
+      "labelEn": "Power limits incl. temperature range"
+    },
+    {
+      "number": 31,
+      "section": "performance",
+      "labelZh": "预期循环寿命（次）",
+      "labelEn": "Expected battery lifetime in cycles"
+    },
+    {
+      "number": 32,
+      "section": "performance",
+      "labelZh": "循环寿命参考试验",
+      "labelEn": "Reference test for expected cycle life"
+    },
+    {
+      "number": 33,
+      "section": "performance",
+      "labelZh": "电池寿命终止容量阈值（EV适用）",
+      "labelEn": "Capacity exhaustion threshold (EV only)"
+    },
+    {
+      "number": 34,
+      "section": "performance",
+      "labelZh": "闲置温度范围及参考试验",
+      "labelEn": "Storage temperature range with reference test"
+    },
+    {
+      "number": 35,
+      "section": "performance",
+      "labelZh": "日历寿命商业质保期限",
+      "labelEn": "Commercial warranty period for calendar life"
+    },
+    {
+      "number": 36,
+      "section": "performance",
+      "labelZh": "初始往返能量效率",
+      "labelEn": "Initial round trip energy efficiency"
+    },
+    {
+      "number": 37,
+      "section": "performance",
+      "labelZh": "循环寿命50%时往返效率",
+      "labelEn": "Round trip energy efficiency at 50% cycle life"
+    },
+    {
+      "number": 38,
+      "section": "performance",
+      "labelZh": "电芯/成品电池包内阻",
+      "labelEn": "Internal battery cell and pack resistance"
+    },
+    {
+      "number": 39,
+      "section": "performance",
+      "labelZh": "循环寿命试验充电倍率",
+      "labelEn": "Cycle-life charging C-rate"
+    },
+    {
+      "number": 40,
+      "section": "performance",
+      "labelZh": "循环寿命试验放电倍率",
+      "labelEn": "Cycle-life discharging C-rate"
+    },
+    {
+      "number": 41,
+      "section": "safety_conformity",
+      "labelZh": "电池标签与标志",
+      "labelEn": "Battery label & marking"
+    },
+    {
+      "number": 42,
+      "section": "safety_conformity",
+      "labelZh": "镉／铅标识（如适用）",
+      "labelEn": "Cadmium/lead marking (if applicable)"
+    },
+    {
+      "number": 43,
+      "section": "safety_conformity",
+      "labelZh": "欧盟符合性声明（DoC）",
+      "labelEn": "EU declaration of conformity"
+    },
+    {
+      "number": 44,
+      "section": "safety_conformity",
+      "labelZh": "废电池预防与管理信息",
+      "labelEn": "Waste battery prevention & management"
+    },
+    {
+      "number": 45,
+      "section": "safety_conformity",
+      "labelZh": "可打印、下载的使用说明",
+      "labelEn": "Downloadable instructions for use"
+    },
+    {
+      "number": 46,
+      "section": "repair_recycling",
+      "labelZh": "正负极与电解液的详细组成",
+      "labelEn": "Detailed cathode, anode & electrolyte composition"
+    },
+    {
+      "number": 47,
+      "section": "repair_recycling",
+      "labelZh": "可替换部件及备件来源",
+      "labelEn": "Replaceable parts & spare sources"
+    },
+    {
+      "number": 48,
+      "section": "repair_recycling",
+      "labelZh": "拆解图、步骤与警示",
+      "labelEn": "Dismantling diagrams, procedures & warnings"
+    },
+    {
+      "number": 49,
+      "section": "repair_recycling",
+      "labelZh": "安全措施",
+      "labelEn": "Safety measures"
+    },
+    {
+      "number": 50,
+      "section": "safety_conformity",
+      "labelZh": "符合性测试报告结果",
+      "labelEn": "Results of conformity test reports"
+    },
+    {
+      "number": 51,
+      "section": "dynamic_health",
+      "labelZh": "运行期额定容量（与第11项对应）",
+      "labelEn": "In-use rated capacity (same as #11)"
+    },
+    {
+      "number": 52,
+      "section": "dynamic_health",
+      "labelZh": "动态容量衰减百分比",
+      "labelEn": "Capacity fade (%)"
+    },
+    {
+      "number": 53,
+      "section": "dynamic_health",
+      "labelZh": "动态功率能力（W）",
+      "labelEn": "Dynamic power (W)"
+    },
+    {
+      "number": 54,
+      "section": "dynamic_health",
+      "labelZh": "动态功率衰减（%）",
+      "labelEn": "Power fade (%)"
+    },
+    {
+      "number": 55,
+      "section": "dynamic_health",
+      "labelZh": "动态内阻（Ω）",
+      "labelEn": "Dynamic internal resistance (ohm)"
+    },
+    {
+      "number": 56,
+      "section": "dynamic_health",
+      "labelZh": "动态内阻增幅（%）",
+      "labelEn": "Internal resistance increase (%)"
+    },
+    {
+      "number": 57,
+      "section": "dynamic_health",
+      "labelZh": "运行期往返效率（适用时）",
+      "labelEn": "In-use round-trip efficiency (where applicable)"
+    },
+    {
+      "number": 58,
+      "section": "dynamic_health",
+      "labelZh": "运行期往返效率衰减（适用时）",
+      "labelEn": "In-use round-trip efficiency fade (where applicable)"
+    },
+    {
+      "number": 59,
+      "section": "dynamic_health",
+      "labelZh": "Individual预期循环寿命（动态）",
+      "labelEn": "Expected lifetime under reference conditions (cycles)"
+    },
+    {
+      "number": 60,
+      "section": "dynamic_health",
+      "labelZh": "Individual预期日历寿命（动态）",
+      "labelEn": "Expected lifetime under reference conditions (years)"
+    },
+    {
+      "number": 61,
+      "section": "dynamic_health",
+      "labelZh": "认证能量状态 SOCE（LMT不适用）",
+      "labelEn": "State of certified energy SOCE (not LMT)"
+    },
+    {
+      "number": 62,
+      "section": "dynamic_health",
+      "labelZh": "健康状态：剩余容量",
+      "labelEn": "State of health: remaining capacity"
+    },
+    {
+      "number": 63,
+      "section": "dynamic_health",
+      "labelZh": "健康状态：剩余功率能力",
+      "labelEn": "State of health: remaining power capability"
+    },
+    {
+      "number": 64,
+      "section": "dynamic_health",
+      "labelZh": "健康状态：剩余往返效率",
+      "labelEn": "State of health: remaining round-trip efficiency"
+    },
+    {
+      "number": 65,
+      "section": "dynamic_health",
+      "labelZh": "健康状态：自放电率变化",
+      "labelEn": "State of health: self-discharge evolution"
+    },
+    {
+      "number": 66,
+      "section": "dynamic_health",
+      "labelZh": "健康状态：欧姆内阻",
+      "labelEn": "State of health: ohmic resistance"
+    },
+    {
+      "number": 67,
+      "section": "operation",
+      "labelZh": "电池生命周期状态",
+      "labelEn": "Battery lifecycle status"
+    },
+    {
+      "number": 68,
+      "section": "operation",
+      "labelZh": "累计充放电循环次数",
+      "labelEn": "Number of charge/discharge cycles"
+    },
+    {
+      "number": 69,
+      "section": "operation",
+      "labelZh": "异常或事故记录",
+      "labelEn": "Negative events or accidents"
+    },
+    {
+      "number": 70,
+      "section": "operation",
+      "labelZh": "运行环境条件记录",
+      "labelEn": "Recorded operating conditions"
+    },
+    {
+      "number": 71,
+      "section": "operation",
+      "labelZh": "荷电状态（SOC）记录",
+      "labelEn": "Recorded state of charge (SOC)"
+    }
+  ]
+}
