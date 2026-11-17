@@ -4,6 +4,10 @@ export const QR_DEMO_ASSETS = "/demo/qr-code/assets";
 
 export type DemoCopy = { zh: string; en: string };
 const copy = (zh: string, en: string): DemoCopy => ({ zh, en });
+export const qrDemoDocumentNotice = copy(
+  "演示资料 · 非签署声明、检测报告或合规证明",
+  "Sample material · not a signed declaration, test report or compliance certificate",
+);
 export const qrDemo = {
   model: "GL24/12-DEMO",
   batch: "DEMO-B2412-202611",

@@ -1,3 +1,6 @@
+import { escapeHtml } from "@/lib/demo/escapeHtml";
+import { demoLocale, demoText } from "@/lib/demo/language";
+import { loadDemoLanguage } from "@/lib/demo/loadLanguage";
 import { withApiRoute } from "@/lib/server/apiRoute";
 
 const allowedFiles = new Set([
@@ -14,28 +17,21 @@ function isRoundB2DemoFile(file: string) {
   return /^round-b2-[a-z0-9-]+\.html$/.test(file);
 }
 
-function escapeHtml(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
 export const GET = withApiRoute(async (request) => {
   const url = new URL(request.url);
   const file = url.searchParams.get("file") || "";
-  const zh = url.searchParams.get("lang") !== "en";
   if (!allowedFiles.has(file) && !isRoundB2DemoFile(file)) {
     return Response.json({ error: "Unknown demo document" }, { status: 404 });
   }
-  const title = zh ? "演示文件" : "Demo Document";
-  const notice = zh
-    ? "该文件为 GreanLean 数字产品护照演示文件，用于说明证书、规格、环境或服务文件的展示入口；不是真实检测报告、实验室签章、证书编号或法规认证。"
-    : "This is a GreanLean Digital Product Passport demonstration document. It illustrates a certificate, specification, environmental or service-document entry and is not a real test report, laboratory seal, certificate number or regulatory certification.";
+  const locale = demoLocale(url.searchParams.get("lang"));
+  const language = await loadDemoLanguage(locale);
+  const title = escapeHtml(demoText(language, "Demo Document", "演示文件"));
+  const notice = escapeHtml(demoText(language,
+    "This is a GreanLean Digital Product Passport demonstration document. It illustrates a certificate, specification, environmental or service-document entry and is not a real test report, laboratory seal, certificate number or regulatory certification.",
+    "该文件为 GreanLean 数字产品护照演示文件，用于说明证书、规格、环境或服务文件的展示入口；不是真实检测报告、实验室签章、证书编号或法规认证。",
+  ));
   const html = `<!doctype html>
-<html lang="${zh ? "zh-CN" : "en"}">
+<html lang="${locale}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title>
 <style>body{margin:0;background:#f8fafc;color:#0f172a;font-family:Arial,sans-serif}.wrap{max-width:720px;margin:0 auto;padding:64px 24px}.label{display:inline-block;border:1px solid #fcd34d;background:#fffbeb;color:#78350f;padding:7px 10px;font-size:12px;font-weight:800}.panel{margin-top:24px;border:1px solid #cbd5e1;background:#fff;padding:32px}h1{font-size:32px;margin:0 0 18px}p{line-height:1.75}.file{margin-top:22px;border-top:1px solid #e2e8f0;padding-top:18px;font-family:monospace;overflow-wrap:anywhere}</style></head>
 <body><main class="wrap"><span class="label">${title}</span><section class="panel"><h1>${title}</h1><p>${notice}</p><p class="file">${escapeHtml(file)}</p></section></main></body></html>`;

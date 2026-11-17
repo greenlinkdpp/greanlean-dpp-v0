@@ -1,15 +1,17 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { DemoLanguageSelect } from "@/components/v2/demo/DemoLanguageSelect";
+import { demoBilingualText, demoMessages, demoText, formatDemoLocale, sourceLocale, type DemoLanguage, type DemoLocale } from "@/lib/demo/language";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BatteryReferencePassport } from "@/components/battery/BatteryReferencePassport";
 import { battery71Category } from "@/lib/battery/passport71";
 import { demoDigitalLinkIdentity, demoDigitalLinkPath } from "@/lib/demoDigitalLinks";
 import {
+  businessState,
   formatValue,
   humanizeFieldKey,
   normalizeDppProjection,
   safeExternalUrl,
-  type PassportLocale,
   type PreviewRole,
   type ProjectedDpp,
   type PresentedField,
@@ -17,7 +19,8 @@ import {
 
 type Props = {
   projection: ProjectedDpp;
-  locale: PassportLocale;
+  language: DemoLanguage;
+  demo?: boolean;
   previewRole: PreviewRole;
   audiencePreviewEnabled: boolean;
   previewGrants?: Partial<Record<PreviewRole, string>>;
@@ -102,14 +105,14 @@ function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
-function dateValue(value: unknown, locale: PassportLocale) {
-  if (typeof value !== "string") return formatValue(value, locale);
+function dateValue(value: unknown, language: DemoLanguage) {
+  if (typeof value !== "string") return localizedValue(value, language);
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return formatValue(value, locale);
-  return new Intl.DateTimeFormat(locale === "zh" ? "zh-CN" : "en-GB", { dateStyle: "medium", timeStyle: value.includes("T") ? "short" : undefined }).format(date);
+  if (Number.isNaN(date.getTime())) return localizedValue(value, language);
+  return new Intl.DateTimeFormat(formatDemoLocale(language.locale), { dateStyle: "medium", timeStyle: value.includes("T") ? "short" : undefined }).format(date);
 }
 
-function unitForKey(key: string, locale: PassportLocale): string | null {
+function unitForKey(key: string, language: DemoLanguage): string | null {
   const suffixes: Array<[RegExp, [string, string]]> = [
     [/_pct$/, ["%", "%"]], [/_kg_co2e.*$/, ["kg CO₂e", "kg CO₂e"]], [/_kg$/, ["kg", "kg"]], [/_mohm$/, ["mΩ", "mΩ"]],
     [/_wh$/, ["Wh", "Wh"]], [/_ah$/, ["Ah", "Ah"]], [/_v$/, ["V", "V"]], [/_a$/, ["A", "A"]], [/_w.*$/, ["W", "W"]], [/_c$/, ["°C", "°C"]],
@@ -117,10 +120,10 @@ function unitForKey(key: string, locale: PassportLocale): string | null {
     [/_months$/, ["months", "个月"]], [/_years$/, ["years", "年"]], [/_seconds$/, ["s", "秒"]],
   ];
   const unit = suffixes.find(([pattern]) => pattern.test(key))?.[1];
-  return unit ? unit[locale === "zh" ? 1 : 0] : null;
+  return unit ? demoText(language, unit[0], unit[1]) : null;
 }
 
-function labelForKey(key: string, locale: PassportLocale) {
+function labelForKey(key: string, language: DemoLanguage) {
   const labels: Record<string, [string, string]> = {
     productName: ["Product name", "产品名称"], modelCode: ["Model", "型号"], familyName: ["Product family", "产品系列"], brand: ["Brand", "品牌"],
     serialNumber: ["Serial number", "序列号"], dppId: ["DPP ID", "DPP 标识"], customer_confirmed: ["Customer confirmed", "客户确认"],
@@ -160,12 +163,18 @@ function labelForKey(key: string, locale: PassportLocale) {
     internalPassportUuid: ["Internal passport UUID", "内部护照 UUID"], schemaVersionUuid: ["Schema version UUID", "Schema 版本 UUID"], payloadHash: ["Payload hash", "载荷哈希"], public_excludes: ["Public exclusions", "公开范围排除项"],
   };
   const translated = labels[key];
-  return translated ? translated[locale === "zh" ? 1 : 0] : humanizeFieldKey(key);
+  return demoText(language, translated?.[0] || humanizeFieldKey(key), translated?.[1]);
 }
 
-function localizedValue(value: unknown, locale: PassportLocale, unit?: string | null) {
+function localizedValue(value: unknown, language: DemoLanguage, unit?: string | null) {
+  const { locale } = language;
   const localized = asRecord(value);
-  if (typeof localized.en === "string" && typeof localized.zh === "string") return publicCopy(String(localized[locale]), locale);
+  if (typeof localized[locale] === "string" || typeof localized.en === "string" || typeof localized.zh === "string") {
+    if (locale === "en" || locale === "zh") return publicCopy(demoBilingualText(language, localized as Partial<Record<DemoLocale, string>>), locale);
+    const direct = localized[locale];
+    if (typeof direct === "string") return direct;
+    return demoText(language, publicCopy(String(localized.en || localized.zh), "en"));
+  }
   if (locale === "zh" && typeof value === "string") {
     const states: Record<string, string> = {
       Charging: "充电中", Discharging: "放电中", Published: "已发布", PUBLISHED: "已发布",
@@ -180,12 +189,22 @@ function localizedValue(value: unknown, locale: PassportLocale, unit?: string | 
     };
     if (states[value]) return states[value];
   }
-  return typeof value === "string" ? publicCopy(value, locale) : formatValue(value, locale, unit);
+  if (typeof value === "string") {
+    const display = publicCopy(value, sourceLocale(locale));
+    return demoText(language, language.messages ? businessState(value, "en") || display : display);
+  }
+  if (typeof value === "number" && language.messages) {
+    const formatted = Number.isInteger(value) && value >= 1900 && value <= 2100
+      ? String(value)
+      : new Intl.NumberFormat(formatDemoLocale(locale), { maximumFractionDigits: 3 }).format(value);
+    return unit ? `${formatted}${unit === "%" ? "" : " "}${demoText(language, unit)}` : formatted;
+  }
+  return demoText(language, formatValue(value, sourceLocale(locale), unit));
 }
 
 /** Public pages render neutral product language while preserving the source
  * provenance enums in storage for audit and internal workflow purposes. */
-function publicCopy(value: string, locale: PassportLocale) {
+function publicCopy(value: string, locale: "zh" | "en") {
   const replacements: Array<[string, string]> = locale === "zh"
     ? [["合成演示数据", "产品数据"], ["合成演示事件。", "记录事件。"], ["合成演示事件", "记录事件"], ["已记录演示事件", "已记录"], ["合成演示流程", "服务流程"], ["合成演示", ""], ["合成数据集", "数据集"], ["演示数据集", "数据集"], ["仅限演示运输分类", "运输分类信息"], ["演示运输指引", "运输指引"], ["演示安全步骤", "安全步骤"], ["演示安全与储存指引", "产品安全与储存指引"], ["演示声明", "声明"], ["提供演示 SDS / MSDS", "提供 SDS / MSDS"], ["演示出具方", "出具方"], ["演示合规文件", "合规文件"], ["演示指南", "服务指南"], ["演示产地", "产地"], ["演示参考", "参考信息"], ["演示固件", "固件"], ["演示 / 未验证", "未验证"], ["仅用于演示", "参考信息"], ["演示程序", "文件化程序"], ["授权回收渠道 — 演示", "授权回收渠道"], ["确定性演示公式", "确定性计算方法"], [" — 演示", ""], ["— 演示", ""], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"], ["演示", "参考"]]
     : [["Synthetic demonstration data", "Product data"], ["synthetic demonstration data", "product data"], ["Synthetic Demo", "Product information"], ["synthetic demo", "product information"], ["Synthetic demo event.", "Recorded event."], ["synthetic demo event.", "recorded event."], ["Synthetic demonstration event.", "Recorded event."], ["synthetic demonstration event.", "recorded event."], ["Synthetic demonstration event", "Recorded event"], ["synthetic demonstration event", "recorded event"], ["Recorded demo event", "Recorded"], ["Deterministic demo formula", "Deterministic calculation method"], ["Deterministic demo", "Documented"], ["deterministic demo", "documented"], ["Reference Demo", "GreanLean"], ["synthetic data set", "data set"], ["Synthetic reference", "Reference information"], ["Demo declaration", "Declaration"], ["Demo SDS / MSDS", "SDS / MSDS"], ["Demo issuer", "Issuer"], ["Demo / unverified", "Unverified"], ["Demonstration only", "Reference information"], ["demo origin", "origin"], ["demo reference", "reference information"], ["demo firmware", "firmware"], ["Demonstration transport classification only", "Transport classification"], ["demo transport guidance", "transport guidance"], ["demo safety steps", "safety steps"], ["demonstrated safety steps", "documented safety steps"], ["product-specific demo safety and storage guidance", "product-specific safety and storage guidance"], ["demo procedure", "documented procedure"], [" — demo", ""], ["— demo", ""], [" Demo ", " Reference "], ["Demo ", "Reference "], [" demo ", " reference "], ["SYNTHETIC_REFERENCE", "GreanLean"], ["SYNTHETIC_DEMO", "GreanLean"]];
@@ -232,16 +251,16 @@ function withPublicDisplayOverrides(projection: ProjectedDpp): ProjectedDpp {
   return sanitizePublicValue(displayProjection) as ProjectedDpp;
 }
 
-function ValueGrid({ value, locale, omit = [] }: { value: unknown; locale: PassportLocale; omit?: string[] }) {
+function ValueGrid({ value, language, omit = [] }: { value: unknown; language: DemoLanguage; omit?: string[] }) {
   const entries = Object.entries(asRecord(value)).filter(([key, item]) => !omit.includes(key) && !isPlaceholderIdentifier(key, item));
-  if (!entries.length) return <p className="text-sm text-slate-500">{formatValue(value, locale)}</p>;
+  if (!entries.length) return <p className="text-sm text-slate-500">{localizedValue(value, language)}</p>;
   return (
     <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
       {entries.map(([key, item]) => (
         <div key={key} className="min-w-0 border-b border-slate-100 pb-3">
-          <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">{labelForKey(key, locale)}</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">{labelForKey(key, language)}</dt>
           <dd className="mt-1 break-words text-sm font-medium text-slate-900">
-            {Array.isArray(item) ? item.map((part) => localizedValue(part, locale)).join(" · ") : typeof item === "object" && item !== null && !(typeof asRecord(item).en === "string" && typeof asRecord(item).zh === "string") ? <CompactObject value={item} locale={locale} /> : localizedValue(item, locale, unitForKey(key, locale))}
+            {Array.isArray(item) ? item.map((part) => localizedValue(part, language)).join(" · ") : typeof item === "object" && item !== null && !(typeof asRecord(item).en === "string" && typeof asRecord(item).zh === "string") ? <CompactObject value={item} language={language} /> : localizedValue(item, language, unitForKey(key, language))}
           </dd>
         </div>
       ))}
@@ -249,11 +268,11 @@ function ValueGrid({ value, locale, omit = [] }: { value: unknown; locale: Passp
   );
 }
 
-function CompactObject({ value, locale }: { value: unknown; locale: PassportLocale }) {
+function CompactObject({ value, language }: { value: unknown; language: DemoLanguage }) {
   return (
     <span className="grid gap-1">
       {Object.entries(asRecord(value)).map(([key, item]) => (
-        <span key={key}><span className="text-slate-500">{labelForKey(key, locale)}:</span> {typeof item === "object" && item !== null && !(typeof asRecord(item).en === "string" && typeof asRecord(item).zh === "string") ? <CompactObject value={item} locale={locale} /> : localizedValue(item, locale, unitForKey(key, locale))}</span>
+        <span key={key}><span className="text-slate-500">{labelForKey(key, language)}:</span> {typeof item === "object" && item !== null && !(typeof asRecord(item).en === "string" && typeof asRecord(item).zh === "string") ? <CompactObject value={item} language={language} /> : localizedValue(item, language, unitForKey(key, language))}</span>
       ))}
     </span>
   );
@@ -284,107 +303,112 @@ function TrendLine({ label, values, unit }: { label: string; values: unknown; un
   return <div className="rounded-xl border border-slate-200 bg-slate-50 p-3"><div className="flex justify-between gap-3 text-xs font-semibold text-slate-600"><span>{label}</span><span>{points.at(-1)} {unit}</span></div><svg className="mt-2 h-16 w-full" viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label={label}><polyline points={polyline} fill="none" stroke="#0f766e" strokeWidth="3" vectorEffect="non-scaling-stroke" /></svg></div>;
 }
 
-function BmsPanel({ value, locale, snapshot }: { value: unknown; locale: PassportLocale; snapshot: string }) {
+function BmsPanel({ value, language, snapshot }: { value: unknown; language: DemoLanguage; snapshot: string }) {
   const data = asRecord(value);
   const trends = asRecord(data.trends);
   return (
     <div>
       <p className="mb-5 flex items-center gap-2 text-sm text-slate-600"><span aria-hidden="true" className="h-2 w-2 rounded-full bg-sky-500" />{snapshot}</p>
       <div className="grid gap-4 sm:grid-cols-2"><Gauge label="SOC" value={data.soc_pct} /><Gauge label="SOH" value={data.soh_pct} /></div>
-      <div className="mt-5"><ValueGrid value={data} locale={locale} omit={["soc_pct", "soh_pct", "trends"]} /></div>
-      {Object.keys(trends).length ? <section className="mt-6" aria-label={locale === "zh" ? "BMS 趋势" : "BMS trends"}><h4 className="text-sm font-bold text-slate-900">{locale === "zh" ? "运行趋势" : "Documented operating trends"}</h4><div className="mt-3 grid gap-3 md:grid-cols-3"><TrendLine label={locale === "zh" ? "24 小时 SOC 趋势" : "24h SOC trend"} values={trends.soc_24h} unit="%" /><TrendLine label={locale === "zh" ? "24 小时温度趋势" : "24h temperature trend"} values={trends.temperature_24h} unit="°C" /><TrendLine label={locale === "zh" ? "30 天 SOH 趋势" : "30d SOH trend"} values={trends.soh_30d} unit="%" /></div></section> : null}
+      <div className="mt-5"><ValueGrid value={data} language={language} omit={["soc_pct", "soh_pct", "trends"]} /></div>
+      {Object.keys(trends).length ? <section className="mt-6" aria-label={demoText(language, "BMS trends", "BMS 趋势")}><h4 className="text-sm font-bold text-slate-900">{demoText(language, "Documented operating trends", "运行趋势")}</h4><div className="mt-3 grid gap-3 md:grid-cols-3"><TrendLine label={demoText(language, "24h SOC trend", "24 小时 SOC 趋势")} values={trends.soc_24h} unit="%" /><TrendLine label={demoText(language, "24h temperature trend", "24 小时温度趋势")} values={trends.temperature_24h} unit="°C" /><TrendLine label={demoText(language, "30d SOH trend", "30 天 SOH 趋势")} values={trends.soh_30d} unit="%" /></div></section> : null}
     </div>
   );
 }
 
-function CarbonPanel({ value, locale }: { value: unknown; locale: PassportLocale }) {
+function CarbonPanel({ value, language }: { value: unknown; language: DemoLanguage }) {
   const data = asRecord(value);
   const breakdown = asRecord(data.lifecycle_breakdown_kg_co2e);
   const total = Number(data.total_kg_co2e_per_battery) || Object.values(breakdown).reduce<number>((sum, item) => sum + Number(item || 0), 0);
   return (
     <div>
-      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-4xl font-bold tracking-tight text-slate-950">{formatValue(total, locale, "kg CO₂e")}</p><p className="mt-1 text-sm text-slate-500">{formatValue(data.functional_unit, locale)}</p></div><StatusBadge tone="amber">{data.third_party_verified ? (locale === "zh" ? "已验证" : "Verified") : (locale === "zh" ? "未经第三方验证" : "Not third-party verified")}</StatusBadge></div>
-      <div className="mt-6 space-y-3" role="img" aria-label={locale === "zh" ? "生命周期阶段碳足迹占比" : "Carbon footprint proportions by lifecycle stage"}>
+      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-4xl font-bold tracking-tight text-slate-950">{localizedValue(total, language, "kg CO₂e")}</p><p className="mt-1 text-sm text-slate-500">{localizedValue(data.functional_unit, language)}</p></div><StatusBadge tone="amber">{data.third_party_verified ? (demoText(language, "Verified", "已验证")) : (demoText(language, "Not third-party verified", "未经第三方验证"))}</StatusBadge></div>
+      <div className="mt-6 space-y-3" role="img" aria-label={demoText(language, "Carbon footprint proportions by lifecycle stage", "生命周期阶段碳足迹占比")}>
         {Object.entries(breakdown).sort((a, b) => Number(b[1]) - Number(a[1])).map(([key, item]) => {
           const amount = Number(item) || 0;
-          return <div key={key}><div className="mb-1 flex justify-between gap-4 text-sm"><span>{labelForKey(key, locale)}</span><span className="font-semibold">{formatValue(amount, locale, "kg CO₂e")}</span></div><div className="h-2 rounded-full bg-slate-100"><div className="h-2 rounded-full bg-emerald-600" style={{ width: `${total ? Math.max(2, amount / total * 100) : 0}%` }} /></div></div>;
+          return <div key={key}><div className="mb-1 flex justify-between gap-4 text-sm"><span>{labelForKey(key, language)}</span><span className="font-semibold">{localizedValue(amount, language, "kg CO₂e")}</span></div><div className="h-2 rounded-full bg-slate-100"><div className="h-2 rounded-full bg-emerald-600" style={{ width: `${total ? Math.max(2, amount / total * 100) : 0}%` }} /></div></div>;
         })}
       </div>
-      <div className="mt-6"><ValueGrid value={data} locale={locale} omit={["lifecycle_breakdown_kg_co2e", "total_kg_co2e_per_battery", "functional_unit", "third_party_verified"]} /></div>
+      <div className="mt-6"><ValueGrid value={data} language={language} omit={["lifecycle_breakdown_kg_co2e", "total_kg_co2e_per_battery", "functional_unit", "third_party_verified"]} /></div>
     </div>
   );
 }
 
-function CompositionPanel({ value, locale }: { value: unknown; locale: PassportLocale }) {
+function CompositionPanel({ value, language }: { value: unknown; language: DemoLanguage }) {
   const data = asRecord(value);
   const percentages = Object.entries(data).filter(([key, item]) => key.endsWith("_pct") && typeof item === "number");
   return (
     <div>
-      {percentages.length ? <div className="grid gap-3 sm:grid-cols-2">{percentages.map(([key, item]) => <div key={key} className="rounded-xl bg-slate-50 p-4"><div className="flex justify-between text-sm"><span>{labelForKey(key, locale)}</span><strong>{formatValue(item, locale, "%")}</strong></div><div className="mt-2 h-2 rounded bg-slate-200"><div className="h-2 rounded bg-teal-600" style={{ width: `${Math.min(100, Number(item))}%` }} /></div></div>)}</div> : null}
-      <div className={percentages.length ? "mt-5" : ""}><ValueGrid value={data} locale={locale} omit={percentages.map(([key]) => key)} /></div>
+      {percentages.length ? <div className="grid gap-3 sm:grid-cols-2">{percentages.map(([key, item]) => <div key={key} className="rounded-xl bg-slate-50 p-4"><div className="flex justify-between text-sm"><span>{labelForKey(key, language)}</span><strong>{localizedValue(item, language, "%")}</strong></div><div className="mt-2 h-2 rounded bg-slate-200"><div className="h-2 rounded bg-teal-600" style={{ width: `${Math.min(100, Number(item))}%` }} /></div></div>)}</div> : null}
+      <div className={percentages.length ? "mt-5" : ""}><ValueGrid value={data} language={language} omit={percentages.map(([key]) => key)} /></div>
     </div>
   );
 }
 
-function DocumentsPanel({ value, locale, metadataOnly }: { value: unknown; locale: PassportLocale; metadataOnly: string }) {
+function DocumentsPanel({ value, language, metadataOnly }: { value: unknown; language: DemoLanguage; metadataOnly: string }) {
   const documents = Array.isArray(value) ? value.map(asRecord) : [];
   return <div className="grid gap-4 md:grid-cols-2">{documents.map((document, index) => {
     const externalUrl = safeExternalUrl(document.url || document.document_url);
-    const demoUrl = typeof document.file === "string" ? `/api/demo-document?file=${encodeURIComponent(document.file)}&lang=${locale}` : null;
+    const demoUrl = typeof document.file === "string" ? `/api/demo-document?file=${encodeURIComponent(document.file)}&lang=${language.locale}` : null;
     const url = demoUrl || externalUrl;
-    return <article key={String(document.document_id || index)} className="rounded-xl border border-slate-200 bg-slate-50 p-5"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">{localizedValue(document.document_type, locale)}</p><h4 className="mt-2 font-semibold text-slate-950">{formatValue(document.title, locale)}</h4></div><span aria-hidden="true" className="text-xl">↗</span></div><p className="mt-3 break-all font-mono text-xs text-slate-500">{formatValue(document.document_id, locale)}</p><div className="mt-4 flex flex-wrap gap-2"><StatusBadge>{metadataOnly}</StatusBadge>{document.issuer ? <StatusBadge>{formatValue(document.issuer, locale)}</StatusBadge> : null}{document.version ? <StatusBadge>v{String(document.version)}</StatusBadge> : null}</div>{url ? <a href={url} target="_blank" rel="noreferrer noopener" className="mt-4 inline-flex min-h-11 items-center font-semibold text-emerald-700 underline decoration-2 underline-offset-4">{locale === "zh" ? "查看附件" : "View document"}</a> : null}</article>;
+    return <article key={String(document.document_id || index)} className="rounded-xl border border-slate-200 bg-slate-50 p-5"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">{localizedValue(document.document_type, language)}</p><h4 className="mt-2 font-semibold text-slate-950">{localizedValue(document.title, language)}</h4></div><span aria-hidden="true" className="text-xl">↗</span></div><p className="mt-3 break-all font-mono text-xs text-slate-500">{localizedValue(document.document_id, language)}</p><div className="mt-4 flex flex-wrap gap-2"><StatusBadge>{metadataOnly}</StatusBadge>{document.issuer ? <StatusBadge>{localizedValue(document.issuer, language)}</StatusBadge> : null}{document.version ? <StatusBadge>v{String(document.version)}</StatusBadge> : null}</div>{url ? <a href={url} target="_blank" rel="noreferrer noopener" className="mt-4 inline-flex min-h-11 items-center font-semibold text-emerald-700 underline decoration-2 underline-offset-4">{demoText(language, "View document", "查看附件")}</a> : null}</article>;
   })}</div>;
 }
 
-function TimelinePanel({ value, locale }: { value: unknown; locale: PassportLocale }) {
+function TimelinePanel({ value, language }: { value: unknown; language: DemoLanguage }) {
   const events = Array.isArray(value) ? value.map(asRecord) : [];
-  return <ol className="relative ml-2 border-l-2 border-emerald-200">{events.map((event, index) => <li key={`${formatValue(event.event_type || event.type, locale)}-${index}`} className="relative pb-8 pl-7 last:pb-0"><span className="absolute -left-[9px] top-1 h-4 w-4 rounded-full border-4 border-white bg-emerald-600" /><p className="font-semibold text-slate-950">{localizedValue(event.event_type || event.type || "Lifecycle event", locale)}</p><p className="mt-1 text-sm text-slate-600">{dateValue(event.timestamp || event.at, locale)}{event.actor ? ` · ${formatValue(event.actor, locale)}` : ""}{event.status ? ` · ${formatValue(event.status, locale)}` : ""}</p>{event.detail ? <p className="mt-1 text-sm text-slate-600">{formatValue(event.detail, locale)}</p> : null}</li>)}</ol>;
+  return <ol className="relative ml-2 border-l-2 border-emerald-200">{events.map((event, index) => <li key={`${localizedValue(event.event_type || event.type, language)}-${index}`} className="relative pb-8 pl-7 last:pb-0"><span className="absolute -left-[9px] top-1 h-4 w-4 rounded-full border-4 border-white bg-emerald-600" /><p className="font-semibold text-slate-950">{localizedValue(event.event_type || event.type || "Lifecycle event", language)}</p><p className="mt-1 text-sm text-slate-600">{dateValue(event.timestamp || event.at, language)}{event.actor ? ` · ${localizedValue(event.actor, language)}` : ""}{event.status ? ` · ${localizedValue(event.status, language)}` : ""}</p>{event.detail ? <p className="mt-1 text-sm text-slate-600">{localizedValue(event.detail, language)}</p> : null}</li>)}</ol>;
 }
 
-function FieldRenderer({ field, locale, m }: { field: PresentedField; locale: PassportLocale; m: typeof messages.en | typeof messages.zh }) {
+function FieldRenderer({ field, language, m }: { field: PresentedField; language: DemoLanguage; m: Record<keyof typeof messages.en, string> }) {
   switch (field.metadata.renderType) {
-    case "bms": return <BmsPanel value={field.value} locale={locale} snapshot={m.snapshot} />;
-    case "carbon": return <CarbonPanel value={field.value} locale={locale} />;
-    case "composition": return <CompositionPanel value={field.value} locale={locale} />;
-    case "documents": return <DocumentsPanel value={field.value} locale={locale} metadataOnly={m.metadataOnly} />;
-    case "timeline": return <TimelinePanel value={field.value} locale={locale} />;
-    case "disassembly": return <div><div role="alert" className="mb-5 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm font-semibold text-amber-950">{m.demoProcedure}</div><ValueGrid value={field.value} locale={locale} /></div>;
-    default: return <ValueGrid value={field.value} locale={locale} />;
+    case "bms": return <BmsPanel value={field.value} language={language} snapshot={m.snapshot} />;
+    case "carbon": return <CarbonPanel value={field.value} language={language} />;
+    case "composition": return <CompositionPanel value={field.value} language={language} />;
+    case "documents": return <DocumentsPanel value={field.value} language={language} metadataOnly={m.metadataOnly} />;
+    case "timeline": return <TimelinePanel value={field.value} language={language} />;
+    case "disassembly": return <div><div role="alert" className="mb-5 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm font-semibold text-amber-950">{m.demoProcedure}</div><ValueGrid value={field.value} language={language} /></div>;
+    default: return <ValueGrid value={field.value} language={language} />;
   }
 }
 
-function sectionTitle(id: string, m: typeof messages.en | typeof messages.zh) {
+function sectionTitle(id: string, m: Record<keyof typeof messages.en, string>) {
   const titles: Record<string, string> = { overview: m.overview, specifications: m.specifications, sustainability: m.sustainability, performance: m.performance, compliance: m.compliance, repair: m.repair, circularity: m.circularity, documents: m.documents, lifecycle: m.lifecycle, passport: m.passportSection, provenance: m.provenance, technical: m.technical };
   return titles[id] || humanizeFieldKey(id);
 }
 
-export function ProductizedDppPage({ projection, locale, previewRole, audiencePreviewEnabled, previewGrants }: Props) {
-  const view = normalizeDppProjection(withPublicDisplayOverrides(projection), locale);
+export function ProductizedDppPage({ projection, language, demo = false, previewRole, audiencePreviewEnabled, previewGrants }: Props) {
+  const { locale } = language;
   const isBatteryPassport = battery71Category(projection) !== null;
-  if (isBatteryPassport) return <BatteryReferencePassport source={projection} locale={locale} />;
-  const m = messages[locale];
-  const passportTitle = isBatteryPassport ? (locale === "zh" ? "电池护照" : "Battery Passport") : m.passport;
+  if (isBatteryPassport) return <BatteryReferencePassport source={projection} locale={locale} language={language} demo={demo} />;
+  const displayProjection = withPublicDisplayOverrides(projection);
+  const view = normalizeDppProjection(displayProjection, sourceLocale(locale));
+  const m = demoMessages(language, messages[sourceLocale(locale)]);
+  const identity = asRecord(displayProjection.fields.find((field) => field.fieldCode === "identity.product")?.value);
+  const productName = language.messages ? localizedValue(identity.productName || view.productName, language) : view.productName;
+  const passportTitle = m.passport;
   const showNeutralDisclaimer = view.synthetic || Boolean(applicationByPassport[projection.passportIdentifier]);
   const otherLocale = locale === "en" ? "zh" : "en";
-  const gs1Identity = demoDigitalLinkIdentity(projection.passportIdentifier);
-  const basePath = demoDigitalLinkPath(projection.passportIdentifier) || `/p/${encodeURIComponent(projection.passportIdentifier)}`;
   const currentGrant = previewGrants?.[previewRole];
   const previewQuery = audiencePreviewEnabled ? `&audience=${previewRole}${currentGrant ? `&audienceGrant=${encodeURIComponent(currentGrant)}` : ""}` : "";
+  const gs1Identity = demoDigitalLinkIdentity(projection.passportIdentifier);
+  const basePath = demoDigitalLinkPath(projection.passportIdentifier) || `/p/${encodeURIComponent(projection.passportIdentifier)}`;
+
   const qrUrl = `/api/v2/resolver/${encodeURIComponent(projection.passportIdentifier)}?format=qr`;
   return (
-    <main className="min-h-screen bg-[#f4f7f5] text-slate-950">
+    <main lang={locale} className="min-h-screen bg-[#f4f7f5] text-slate-950">
       <a href="#passport-content" className="sr-only z-50 rounded bg-white p-3 focus:not-sr-only focus:fixed focus:left-3 focus:top-3">{m.skip}</a>
       <header className="border-b border-emerald-950/10 bg-emerald-950 text-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8"><BrandLogo href={`/?lang=${locale}`} size="md" variant="light" wordmarkClassName="drop-shadow-sm" /><nav aria-label={locale === "zh" ? "账户与语言" : "Account and language"} className="flex items-center gap-2"><Link href={`/login?lang=${locale}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.login}</Link><Link href={`${basePath}?lang=${otherLocale}${previewQuery}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.language}</Link></nav></div>
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-8"><BrandLogo href={`/?lang=${sourceLocale(locale)}`} size="md" variant="light" wordmarkClassName="drop-shadow-sm" /><nav aria-label={demoText(language, "Account and language", "账户与语言")} className="flex items-center gap-2"><Link href={`/login?lang=${sourceLocale(locale)}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.login}</Link>{demo ? <DemoLanguageSelect language={language} light /> : <Link href={`${basePath}?lang=${otherLocale}${previewQuery}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold hover:bg-white/10 focus:ring-2 focus:ring-white">{m.language}</Link>}</nav></div>
       </header>
-      {audiencePreviewEnabled ? <div className="border-b border-sky-200 bg-sky-50"><div className="mx-auto max-w-7xl px-5 py-4 sm:px-8"><div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-xs font-bold tracking-[.16em] text-sky-900">{m.preview}</p><p className="mt-1 text-sm text-sky-800">{m.previewWarning}</p></div><nav aria-label={m.preview} className="flex gap-2 overflow-x-auto pb-1">{(["PUBLIC", "REPAIRER", "RECYCLER", "MANUFACTURER", "AUTHORITY"] as PreviewRole[]).map((role) => { const grant = previewGrants?.[role]; return <Link key={role} href={`${basePath}?lang=${locale}&audience=${role}${grant ? `&audienceGrant=${encodeURIComponent(grant)}` : ""}`} className={`inline-flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-semibold ring-1 ring-inset ${previewRole === role ? "bg-sky-900 text-white ring-sky-900" : "bg-white text-sky-900 ring-sky-200"}`}>{m[role.toLowerCase() as keyof typeof m]}</Link>; })}</nav></div></div></div> : null}
-      <section className="relative overflow-hidden bg-emerald-950 text-white"><div className="absolute inset-0 opacity-30 dpp-grid" /><div className="relative mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_300px] lg:py-16"><div><div className="flex flex-wrap gap-2"><StatusBadge tone="green">{view.brand}</StatusBadge><StatusBadge tone="blue">{view.category ? (locale === "zh" ? ({ "E-bike battery pack": "LMT 电池", "Industrial energy storage": "工业储能电池", "Textile garment": "纺织品", "Consumer electronics": "消费电子产品", "Wood-plastic flooring": "建筑材料", "Hand tool": "五金产品" }[view.category] || view.category) : view.category) : passportTitle}</StatusBadge><StatusBadge tone="amber">{m.unverified}</StatusBadge></div><p className="mt-7 text-sm font-semibold uppercase tracking-[.2em] text-emerald-300">{passportTitle}</p><h1 className="mt-3 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">{view.productName}</h1><p className="mt-5 text-lg text-emerald-100">{view.modelCode} · {projection.passportIdentifier}</p><div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-emerald-100"><span><strong className="text-white">{m.status}:</strong> {localizedValue(projection.status, locale)}</span><span><strong className="text-white">{m.updated}:</strong> {dateValue(projection.publishedAt, locale)}</span></div></div><div className="flex items-center justify-center"><div className="rounded-2xl bg-white p-4 text-center text-slate-900 shadow-2xl"><img src={qrUrl} width={220} height={220} alt={`${m.scan}: ${projection.passportIdentifier}`} className="h-auto w-[220px] max-w-full" /><p className="mt-3 max-w-[220px] text-xs font-semibold text-slate-600">{m.scan}</p></div></div></div></section>
-      {!isBatteryPassport ? (<div className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur"><nav aria-label={locale === "zh" ? "护照章节" : "Passport sections"} className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-5 py-2 sm:px-8">{view.sections.filter((section) => section.id !== "technical").map((section) => <a key={section.id} href={`#${section.id}`} className="inline-flex min-h-11 shrink-0 items-center rounded-lg px-3 text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-emerald-600">{sectionTitle(section.id, m)}</a>)}</nav></div>) : null}
+      {audiencePreviewEnabled ? <div className="border-b border-sky-200 bg-sky-50"><div className="mx-auto max-w-7xl px-5 py-4 sm:px-8"><div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-xs font-bold tracking-[.16em] text-sky-900">{m.preview}</p><p className="mt-1 text-sm text-sky-800">{m.previewWarning}</p></div><nav aria-label={m.preview} className="flex gap-2 overflow-x-auto pb-1">{(["PUBLIC", "REPAIRER", "RECYCLER", "MANUFACTURER", "AUTHORITY"] as PreviewRole[]).map((role) => { const grant = previewGrants?.[role]; return <Link key={role} href={`${basePath}?lang=${locale}${demo && !gs1Identity ? "&demo=1" : ""}&audience=${role}${grant ? `&audienceGrant=${encodeURIComponent(grant)}` : ""}`} className={`inline-flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-semibold ring-1 ring-inset ${previewRole === role ? "bg-sky-900 text-white ring-sky-900" : "bg-white text-sky-900 ring-sky-200"}`}>{m[role.toLowerCase() as keyof typeof m]}</Link>; })}</nav></div></div></div> : null}
+      <section className="relative overflow-hidden bg-emerald-950 text-white"><div className="absolute inset-0 opacity-30 dpp-grid" /><div className="relative mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_300px] lg:py-16"><div><div className="flex flex-wrap gap-2"><StatusBadge tone="green">{view.brand}</StatusBadge><StatusBadge tone="blue">{view.category ? (locale === "zh" ? ({ "E-bike battery pack": "LMT 电池", "Industrial energy storage": "工业储能电池", "Textile garment": "纺织品", "Consumer electronics": "消费电子产品", "Wood-plastic flooring": "建筑材料", "Hand tool": "五金产品" }[view.category] || view.category) : demoText(language, view.category)) : passportTitle}</StatusBadge><StatusBadge tone="amber">{m.unverified}</StatusBadge></div><p className="mt-7 text-sm font-semibold uppercase tracking-[.2em] text-emerald-300">{passportTitle}</p><h1 className="mt-3 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">{productName}</h1><p className="mt-5 text-lg text-emerald-100">{view.modelCode} · {projection.passportIdentifier}</p><div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-emerald-100"><span><strong className="text-white">{m.status}:</strong> {localizedValue(projection.status, language)}</span><span><strong className="text-white">{m.updated}:</strong> {dateValue(projection.publishedAt, language)}</span></div></div><div className="flex items-center justify-center"><div className="rounded-2xl bg-white p-4 text-center text-slate-900 shadow-2xl"><img src={qrUrl} width={220} height={220} alt={`${m.scan}: ${projection.passportIdentifier}`} className="h-auto w-[220px] max-w-full" /><p className="mt-3 max-w-[220px] text-xs font-semibold text-slate-600">{m.scan}</p></div></div></div></section>
+      {(<div className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur"><nav aria-label={demoText(language, "Passport sections", "护照章节")} className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-5 py-2 sm:px-8">{view.sections.filter((section) => section.id !== "technical").map((section) => <a key={section.id} href={`#${section.id}`} className="inline-flex min-h-11 shrink-0 items-center rounded-lg px-3 text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-950 focus:ring-2 focus:ring-emerald-600">{sectionTitle(section.id, m)}</a>)}</nav></div>)}
       <div id="passport-content" className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:py-14">
-        {!isBatteryPassport && view.metrics.length ? <section aria-labelledby="key-metrics"><div className="mb-5 flex items-end justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-700">{m.overview}</p><h2 id="key-metrics" className="mt-1 text-2xl font-bold tracking-tight">{m.metrics}</h2></div></div><div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8">{view.metrics.map((metric) => <article key={metric.key} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"><p className="text-xs font-semibold text-slate-500">{metric.label}</p><p className="mt-2 break-words text-xl font-bold tracking-tight">{localizedValue(metric.value, locale, metric.unit)}</p></article>)}</div></section> : null}
-        {isBatteryPassport ? null : (<div className="mt-12 space-y-12">{view.sections.filter((section) => section.id !== "technical").map((section) => <section id={section.id} key={section.id} aria-labelledby={`${section.id}-title`} className="scroll-mt-20"><div className="mb-5"><h2 id={`${section.id}-title`} className="text-2xl font-bold tracking-tight sm:text-3xl">{sectionTitle(section.id, m)}</h2><div className="mt-2 h-1 w-12 rounded-full bg-emerald-600" /></div><div className="grid gap-5">{section.fields.filter((field) => field.fieldCode !== "demo.warning" && field.fieldCode !== "provenance.synthetic").map((field) => <article key={field.fieldCode} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"><h3 className="font-semibold text-slate-950">{field.metadata.label[locale]}</h3><div className="flex flex-wrap gap-2"><StatusBadge tone="amber">{localizedValue(field.verificationStatus || m.unverified, locale)}</StatusBadge></div></div><div className="p-5 sm:p-6"><FieldRenderer field={field} locale={locale} m={m} /></div></article>)}</div></section>)}</div>)}
-        <section id="passport" aria-labelledby="passport-title" className="mt-12 scroll-mt-20"><h2 id="passport-title" className="text-2xl font-bold tracking-tight sm:text-3xl">{m.passportSection}</h2><div className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><ValueGrid locale={locale} value={{ dppId: projection.passportIdentifier, ...(gs1Identity ? { [locale === "zh" ? "演示 GTIN" : "Demo GTIN"]: gs1Identity.gtin, [locale === "zh" ? "GS1 序列号" : "GS1 serial number"]: gs1Identity.serialNumber, [locale === "zh" ? "GS1 数字链接" : "GS1 Digital Link"]: `https://www.greanlean.com${basePath}` } : {}), status: projection.status, version: projection.version, publishedAt: projection.publishedAt, audience: projection.audience }} /></div></section>
-        <details id="technical" className="mt-8 scroll-mt-20 rounded-2xl border border-slate-300 bg-white"><summary className="min-h-14 cursor-pointer px-5 py-4 font-semibold focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:px-6">{m.technical}</summary><div className="border-t border-slate-200 p-5 sm:p-6"><p className="mb-5 text-sm text-slate-600">{m.technicalHint}</p><ValueGrid locale={locale} value={{ internalPassportUuid: projection.passportId, schemaVersionUuid: projection.schemaVersion, payloadHash: projection.payloadHash }} />{view.sections.find((section) => section.id === "technical")?.fields.map((field) => <div key={field.fieldCode} className="mt-6 border-t border-slate-200 pt-5"><h3 className="mb-4 font-semibold">{field.metadata.label[locale]}</h3><FieldRenderer field={field} locale={locale} m={m} /></div>)}</div></details>
+        {view.metrics.length ? <section aria-labelledby="key-metrics"><div className="mb-5 flex items-end justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-700">{m.overview}</p><h2 id="key-metrics" className="mt-1 text-2xl font-bold tracking-tight">{m.metrics}</h2></div></div><div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8">{view.metrics.map((metric) => <article key={metric.key} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"><p className="text-xs font-semibold text-slate-500">{demoText(language, metric.label)}</p><p className="mt-2 break-words text-xl font-bold tracking-tight">{localizedValue(metric.value, language, metric.unit)}</p></article>)}</div></section> : null}
+        {(<div className="mt-12 space-y-12">{view.sections.filter((section) => section.id !== "technical").map((section) => <section id={section.id} key={section.id} aria-labelledby={`${section.id}-title`} className="scroll-mt-20"><div className="mb-5"><h2 id={`${section.id}-title`} className="text-2xl font-bold tracking-tight sm:text-3xl">{sectionTitle(section.id, m)}</h2><div className="mt-2 h-1 w-12 rounded-full bg-emerald-600" /></div><div className="grid gap-5">{section.fields.filter((field) => field.fieldCode !== "demo.warning" && field.fieldCode !== "provenance.synthetic").map((field) => <article key={field.fieldCode} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"><h3 className="font-semibold text-slate-950">{demoBilingualText(language, field.metadata.label)}</h3><div className="flex flex-wrap gap-2"><StatusBadge tone="amber">{field.verificationStatus ? localizedValue(field.verificationStatus, language) : m.unverified}</StatusBadge></div></div><div className="p-5 sm:p-6"><FieldRenderer field={field} language={language} m={m} /></div></article>)}</div></section>)}</div>)}
+        <section id="passport" aria-labelledby="passport-title" className="mt-12 scroll-mt-20"><h2 id="passport-title" className="text-2xl font-bold tracking-tight sm:text-3xl">{m.passportSection}</h2><div className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><ValueGrid language={language} value={{ dppId: projection.passportIdentifier, ...(gs1Identity ? { [locale === "zh" ? "演示 GTIN" : "Demo GTIN"]: gs1Identity.gtin, [locale === "zh" ? "GS1 序列号" : "GS1 serial number"]: gs1Identity.serialNumber, [locale === "zh" ? "GS1 数字链接" : "GS1 Digital Link"]: `https://www.greanlean.com${basePath}` } : {}), status: projection.status, version: projection.version, publishedAt: projection.publishedAt, audience: projection.audience }} /></div></section>
+        <details id="technical" className="mt-8 scroll-mt-20 rounded-2xl border border-slate-300 bg-white"><summary className="min-h-14 cursor-pointer px-5 py-4 font-semibold focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:px-6">{m.technical}</summary><div className="border-t border-slate-200 p-5 sm:p-6"><p className="mb-5 text-sm text-slate-600">{m.technicalHint}</p><ValueGrid language={language} value={{ internalPassportUuid: projection.passportId, schemaVersionUuid: projection.schemaVersion, payloadHash: projection.payloadHash }} />{view.sections.find((section) => section.id === "technical")?.fields.map((field) => <div key={field.fieldCode} className="mt-6 border-t border-slate-200 pt-5"><h3 className="mb-4 font-semibold">{demoBilingualText(language, field.metadata.label)}</h3><FieldRenderer field={field} language={language} m={m} /></div>)}</div></details>
       </div>
       <footer className="border-t border-slate-200 bg-white"><div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-8 text-sm text-slate-500 sm:px-8"><p className="max-w-4xl leading-6">{showNeutralDisclaimer ? m.disclaimer : null}</p><div className="flex flex-col gap-2 md:flex-row md:justify-between"><span>GREANLEAN · {passportTitle}</span><span>{projection.passportIdentifier} · v{projection.version}</span></div></div></footer>
     </main>
