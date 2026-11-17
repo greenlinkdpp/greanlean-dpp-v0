@@ -1,0 +1,56 @@
+[
+  {
+    "passportIdentifier": "DPP-GLR-LMT-000001",
+    "gtin": "09520000000011",
+    "serialNumber": "GLR-LMT-000001",
+    "gtinSource": "GS1_952_DEMONSTRATION"
+  },
+  {
+    "passportIdentifier": "DPP-GLR-LMT-000002",
+    "gtin": "09506000134352",
+    "serialNumber": "GLR-LMT-000002",
+    "gtinSource": "USER_PROVIDED_EXAMPLE"
+  },
+  {
+    "passportIdentifier": "DPP-GLR-LMT-000003",
+    "gtin": "09520000000035",
+    "serialNumber": "GLR-LMT-000003",
+    "gtinSource": "GS1_952_DEMONSTRATION"
+  },
+  {
+    "passportIdentifier": "DPP-DEMO-ESS-000001",
+    "gtin": "09520000000042",
+    "serialNumber": "DEMO-ESS-000001",
+    "gtinSource": "GS1_952_DEMONSTRATION"
+  },
+  {
+    "passportIdentifier": "DPP-DEMO-TEX-000001",
+    "gtin": "09520000000059",
+    "serialNumber": "DEMO-TEX-000001",
+    "gtinSource": "GS1_952_DEMONSTRATION"
+  },
+  {
+    "passportIdentifier": "DPP-DEMO-CE-000001",
+    "gtin": "09520000000066",
+    "serialNumber": "DEMO-CE-000001",
+    "gtinSource": "GS1_952_DEMONSTRATION"
+  },
+  {
+    "passportIdentifier": "DPP-DEMO-BLD-000001",
+    "gtin": "09520000000073",
+    "serialNumber": "DEMO-BLD-000001",
+    "gtinSource": "GS1_952_DEMONSTRATION"
+  },
+  {
+    "passportIdentifier": "DPP-DEMO-HW-000001",
+    "gtin": "09520000000080",
+    "serialNumber": "DEMO-HW-000001",
+    "gtinSource": "GS1_952_DEMONSTRATION"
+  },
+  {
+    "passportIdentifier": "DPP-DEMO-GOLF-000001",
+    "gtin": "09520000000110",
+    "serialNumber": "GC51105-DEMO-0001",
+    "gtinSource": "GS1_952_DEMONSTRATION"
+  }
+]

@@ -5,7 +5,7 @@ import {
 } from "@/lib/server/dppShowcase";
 import { buildBatteryPassShowcaseExport } from "@/lib/server/batteryPassShowcase";
 import { loadBatteryProjection } from "@/lib/server/batteryRepository";
-import { createSupabaseAdminClient, createSupabasePublicServerClient } from "@/lib/server/supabase";
+import { createSupabasePublicServerClient } from "@/lib/server/supabase";
 import { createSupabaseClient } from "@/lib/supabase";
 
 function escapePdfText(value: string) {
@@ -109,19 +109,13 @@ function pdfLines(payload: any) {
   ];
 }
 
-const BATTERY_SHOWCASE_IDS = new Set([
-  "DPP-LMT-BAT-48V15AH",
-  "DPP-GV-ESS-14K3-000001",
-]);
-
-async function publicBatteryPassport(identifier: string, showcase: boolean) {
+async function publicBatteryPassport(identifier: string) {
   try {
-    const showcaseProjection = showcase && BATTERY_SHOWCASE_IDS.has(identifier);
     return await loadBatteryProjection(
-      showcaseProjection ? createSupabaseAdminClient() : createSupabasePublicServerClient(),
+      createSupabasePublicServerClient(),
       identifier,
-      showcaseProjection ? "INTERNAL" : "PUBLIC",
-      { includeMissing: showcaseProjection },
+      "PUBLIC",
+      { includeMissing: false },
     );
   } catch {
     return null;
@@ -169,7 +163,7 @@ export async function GET(request: Request) {
   if (!basePayload) {
     return Response.json({ error: "DPP not found." }, { status: 404 });
   }
-  const batteryPassport = await publicBatteryPassport(identifier, showcase);
+  const batteryPassport = await publicBatteryPassport(identifier);
   const payload = batteryPassport
     ? { ...basePayload, batteryPassport }
     : basePayload;

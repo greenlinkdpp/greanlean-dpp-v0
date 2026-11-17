@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ searchParams }: { searchParams?: Promise<{ lang?: string }> }): Promise<Metadata> {
   const zh = (await searchParams)?.lang !== "en";
-  return { title: { absolute: zh ? "GreanLean 产品护照展厅" : "GreanLean Digital Product Passport Showcase" } };
+  return { title: { absolute: zh ? "GreanLean 二维码与产品护照展厅" : "GreanLean QR Code & Product Passport Showcase" } };
 }
 
 export default async function DemoPage({ searchParams }: { searchParams?: Promise<{ lang?: string }> }) {

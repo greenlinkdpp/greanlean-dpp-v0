@@ -1,4 +1,18 @@
-const OFFICIAL_PATH = /^\/(?:api\/v2\/resolver\/[^/]+|r\/[^/]+|p\/[^/]+|01\/[^/]+)$/;
+import { isValidGtin } from "../dppCompliance.ts";
+
+const OFFICIAL_PATH = /^\/(?:api\/v2\/resolver\/[^/]+|r\/[^/]+|p\/[^/]+)$/;
+
+function isGs1Path(path: string) {
+  const match = /^\/01\/(\d{14})(?:\/(10|21)\/([^/]+))?$/.exec(path);
+  if (!match || !isValidGtin(match[1])) return false;
+  if (!match[3]) return true;
+  try {
+    const qualifier = decodeURIComponent(match[3]);
+    return qualifier.length <= 20 && /^[!"%&'()*+,\-./0-9:;<=>?A-Z_a-z]+$/.test(qualifier);
+  } catch {
+    return false;
+  }
+}
 
 function normalizeQrHost(host: string) {
   return host.trim().toLowerCase().replace(/:\d+$/, "");
@@ -23,6 +37,6 @@ export function validateOfficialQrTarget(rawTarget: string, requestOrigin: strin
   if (target.protocol !== "https:" && !(isLocal && target.protocol === "http:")) throw new Error("QR_TARGET_SCHEME_DENIED");
   if (target.username || target.password) throw new Error("QR_TARGET_CREDENTIALS_DENIED");
   if (!hosts.map(normalizeQrHost).includes(targetHost)) throw new Error("QR_TARGET_HOST_DENIED");
-  if (!OFFICIAL_PATH.test(target.pathname) || target.search || target.hash) throw new Error("QR_TARGET_PATH_DENIED");
+  if ((!OFFICIAL_PATH.test(target.pathname) && !isGs1Path(target.pathname)) || target.search || target.hash) throw new Error("QR_TARGET_PATH_DENIED");
   return target.toString();
 }

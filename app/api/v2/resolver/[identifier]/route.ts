@@ -28,7 +28,7 @@ export const GET = withApiRoute<{ params: { identifier: string } }>(async (reque
     return Response.json(result.tombstone, { status: 410, headers: { "Cache-Control": "public, max-age=60", "Server-Timing": timingHeader() } });
   }
   const format = (url.searchParams.get("format") || "json").toLowerCase();
-  const etag = `"${result.version.payload_hash}.phase4-projection-v1.PUBLIC"`;
+  const etag = `"${result.version.payload_hash}.phase4-projection-v1.PUBLIC${format === "html" ? ".battery71-html-v1" : ""}"`;
   if (request.headers.get("if-none-match") === etag) return new Response(null, { status: 304, headers: { ETag: etag } });
   const headers = {
     ETag: etag,

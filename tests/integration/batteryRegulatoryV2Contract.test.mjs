@@ -40,7 +40,7 @@ test("back office and public projections use the regulatory catalog while Batter
 
 test("battery passports render one regulatory chapter structure instead of appending it to legacy sections", async () => {
   const unifiedPage = await readFile("components/UnifiedDppPage.tsx", "utf8");
-  const batteryProjection = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
+  const batteryProjection = (await readFile("components/battery/BatteryPublicProjection.tsx", "utf8")) + (await readFile("components/battery/BatteryPassport71.tsx", "utf8"));
 
   assert.equal((unifiedPage.match(/!isBatteryProduct \? \(/g) || []).length, 2);
   assert.match(unifiedPage, /<BatteryPublicProjection/);
@@ -50,7 +50,7 @@ test("battery passports render one regulatory chapter structure instead of appen
 });
 
 test("Chinese battery passports localize regulatory prose while retaining technical identifiers", async () => {
-  const batteryProjection = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
+  const batteryProjection = (await readFile("components/battery/BatteryPublicProjection.tsx", "utf8")) + (await readFile("components/battery/BatteryPassport71.tsx", "utf8"));
 
   for (const text of [
     "镉、铅和汞声明仍需供应商及实验室验证。",
@@ -63,7 +63,7 @@ test("Chinese battery passports localize regulatory prose while retaining techni
 });
 
 test("battery organisation objects are projected into their semantic contact fields", async () => {
-  const batteryProjection = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
+  const batteryProjection = (await readFile("components/battery/BatteryPublicProjection.tsx", "utf8")) + (await readFile("components/battery/BatteryPassport71.tsx", "utf8"));
 
   assert.match(batteryProjection, /battery\.economic_operator_information/);
   assert.match(batteryProjection, /battery\.manufacturer_information/);
@@ -75,7 +75,7 @@ test("battery organisation objects are projected into their semantic contact fie
 });
 
 test("battery document and guidance references render as named links instead of raw URLs", async () => {
-  const batteryProjection = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
+  const batteryProjection = (await readFile("components/battery/BatteryPublicProjection.tsx", "utf8")) + (await readFile("components/battery/BatteryPassport71.tsx", "utf8"));
 
   for (const label of [
     "查看欧盟符合性声明",
@@ -90,7 +90,7 @@ test("battery document and guidance references render as named links instead of 
 });
 
 test("the sustainability chapter does not imply a complete carbon-footprint report", async () => {
-  const batteryProjection = await readFile("components/battery/BatteryPublicProjection.tsx", "utf8");
+  const batteryProjection = (await readFile("components/battery/BatteryPublicProjection.tsx", "utf8")) + (await readFile("components/battery/BatteryPassport71.tsx", "utf8"));
   assert.match(batteryProjection, /可持续性与循环材料/);
   assert.match(batteryProjection, /Sustainability and circular materials/);
 });

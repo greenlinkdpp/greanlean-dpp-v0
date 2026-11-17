@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { DppAccessBadge } from "@/components/DppAccessBadge";
+import { BatteryPassport71 } from "@/components/battery/BatteryPassport71";
+import { BatteryReferencePassport } from "@/components/battery/BatteryReferencePassport";
+import { legacyBatteryReferenceSource } from "@/lib/battery/legacyReferenceSource";
+import type { Battery71Category } from "@/lib/battery/passport71";
 import { createSupabaseClient } from "@/lib/supabase";
 
 type Audience = "public" | "professional" | "authority";
-type Props = { identifier: string; audience: Audience; locale: "en" | "zh"; showcase?: boolean };
+type Props = { identifier: string; audience: Audience; locale: "en" | "zh"; showcase?: boolean; fullPage?: boolean };
 
 function localizedScalar(value: string, locale: "en" | "zh") {
   if (locale === "en") return value;
@@ -121,7 +124,7 @@ function unitLabel(unit: string, locale: "en" | "zh") {
   return ({ cycles: "次", years: "年", months: "个月", Ohm: "Ω", mOhm: "mΩ", count: "次" } as Record<string, string>)[unit] || unit;
 }
 
-export function BatteryPublicProjection({ identifier, audience, locale, showcase = false }: Props) {
+export function BatteryPublicProjection({ identifier, audience, locale, showcase = false, fullPage = false }: Props) {
   const supabase = useMemo(() => createSupabaseClient(), []);
   const [data, setData] = useState<any>(null);
   const [state, setState] = useState<"loading" | "ready" | "hidden" | "restricted" | "error">("loading");
@@ -158,61 +161,20 @@ export function BatteryPublicProjection({ identifier, audience, locale, showcase
     return <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-800">{locale === "zh" ? "电池护照法规数据暂时无法读取。" : "Battery-passport regulatory data is temporarily unavailable."}</div>;
   }
 
-  const grouped = Object.values((data?.fields || []).reduce((groups: Record<string, any>, field: any) => {
-    const key = field.groupCode || "other";
-    groups[key] ||= {
-      code: key,
-      label: key === "sustainability"
-        ? (locale === "zh" ? "可持续性与循环材料" : "Sustainability and circular materials")
-        : (locale === "zh" ? field.groupLabelZh : field.groupLabelEn),
-      fields: [],
-    };
-    groups[key].fields.push(field);
-    return groups;
-  }, {})) as Array<{ code: string; label: string; fields: any[] }>;
-
-  const groupAnchor = (code: string) => `battery-${code.replace(/[^a-z0-9_-]/gi, "-")}`;
-
+  const category = data?.profile?.legalCategory;
+  if (fullPage) return <BatteryReferencePassport source={legacyBatteryReferenceSource(data)} locale={locale} qrUrl={`https://www.greanlean.com/api/qr?url=${encodeURIComponent(`https://www.greanlean.com/p/${identifier}`)}`} />;
   return (
-    <section id="battery-passport-content" className="border-t border-slate-200 bg-[#f5f7f6]" aria-label={locale === "zh" ? "电池护照信息" : "Battery passport information"}>
-      {grouped.length ? (
-        <nav className="sticky top-16 z-40 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur" aria-label={locale === "zh" ? "电池护照章节" : "Battery passport sections"}>
-          <div className="mx-auto flex max-w-[1440px] gap-1 overflow-x-auto px-4 py-2 sm:px-6 lg:px-10">
-            {grouped.map((group, index) => (
-              <a
-                key={group.code}
-                href={`#${groupAnchor(group.code)}`}
-                className="inline-flex h-10 shrink-0 items-center gap-2 rounded-md px-3 text-sm font-bold text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-800"
-              >
-                <span className="text-xs font-black text-emerald-700">{String(index + 1).padStart(2, "0")}</span>
-                {group.label}
-              </a>
-            ))}
-          </div>
-        </nav>
-      ) : null}
-      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 lg:px-10">
-      {grouped.length ? (
-        <div className="divide-y divide-slate-200">
-          {grouped.map((group, index) => (
-            <section key={group.code} id={groupAnchor(group.code)} className="scroll-mt-32 py-7" aria-labelledby={`${groupAnchor(group.code)}-title`}>
-              <h2 id={`${groupAnchor(group.code)}-title`} className="text-xl font-black text-slate-950 sm:text-2xl"><span className="mr-3 text-sm text-emerald-700">{String(index + 1).padStart(2, "0")}</span>{group.label}</h2>
-              <dl className="mt-3 grid gap-x-6 gap-y-4 sm:grid-cols-2 xl:grid-cols-3">
-                {group.fields.map((field) => (
-                  <div key={field.id || `${field.fieldCode}-${field.number}`} className="border-t border-slate-100 pt-3">
-                    <dt className="flex items-start justify-between gap-2 text-xs font-bold text-slate-500">
-                      <span>{locale === "zh" ? field.labelZh : field.labelEn}</span>
-                      {showcase ? <DppAccessBadge audience={field.accessLevel || "PUBLIC"} locale={locale} /> : null}
-                    </dt>
-                    <dd className="mt-1 break-words text-sm font-black text-slate-900">{field.dataStatus === "missing" ? (locale === "zh" ? "待补充" : "Pending") : fieldValueContent(field, locale)}{field.dataStatus !== "missing" && field.unit ? ` ${unitLabel(field.unit, locale)}` : ""}</dd>
-                    <dd className="mt-2 flex flex-wrap gap-2 text-[11px] font-bold text-slate-500"><span>{field.dataBehavior === "DYNAMIC" ? (locale === "zh" ? "动态数据" : "Dynamic") : (locale === "zh" ? "静态数据" : "Static")}</span>{field.verificationStatus === "verified" ? <><span>·</span><span className="text-emerald-700">{locale === "zh" ? "已核验" : "Verified"}</span></> : null}</dd>
-                  </div>
-                ))}
-              </dl>
-            </section>
-          ))}
-        </div>
-      ) : <p className="mt-5 text-sm font-semibold text-slate-500">{locale === "zh" ? "当前权限层暂无已发布字段。" : "No published fields are available at this access level."}</p>}
+    <section id="battery-passport-content" className="border-t border-slate-200 bg-[#f5f7f6] px-4 py-8 sm:px-6 lg:px-10" aria-label={locale === "zh" ? "电池护照章节" : "Battery passport sections"}>
+      <div className="mx-auto max-w-[1440px]">
+        <BatteryPassport71
+          source={{ passportIdentifier: identifier, audience: data?.accessLevel || "PUBLIC", fields: data?.fields || [] }}
+          locale={locale}
+          category={(["ev", "lmt", "industrial"].includes(category) ? category : "other") as Battery71Category}
+          renderValue={(row) => {
+            const field = data.fields.find((candidate: any) => candidate.id === row.id || candidate.number === row.number);
+            return field ? <>{fieldValueContent(field, locale)}{field.unit ? ` ${unitLabel(field.unit, locale)}` : ""}</> : null;
+          }}
+        />
       </div>
     </section>
   );
